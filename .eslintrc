@@ -1,0 +1,40 @@
+{
+  "parserOptions": {
+    "parser": "@babel/eslint-parser",
+    "requireConfigFile": false
+  },
+  "extends": [
+    "@nuxtjs",
+    "plugin:nuxt/recommended",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "ignorePatterns": ["tailwind.config.js", "nuxt.config.ts"],
+  "rules": {
+    "vue/html-indent": ["error", 2],
+    "vue/singleline-html-element-content-newline": 0,
+    "vue/component-name-in-template-casing": [
+      "error",
+      "PascalCase"
+    ],
+    "prettier/prettier":
+    [ "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "jsx-quotes": "off",
+    "vue/valid-v-slot": [
+      "error",
+      {
+        "allowModifiers": true
+      }
+    ],
+    "semi": "off",
+    "eqeqeq": "off",
+    "no-undef": "off"
+  }
+}
