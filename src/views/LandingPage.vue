@@ -1,5 +1,13 @@
-<script setup></script>
+<script setup>
+</script>
+
+<script setup>
+  import HeaderSection from "@/components/page-sections/LandingHeader.vue";
+</script>
 
 <template>
-  <div>Hello There</div>
+  <div>
+    <HeaderSection />
+    <div class="h-[1000px]"></div>
+  </div>
 </template>
