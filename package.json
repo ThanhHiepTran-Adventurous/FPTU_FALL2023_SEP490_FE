@@ -10,6 +10,7 @@
   "dependencies": {
     "bootstrap": "^5.3.1",
     "flowbite": "^1.5.3",
+    "flowbite-vue": "^0.0.17-next.0",
     "jquery": "^3.7.0",
     "vue": "^3.3.4",
     "vue-carousel": "^0.18.0",
