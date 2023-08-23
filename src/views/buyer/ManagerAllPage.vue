@@ -1,8 +1,6 @@
 <template>
   <div class="page">
-    <h1>
-      HEADER-BUYER
-    </h1>
+    <LandingHeader />
     <router-view></router-view>
     <h1>
       FOOTER-BUYER
@@ -13,9 +11,16 @@
 <script>
 import { ref } from 'vue'; // Import ref from the Composition API
 
+import { defineAsyncComponent } from 'vue';
+
+const LandingHeader = defineAsyncComponent(() => import('@/components/page-sections/LandingHeader.vue'))
+
+
 export default {
   name: 'ManageAllPage',
-  components: {},
+  components: {
+    LandingHeader,
+  },
   setup() {
     // Use the setup function for data and methods
     const data = ref(); // Initialize your data using ref()
