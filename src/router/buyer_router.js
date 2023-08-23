@@ -6,12 +6,12 @@ const buyer_router = [
   {
     name: "all-page-buyer",
     path: "/",
-    component: lazyLoad("@/views/common/LandingPage.vue"),
+    component: lazyLoad("../views/common/LandingPage.vue"),
     children: [
       {
         name: "landing-page",
         path: "landing-page",
-        component: lazyLoad("@/views/LandingPage.vue"),
+        component: lazyLoad("../views/LandingPage.vue"),
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
@@ -20,7 +20,7 @@ const buyer_router = [
       {
         name: "sign-in",
         path: "sign-in",
-        component: lazyLoad("@/views/common/SignInPage.vue"),
+        component: lazyLoad("../views/common/SignInPage.vue"),
         meta: {
           requiresAuth: false,
         },
@@ -28,7 +28,7 @@ const buyer_router = [
       {
         name: "sign-up",
         path: "sign-up",
-        component: lazyLoad("@/views/common/SignUpPage.vue"),
+        component: lazyLoad("../views/common/SignUpPage.vue"),
         meta: {
           requiresAuth: false,
         },
