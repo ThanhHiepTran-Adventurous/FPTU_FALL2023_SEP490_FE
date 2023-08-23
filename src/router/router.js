@@ -5,8 +5,8 @@ import buyer_routes from "./buyer_router";
 import TokenService from "@/services/token/token.service.js";
 
 const ROUTE_NAMES = {
-  SIGN_IN: "sign-in",
-  SIGN_UP: "sign-up",
+  SIGN_IN: "login",
+  SIGN_UP: "create-account",
   FORGOT_PASSWORD: "forgot-password",
   LANDING_PAGE: "landing-page",
   HOME: "home",

@@ -20,7 +20,7 @@ const buyer_router = [
       {
         name: "sign-in",
         path: "sign-in",
-        component: lazyLoad("../views/common/SignInPage.vue"),
+        component: lazyLoad("../views/common/LoginPage.vue"),
         meta: {
           requiresAuth: false,
         },
@@ -28,7 +28,15 @@ const buyer_router = [
       {
         name: "sign-up",
         path: "sign-up",
-        component: lazyLoad("../views/common/SignUpPage.vue"),
+        component: lazyLoad("../views/common/CreateAccountPage.vue"),
+        meta: {
+          requiresAuth: false,
+        },
+      }, 
+       {
+        name: "forbidden",
+        path: "forbidden",
+        component: lazyLoad("../views/common/ComingSoonPage.vue"),
         meta: {
           requiresAuth: false,
         },
