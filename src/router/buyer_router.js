@@ -6,12 +6,12 @@ const buyer_router = [
   {
     name: "all-page-buyer",
     path: "/",
-    component: lazyLoad("@/views/buyer/ManageAllPage.vue"),
+    component: lazyLoad("@/views/common/LandingPage.vue"),
     children: [
       {
         name: "landing-page",
         path: "landing-page",
-        component: lazyLoad("@/views/common/LandingPage.vue"),
+        component: lazyLoad("@/views/LandingPage.vue"),
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
