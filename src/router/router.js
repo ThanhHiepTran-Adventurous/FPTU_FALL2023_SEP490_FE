@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ENUM from "@/utils/enum";
-import buyer_routes from "./buyer_routes";
-import seller_routes from "./seller_routes";
+import ENUM from "@/models/enum.js";
+import buyer_routes from "./buyer_router";
+// import seller_routes from "./seller_routes";
 import TokenService from "@/services/token/token.service.js";
 
 const ROUTE_NAMES = {
@@ -12,7 +12,8 @@ const ROUTE_NAMES = {
   HOME: "home",
 };
 
-const routes = [...buyer_routes, ...seller_routes];
+// const routes = [...buyer_routes, ...seller_routes];
+const routes = [...buyer_routes];
 
 const isAuthenticated = () => {
   const currentUser = TokenService.getCookie("Token")

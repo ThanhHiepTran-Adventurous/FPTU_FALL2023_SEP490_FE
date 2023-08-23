@@ -9,8 +9,8 @@ const buyer_router = [
     component: lazyLoad("@/views/buyer/ManageAllPage.vue"),
     children: [
       {
-        name: "landing",
-        path: "landing",
+        name: "landing-page",
+        path: "landing-page",
         component: lazyLoad("@/views/common/LandingPage.vue"),
         meta: {
           requiresAuth: false,
@@ -33,15 +33,7 @@ const buyer_router = [
           requiresAuth: false,
         },
       },
-      {
-        name: "forgot-password",
-        path: "forgot-password",
-        component: lazyLoad("@/views/common/ForgotPasswordPage.vue"),
-        meta: {
-          requiresAuth: false,
-          roles: [ENUM.BUYER.ROLE_ID, ENUM.SELLER.ROLE_ID],
-        },
-      },
+   
     ],
   },
 ];
