@@ -1,6 +1,9 @@
-import ENUM from "@/models/enum.js";
+import ENUM from "@/constants/enum.js";
 
 const lazyLoad = (componentPath) => () => import(componentPath);
+
+
+// lưu ý: lazyLoad("../views/buyer/ManagerAllPage.vue"), -> ".." không thể được thay bằng "@"" alias
 
 const buyer_router = [
   {
@@ -33,17 +36,24 @@ const buyer_router = [
           requiresAuth: false,
         },
       }, 
-       {
-        name: "forbidden",
-        path: "forbidden",
-        component: lazyLoad("../views/common/ComingSoonPage.vue"),
-        meta: {
-          requiresAuth: false,
-        },
-      },
-   
     ],
   },
+  {
+    name: "not-found",
+    path: "/:pathMatch(.*)*",
+    component: lazyLoad("../views/common/ComingSoonPage.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    name: "forbidden",
+    path: "/forbidden",
+    component: lazyLoad("../views/common/ComingSoonPage.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+  }
 ];
 
 export default buyer_router;

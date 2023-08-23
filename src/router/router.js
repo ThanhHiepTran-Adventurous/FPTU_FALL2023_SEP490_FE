@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ENUM from "@/models/enum.js";
+import ENUM from "@/constants/enum.js";
 import buyer_routes from "./buyer_router";
 // import seller_routes from "./seller_routes";
 import TokenService from "@/services/token/token.service.js";
