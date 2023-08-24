@@ -1,59 +1,50 @@
-import ENUM from "@/constants/enum.js";
-
-const lazyLoad = (componentPath) => () => import(componentPath);
-
-
-// lưu ý: lazyLoad("../views/buyer/ManagerAllPage.vue"), -> ".." không thể được thay bằng "@"" alias
+import ENUM from '@/constants/enum.js'
+import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
+import LandingPage from '@/views/common/LandingPage.vue'
+import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
+import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 
 const buyer_router = [
   {
-    name: "all-page-buyer",
-    path: "/",
-    component: lazyLoad("../views/buyer/ManagerAllPage.vue"),
+    name: 'all-page-buyer',
+    path: '/',
+    component: ManagerAllPage,
     children: [
       {
-        name: "landing-page",
-        path: "/",
-        component: lazyLoad("../views/common/LandingPage.vue"),
+        name: 'landing-page',
+        path: '/',
+        component: LandingPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
         },
       },
       {
-        name: "sign-in",
-        path: "sign-in",
-        component: lazyLoad("../views/common/LoginPage.vue"),
+        name: 'sign-up',
+        path: 'sign-up',
+        component: CreateAccountPage,
         meta: {
           requiresAuth: false,
         },
       },
-      {
-        name: "sign-up",
-        path: "sign-up",
-        component: lazyLoad("../views/common/CreateAccountPage.vue"),
-        meta: {
-          requiresAuth: false,
-        },
-      }, 
     ],
   },
   {
-    name: "not-found",
-    path: "/:pathMatch(.*)*",
-    component: lazyLoad("../views/common/ComingSoonPage.vue"),
+    name: 'not-found',
+    path: '/:pathMatch(.*)*',
+    component: ComingSoonPage,
     meta: {
       requiresAuth: false,
     },
   },
   {
-    name: "forbidden",
-    path: "/forbidden",
-    component: lazyLoad("../views/common/ComingSoonPage.vue"),
+    name: 'forbidden',
+    path: '/forbidden',
+    component: ComingSoonPage,
     meta: {
       requiresAuth: false,
     },
-  }
-];
+  },
+]
 
-export default buyer_router;
+export default buyer_router
