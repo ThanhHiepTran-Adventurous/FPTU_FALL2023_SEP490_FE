@@ -3,7 +3,7 @@ import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
 import LandingPage from '@/views/common/LandingPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
-
+import ProductDetailPage from '@/views/buyer/child-page/product/ProductDetailPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -12,8 +12,17 @@ const buyer_router = [
     children: [
       {
         name: 'landing-page',
-        path: '/',
+        path: '/a',
         component: LandingPage,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
+        },
+      },
+        {
+        name: 'product-detail',
+        path: '/',
+        component: ProductDetailPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
