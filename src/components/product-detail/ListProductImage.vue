@@ -20,14 +20,14 @@
 												</div>
 											</div>
 										</li>
-										<li>
+										<!-- <li>
 											<div class="video-link-product" data-toggle="modal" data-type="video" data-target="#modalVideoProduct" data-value="video/video.mp4" data-poster="video/video_img.jpg">
 												<img src="@/assets/img/product/product-small-empty.png" alt="" >
 												<div>
 													<i class="icon-f-32"></i>
 												</div>
 											</div>
-										</li>
+										</li> -->
 									</ul>
 								</div>
 							</div>
@@ -42,7 +42,10 @@ export default {
   setup() {
     const data = ref();
 
-    const methods = {};
+    const methods = {
+					
+
+		};
 
     return {
       data,
