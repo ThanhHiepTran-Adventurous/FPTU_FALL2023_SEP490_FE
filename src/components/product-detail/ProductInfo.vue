@@ -22,7 +22,7 @@
     <div class="tt-wrapper">
       <div class="tt-countdown_box_02">
         <div class="tt-countdown_inner">
-          COUNT-DOWN-COMPONENT-HERE
+          <CountDown :coefficientSize="0.7" :deadlineInMilis="1693094493940" />
         </div>
       </div>
     </div>
@@ -51,10 +51,12 @@
 
 <script>
 import { ref,computed } from 'vue';
+import CountDown from '@/components/common-components/CountDown.vue';
 
 export default {
   components: {
-  },
+    CountDown
+},
   
   setup() {
  

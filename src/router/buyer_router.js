@@ -1,6 +1,6 @@
 import ENUM from '@/constants/enum.js'
 import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
-import LandingPage from '@/views/common/LandingPage.vue'
+import LandingPage from '@/views/LandingPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/product/ProductDetailPage.vue'
