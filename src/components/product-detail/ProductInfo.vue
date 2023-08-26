@@ -49,16 +49,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref,computed } from 'vue';
 import CountDown from '@/components/common-components/CountDown.vue';
 
-export default {
-  components: {
-    CountDown
-},
-  
-  setup() {
+
  
     const data = ref({
       sku: '001',
@@ -91,13 +86,8 @@ export default {
         .concat(Array(emptyStars).fill(emptyStarClass));
     });
 
-    return {
-      data,
-      getTags,
-      starClasses,
-    };
-  },
-};
+
+
 </script>
 
 <style>
