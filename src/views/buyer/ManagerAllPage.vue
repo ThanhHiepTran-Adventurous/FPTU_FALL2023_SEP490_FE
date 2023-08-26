@@ -1,19 +1,14 @@
 <template>
-  <div class="page">
+  <div>
     <LandingHeader />
-    <router-view></router-view>
-    <h1>
-      FOOTER-BUYER
-    </h1>
+    <router-view />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'; // Import ref from the Composition API
 
-import { defineAsyncComponent } from 'vue';
-
-const LandingHeader = defineAsyncComponent(() => import('@/components/page-sections/LandingHeader.vue'))
+import LandingHeader from '../../components/page-sections/LandingHeader.vue';
 
 
 export default {
@@ -34,7 +29,3 @@ export default {
   },
 };
 </script>
-
-<style>
-  /* @import <--- import cac css buyer page */
-</style>
