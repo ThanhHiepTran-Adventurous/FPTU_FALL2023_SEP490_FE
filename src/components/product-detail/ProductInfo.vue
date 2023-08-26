@@ -100,7 +100,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .direction {
   display: flex;
   flex-direction: column;
