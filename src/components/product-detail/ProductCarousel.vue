@@ -14,19 +14,15 @@ const props = defineProps({
     </div>
     <div
       class="tt-carousel-products row arrow-location-right-top tt-alignment-img tt-layout-product-item slick-animated-show-js">
-      <!-- Iterate through each product in the products prop -->
       <div v-for="(product, index) in products" :key="index" class="col-2 col-md-4 col-lg-3">
         <div class="tt-product thumbprod-center">
-          <!-- Use product data from the prop -->
           <div class="tt-image-box">
             <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView"
               data-tooltip="Quick View" data-tposition="left"></a>
             <a href="#" class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
             <a href="#" class="tt-btn-compare" data-tooltip="Add to Compare" data-tposition="left"></a>
             <span class="tt-img"><img data-lazy="@/assets/img/product/{{ product.image }}" alt=""></span>
-            <!-- ... Other elements here ... -->
             <span class="tt-img-roll-over"><img data-lazy="@/assets/img/product/product-17-01.jpg" alt=""></span>
-
           </div>
           <div class="tt-description">
 

@@ -1,15 +1,12 @@
 
 
 <script setup>
-import { ref } from 'vue'; 
+    import { defineProps } from 'vue';
 
+    const props = defineProps({
+        images: Array,
+    });
 
-const images = ref([
-      "@/assets/img/product/product-01.jpg",
-      "@/assets/img/product/product-01-02.jpg",
-      "@/assets/img/product/product-01-03.jpg",
-      "@/assets/img/product/product-01-04.jpg"
-    ]);
 </script>
 
 <style>

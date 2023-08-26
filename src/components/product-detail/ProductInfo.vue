@@ -1,9 +1,42 @@
+<script setup>
+import { computed } from 'vue';
+import CountDown from '@/components/common-components/CountDown.vue';
+   
+  const props = defineProps({
+    productInfo : Object,
+  });
+  
+    const data = props.productInfo;
+    const getTags = () => {
+      return data.tags;
+    };
+
+
+    const starClass = 'icon-star';
+    const halfStarClass = 'icon-star-half';
+    const emptyStarClass = 'icon-star-empty';
+
+    const starClasses = computed(() => {
+      const rating = data.productRateStar;
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 !== 0;
+      const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+      return Array(fullStars).fill(starClass)
+        .concat(hasHalfStar ? [halfStarClass] : [])
+        .concat(Array(emptyStars).fill(emptyStarClass));
+    });
+
+
+
+</script>
+
 <template>
   <div class="tt-product-single-info">
     <div class="tt-add-info">
       <ul>
         <li><span>SKU:</span> {{ data.sku }}</li>
-        <li><span>Care:</span> 40 người đang tham gia đấu giá</li>
+        <li><span>Care:</span> {{ data.productPeopleJoin }} người đang tham gia đấu giá</li>
       </ul>
     </div>
     <h1 class="tt-title">{{ data.productTitle }}</h1>
@@ -49,46 +82,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref,computed } from 'vue';
-import CountDown from '@/components/common-components/CountDown.vue';
 
-
- 
-    const data = ref({
-      sku: '001',
-      productTitle: 'Tên Sản Phẩm',
-      productPrice: '90.000.000 VND',
-      productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
-      productRateStar: 3,
-      reviewNumber: '1',
-      vendor: 'Polo',
-      productType: 'T-Shirt',
-      tags: ['T-Shirt', 'Women', 'Top']
-    });
-    const getTags = () => {
-      return data.value.tags;
-    };
-
-
-    const starClass = 'icon-star';
-    const halfStarClass = 'icon-star-half';
-    const emptyStarClass = 'icon-star-empty';
-
-    const starClasses = computed(() => {
-      const rating = data.value.productRateStar;
-      const fullStars = Math.floor(rating);
-      const hasHalfStar = rating % 1 !== 0;
-      const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-      return Array(fullStars).fill(starClass)
-        .concat(hasHalfStar ? [halfStarClass] : [])
-        .concat(Array(emptyStars).fill(emptyStarClass));
-    });
-
-
-
-</script>
 
 <style>
 .direction {
