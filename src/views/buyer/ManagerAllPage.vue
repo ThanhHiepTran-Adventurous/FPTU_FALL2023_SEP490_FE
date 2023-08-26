@@ -2,13 +2,11 @@
   <div class="page">
     <LandingHeader />
     <router-view></router-view>
-    <h1>
-      FOOTER-BUYER
-    </h1>
-  </div>
+    <Footer />
+    </div>
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue';
-const LandingHeader = defineAsyncComponent(() => import('@/components/page-sections/LandingHeader.vue'))
+import LandingHeader from '@/components/page-sections/LandingHeader.vue';
+import Footer from '@/components/page-sections/Footer.vue';
 </script>
