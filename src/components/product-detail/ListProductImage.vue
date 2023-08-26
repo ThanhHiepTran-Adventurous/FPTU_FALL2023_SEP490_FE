@@ -1,59 +1,45 @@
-<template>
- 	<div class="tt-product-vertical-layout">
-								<div class="tt-product-single-img">
-									<div>
-										<button class="tt-btn-zomm tt-top-right"><i class="icon-f-86"></i></button>
-										<img class="zoom-product" src='@/assets/img/product/product-01.jpg' data-zoom-image="@/assets/img/product/product-01.jpg" alt="">
-									</div>
-								</div>
-								<div class="tt-product-single-carousel-vertical">
-									<ul id="smallGallery" class="tt-slick-button-vertical  slick-animated-show-js">
-										<li><a class="zoomGalleryActive" href="#" data-image="@/assets/img/product/product-01.jpg" data-zoom-image="@/assets/img/product/product-01.jpg"><img src="@/assets/img/product/product-01.jpg" alt=""></a></li>
-										<li><a href="#" data-image="@/assets/img/product/product-01-02.jpg" data-zoom-image="@/assets/img/product/product-01-02.jpg"><img src="@/assets/img/product/product-01-02.jpg" alt=""></a></li>
-										<li><a href="#" data-image="@/assets/img/product/product-01-03.jpg" data-zoom-image="@/assets/img/product/product-01-03.jpg"><img src="@/assets/img/product/product-01-03.jpg" alt=""></a></li>
-										<li><a href="#" data-image="@/assets/img/product/product-01-04.jpg" data-zoom-image="@/assets/img/product/product-01-04.jpg"><img src="@/assets/img/product/product-01-04.jpg" alt=""></a></li>
-										<li>
-											<div class="video-link-product" data-toggle="modal" data-type="youtube" data-target="#modalVideoProduct" data-value="http://www.youtube.com/embed/GhyKqj_P2E4">
-												<img src="@/assets/img/product/product-small-empty.png" alt="">
-												<div>
-													<i class="icon-f-32"></i>
-												</div>
-											</div>
-										</li>
-										<!-- <li>
-											<div class="video-link-product" data-toggle="modal" data-type="video" data-target="#modalVideoProduct" data-value="video/video.mp4" data-poster="video/video_img.jpg">
-												<img src="@/assets/img/product/product-small-empty.png" alt="" >
-												<div>
-													<i class="icon-f-32"></i>
-												</div>
-											</div>
-										</li> -->
-									</ul>
-								</div>
-							</div>
-</template>
 
-<script>
+
+<script setup>
 import { ref } from 'vue'; 
 
-export default {
-  components: {
-  },
-  setup() {
-    const data = ref();
 
-    const methods = {
-					
-
-		};
-
-    return {
-      data,
-      ...methods,
-    };
-  },
-};
+const images = ref([
+      "@/assets/img/product/product-01.jpg",
+      "@/assets/img/product/product-01-02.jpg",
+      "@/assets/img/product/product-01-03.jpg",
+      "@/assets/img/product/product-01-04.jpg"
+    ]);
 </script>
 
 <style>
+</style>
+
+
+
+<template>
+  <div class="tt-product-vertical-layout">
+    <div class="tt-product-single-img">
+      <div>
+        <button class="tt-btn-zomm tt-top-right"><i class="icon-f-86"></i></button>
+        <img class="zoom-product" :src="images[0]" :data-zoom-image="images[0]" alt="">
+      </div>
+    </div>
+    <div class="tt-product-single-carousel-vertical">
+      <ul id="smallGallery" class="tt-slick-button-vertical  slick-animated-show-js-custom">
+        <li v-for="(image, index) in images" :key="index">
+          <a href="#" :data-image="image" :data-zoom-image="image">
+            <img :src="image" alt="">
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<style>
+.slick-animated-show-js-custom {
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
 </style>

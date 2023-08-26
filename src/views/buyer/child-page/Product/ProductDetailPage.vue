@@ -3,10 +3,22 @@
 import { ref } from 'vue';
 import ListProductImage from '@/components/product-detail/ListProductImage.vue';
 import ProductInfo from '@/components/product-detail/ProductInfo.vue';
-import ListRelatedProduct from '@/components/product-detail/ListRelatedProduct.vue';
-const isModalActive = ref(true)
-const inputVal = ref('')
-
+import ProductCarousel from '@/components/product-detail/ProductCarousel.vue';
+   
+const productCarousels = [
+  {
+    id: 1,
+    title: 'Flared Shift Dress',
+    image: '/assets/img/product/product-1.jpg',
+    price: '$24'
+  },
+  {
+    id: 2,
+    title: 'Casual T-shirt',
+    image: '/assets/img/product/product-2.jpg',
+    price: '$18'
+  },
+];
 </script>
 
 <template>
@@ -66,8 +78,9 @@ const inputVal = ref('')
 
 	
 	<div class="container-indent">
-		<ListRelatedProduct />
+		  <ProductCarousel :products="productCarousels" />
 	</div>
+	
 </div>
 
 </template>
