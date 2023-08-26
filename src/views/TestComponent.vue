@@ -1,10 +1,10 @@
 <script setup>
 import Modal from '@/components/common-components/Modal.vue';
-import HeaderSection from "@/components/page-sections/LandingHeader.vue";
 import Input from '@/components/common-components/Input.vue';
 import Label from '../components/common-components/Label.vue';
 import { Icon } from '@iconify/vue';
 import Countdown from '@/components/common-components/Countdown.vue';
+import ItemBox from '../components/common-components/ItemBox.vue';
 
 import { ref } from 'vue';
 
@@ -15,7 +15,9 @@ const inputVal = ref('')
 
 <template>
   <div>
-    <HeaderSection />
+    <div class="flex container">
+      <ItemBox />
+    </div>
     <Modal v-if="isModalActive" title="Test Modal" @decline-modal="() => isModalActive = false">
       <div>
         <Label for="test">Label test</Label>

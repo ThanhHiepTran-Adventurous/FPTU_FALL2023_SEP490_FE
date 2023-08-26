@@ -90,7 +90,7 @@ import CountDown from '@/components/common-components/CountDown.vue';
 
 </script>
 
-<style scoped>
+<style>
 .direction {
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import ENUM from '@/constants/enum.js'
 import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
-import LandingPage from '@/views/LandingPage.vue'
+import TestComponent from '@/views/TestComponent.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/product/ProductDetailPage.vue'
@@ -12,8 +12,8 @@ const buyer_router = [
     children: [
       {
         name: 'landing-page',
-        path: '/a',
-        component: LandingPage,
+        path: '/test-components',
+        component: TestComponent,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
