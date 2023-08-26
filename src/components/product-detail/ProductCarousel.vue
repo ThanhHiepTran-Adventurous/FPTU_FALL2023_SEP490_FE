@@ -3,7 +3,23 @@ import { defineProps } from 'vue';
 
 const props = defineProps({
   products: Array,
+  
 });
+
+    const starClass = 'icon-star';
+    const halfStarClass = 'icon-star-half';
+    const emptyStarClass = 'icon-star-empty';
+
+    const getStar =  ( startNumber ) => {
+      const rating = startNumber;
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 !== 0;
+      const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+      return Array(fullStars).fill(starClass)
+        .concat(hasHalfStar ? [halfStarClass] : [])
+        .concat(Array(emptyStars).fill(emptyStarClass));
+    };
 </script>
 
 
@@ -28,14 +44,11 @@ const props = defineProps({
 
             <div class="tt-row">
               <ul class="tt-add-info">
-                <li><a href="#">T-SHIRTS</a></li>
+                <li><a href="#">{{ product.tag }}</a></li>
               </ul>
               <div class="tt-rating">
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star"></i>
-                <i class="icon-star-half"></i>
-                <i class="icon-star-empty"></i>
+                <i v-for="starClass in getStar(product.starNumber)" :key="starClass" :class="starClass"></i>
+
               </div>
             </div>
 
@@ -47,7 +60,7 @@ const props = defineProps({
             <div class="tt-product-inside-hover">
               <div class="tt-row-btn">
                 <a href="#" class="tt-btn-addtocart thumbprod-button-bg" data-toggle="modal"
-                  data-target="#modalAddToCartProduct">ADD TO CART</a>
+                  data-target="#modalAddToCartProduct">THÊM VÀO GIỎ</a>
               </div>
               <div class="tt-row-btn">
                 <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView"></a>

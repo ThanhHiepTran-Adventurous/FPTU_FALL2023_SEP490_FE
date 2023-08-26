@@ -68,8 +68,8 @@ import CountDown from '@/components/common-components/CountDown.vue';
     </div>
     <div class="tt-wrapper">
       <ul class="tt-list-btn">
-        <li><a class="btn-link" href="#"><i class="icon-n-072"></i>ADD TO WISH LIST</a></li>
-        <li><a class="btn-link" href="#"><i class="icon-n-08"></i>ADD TO COMPARE</a></li>
+        <li><a class="btn-link" href="#"><i class="icon-n-072"></i>THÊM VÀO YÊU THÍCH</a></li>
+        <li><a class="btn-link" href="#"><i class="icon-n-08"></i>SO SÁNH</a></li>
       </ul>
     </div>
     <div class="tt-wrapper">

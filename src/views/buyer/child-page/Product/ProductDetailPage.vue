@@ -31,13 +31,18 @@ const productCarousels = [
 		id: 1,
 		title: 'Flared Shift Dress',
 		image: '/assets/img/product/product-1.jpg',
-		price: '$24'
+		price: '$24',
+		starNumber: 4,
+		tag: 'T-shirt'
 	},
 	{
 		id: 2,
 		title: 'Casual T-shirt',
 		image: '/assets/img/product/product-2.jpg',
-		price: '$18'
+		price: '$18',
+		starNumber: 5,
+		tag: 'NEWS-Brand'
+
 	},
 ];
 </script>
@@ -66,7 +71,7 @@ const productCarousels = [
 									</div>
 									<div class="tt-col-description">
 										<h4 class="tt-title">FREE SHIPPING</h4>
-										<p>Free shipping on all US order or order above $99</p>
+										<p>Miễn phí shipping với mặt hàng có giá trị từ 2.000.000 VND trở lên</p>
 									</div>
 								</a>
 								<a href="#" class="tt-services-block">
@@ -75,7 +80,7 @@ const productCarousels = [
 									</div>
 									<div class="tt-col-description">
 										<h4 class="tt-title">SUPPORT 24/7</h4>
-										<p>Contact us 24 hours a day, 7 days a week</p>
+										<p>Hỗ trợ chăm sóc khách hàng 24 tiếng / ngày , 7 ngày / tuần</p>
 									</div>
 								</a>
 								<a href="#" class="tt-services-block">
@@ -84,7 +89,7 @@ const productCarousels = [
 									</div>
 									<div class="tt-col-description">
 										<h4 class="tt-title">30 DAYS RETURN</h4>
-										<p>Simply return it within 30 days for an exchange.</p>
+										<p>30 Ngày hoàn trả nếu sản phẩm đấu giá không đúng với chính sách hoàn trả của chúng tôi.</p>
 									</div>
 								</a>
 							</div>
