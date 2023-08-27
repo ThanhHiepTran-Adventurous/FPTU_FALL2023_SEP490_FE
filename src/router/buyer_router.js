@@ -1,9 +1,9 @@
 import ENUM from '@/constants/enum.js'
 import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
 import TestComponent from '@/views/TestComponent.vue'
-import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
-import ProductDetailPage from '@/views/buyer/child-page/product/ProductDetailPage.vue'
+import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
+import CreateAccountPage from '@/views/buyer/child-page/CreateAccountPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -19,9 +19,9 @@ const buyer_router = [
           roles: [ENUM.BUYER.ROLE_ID],
         },
       },
-        {
+      {
         name: 'product-detail',
-        path: '/',
+        path: '/product-detail/:id',
         component: ProductDetailPage,
         meta: {
           requiresAuth: false,
@@ -30,7 +30,7 @@ const buyer_router = [
       },
       {
         name: 'sign-up',
-        path: 'sign-up',
+        path: '/',
         component: CreateAccountPage,
         meta: {
           requiresAuth: false,
