@@ -4,6 +4,7 @@ import TestComponent from '@/views/TestComponent.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import CreateAccountPage from '@/views/buyer/child-page/CreateAccountPage.vue'
+import WishListPage from '@/views/buyer/child-page/WishListPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -14,6 +15,15 @@ const buyer_router = [
         name: 'landing-page',
         path: '/test-components',
         component: TestComponent,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
+        },
+      },
+      {
+        name: 'wishlist',
+        path: '/wishlist',
+        component: WishListPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
