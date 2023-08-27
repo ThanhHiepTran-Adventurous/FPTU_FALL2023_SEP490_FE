@@ -5,6 +5,7 @@ import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import CreateAccountPage from '@/views/buyer/child-page/CreateAccountPage.vue'
 import WishListPage from '@/views/buyer/child-page/WishListPage.vue'
+import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -24,6 +25,15 @@ const buyer_router = [
         name: 'wishlist',
         path: '/wishlist',
         component: WishListPage,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
+        },
+      },
+      {
+        name: 'compare',
+        path: '/compare',
+        component: ComparePage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
