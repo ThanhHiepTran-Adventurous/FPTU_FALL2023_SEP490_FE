@@ -6,10 +6,10 @@ import ProductCarousel from '@/components/product-detail/ProductCarousel.vue';
 
 const product = {
 	productImages :[
-		"./assets/img/product/product-1.jpg",
-		"./assets/img/product/product-1.jpg",
-		"./assets/img/product/product-1.jpg",
-		"./assets/img/product/product-1.jpg",
+		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
 	],
 	productInfo : {
 			sku: '001',
@@ -38,7 +38,7 @@ const productCarousels = [
 	{
 		id: 2,
 		title: 'Casual T-shirt',
-		image: '/assets/img/product/product-2.jpg',
+		image: 'https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png',
 		price: '$18',
 		starNumber: 5,
 		tag: 'NEWS-Brand'
