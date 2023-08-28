@@ -87,7 +87,7 @@ const products = ref([
                   <h2 class="tt-title"><a :href="'product.html?id=' + index">{{ product.title }}</a></h2>
                   <div class="tt-price">{{ product.price }}</div>
                   <a href="#" class="tt-btn-addtocart" data-toggle="modal" data-target="#modalAddToCartProduct"><i
-                      class="icon-f-39"></i>ADD TO CART</a>
+                      class="icon-f-39"></i>TIẾN HÀNH ĐẤU GIÁ</a>
                 </div>
                 <div class="tt-value js_one-height-02">{{ product.description }}</div>
                 <div class="tt-value js_one-height-03">{{ product.vendor }}</div>
