@@ -6,6 +6,7 @@ import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import CreateAccountPage from '@/views/buyer/child-page/CreateAccountPage.vue'
 import WishListPage from '@/views/buyer/child-page/WishListPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
+import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -13,9 +14,18 @@ const buyer_router = [
     component: ManagerAllPage,
     children: [
       {
-        name: 'landing-page',
+        name: 'test-page',
         path: '/test-components',
         component: TestComponent,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
+        },
+      },
+      {
+        name: 'landing-page',
+        path: '/landing',
+        component: LandingPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],

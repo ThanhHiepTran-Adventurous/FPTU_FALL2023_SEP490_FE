@@ -15,7 +15,11 @@ const inputVal = ref('')
 
 <template>
   <div>
-    <div class="flex container">
+    <div class="flex container justify-between">
+      <ItemBox product-name="Super long long long long name long long "/>
+      <ItemBox />
+      <ItemBox />
+      <ItemBox />
       <ItemBox />
     </div>
     <Modal v-if="isModalActive" title="Test Modal" @decline-modal="() => isModalActive = false">
@@ -23,7 +27,7 @@ const inputVal = ref('')
         <Label for="test">Label test</Label>
         <Input v-model="inputVal" w="w-full" id="test" /> {{ inputVal }}
         <Icon icon="mdi-light:home" />
-        <Countdown :coefficientSize="0.5" :deadlineInMilis="1692895388011" />
+        <Countdown :coefficientSize="0.5" :deadlineInMilis="1693895388011" />
       </div>
     </Modal>
     <div class="h-[1000px]"></div>

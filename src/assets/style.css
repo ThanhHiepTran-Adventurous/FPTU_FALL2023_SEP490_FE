@@ -23642,7 +23642,7 @@ html.ie .tt-btn-col-close {
     color: #ffffff;
   }
   .tt-product:not(.tt-view) .tt-description {
-    padding-top: 17px;
+    padding-top: 10px;
     position: relative;
     z-index: 2;
     background: #ffffff;
@@ -23739,7 +23739,7 @@ html.ie .tt-btn-col-close {
     justify-content: space-between;
     align-content: flex-start;
     align-items: flex-start;
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
   }
 }
@@ -23749,7 +23749,7 @@ html.ie .tt-btn-col-close {
     opacity: 0;
   }
   .tt-product:not(.tt-view) .tt-description .tt-product-inside-hover > * {
-    margin-top: 17px;
+    margin-top: 8px;
   }
 }
 @media (min-width: 1025px) {
@@ -24507,7 +24507,8 @@ html.ie .tt-btn-col-close {
     justify-content: space-between;
     align-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 5px;
+    width: 100%;
   }
 }
 @media (max-width: 1024px) and (min-width: 1025px) {
@@ -24530,7 +24531,7 @@ html.ie .tt-btn-col-close {
   }
   .tt-product:not(.tt-view) .tt-description .tt-product-inside-hover .tt-row-btn:not(:first-child),
 .tt-product-design02:not(.tt-view) .tt-description .tt-product-inside-hover .tt-row-btn:not(:first-child) {
-    margin-top: 10px;
+    margin-top: 5px;
   }
 }
 @media (max-width: 1024px) {
