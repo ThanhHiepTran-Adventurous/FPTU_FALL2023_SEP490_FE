@@ -1,4 +1,31 @@
 <script setup>
+    import currencyFormat from '@/utils/currency-formatter.js'
+    const props = defineProps({
+        mainImage : {
+            type: String,
+            default: "/src/assets/img/product/product-18.jpg"
+        },
+        secondaryImage : {
+            type: String,
+            default: "/src/assets/img/product/product-18-01.jpg"
+        },
+        brand : {
+            type: String,
+            default: "BRAND"
+        },
+        productName : {
+            type: String,
+            default: "Name product"
+        },
+        floorPrice : {
+            type: Number,
+            default: 100000
+        },
+        relativeTime : {
+            type: String,
+            default: "02d 02h 15m"
+        }
+    })
 </script>
 <template>
     <div class="tt-product thumbprod-center">
@@ -7,33 +34,29 @@
                 data-tposition="left"></a>
             <a href="#" class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
             <a class="block w-[200px] h-[250px] overflow-hidden" href="product.html">
-                <span class="tt-img"><img src="/src/assets/img/product/product-18.jpg" data-src="/src/assets/img/product/product-18.jpg" alt=""></span>
+                <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
-                    <img src="/src/assets/img/product/product-18-01.jpg" data-src="/src/assets/img/product/product-18-01.jpg" alt="">
+                    <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="">
                 </span>
             </a>
         </div>
-        <div class="tt-description">
+        <div class="tt-description flex flex-col items-center">
             <div class="tt-row">
                 <ul class="tt-add-info">
-                    <li><a href="#">VENDER</a></li>
+                    <li>{{ props.brand }}</li>
                 </ul>
-                <div class="tt-rating">
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star"></i>
-                    <i class="icon-star-half"></i>
-                    <i class="icon-star-empty"></i>
+            </div>
+            <div class="tt-title font-semibold w-36 truncate">{{ props.productName }}</div>
+            <div class="flex justify-center">
+                <div class="flex items-center gap-2">
+                    <span class="">Floor:</span> <span class="font-semibold text-xl text-red-700">{{ currencyFormat(props.floorPrice) }}</span>
                 </div>
             </div>
-            <h2 class="tt-title"><a href="product.html">Name product</a></h2>
-            <div class="tt-price">
-                $124
-            </div>
-            <div class="tt-product-inside-hover opacity-0 hover:opacity-1">
-                <div class="tt-row-btn">
-                    <a href="#" class="tt-btn-addtocart thumbprod-button-bg" data-toggle="modal"
-                        data-target="#modalAddToCartProduct">ADD TO CART</a>
+            <div class="tt-product-inside-hover">
+                <div class="w-full">
+                    <span class="text-xs font-semibold bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded flex items-center justify-center px-2">
+                        {{ props.relativeTime }}
+                    </span>
                 </div>
                 <div class="tt-row-btn">
                     <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView"></a>

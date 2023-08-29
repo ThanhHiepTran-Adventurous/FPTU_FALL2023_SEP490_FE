@@ -61,7 +61,7 @@ const emit = defineEmits(["decline-modal", "confirm-modal"])
   </transition>
 </template>
 
-<style scoped>
+<style>
 .nested-enter-from {
   opacity: 0;
 }
