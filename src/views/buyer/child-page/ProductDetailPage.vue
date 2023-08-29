@@ -26,6 +26,7 @@ const product = {
 
 }
 
+
 const productCarousels = [
 	{
 		id: 1,
@@ -101,9 +102,7 @@ const productCarousels = [
 									</div>
 								</a>
 							</div>
-							<div class="tt-promo-brand">
-								<img src="@/assets/img/custom/tt-promo-brand-mobile.png" alt="">
-							</div>
+							
 						</div>
 					</div>
 				</div>

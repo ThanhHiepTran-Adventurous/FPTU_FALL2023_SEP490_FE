@@ -63,7 +63,6 @@ import CountDown from '@/components/common-components/CountDown.vue';
       <div class="direction">
         <a href="#" class="button-scope btn btn-lg"><i class="icon-f-39"></i>ĐẶT LỆNH ĐẤU GIÁ</a>
         <a href="#" class="button-scope btn btn-lg"><i class="icon-f-39"></i>THÊM VÀO YÊU THÍCH</a>
-        <a href="#" class="button-scope btn btn-lg"><i class="icon-f-39"></i>BÁO CÁO </a>
       </div>
     </div>
     <div class="tt-wrapper">
