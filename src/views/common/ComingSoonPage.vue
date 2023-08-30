@@ -12,7 +12,7 @@ const inputVal = ref('')
   <div class="container">
     <div class="row	justify-content-center">
       <div class="col-md-8 tt-coming-soon-content">
-        <a class="tt-logo" href="index.html"><img class="tt-retina" src="images/custom/logo.png" alt=""></a>
+        <a class="tt-logo" href="index.html"><img class="tt-retina" src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686" alt=""></a>
         <h1 class="tt-title">WEBSITE IS COMING SOON</h1>
         <div class="description">
           Successful brands get into the mind slowly. A blurb in a magazine. A mention in a newspaper. A comment from a friend. A display in a retail store.

@@ -6595,7 +6595,7 @@ jQuery.fn.liColl = function(options){
 		// Create the Google Map using our element and options defined above
 		var map = new google.maps.Map(mapElement, mapOptions);
 
-		var image = 'images/custom/beachflag.png';
+		var image = 'https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686';
 
 		 var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(40.6700, -73.9400),
