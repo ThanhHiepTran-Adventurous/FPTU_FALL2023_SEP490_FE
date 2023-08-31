@@ -3,28 +3,43 @@
 import ListProductImage from '@/components/product-detail/ListProductImage.vue';
 import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import ProductCarousel from '@/components/product-detail/ProductCarousel.vue';
-
+import Table from '@/components/common-components/Table.vue';
+import CustomChart from '@/components/common-components/CustomChart.vue';
 const product = {
-	productImages :[
+	productImages: [
 		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
 		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
 		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
 		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
 	],
-	productInfo : {
-			sku: '001',
-      productTitle: 'Tên Sản Phẩm',
-			productPeopleJoin: '40',
-      productPrice: '90.000.000 VND',
-      productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
-      productRateStar: 3,
-      reviewNumber: '1',
-      vendor: 'Polo',
-      productType: 'T-Shirt',
-      tags: ['T-Shirt', 'Women', 'Top']
+	productInfo: {
+		sku: '001',
+		productTitle: 'Tên Sản Phẩm',
+		productPeopleJoin: '40',
+		productPrice: '90.000.000 VND',
+		productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
+		productRateStar: 3,
+		reviewNumber: '1',
+		vendor: 'Polo',
+		productType: 'T-Shirt',
+		tags: ['T-Shirt', 'Women', 'Top']
 	}
 
 }
+
+
+const chartData = {
+    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: 'rgba(75, 192, 192, 0.2)'
+    }]
+};
+
+const chartOptions = {
+    // ... your chart options here
+};
 
 
 const productCarousels = [
@@ -102,9 +117,21 @@ const productCarousels = [
 									</div>
 								</a>
 							</div>
-							
+
 						</div>
 					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-12 col-lg-6">
+							 <!-- CHART HERE  -->
+							 <CustomChart :data="chartData" :options="chartOptions"></CustomChart>
+					</div>
+					<div class="col-12 col-lg-6">
+								<!-- TABLE HERE  -->
+								 <Table />
+					</div>
+
 				</div>
 			</div>
 		</div>
