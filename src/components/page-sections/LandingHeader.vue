@@ -373,8 +373,8 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                           <div class="tt-item">
                             <a href="product.html">
                               <div class="tt-item-img">
-                                <img src="images/loader-03.svg"
-                                  data-src="images/skin-basketball/product/product-01.jpg" alt="">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686"
+                                  data-src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686" alt="">
                               </div>
                               <div class="tt-item-descriptions">
                                 <h2 class="tt-title">Flared Shift Dress</h2>
@@ -393,8 +393,8 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                           <div class="tt-item">
                             <a href="product.html">
                               <div class="tt-item-img">
-                                <img src="images/loader-03.svg"
-                                  data-src="images/skin-basketball/product/product-02.jpg" alt="">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686"
+                                  data-src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686" alt="">
                               </div>
                               <div class="tt-item-descriptions">
                                 <h2 class="tt-title">Flared Shift Dress</h2>
@@ -574,7 +574,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                               <a class="tt-title-submenu" href="listing-left-column.html">
                                 TOP BRANDS
                               </a>
-                              <ul class="tt-listing-01">
+                              <!-- <ul class="tt-listing-01">
                                 <li><a href="#" target="_blank"><img src="images/loader.svg"
                                       data-src="images/custom/brand-img-01.png" alt=""></a></li>
                                 <li><a href="#" target="_blank"><img src="images/loader.svg"
@@ -587,7 +587,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                                       data-src="images/custom/brand-img-05.png" alt=""></a></li>
                                 <li><a href="#" target="_blank"><img src="images/loader.svg"
                                       data-src="images/custom/brand-img-06.png" alt=""></a></li>
-                              </ul>
+                              </ul> -->
                             </div>
                           </div>
                         </div>
@@ -598,7 +598,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                               <div class="tt-product thumbprod-center">
                                 <a href="product.html">
                                   <div class="tt-image-box">
-                                    <span class="tt-img"><img src="#" data-lazy="images/product/product-01.jpg"
+                                    <span class="tt-img"><img src="#" data-lazy="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686"
                                         alt=""></span>
                                   </div>
                                   <div class="tt-description">
@@ -643,7 +643,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                               <div class="tt-product thumbprod-center">
                                 <a href="product.html">
                                   <div class="tt-image-box">
-                                    <span class="tt-img"><img src="#" data-lazy="images/product/product-04.jpg"
+                                    <span class="tt-img"><img src="#" data-lazy="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686"
                                         alt=""></span>
                                   </div>
                                   <div class="tt-description">
@@ -690,7 +690,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                       <div class="row">
                         <div class="col-sm-6">
                           <a href="listing-left-column.html" class="tt-promo-02">
-                            <img src="images/custom/header-promo-01.jpg" alt="">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686" alt="">
                             <div class="tt-description tt-point-h-l">
                               <div class="tt-description-wrapper">
                                 <div class="tt-title-small">SUMMER <span class="tt-base-color">2018</span></div>
@@ -701,7 +701,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                         </div>
                         <div class="col-sm-6">
                           <a href="listing-left-column.html" class="tt-promo-02">
-                            <img src="images/custom/header-promo-02.jpg" alt="">
+                            <!-- <img src="images/custom/header-promo-02.jpg" alt=""> -->
                             <div class="tt-description tt-point-h-l">
                               <div class="tt-description-wrapper">
                                 <div class="tt-title-small"><span class="tt-white-color">CLEARANCE SALES</span></div>
@@ -734,7 +734,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                             <div class="col-sm-4">
                               <a href="listing-right-column.html" class="tt-title-submenu">
                                 TOPS
-                                <img src="images/loader.svg" data-src="images/custom/header-category-01.jpg" alt="">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/0227823b-2dc3-4445-84ec-72141e18cdb7.jpg?alt=media&token=b8834d98-ce12-414f-a4d9-af67e52ec686" alt="">
                               </a>
                               <ul class="tt-megamenu-submenu">
                                 <li><a href="listing-right-column.html">Shirts</a></li>
@@ -794,7 +794,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                             <div class="col-sm-4">
                               <a class="tt-title-submenu" href="listing-right-column.html">
                                 BOTTOMS
-                                <img src="images/loader.svg" data-src="images/custom/header-category-02.jpg" alt="">
+                                <!-- <img src="images/loader.svg" data-src="images/custom/header-category-02.jpg" alt=""> -->
                               </a>
                               <ul class="tt-megamenu-submenu">
                                 <li><a href="listing-right-column.html">Trousers <span
@@ -808,7 +808,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                             <div class="col-sm-4">
                               <a class="tt-title-submenu" href="listing-right-column.html">
                                 ACCESSORIES
-                                <img src="images/loader.svg" data-src="images/custom/header-category-03.jpg" alt="">
+                                <!-- <img src="images/loader.svg" data-src="images/custom/header-category-03.jpg" alt=""> -->
                               </a>
                               <ul class="tt-megamenu-submenu">
                                 <li><a href="listing-right-column.html">Hats</a></li>
@@ -825,7 +825,7 @@ import SearchInput from '@/components/common-components/searchinput.vue';
                         <div class="col-sm-3">
                           <div class="tt-offset-7">
                             <a href="listing-left-column.html" class="tt-promo-02">
-                              <img src="images/loader.svg" data-src="images/custom/header-promo-03.jpg" alt="">
+                              <!-- <img src="images/loader.svg" data-src="images/custom/header-promo-03.jpg" alt=""> -->
                               <div class="tt-description tt-point-h-l tt-point-v-t">
                                 <div class="tt-description-wrapper">
                                   <div class="tt-title-small tt-white-color">SALE</div>

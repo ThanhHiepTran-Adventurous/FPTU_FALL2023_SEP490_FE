@@ -116,9 +116,9 @@
             <div class="tt-col-left">
               <div class="tt-col-item tt-logo-col">
                 <!-- logo -->
-                <a class="tt-logo tt-logo-alignment" href="index.html">
+                <!-- <a class="tt-logo tt-logo-alignment" href="index.html">
                   <img src="images/loader.svg" data-src="images/custom/logo.png" alt="">
-                </a>
+                </a> -->
                 <!-- /logo -->
               </div>
               <div class="tt-col-item">
