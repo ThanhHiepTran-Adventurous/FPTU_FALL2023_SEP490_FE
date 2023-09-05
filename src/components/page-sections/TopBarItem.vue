@@ -14,7 +14,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="group flex flex-col justify-center items-center w-[50px] rounded-md px-12 py-2 my-2 hover:bg-blue-500">
+    <div class="group flex flex-col justify-center items-center w-[50px] rounded-md px-16 py-3 my-2 hover:bg-blue-500">
         <slot name="">
             <Icon :icon="props.icon" class="text-[44px] group-hover:text-white"/>
         </slot>

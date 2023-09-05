@@ -3,7 +3,7 @@
     <LayoutHeader>
       <!-- <LandingHeader /> -->
       <Navbar />
-      <div class="mt-[60px]">
+      <div class="mt-[70px] mb-[10px]">
         <!-- <Topbar /> -->
         <NewTopBar />
       </div>
@@ -18,8 +18,7 @@
 
 <script setup>
   import LandingHeader from '@/components/page-sections/LandingHeader.vue';
-  import Navbar from '../../components/page-sections/Navbar.vue';
-  import Topbar from '../../components/page-sections/Topbar.vue';
+  import Navbar from '@/components/page-sections/Navbar.vue';
   import NewTopBar from '@/components/page-sections/NewTopBar.vue';
   import LayoutContent from '@/layouts/LayoutContent.vue';
   import LayoutHeader from '@/layouts/LayoutHeader.vue';
