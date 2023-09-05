@@ -3,11 +3,11 @@
     const props = defineProps({
         mainImage : {
             type: String,
-            default: "/src/assets/img/product/product-18.jpg"
+            default: "https://images.unsplash.com/photo-1619086303291-0ef7699e4b31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmFzaGlvbiUyMG1vZGVsfGVufDB8fDB8fHww&w=1000&q=80"
         },
         secondaryImage : {
             type: String,
-            default: "/src/assets/img/product/product-18-01.jpg"
+            default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKBMDCwElNqXzxgqg6K-hkKoNWECLd2iKnaflZivfgPntwaTCe_hAl7xmQH1zeOIZfIX8&usqp=CAU"
         },
         brand : {
             type: String,
