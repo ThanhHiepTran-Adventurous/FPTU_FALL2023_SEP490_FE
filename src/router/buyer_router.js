@@ -4,7 +4,7 @@ import TestComponent from '@/views/TestComponent.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import CreateAccountPage from '@/views/buyer/child-page/CreateAccountPage.vue'
-import WishListPage from '@/views/buyer/child-page/WishListPage.vue'
+import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 const buyer_router = [

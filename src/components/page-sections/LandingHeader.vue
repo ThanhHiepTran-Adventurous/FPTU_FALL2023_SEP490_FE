@@ -1,5 +1,5 @@
 <script setup>
-import SearchInput from '@/components/common-components/searchinput.vue';
+import SearchInput from '@/components/common-components/SearchInput.vue';
 </script>
 
 <template>
