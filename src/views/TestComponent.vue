@@ -1,6 +1,7 @@
 <script setup>
 import Modal from '@/components/common-components/Modal.vue';
 import Input from '@/components/common-components/Input.vue';
+import SearchInput from '../components/common-components/SearchInput.vue';
 import Label from '../components/common-components/Label.vue';
 import { Icon } from '@iconify/vue';
 import Countdown from '@/components/common-components/Countdown.vue';

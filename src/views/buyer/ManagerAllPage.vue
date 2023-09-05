@@ -4,7 +4,8 @@
       <!-- <LandingHeader /> -->
       <Navbar />
       <div class="mt-[60px]">
-        <Topbar />
+        <!-- <Topbar /> -->
+        <NewTopBar />
       </div>
     </LayoutHeader>
     <!-- <LayoutBreadcrumb /> -->
@@ -19,6 +20,7 @@
   import LandingHeader from '@/components/page-sections/LandingHeader.vue';
   import Navbar from '../../components/page-sections/Navbar.vue';
   import Topbar from '../../components/page-sections/Topbar.vue';
+  import NewTopBar from '@/components/page-sections/NewTopBar.vue';
   import LayoutContent from '@/layouts/LayoutContent.vue';
   import LayoutHeader from '@/layouts/LayoutHeader.vue';
   import LayoutFooter from '@/layouts/LayoutFooter.vue';
