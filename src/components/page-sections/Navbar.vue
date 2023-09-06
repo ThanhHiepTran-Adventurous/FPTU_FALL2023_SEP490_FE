@@ -16,7 +16,10 @@ const mobileMenu = ref(false)
             <nav class="container px-6 py-2 mx-auto flex justify-between items-center text-white">
                 <div class="flex items-center justify-between">
                     <router-link to="/" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
-                        Shoe Market
+                        <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/svg-formatter-beautifier-1.png?alt=media&token=3f69cb28-1feb-4d06-93bb-a25ee66ec880"
+                            alt="logo"
+                            class="w-[100px] h-[28px]"
+                        />
                     </router-link>
                 </div>
 
