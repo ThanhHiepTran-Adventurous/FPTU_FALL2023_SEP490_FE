@@ -61,7 +61,7 @@ const buyer_router = [
       {
         name: 'sign-up',
         path: '/',
-        component: CreateAccountPage,
+        component: LandingPage,
         meta: {
           requiresAuth: false,
         },

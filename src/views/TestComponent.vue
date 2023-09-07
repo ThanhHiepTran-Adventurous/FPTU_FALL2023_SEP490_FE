@@ -15,12 +15,6 @@ const inputVal = ref('')
 
 <template>
   <div>
-    <div class="flex container justify-between">
-      <ItemBox product-name="Super long long long long name long long long long"/>
-      <ItemBox />
-      <ItemBox />
-      <ItemBox />
-    </div>
     <Modal v-if="isModalActive" title="Test Modal" @decline-modal="() => isModalActive = false">
       <div>
         <Label for="test">Label test</Label>
