@@ -33,7 +33,7 @@
             <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left"></a>
             <a href="#" class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
-            <a class="block w-[250px] h-[250px] overflow-hidden" href="product.html">
+            <a class="block w-[220px] h-[250px] overflow-hidden" href="product.html">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
                     <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="">
@@ -53,17 +53,17 @@
                         </div>
                 </div>
             </div>
-            <div class="w-[230px] text-left text-gray-800 my-2.5 font-semibold text-[16px] truncate">
+            <div class="w-[210px] text-left text-gray-800 my-2.5 pl-1 font-semibold text-[16px] truncate">
                 {{ props.productName }}
             </div>
             <div class="flex justify-between px-2 pb-2 w-full">
                 <div class="">
                     <div class="text-left text-xs">Current</div>
-                    <div class="font-semibold text-xl text-blue-700 text-left">{{ currencyFormat(props.floorPrice) }}</div>
+                    <div class="font-semibold text-lg text-blue-700 text-left">{{ currencyFormat(props.floorPrice) }}</div>
                 </div>
                 <div class="">
                     <div class="text-right text-xs italic">Sold</div>
-                    <div class="text-right font-semibold text-xl text-red-700 italic">{{ currencyFormat(150000) }}</div>
+                    <div class="text-right font-semibold text-lg text-red-700 italic">{{ currencyFormat(150000) }}</div>
                 </div>
             </div>
         </div>
