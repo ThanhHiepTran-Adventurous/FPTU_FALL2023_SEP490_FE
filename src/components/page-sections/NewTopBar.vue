@@ -3,7 +3,7 @@ import TopBarItem from '@/components/page-sections/TopBarItem.vue';
 
 </script>
 <template>
-    <div class="container py-2 bg-gray-50 rounded-lg">
+    <div class="container py-2 rounded-lg">
         <div class="flex w-full justify-between gap-8 items-center">
             <TopBarItem text="Women" icon="grommet-icons:restroom-women" />
             <TopBarItem text="Men" icon="grommet-icons:restroom-men" />

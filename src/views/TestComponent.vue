@@ -16,8 +16,7 @@ const inputVal = ref('')
 <template>
   <div>
     <div class="flex container justify-between">
-      <ItemBox product-name="Super long long long long name long long "/>
-      <ItemBox />
+      <ItemBox product-name="Super long long long long name long long long long"/>
       <ItemBox />
       <ItemBox />
       <ItemBox />
