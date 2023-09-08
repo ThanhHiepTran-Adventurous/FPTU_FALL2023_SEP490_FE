@@ -1,19 +1,17 @@
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import ENUM from "@/constants/enum.js";
 import buyer_routes from "./buyer_router";
-// import seller_routes from "./seller_routes";
+import seller_routes from "./seller_router";
 import TokenService from "@/services/token/token.service.js";
 
 const ROUTE_NAMES = {
   SIGN_IN: "login",
   SIGN_UP: "create-account",
   FORGOT_PASSWORD: "forgot-password",
-  LANDING_PAGE: "landing-page",
   HOME: "home",
 };
 
-// const routes = [...buyer_routes, ...seller_routes];
-const routes = [...buyer_routes];
+const routes = [...buyer_routes, ...seller_routes];
 
 const isAuthenticated = () => {
   const currentUser = TokenService.getCookie("Token")
@@ -32,7 +30,6 @@ const shouldRedirectToHome = (to, currentUser) => {
     ROUTE_NAMES.SIGN_IN,
     ROUTE_NAMES.SIGN_UP,
     ROUTE_NAMES.FORGOT_PASSWORD,
-    ROUTE_NAMES.LANDING_PAGE,
   ];
 
   return (

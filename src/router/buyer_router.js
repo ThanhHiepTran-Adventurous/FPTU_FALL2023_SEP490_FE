@@ -24,7 +24,7 @@ const buyer_router = [
       },
       {
         name: 'landing-page',
-        path: '/landing',
+        path: '/',
         component: LandingPage,
         meta: {
           requiresAuth: false,
@@ -60,8 +60,8 @@ const buyer_router = [
       },
       {
         name: 'sign-up',
-        path: '/',
-        component: LandingPage,
+        path: '/register',
+        component: CreateAccountPage,
         meta: {
           requiresAuth: false,
         },
