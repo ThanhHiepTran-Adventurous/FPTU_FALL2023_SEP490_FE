@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 import ENUM from "@/constants/enum.js";
 import buyer_routes from "./buyer_router";
 // import seller_routes from "./seller_routes";
@@ -51,7 +51,7 @@ const determineNextRoute = (to, currentUser) => {
 
 const router = createRouter({
   mode: "history",
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 
