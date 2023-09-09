@@ -1,5 +1,6 @@
 <script setup>
     import currencyFormat from '@/utils/currency-formatter.js'
+    import CountDown from '@/components/common-components/Countdown.vue';
     const props = defineProps({
         mainImage : {
             type: String,
@@ -19,7 +20,7 @@
         },
         floorPrice : {
             type: Number,
-            default: 100000
+            default: 3000000
         },
         relativeTime : {
             type: String,
@@ -28,7 +29,7 @@
     })
 </script>
 <template>
-    <div class="tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
+    <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
         <div class="tt-image-box">
             <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left"></a>
@@ -41,29 +42,16 @@
             </a>
         </div>
         <div class="tt-description flex flex-col items-center">
-            <div class="flex items-center justify-between w-full px-2">
-                <div class="font-semibold text-[16px] text-left">
-                    <span class="text-xs font-semibold bg-gray-100 text-gray-800  px-2 py-0.5 rounded flex items-center justify-center">
-                        {{ props.brand }}
-                    </span>
-                </div>
-                <div class="">
-                        <div class="text-xs font-semibold bg-blue-50 text-blue-800 px-2 py-0.5 rounded flex items-center justify-center">
-                            {{ props.relativeTime }}
-                        </div>
-                </div>
+            <div class="block group-hover:block bg-[#F5F5FA] bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
+                <CountDown :coefficientSize="0.4" :deadlineInMilis="1697094493940" />
             </div>
-            <div class="w-[210px] text-left text-gray-800 my-2.5 pl-1 font-semibold text-[16px] truncate">
+            <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>
-            <div class="flex justify-between px-2 pb-2 w-full">
-                <div class="">
-                    <div class="text-left text-xs">Current</div>
-                    <div class="font-semibold text-lg text-blue-700 text-left">{{ currencyFormat(props.floorPrice) }}</div>
-                </div>
-                <div class="">
-                    <div class="text-right text-xs italic">Sold</div>
-                    <div class="text-right font-semibold text-lg text-red-700 italic">{{ currencyFormat(150000) }}</div>
+            <div class="flex justify-between px-2 w-full">
+                <div class="flex items-center pb-2">
+                    <div class="text-left text-[16px]">Giá hiện tại: </div>
+                    <div class="font-semibold text-lg ml-1 text-blue-700 text-left">{{ currencyFormat(props.floorPrice) }}</div>
                 </div>
             </div>
         </div>
