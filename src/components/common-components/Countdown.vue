@@ -16,16 +16,19 @@
     let defaultCountdownSize = 3 //rem
     let defaultLabelSize = 1.2 //rem
 
+    const configLabel = {days: 'Ngày',hours: 'Giờ',minutes: 'Phút',seconds: 'Giây',}
+
 </script>
 
 <template>
     <Countdown
         :deadline="moment(props.deadlineInMilis).format('YYYY-MM-DD HH:mm:ss')"
-        mainFlipBackgroundColor="#2D3339"
-        secondFlipBackgroundColor="#2D3339"
+        mainFlipBackgroundColor="#1A56DB"
+        secondFlipBackgroundColor="#1A56DB"
         mainColor="#FFFFFF"
         secondColor="#FFFFFF"
         :countdownSize="`${defaultCountdownSize*props.coefficientSize}rem`"
         :labelSize="`${defaultLabelSize*props.coefficientSize}rem`"
+        :labels="configLabel"
     />
 </template>
