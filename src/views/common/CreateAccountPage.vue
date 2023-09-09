@@ -1,28 +1,26 @@
-
-
-
 <script setup>
 import { ref } from 'vue'
+import ENUM from '@/constants/enum';
 
 const UserInfo = {
-	name: ref(''),
+	fullName: ref(''),
 	phone: ref(''),
-	email: ref(''),
+	role: ref(''),
 	password: ref('')
 }
 
 const submitForm = async () => {
 	try {
 		// const response = await authService.register({
-		//   name: UserInfo.name,
+		//   fullName: UserInfo.fullName,
 		//   phone: UserInfo.phone,
-		//   email: UserInfo.email,
+		//   role: UserInfo.role,
 		//   password: UserInfo.password
 		// })
 
-		UserInfo.name = ''
+		UserInfo.fullName = ''
 		UserInfo.phone = ''
-		UserInfo.email = ''
+		UserInfo.role = ''
 		UserInfo.password = ''
 	} catch (error) {
 		console.error('Error submitting form:', error)
@@ -39,22 +37,26 @@ const submitForm = async () => {
 				<div class="tt-login-form">
 					<div class="row justify-content-center">
 						<div class="col-md-8 col-lg-6">
-						<div class="tt-item">
-							<h2 class="tt-title">THÔNG TIN CÁ NHÂN </h2>
-							<div class="form-default">
+							<div class="tt-item">
+								<h2 class="tt-title">THÔNG TIN CÁ NHÂN </h2>
+								<div class="form-default">
 									<div class="form-group">
-										<label for="loginInputName">Tên Của Bạn *</label>
+										<label for="loginInputfullName">Tên Của Bạn *</label>
 										<div class="tt-required">* Bắt Buộc</div>
-										<input v-model="UserInfo.name" type="text" class="form-control" placeholder="Nguyễn Văn A">
+										<input v-model="UserInfo.fullName" type="text" class="form-control" placeholder="Nguyễn Văn A">
 
 									</div>
 									<div class="form-group">
-										<label for="loginLastName">Số Điện Thoại (+84) *</label>
-										<input v-model="UserInfo.phone" type="text"   class="form-control" placeholder="+8493124124">
+										<label for="loginLastfullName">Số Điện Thoại (+84) *</label>
+										<input v-model="UserInfo.phone" type="text" class="form-control" placeholder="+8493124124">
 									</div>
 									<div class="form-group">
-										<label for="loginInputEmail">E-MAIL *</label>
-										<input v-model="UserInfo.email" type="text"  class="form-control" placeholder="nguyenvana@gmail.com">
+										<label for="loginInputrole">Bạn muốn *</label>
+										<select v-model="UserInfo.role" class="form-control">
+											<option :value="ENUM.BUYER">Người Mua</option>
+											<option :value="ENUM.SELLER">Người Bán</option>
+											<!-- Add more options as needed -->
+										</select>
 									</div>
 									<div class="form-group">
 										<label for="loginInputPassword">PASSWORD *</label>
@@ -74,26 +76,10 @@ const submitForm = async () => {
 											</div>
 										</div>
 									</div>
-							</div>
-						</div>
-					</div>
-						<div class="col-md-4 col-lg-6">
-							<div class="tt-item">
-								<h2 class="tt-title">THÔNG TIN ĐỊNH DANH *</h2>
-								<div class="upload-container">
-									<input type="file" id="fileInput" accept="image/*">
-									<label for="fileInput" class="custom-upload-button">Tải Lên Hình Ảnh</label>
-									<img
-										src="https://danviet.mediacdn.vn/296231569849192448/2022/3/3/cccd-2-1646319199783844102892-1646319637762313385054.jpeg"
-										alt="Image Preview" id="imagePreview" class="image-preview">
 								</div>
 							</div>
-
-
 						</div>
-
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -102,26 +88,18 @@ const submitForm = async () => {
 
 
 <style scoped>
-.upload-container {
-	text-align: center;
-	margin: 20px;
-}
-
-input[type="file"] {
-	display: none;
-}
-
-.custom-upload-button {
-	background-color: #3498db;
-	color: white;
-	padding: 10px 20px;
-	border: none;
-	cursor: pointer;
-}
-
-.image-preview {
-	max-width: 100%;
-	max-height: 300px;
-	margin-top: 20px;
+.form-control,
+select.form-control {
+	display: block;
+	width: 100%;
+	padding: 0.375rem 0.75rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 6px;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 </style>

@@ -1,14 +1,14 @@
 
 const ENUM = {
   'SELLER' : {
-      ROLE_ID : 1 ,
+     ROLE_ID : 'SELLER' ,
   },
   'BUYER' : {
-      ROLE_ID : 2,
+      ROLE_ID : 'BUYER',
   },
   // system is admin
-  'SYSTEM' : {
-      ROLE_ID : 3,
+  'ADMIN' : {
+      ROLE_ID : 'ADMIN',
   },
 }
 export default ENUM;
