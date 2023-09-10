@@ -3,17 +3,22 @@ import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue'
+import Button from "@/components/common-components/Button.vue"
+import constant from "@/common/constant"
 import SearchInput from '@/components/common-components/SearchInput.vue'
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
+
+const isAuth = ref(false)
+
 </script>
 <template>
     <!-- component -->
     <!-- Header -->
     <div class="fixed w-full top-0 z-10">
         <div class="bg-blue-700">
-            <nav class="container px-6 py-2 mx-auto flex justify-between items-center text-white">
+            <nav class="container px-6 py-2 mx-auto flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center text-white">
                 <div class="flex items-center justify-between">
                     <router-link to="/" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
                         <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/svg-formatter-beautifier-1.png?alt=media&token=3f69cb28-1feb-4d06-93bb-a25ee66ec880"
@@ -23,10 +28,10 @@ const mobileMenu = ref(false)
                     </router-link>
                 </div>
 
-                <SearchInput placeholder="       Search a product" addOnInputClass="w-[450px]" />
+                <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" />
 
                 <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-                <ul class="flex flex-row gap-8 items-center">
+                <ul v-if="isAuth" class="flex flex-row gap-8 items-center">
                     <RouterLink to="/cart" class="flex text-white hover:!text-gray-400">
                         <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
                         <span class="flex absolute -mt-1 ml-4">
@@ -61,6 +66,16 @@ const mobileMenu = ref(false)
                         </ListGroup>
                     </Dropdown>
                 </ul>
+                <div v-else class="flex gap-3">
+                    <router-link to="/register">
+                        <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">
+                            Đăng kí
+                        </Button>
+                    </router-link>
+                    <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">
+                        Đăng nhập
+                    </Button>
+                </div>
             </nav>
         </div>
     </div>

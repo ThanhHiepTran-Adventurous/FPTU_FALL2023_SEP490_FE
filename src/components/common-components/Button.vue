@@ -70,7 +70,7 @@ defineProps({
 })
 
 const myDefaultActiveActionCustomColor = ['bg-primary', 'hover:bg-bb-sub-color']
-const myDefaultActiveOutlineCustomColor = ['hover:bg-bb-sub-color', 'text-primary']
+const myDefaultActiveOutlineCustomColor = ['bg-white hover:bg-slate-100', 'text-primary']
 const myDefaultDisableActionCustomColor = ['bg-primary', 'hover:bg-bb-sub-color']
 const myDefaultDisableOutlineCustomColor = ['text-primary']
 </script>
