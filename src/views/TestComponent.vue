@@ -4,7 +4,6 @@ import Input from '@/components/common-components/Input.vue';
 import Label from '../components/common-components/Label.vue';
 import { Icon } from '@iconify/vue';
 import Countdown from '@/components/common-components/Countdown.vue';
-import ItemBox from '../components/common-components/ItemBox.vue';
 
 import { ref } from 'vue';
 

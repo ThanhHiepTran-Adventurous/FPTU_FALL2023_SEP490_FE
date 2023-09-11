@@ -1,19 +1,20 @@
 import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
+import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
     path: '/',
     component: ManagerAllPage,
     children: [
-      // {
-      //   name: 'sign-up',
-      //   path: '/register-seller',
-      //   component: CreateAccountPage,
-      //   meta: {
-      //     requiresAuth: false,
-      //   },
-      // },
+      {
+        name: 'product-manager',
+        path: '/product-manager',
+        component: ProductManagerPage,
+        meta: {
+          requiresAuth: false,
+        },
+      },
     ],
   },
   {
