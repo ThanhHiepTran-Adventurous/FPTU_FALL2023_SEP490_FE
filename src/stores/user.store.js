@@ -6,6 +6,7 @@ export const useUserStore = defineStore("user", {
     userId: "",
     token: "",
     role: "",
+    refreshToken: "",
   }),
   actions: {
     resetUsername(){
@@ -18,6 +19,14 @@ export const useUserStore = defineStore("user", {
       const usernameInLocalStorage = localStorage.getItem("username");
       this.username = usernameInLocalStorage || "";
       return this.username;
+    },
+    getRefreshTokenAndGetFromLocalStorageIfNotExist(){
+      if(this.refreshToken){
+        return this.refreshToken
+      }
+      const refreshTokenInLocalStorage = localStorage.getItem("refreshToken")
+      this.refreshToken = refreshTokenInLocalStorage || ""
+      return this.refreshToken
     },
     getUserIdAndGetFromLocalStorageIfNotExist(){
       if(this.userId){
@@ -35,6 +44,14 @@ export const useUserStore = defineStore("user", {
       this.token = tokenInLocalStorage || "";
       return this.token;
     },
+    getRoleAndGetFromLocalStorageIfNotExist() {
+      if(this.role) {
+        return this.role
+      }
+      const roleInLocalStorage = localStorage.getItem("role")
+      this.role = roleInLocalStorage || ""
+      return this.role
+    },
     setUsernameAndSaveToLocalStorage(value){
       this.username = value;
       localStorage.setItem("username", value);
@@ -51,21 +68,21 @@ export const useUserStore = defineStore("user", {
       this.role = value;
       localStorage.setItem("role", value)
     },
-    getRoleAndGetFromLocalStorageIfNotExist() {
-      if(this.role) {
-        return this.role
-      }
-      const roleInLocalStorage = localStorage.getItem("role")
-      this.role = roleInLocalStorage || ""
-      return this.role
+    setRefreshTokenAndSaveToLocalStorage(value){
+      this.refreshToken = value
+      localStorage.setItem("refreshToken", value)
     },
     clear(){
       this.userId = "";
       this.username = "";
       this.token = "";
       this.role = "";
+      this.refreshToken = "";
       localStorage.removeItem("token");
       localStorage.removeItem("role");
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("userId")
+      localStorage.removeItem("username")
     }
   },
 });

@@ -4,8 +4,11 @@ export default {
     base: SERVICE_URL,
     endpoint: {
         auth: {
+            register: '/users/register',
             login: '/public/auth/login',
             logout: '/auth/logout',
+            verifyOtp: '/users/register/otp/verify',
+            resendOtp: '/users/register/otp/resend',
             refreshToken: '/auth/access-tokens/refresh',
         },
     }
