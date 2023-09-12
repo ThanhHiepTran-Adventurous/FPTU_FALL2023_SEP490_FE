@@ -1,6 +1,6 @@
 import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
-import CreateAccountPage from '@/views/seller/child-page/CreateAccountPage.vue'
+import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -9,12 +9,11 @@ const seller_router = [
     children: [
       {
         name: 'sign-up',
-        path: '/register-seller',
+        path: '/register',
         component: CreateAccountPage,
         meta: {
           requiresAuth: false,
         },
-       
       },
     ],
   },

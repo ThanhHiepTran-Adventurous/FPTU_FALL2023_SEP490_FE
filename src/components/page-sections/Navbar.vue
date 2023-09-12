@@ -6,11 +6,12 @@ import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue'
 import Button from "@/components/common-components/Button.vue"
 import constant from "@/common/constant"
 import SearchInput from '@/components/common-components/SearchInput.vue'
+import Avatar from '@/components/common-components/Avatar.vue'
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
 
-const isAuth = ref(false)
+const isAuth = ref(true)
 
 </script>
 <template>
@@ -49,6 +50,7 @@ const isAuth = ref(false)
                     <Dropdown placement="bottom" text="bottom">
                         <template #trigger>
                             <Icon icon="codicon:account" class="text-[28px] hover:cursor-pointer hover:text-gray-400" />
+                            <!-- <Avatar /> -->
                         </template>
                         <ListGroup>
                             <ListGroupItem>
