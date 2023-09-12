@@ -9,7 +9,10 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use((config) => {
     const userStore = useUserStore();
     if(userStore.getTokenAndGetFromLocalStorageIfNotExist()){
-        config.headers.Authorization = `${userStore.getTokenAndGetFromLocalStorageIfNotExist()}`;
+        config.headers.Authorization = `${userStore.getTokenAndGetFromLocalStorageIfNotExist()}`
+    }
+    if(userStore.getRefreshTokenAndGetFromLocalStorageIfNotExist()){
+        config.headers.set("refreshToken", userStore.getRefreshTokenAndGetFromLocalStorageIfNotExist())
     }
     config.headers.Accept = "application/json;charset=UTF-8"
     return config;
