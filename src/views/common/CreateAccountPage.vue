@@ -4,26 +4,31 @@ import loginService from "../../services/login.service"
 import Dropdown from '@/components/common-components/Dropdown.vue';
 import OtpInput from '@/components/common-components/OtpInput.vue';
 import { Role } from '../../common/contract'
+import { useUserStore } from '../../stores/user.store'
+import toast from '../../utils/toast-option'
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 
-const showOtpVerification = ref(true)
+const userStore = useUserStore()
+const showOtpVerification = ref(false)
 
 const roleOptions = [
 	{
 		label: "Người mua",
-		data: Role.buyer
+		data: Role.buyer.value
 	},
 	{
 		label: "Người bán",
-		data: Role.seller
+		data: Role.seller.value
 	},
 ]
 const selected = ref(roleOptions[0])
 
 const userInfo = ref({
 	name: '',
-	phone: '844111006',
-	password: '123456',
+	phone: '',
+	password: '',
 	confirmPassword: '',
 })
 const otp = ref('')
@@ -38,21 +43,30 @@ const submitForm = async () => {
 			confirmPassword: userInfo.value.confirmPassword,
 			userRole: selected.value.data
 		}
-		console.log(data)
+		let toastId = toast.toastLoadingMessage("Đang đăng kí...")
 		loginService.register(data)
 		.then((response) => {
-			console.log(response)
+			toast.updateLoadingToast(toastId, "Đăng kí thành công", false)
 			showOtpVerification.value = true
 		})
-		.catch(e => console.log(e))
+		.catch(e => {
+			if(e.response.data.message.includes("already existed")){
+				toast.updateLoadingToast("Số điện thoại đã được đăng kí")
+			} else {
+				toast.updateLoadingToast(toastId, "Đăng kí thất bại", true)
+			}
+		})
+		.finally(
+			toast.updateLoadingToast(toastId, "Đăng kí thất bại", true)
+		)
 	}
 }
 const resendOtp = async () => {
 	loginService.resendOtp(userInfo.value.phone)
 	.then(response => {
-		console.log("Resend OTP successfully")
+		toast.toastSuccess("Yêu cầu gửi lại OTP thành công")
 	})
-	.catch(error => console.log("Resend OTP error"))
+	.catch(error => toast.toastError("Yêu cầu gửi lại OTP thất bại"))
 }
 const confirmOtp = async () => {
 	const data = {
@@ -60,8 +74,18 @@ const confirmOtp = async () => {
 		phoneNum: userInfo.value.phone,
 		password: userInfo.value.password,
 	}
-	console.log(data)
-	loginService.verifyOtp(data).then(response => console.log("Verify successfully")).catch(error => console.log(error))
+	loginService.verifyOtp(data)
+		.then(async response => {
+			userStore.setRefreshTokenAndSaveToLocalStorage(response.data.refreshToken)
+			userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
+			const informationUser = await loginService.fetchUserInfo()
+			userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
+			userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
+			userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullName)
+			toast.toastSuccess("Xác thực OTP thành công")
+			router.push("/")
+		})
+		.catch(error => toast.toastError("OTP không đúng hoặc đã hết hạn"))
 }
 const onOtpInputChange = (value) => {
 	otp.value = value

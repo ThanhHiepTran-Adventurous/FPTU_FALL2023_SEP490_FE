@@ -34,6 +34,12 @@ const resendOtp = async (phone) => {
     return response ? response.data : response;
 }
 
+const fetchUserInfo = async () => {
+    const serviceUrl = url.endpoint.user.info
+    const response = await utils.axiosLocalHost.get(serviceUrl);
+    return response ? response.data : response;
+}
+
 export default {
-    login, logout, register, verifyOtp, resendOtp
+    login, logout, register, verifyOtp, resendOtp, fetchUserInfo
 }

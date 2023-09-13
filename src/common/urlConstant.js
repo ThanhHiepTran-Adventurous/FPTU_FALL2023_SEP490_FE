@@ -11,5 +11,8 @@ export default {
             resendOtp: '/users/register/otp/resend',
             refreshToken: '/auth/access-tokens/refresh',
         },
+        user: {
+            info: '/users/access-token/information'
+        }
     }
 }

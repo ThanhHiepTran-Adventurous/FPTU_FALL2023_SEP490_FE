@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Icon } from '@iconify/vue';
 import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue'
@@ -7,11 +7,16 @@ import Button from "@/components/common-components/Button.vue"
 import constant from "@/common/constant"
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Avatar from '@/components/common-components/Avatar.vue'
+import { useUserStore } from '../../stores/user.store'
+
+const userStore = useUserStore()
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
 
-const isAuth = ref(true)
+const isAuth = computed(() => {
+    return userStore.getUserIdAndGetFromLocalStorageIfNotExist()
+})
 
 </script>
 <template>
