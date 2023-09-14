@@ -1,9 +1,11 @@
 <script setup>
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
 import SearchInput from '@/components/common-components/SearchInput.vue'
+import ModalProduct from '@/components/manger-product/ModalProduct.vue'
 </script>
+
 <template>
-	
+	<ModalProduct />
 	<div class="container mx-auto">
 <div class="  rounded-lg bg-white p-10 shadow-lg">
 		<div class="mb-4 flex  items-center">
