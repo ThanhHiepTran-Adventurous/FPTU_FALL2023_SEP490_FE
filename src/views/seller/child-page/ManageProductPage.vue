@@ -1,57 +1,48 @@
 <script setup>
-import ListProduct from '@/components/page-sections/product-manager/Products.vue';
-const Products = [
-	{
-		id: 1,
-		title: 'Flared Shift Dress',
-		image: '/assets/img/product/product-1.jpg',
-		price: '$24',
-		starNumber: 4,
-		tag: 'T-shirt'
-	},
-	{
-		id: 3,
-		title: 'Flared Shift Dress',
-		image: '/assets/img/product/product-1.jpg',
-		price: '$24',
-		starNumber: 4,
-		tag: 'T-shirt'
-	},
-	{
-		id: 2,
-		title: 'Casual T-shirt',
-		image: 'https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png',
-		price: '$18',
-		starNumber: 5,
-		tag: 'NEWS-Brand'
-
-	},
-];
+import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
+import SearchInput from '@/components/common-components/SearchInput.vue'
 </script>
-
 <template>
+	
+	<div class="container mx-auto">
+<div class="  rounded-lg bg-white p-10 shadow-lg">
+		<div class="mb-4 flex  items-center">
+			<SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[1000px]" />
+			<button class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tìm Kiêm</button>
+		</div>
+		<div class="flex">
+			<label class="mr-4">
+				<input type="checkbox" class="mr-2" />
+				Đang Đấu Giá
+			</label>
+			<label class="mr-4">
+				<input type="checkbox" class="mr-2" />
+				Đã Bán
+			</label>
+			<label>
+				<input type="checkbox" class="mr-2" />
+				Đang Kiểm Định
+			</label>
+		</div>
+	</div>
 	<div id="tt-pageContent">
 		<div class="container-indent">
-			<div class="container container-fluid-mobile">
-				<div class="row">
-					<div class="col-12 col-lg-9">
-					   PROFILE HERE
-					</div>
-					<div class="col-12 col-lg-3">
-						<div class="tt-product-single-aside">
-							<div class="tt-services-aside">
-							   TOTAL NUMBER 
-							</div>
-						</div>
+			<div class="bg-white my-3">
+				<div class="container my-[20px] py-2">
+					<div class="flex flex-wrap mt-10">
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
+						<ItemBoxManageVue class="ml-10 mb-10" product-name="Super long long long" />
 					</div>
 				</div>
 			</div>
 		</div>
 
-
-		<div class="container-indent">
-			<Products :products="products" />
-		</div>
-
 	</div>
+	</div>
+	
 </template>

@@ -8,8 +8,8 @@ const seller_router = [
     component: ManagerAllPage,
     children: [
       {
-        name: 'product-manager',
-        path: '/product-manager',
+        name: 'manage-product',
+        path: '/manage',
         component: ProductManagerPage,
         meta: {
           requiresAuth: false,
