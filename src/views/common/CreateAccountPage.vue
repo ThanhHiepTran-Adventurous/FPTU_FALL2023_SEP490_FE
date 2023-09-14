@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import loginService from "../../services/login.service"
 import Dropdown from '@/components/common-components/Dropdown.vue';
 import OtpInput from '@/components/common-components/OtpInput.vue';
@@ -56,9 +56,6 @@ const submitForm = async () => {
 				toast.updateLoadingToast(toastId, "Đăng kí thất bại", true)
 			}
 		})
-		.finally(
-			toast.updateLoadingToast(toastId, "Đăng kí thất bại", true)
-		)
 	}
 }
 const resendOtp = async () => {
@@ -81,7 +78,7 @@ const confirmOtp = async () => {
 			const informationUser = await loginService.fetchUserInfo()
 			userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
 			userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
-			userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullName)
+			userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
 			toast.toastSuccess("Xác thực OTP thành công")
 			router.push("/")
 		})
@@ -109,8 +106,8 @@ const onOtpInputChange = (value) => {
 
 							</div>
 							<div class="form-group">
-								<label for="loginLastName">Số Điện Thoại (+84) <span class="text-red-500">*</span></label>
-								<input v-model="userInfo.phone" type="text" class="form-control" placeholder="+8493124124">
+								<label for="loginLastName">Số Điện Thoại <span class="text-red-500">*</span></label>
+								<input v-model="userInfo.phone" type="text" class="form-control" placeholder="093124124">
 							</div>
 							<div class="form-group">
 								<label for="loginInputPassword">Mật khẩu <span class="text-red-500">*</span></label>
