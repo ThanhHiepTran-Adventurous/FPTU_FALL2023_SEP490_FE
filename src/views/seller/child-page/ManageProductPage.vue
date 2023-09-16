@@ -19,7 +19,7 @@ function closeModal() {
 }
 
 function handleConfirm() {
-	
+
 	closeModal();
 }
 
@@ -89,10 +89,11 @@ function handleConfirm() {
 
 
 	<div>
-		<Modal v-if="isModalVisible" @decline-modal="closeModal" @confirm-modal="handleConfirm">
+		<Modal v-if="isModalVisible"  @hasOverFlowVertical="true" @decline-modal="closeModal" @confirm-modal="handleConfirm">
 
 			<BasicInfo />
 			<HistoryProduct />
+
 
 		</Modal>
 	</div>
