@@ -11,19 +11,15 @@ import { ref } from 'vue'
 const isModalVisible = ref(false);
 
 function showModal() {
-	// Show the custom modal
 	isModalVisible.value = true;
 }
 
 function closeModal() {
-	// Close the custom modal
 	isModalVisible.value = false;
 }
 
 function handleConfirm() {
-	// Handle the "Confirm" button click event here
-	// You can perform any actions you want
-	// Close the modal if needed
+	
 	closeModal();
 }
 

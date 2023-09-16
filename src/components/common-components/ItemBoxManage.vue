@@ -46,7 +46,9 @@ const props = defineProps({
     <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
         <div class="tt-image-box">
             <a class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
-                data-tposition="left"></a>
+                data-tposition="left">
+                
+            </a>
             <a class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
             <a class="block w-[220px] h-[250px] overflow-hidden">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
