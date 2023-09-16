@@ -11,6 +11,8 @@ import { useUserStore } from '../../stores/user.store'
 import loginService from '../../services/login.service'
 import Modal from '@/components/common-components/Modal.vue';
 import toast from '../../utils/toast-option'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const userStore = useUserStore()
 
@@ -43,6 +45,12 @@ const submitForm = async () => {
 			userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
             toast.toastSuccess("Đăng nhập thành công")
             isModalActive.value = false
+         
+             // Check the user's role and redirect accordingly
+             if (informationUser.data.role === 'ADMIN') {
+               
+                    router.push('/admin/dashboard'); // Replace '/admin' with the actual admin page route
+                }
 		})
 		.catch(e => {
 			if(e.response.status === 401 || e.response.status === 400){
