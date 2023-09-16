@@ -12,7 +12,14 @@ export default {
             refreshToken: '/auth/access-tokens/refresh',
         },
         user: {
-            info: '/users/access-token/information'
+            info: '/users/access-token/information',
+            getCitizenCard: '/citizenCard/imagesCitizenCard',
+            verifyCitizenCard: '/citizenCard/verify-citizen-card',
+        },
+        address: {
+            allWardsOfDistrict: '/address/districts/{code}',
+            allProvinces: '/address/provinces',
+            allDistrictsOfProvince: '/address/provinces/{code}'
         }
     }
 }

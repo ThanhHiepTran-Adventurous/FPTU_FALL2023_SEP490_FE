@@ -53,8 +53,11 @@ const submitForm = async () => {
 }
 
 const onLogout = async () => {
-    await loginService.logout()
-    userStore.clear()
+    loginService.logout()
+    .catch(e => console.log(e))
+    .finally(() => {
+        userStore.clear()
+    })
 }
 
 </script>
