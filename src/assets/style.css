@@ -165,6 +165,58 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+/* Vue toastify config */
+.loading-toastification {
+  display: inline-block;
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid #9facc2 !important;
+  border-radius: 50%;
+  border-top-color: white !important;
+  animation: spin 1s ease-in-out infinite !important;
+  -webkit-animation: spin 1s ease-in-out infinite;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.Vue-Toastification__toast--default {
+  --tw-gradient-to: #a8b8d8;
+  --tw-gradient-from: #627594;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  color: white;
+  width: 40vw;
+}
+.Vue-Toastification__toast--error.my-toast-error-color {
+  --tw-gradient-to: #ff667c;
+  --tw-gradient-from: #ea0606;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  color: white;
+  width: 40vw;
+}
+.Vue-Toastification__toast--success.my-toast-success-color {
+  --tw-gradient-to: #98ec2d;
+  --tw-gradient-from: #17ad37;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+  color: white;
+  width: 40vw;
+}
+
+
+
 @-ms-viewport {
   width: device-width;
 }
