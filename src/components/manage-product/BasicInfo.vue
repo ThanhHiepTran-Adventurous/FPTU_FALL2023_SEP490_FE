@@ -7,44 +7,30 @@
       <li class="flex border-y py-2">
         <span class="font-bold w-50">Tên Sản Phẩm:</span>
         <span class="text-gray-700">Amanda S. Ross</span>
-      </li>     
+      </li>
       <li class="flex border-b py-2">
         <span class="font-bold w-50">Ngày Khởi Tạo:</span>
         <span class="text-gray-700">24 , 09 , 2009</span>
-      </li>
-      <li class="flex border-b py-2">
-        <span class="font-bold w-50">Ngày Đấu Giá:</span>
-        <span class="text-gray-700">28 , 02 , 2022</span>
-      </li>
-      <li class="flex border-b py-2">
-        <span class="font-bold w-50">Người Trúng Thầu:</span>
-        <span class="text-gray-700"> Nguyễn Văn A <a href="#"> ( Liên Hệ ) </a></span>
       </li>
       <li class="flex border-b py-2">
         <span class="font-bold w-50">Trạng Thái:</span>
         <span class="text-gray-700">Đã Bán</span>
       </li>
       <li class="flex border-b py-2">
-        <span class="font-bold w-50">Giá Khởi Điểm:</span>
-        <span class="text-gray-700">20.000.000 VND</span>
+        <span class="font-bold w-50">Brand:</span>
+        <span class="text-gray-700">Deg-rey</span>
       </li>
       <li class="flex border-b py-2">
-        <span class="font-bold w-50">Giá Trúng Thầu:</span>
-        <span class="text-gray-700">23.000.000 VND <span :style="{ color: getColorProfit(bidPrice) }"> {{ getPercentProfit(bidPrice) }}%</span></span>
-          
+        <span class="font-bold w-50">Loại Sản Phẩm:</span>
+        <span class="text-gray-700">Quần </span>
+      </li>
+      <li class="flex border-b py-4">
+        <span class="font-bold w-50">Giới Thiệu :</span>
+        <span class="text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. quisquam quod debitis
+          eveniet. accusamus!</span>
       </li>
     </ul>
   </div>
 </template>
 
 
-<style scoped>
-.text-red-500 {
-  color: #ff0000;
-  /* Red color */
-}
-
-.text-green-500 {
-  color: #008000;
-  /* Green color */
-}</style>
