@@ -1,11 +1,13 @@
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import ENUM from "@/constants/enum.js";
-import buyer_routes from "./buyer_router";
-import seller_routes from "./seller_router";
+import buyer_routes, { defaultBuyerRoute } from "./buyer_router";
+import seller_routes, { defaultSellerRoute } from "./seller_router";
 import TokenService from "@/services/token/token.service.js";
+import { useUserStore } from '@/stores/user.store'
+import { Role } from '@/common/contract'
 
 const ROUTE_NAMES = {
-  SIGN_IN: "login",
+  SIGN_IN: "all-page-buyer",
   SIGN_UP: "create-account",
   FORGOT_PASSWORD: "forgot-password",
   HOME: "home",
@@ -38,12 +40,14 @@ const shouldRedirectToHome = (to, currentUser) => {
   );
 };
 
-const determineNextRoute = (to, currentUser) => {
-  if (to.name === ROUTE_NAMES.HOME) {
-    const currentRoleId = currentUser.RoleIds[0];
-    return currentRoleId === ENUM.BUYER.ROLE_ID ? null : "/seller/dashboard";
+const determineDefaultRouteByRole = (to, role) => {
+  if(Role.seller.value === role) {
+    return defaultSellerRoute
   }
-  return null;
+  if(Role.buyer.value === role) {
+    return defaultBuyerRoute
+  }
+  return ROUTE_NAMES.SIGN_IN
 };
 
 const router = createRouter({
@@ -54,8 +58,11 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const requireAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const userStore = useUserStore()
+  const userId = userStore.getUserIdAndGetFromLocalStorageIfNotExist()
+  // const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
 
-  if (requireAuth && !isAuthenticated()) {
+  if (requireAuth && !userId) {
     next({ name: ROUTE_NAMES.SIGN_IN });
   } else {
     const currentUser = isAuthenticated();

@@ -25,6 +25,9 @@ const seller_router = [
         name: 'profile',
         path: '/profile',
         component: ProfilePage,
+        meta: {
+          requiresAuth: true,
+        },
       },
       {
         name: 'cccd',
@@ -60,3 +63,4 @@ const seller_router = [
 ]
 
 export default seller_router
+export const defaultSellerRoute = "all-page-seller"
