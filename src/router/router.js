@@ -65,21 +65,22 @@ router.beforeEach(async (to, from, next) => {
   if (requireAuth && !userId) {
     next({ name: ROUTE_NAMES.SIGN_IN });
   } else {
-    const currentUser = isAuthenticated();
+    // const currentUser = isAuthenticated();
 
-    if (shouldRedirectToHome(to, currentUser)) {
-      next("/");
-    } else if (requireAuth) {
-      if (currentUser) {
-        if (isAuthorized(to, currentUser)) {
-          next();
-        } else {
-          next("forbidden");
-        }
-      }
-    } else {
-      next();
-    }
+    // if (shouldRedirectToHome(to, currentUser)) {
+    //   next("/");
+    // } else if (requireAuth) {
+    //   if (currentUser) {
+    //     if (isAuthorized(to, currentUser)) {
+    //       next();
+    //     } else {
+    //       next("forbidden");
+    //     }
+    //   }
+    // } else {
+    //   next();
+    // }
+    next();
   }
 });
 

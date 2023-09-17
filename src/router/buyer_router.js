@@ -78,4 +78,4 @@ const buyer_router = [
 ]
 
 export default buyer_router
-export const defaultBuyerRoute = "/"
+export const defaultBuyerRoute = "all-page-buyer"
