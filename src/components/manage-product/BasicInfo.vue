@@ -1,17 +1,4 @@
 <script setup>
- const bidPrice = {
-  startBid: 200000,
-  closeBid: 2300000,
- }
-
-function getColorProfit(bidPrice) {
-  return bidPrice.startBid <= bidPrice.closeBid ? 'green' : 'green';
-}
-function getPercentProfit(bidPrice){
-  const percent = (bidPrice.startBid/bidPrice.closeBid)*100
-  return bidPrice.startBid <= bidPrice.closeBid ? '+'+percent :  '-'+percent ;
-}
-
 </script>
 <template>
   <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
