@@ -4,6 +4,7 @@ import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import CCCD from '@/components/page-sections/UploadCCCD.vue'
+import CreateProductPage from '@/views/seller/child-page/CreateProductPage.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -14,6 +15,11 @@ const seller_router = [
         name: 'manage-product',
         path: '/manage',
         component: ProductManagerPage,
+      },
+       {
+        name: 'create-product',
+        path: '/create',
+        component: CreateProductPage,
       },
       {
         name: 'profile',

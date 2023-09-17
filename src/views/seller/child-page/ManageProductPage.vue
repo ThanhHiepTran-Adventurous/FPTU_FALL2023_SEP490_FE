@@ -1,16 +1,19 @@
 <script setup>
 import BasicInfo from '@/components/manage-product/BasicInfo.vue';
-import HistoryProduct from '@/components/manage-product/HistoryProduct.vue';
-
 
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Modal from '@/components/common-components/Modal.vue'
 import { ref } from 'vue'
 
-const isModalVisible = ref(false);
+const allowedModalTypes = { create : 'create', info : 'info'};
 
-function showModal() {
+const isModalVisible = ref(false);
+const typeofModal = ref('info');
+
+
+function showModal(typeModal) {
+	typeofModal.value = typeModal;
 	isModalVisible.value = true;
 }
 
@@ -19,7 +22,6 @@ function closeModal() {
 }
 
 function handleConfirm() {
-
 	closeModal();
 }
 
@@ -29,8 +31,8 @@ function handleConfirm() {
 	<div class="container mx-auto">
 		<div class="  rounded-lg bg-white p-10 shadow-lg">
 			<div class="mb-4 flex  items-center">
-				<SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[1000px]" />
-				<button class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tìm Kiêm</button>
+				<SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[950px]" />
+				<button @click="showModal(allowedModalTypes.create)" class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tạo Sản Phẩm</button>
 			</div>
 			<div class="flex">
 				<div class="space-y-5">
@@ -73,13 +75,10 @@ function handleConfirm() {
 					<div class="container my-[20px] py-2">
 						<div class="flex flex-wrap mt-10">
 
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal" class="ml-10 mb-10" product-name="Super long long long" />
+							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
+							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
+							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
+							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
 						</div>
 					</div>
 				</div>
@@ -89,15 +88,15 @@ function handleConfirm() {
 
 
 	<div>
-		<Modal v-if="isModalVisible"  @hasOverFlowVertical="true" @decline-modal="closeModal" @confirm-modal="handleConfirm">
-
-			<BasicInfo />
-			<HistoryProduct />
-
-
+		<Modal v-if="isModalVisible"  @hasButton="false"  @decline-modal="closeModal"
+			@confirm-modal="handleConfirm">
+			<div v-if="typeofModal === allowedModalTypes.info">
+				<BasicInfo />
+			</div>
+			<div v-if="typeofModal === allowedModalTypes.create">
+				MODAL 2
+			</div>
 		</Modal>
 	</div>
 </template>
-
-
 
