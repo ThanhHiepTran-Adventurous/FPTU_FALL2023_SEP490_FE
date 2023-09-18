@@ -49,7 +49,7 @@ const emit = defineEmits(["decline-modal", "confirm-modal"])
         <div v-if="hasButton" class="flex justify-end p-4 gap-x-2">
           <div>
             <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">
-              Cancel
+              Hủy
             </Button>
           </div>
           <div>
