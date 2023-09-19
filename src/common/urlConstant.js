@@ -15,6 +15,8 @@ export default {
             info: '/users/access-token/information',
             getCitizenCard: '/citizenCard/imagesCitizenCard',
             verifyCitizenCard: '/citizenCard/verify-citizen-card',
+            updateInfo: 'profiles/userProfile',
+            updateAvatar: 'profiles/userProfile/image'
         },
         address: {
             allWardsOfDistrict: '/address/districts/{code}',
