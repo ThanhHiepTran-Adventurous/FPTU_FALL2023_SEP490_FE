@@ -1,5 +1,4 @@
 <script setup>
-import BasicInfo from '@/components/manage-product/BasicInfo.vue';
 
 import InspectionRequest from '@/components/manage-product/InspectionRequest.vue';
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
@@ -90,10 +89,9 @@ function handleConfirm() {
 
 
 	<div>
-		<Modal v-if="isModalVisible"  @hasOverFlowVertical=true @hasButton=false  @decline-modal="closeModal"
+		<Modal v-if="isModalVisible"  :widthClass="'w-[1000px]'" :hasOverFlowVertical=true :hasButton=false  @decline-modal="closeModal"
 			@confirm-modal="handleConfirm">
 			<div v-if="typeofModal === allowedModalTypes.info">
-				<BasicInfo />
 				<InspectionRequest />
 			</div>
 			<div v-if="typeofModal === allowedModalTypes.create">

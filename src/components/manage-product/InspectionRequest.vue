@@ -1,88 +1,91 @@
-<script setup>
-
-import { ref } from 'vue';
-
-const isOpenRequest = ref(false);
-
-function showModal() {
-  isOpenRequest.value = true;
-}
-
-function closeModal() {
-  isOpenRequest.value = false;
-}
-
-function handleConfirm(){
-  closeModal();
-}
-</script>
 <template>
-  <div class="max-w-md mx-auto">
-    <div class="divide-y divide-gray-200">
-      <div @click="showModal()" class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-        <button
-          class="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Gửi
-          Yêu Cầu Đấu Giá
+  <div class="bg-white rounded-lg shadow-xl p-8 space-y-4">
+    <h4 class="text-xl text-gray-900 font-bold">Thông Tin Sản Phẩm</h4>
+
+    <!-- Tab buttons -->
+    <div class="flex space-x-4">
+      <button @click="showTableTab" :class="{
+        'bg-blue-500 hover:bg-blue-600 text-white': currentTab === 'table',
+        'bg-gray-300 hover:bg-gray-400 text-gray-600': currentTab !== 'table'
+      }" class="px-4 py-3 rounded-md focus:outline-none transition flex-grow">
+        Thông Tin
+      </button>
+
+      <button @click="showFormTab" :class="{
+        'bg-blue-500 hover:bg-blue-600 text-white': currentTab === 'form',
+        'bg-gray-300 hover:bg-gray-400 text-gray-600': currentTab !== 'form'
+      }" class="px-4 py-3 rounded-md focus:outline-none transition flex-grow">
+        Gửi Yêu Cầu Đấu Giá
+      </button>
+    </div>
+
+    <!-- Table Tab -->
+    <div v-if="currentTab === 'table'">
+      <ul class="space-y-2 text-gray-700">
+        <ul class="mt-2 text-gray-700">
+          <li class="flex border-y py-2">
+            <span class="font-bold w-50">Tên Sản Phẩm:</span>
+            <span class="text-gray-700">Amanda S. Ross</span>
+          </li>
+          <li class="flex border-b py-2">
+            <span class="font-bold w-50">Ngày Khởi Tạo:</span>
+            <span class="text-gray-700">24 , 09 , 2009</span>
+          </li>
+          <li class="flex border-b py-2">
+            <span class="font-bold w-50">Trạng Thái:</span>
+            <span class="text-gray-700">Đã Bán</span>
+          </li>
+          <li class="flex border-b py-2">
+            <span class="font-bold w-50">Brand:</span>
+            <span class="text-gray-700">Deg-rey</span>
+          </li>
+          <li class="flex border-b py-2">
+            <span class="font-bold w-50">Loại Sản Phẩm:</span>
+            <span class="text-gray-700">Quần </span>
+          </li>
+          <li class="flex border-b py-4">
+            <span class="font-bold w-50">Giới Thiệu :</span>
+            <span class="text-gray-700">Lorem ipsum dolor sit amet consectetur, adipisicing elit. quisquam quod debitis
+              eveniet. accusamus!</span>
+          </li>
+        </ul>
+        <!-- Add more table rows as needed -->
+      </ul>
+    </div>
+
+    <!-- Form Tab -->
+    <div v-if="currentTab === 'form'">
+      <div class="py-4 space-y-4">
+        <div class="flex flex-col">
+          <label class="text-sm font-semibold">Field 1 *</label>
+          <input type="text"
+            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+        </div>
+        <div class="flex flex-col">
+          <label class="text-sm font-semibold">Field 2 *</label>
+          <input type="text"
+            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+        </div>
+        <!-- Add more form fields as needed -->
+        <button @click="showTableTab"
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
+          Quay Lại
         </button>
-      </div>
-      <div v-if="isOpenRequest" class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-        <div class="flex flex-col">
-            <h2 class="leading-relaxed">Trước khi gửi yêu cầu...</h2>
-            <p class="text-sm text-gray-500 font-normal leading-relaxed">Chúng tôi cần bạn cung cấp một số thông tin liên quan đến buổi đấu giá.</p>
-        </div>
-        <div class="flex flex-col">
-          <label class="leading-loose">Giá Khởi Điểm * </label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-        </div>
-        <div class="flex flex-col">
-          <label class="leading-loose">Giá Mua Ngay *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-        </div>
-        <div class="flex flex-col">
-          <label class="leading-loose">Bước Nhảy Tối Thiểu * </label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-        </div>
-        <div class="flex items-center space-x-6">
-          <div class="flex flex-col">
-            <label class="leading-loose">Số Ngày Mở Bán</label>
-            <div class="relative focus-within:text-gray-600 text-gray-400">
-              <select
-                class="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-                <option value="1">1 ngày</option>
-                <option value="7">7 ngày</option>
-                <option value="30">30 ngày</option>
-                <option value="60">60 ngày</option>
-                <!-- Add more options as needed -->
-              </select>
-              <div class="absolute left-3 top-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col">
-            <label class="leading-loose">Kết Thúc</label>
-            <div class="relative focus-within:text-gray-600 text-gray-400">
-              <input type="text"
-                class="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
-                placeholder="26/02/2020">
-              <div class="absolute left-3 top-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref } from "vue";
+
+const currentTab = ref('table');
+
+const showTableTab = () => {
+  currentTab.value = 'table';
+};
+
+const showFormTab = () => {
+  currentTab.value = 'form';
+};
+</script>
