@@ -89,7 +89,7 @@ function handleConfirm() {
 
 
 	<div>
-		<Modal v-if="isModalVisible"  :widthClass="'w-[1000px]'" :hasOverFlowVertical=true :hasButton=false  @decline-modal="closeModal"
+		<Modal v-if="isModalVisible"  :widthClass="'w-[700px]'" :hasOverFlowVertical=true :hasButton=false  @decline-modal="closeModal"
 			@confirm-modal="handleConfirm">
 			<div v-if="typeofModal === allowedModalTypes.info">
 				<InspectionRequest />
