@@ -16,7 +16,10 @@ export default {
             getCitizenCard: '/citizenCard/imagesCitizenCard',
             verifyCitizenCard: '/citizenCard/verify-citizen-card',
             updateInfo: 'profiles/userProfile',
-            updateAvatar: 'profiles/userProfile/image'
+            updateAvatar: 'profiles/userProfile/image',
+            resendEmailOtp: 'profiles/register/otp/resend',
+            changeEmail: 'profiles/userProfile/changeEmail',
+            verifyEmailOtp: 'profiles/userProfile/verifyOtpChangeEmail'
         },
         address: {
             allWardsOfDistrict: '/address/districts/{code}',

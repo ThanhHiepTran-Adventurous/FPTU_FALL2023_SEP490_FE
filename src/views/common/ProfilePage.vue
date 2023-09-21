@@ -10,8 +10,10 @@ import Dropdown from '@/components/common-components/Dropdown.vue';
 import toast from '../../utils/toast-option'
 import Modal from '@/components/common-components/Modal.vue';
 import OtpInput from '@/components/common-components/OtpInput.vue';
+import { Role } from '../../common/contract';
 
 //------------------------------------------------------------
+const isVerifyOtpShow = ref(false)
 const isModalActive = ref(false)
 const otp = ref("")
 const newEmail = ref("")
@@ -47,7 +49,8 @@ const profileModel = ref({
     email: "",
     address: "",
     imageUrl: "",
-    isCCVerified: false
+    isCCVerified: false,
+    role: "",
 })
 
 const fileFront = ref(undefined)
@@ -82,6 +85,7 @@ const setProfileModel = (userInfo) => {
     profileModel.value.name = userInfo.fullname
     profileModel.value.imageUrl = userInfo.avatarUrl
     profileModel.value.isCCVerified = userInfo.citizenCardVerified
+    profileModel.value.role = userInfo.role
 }
 const setProfileModelData = (userInfo) => {
     profileModelData.value.address = ""
@@ -143,46 +147,45 @@ const onSaveUpdate = () => {
         fetchUserdata().then(() => onUpdateCancel())
         toast.toastSuccess("Cập nhật thông tin thành công")
     })
-    .catch(err => {
-        toast.toastError("Có lỗi khi cập nhật thông tin")
-    })
+        .catch(err => {
+            toast.toastError("Có lỗi khi cập nhật thông tin")
+        })
 }
 const onOtpInputChange = (value) => {
-	otp.value = value
+    otp.value = value
 }
 
 const sendEmail = async () => {
-    const data = {
-        email: newEmail.value,
-        password: emailPassword.value,
-    }
-    
+    userService.updateEmail(newEmail.value, emailPassword.value)
+        .then(response => {
+            toast.toastSuccess("Thành công. Mời bạn kiểm tra email và nhập mã OTP")
+            isVerifyOtpShow.value = true
+        })
+        .catch(err => {
+            if(err.response.data.message.includes("password")){
+                toast.toastError("Mật khẩu nhập vào không đúng")
+            } else {
+                toast.toastError("Có lỗi khi gửi yêu cầu")
+            }
+        })
+
 }
 const resendOtp = async () => {
-	// loginService.resendOtp(userInfo.value.phone)
-	// .then(response => {
-	// 	toast.toastSuccess("Yêu cầu gửi lại OTP thành công")
-	// })
-	// .catch(error => toast.toastError("Yêu cầu gửi lại OTP thất bại"))
+    userService.resendEmailOtp(newEmail.value)
+    .then(response => {
+    	toast.toastSuccess("Yêu cầu gửi lại OTP thành công")
+    })
+    .catch(error => toast.toastError("Yêu cầu gửi lại OTP thất bại"))
 }
 const confirmOtp = async () => {
-	// const data = {
-	// 	otp: otp.value,
-	// 	phoneNum: userInfo.value.phone,
-	// 	password: userInfo.value.password,
-	// }
-	// loginService.verifyOtp(data)
-	// 	.then(async response => {
-	// 		userStore.setRefreshTokenAndSaveToLocalStorage(response.data.refreshToken)
-	// 		userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
-	// 		const informationUser = await loginService.fetchUserInfo()
-	// 		userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
-	// 		userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
-	// 		userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
-	// 		toast.toastSuccess("Xác thực OTP thành công")
-	// 		router.push("/")
-	// 	})
-	// 	.catch(error => toast.toastError("OTP không đúng hoặc đã hết hạn"))
+    userService.verifyEmailOtp(otp.value, newEmail.value).then(response => {
+        toast.toastSuccess("Cập nhật email thành công.")
+        isVerifyOtpShow.value = false
+        isModalActive.value = false
+        isInEditMode.value = false
+    }).catch(_ => {
+        toast.toastError("Mã không đúng hoặc có lỗi khi xử lý.")
+    })
 }
 
 watch(selectedProvince, async () => {
@@ -230,29 +233,31 @@ onMounted(async () => {
             <div class="w-full flex items-center">
                 <div class="tt-item bg-white w-[100%]">
                     <div class="form-default mb-8">
-                        <div class="w-full flex flex-col items-center">
-							<h2 class="tt-title text-center mb-3">NHẬP EMAIL MỚI</h2>
-							<input v-model="newEmail" type="password"
-                                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-2" />
-						</div>
-                        <div class="w-full flex flex-col items-center">
-                            <h2 class="tt-title text-center my-3">XÁC NHẬN MẬT KHẨU</h2>
-                            <input v-model="emailPassword" type="password"
-                                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-2" />
+                        <div v-if="!isVerifyOtpShow">
+                            <div class="w-full flex flex-col items-center">
+                                <h2 class="tt-title text-center mb-3">NHẬP EMAIL MỚI</h2>
+                                <input v-model="newEmail" type="email"
+                                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-2" />
+                            </div>
+                            <div class="w-full flex flex-col items-center">
+                                <h2 class="tt-title text-center my-3">XÁC NHẬN MẬT KHẨU</h2>
+                                <input v-model="emailPassword" type="password"
+                                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-2" />
+                            </div>
+                            <div class="w-full mt-4 gap-6 flex justify-center">
+                                <button class="btn btn-border" @click="resendOtp">GỬI LẠI</button>
+                                <button class="btn btn-primary" @click="sendEmail">GỬI MÃ CODE</button>
+                            </div>
                         </div>
-                        <div class="w-full mt-4 gap-6 flex justify-center">
-							<!-- <button class="btn btn-border" @click="resendOtp">GỬI LẠI</button> -->
-							<button class="btn btn-primary" @click="sendEmail">GỬI MÃ CODE</button>
-						</div>
-                        <div class="w-full border-b-[1px] mt-3"></div>
-                        <div class="w-full flex flex-col items-center">
-							<h2 class="tt-title text-center my-3">NHẬP MÃ OTP</h2>
-							<OtpInput @valueChange="onOtpInputChange"/>
-						</div>
-						<div class="w-full mt-4 gap-6 flex justify-center">
-							<!-- <button class="btn btn-border" @click="resendOtp">GỬI LẠI</button> -->
-							<button class="btn btn-primary" @click="confirmOtp">XÁC NHẬN</button>
-						</div>
+                        <div v-if="isVerifyOtpShow">
+                            <div class="w-full flex flex-col items-center">
+                                <h2 class="tt-title text-center my-3">NHẬP MÃ OTP</h2>
+                                <OtpInput @valueChange="onOtpInputChange" />
+                            </div>
+                            <div class="w-full mt-4 gap-6 flex justify-center">
+                                <button class="btn btn-primary" @click="confirmOtp">XÁC NHẬN</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,7 +292,7 @@ onMounted(async () => {
         </div>
 
         <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
-            <div class="w-full flex flex-col 2xl:w-[40%]">
+            <div class="w-full flex flex-col" :class="{ '2xl:w-[40%]': profileModel.role === Role.seller }">
                 <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
                     <div class="flex items-center">
                         <div class="text-xl text-gray-900 font-bold mr-3">Thông tin cá nhân</div>
@@ -320,8 +325,7 @@ onMounted(async () => {
                         </li>
                         <li class="flex border-b py-2">
                             <span class="font-bold w-28">Email:</span>
-                            <button v-if="isInEditMode && !profileModel.email"
-                                @click="onUpdateEmailClick"
+                            <button v-if="isInEditMode" @click="onUpdateEmailClick"
                                 class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                                 <span>Thay đổi email</span>
                             </button>
@@ -331,19 +335,19 @@ onMounted(async () => {
                             <span class="font-bold w-28">Địa chỉ:</span>
                             <div v-if="isInEditMode" class="w-full ml-4">
                                 <input v-model="profileModelData.address" type="text"
-                                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[67%]" />
+                                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[63%]" />
                                 <div class="flex flex-col w-[full] gap-3 mt-3">
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Tỉnh / Thành phố:</div>
-                                        <Dropdown v-model="selectedProvince" :data="provinces" class="w-[250px]" />
+                                        <Dropdown v-model="selectedProvince" :data="provinces" class="w-[300px]" />
                                     </div>
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Quận / Huyện:</div>
-                                        <Dropdown v-model="selectedDistrict" :data="districts" class="w-[250px]" />
+                                        <Dropdown v-model="selectedDistrict" :data="districts" class="w-[300px]" />
                                     </div>
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Phường / Xã:</div>
-                                        <Dropdown v-model="selectedWard" :data="wards" class="w-[250px]" />
+                                        <Dropdown v-model="selectedWard" :data="wards" class="w-[300px]" />
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +366,7 @@ onMounted(async () => {
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
+            <div class="flex flex-col w-full 2xl:w-2/3" :class="{ 'hidden': profileModel.role !== Role.seller }">
                 <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
                     <div class="flex items-center justify-between">
                         <div class="text-xl text-gray-900 font-bold">Căn cước công dân</div>

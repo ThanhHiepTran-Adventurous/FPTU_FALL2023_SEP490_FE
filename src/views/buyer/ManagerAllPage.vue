@@ -3,7 +3,10 @@
     <LayoutHeader>
       <Navbar />
     </LayoutHeader>
-    <div class="mt-[60px] mb-[10px]">
+    <!-- To prevent margin collapsing -->
+    <div class="mt-[60px] float-left"></div>
+    <div class="clear-both"></div>
+    <div class="mb-[10px]">
       <LayoutContent>
         <router-view />
       </LayoutContent>
