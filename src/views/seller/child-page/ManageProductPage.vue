@@ -1,10 +1,11 @@
 <script setup>
-import BasicInfo from '@/components/manage-product/BasicInfo.vue';
 
+import InspectionRequest from '@/components/manage-product/InspectionRequest.vue';
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
-import SearchInput from '@/components/common-components/SearchInput.vue'
-import Modal from '@/components/common-components/Modal.vue'
+import SearchInput from '@/components/common-components/SearchInput.vue';
+import Modal from '@/components/common-components/Modal.vue';
 import { ref } from 'vue'
+import CreateNewProduct from '@/components/manage-product/CreateNewProduct.vue';
 
 const allowedModalTypes = { create : 'create', info : 'info'};
 
@@ -88,13 +89,13 @@ function handleConfirm() {
 
 
 	<div>
-		<Modal v-if="isModalVisible"  @hasButton="false"  @decline-modal="closeModal"
+		<Modal v-if="isModalVisible"  :widthClass="'w-[1000px]'" :hasOverFlowVertical=true :hasButton=false  @decline-modal="closeModal"
 			@confirm-modal="handleConfirm">
 			<div v-if="typeofModal === allowedModalTypes.info">
-				<BasicInfo />
+				<InspectionRequest />
 			</div>
 			<div v-if="typeofModal === allowedModalTypes.create">
-				MODAL 2
+				<CreateNewProduct />
 			</div>
 		</Modal>
 	</div>
