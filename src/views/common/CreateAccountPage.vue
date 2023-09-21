@@ -121,7 +121,7 @@ const onOtpInputChange = (value) => {
 							</div>
 							<div class="form-group flex items-center gap-3">
 								<label>Bạn muốn là:</label>
-								<Dropdown v-model="selected" :data="roleOptions"/>
+								<Dropdown v-model="selected" :data="roleOptions" class="w-[180px]"/>
 							</div>
 							<div class="row">
 								<div class="col-auto">

@@ -365,6 +365,7 @@ module.exports = {
     }),
   },
   plugins: [
+    require('@vueform/slider/tailwind'),
     require('flowbite/plugin')
   ],
 }

@@ -6,6 +6,7 @@ import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
+import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -20,6 +21,14 @@ const buyer_router = [
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
         },
+      },
+      {
+        name: 'auction-list',
+        path: '/auctions',
+        component: AuctionListPage,
+        meta: {
+          requiresAuth: false,
+        }
       },
       {
         name: 'landing-page',
