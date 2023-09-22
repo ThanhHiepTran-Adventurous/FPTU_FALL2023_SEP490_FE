@@ -51,7 +51,7 @@ const submitForm = async () => {
 		})
 		.catch(e => {
 			if(e.response.data.message.includes("already existed")){
-				toast.updateLoadingToast("Số điện thoại đã được đăng kí")
+				toast.updateLoadingToast(toastId, "Số điện thoại đã được đăng kí", true)
 			} else {
 				toast.updateLoadingToast(toastId, "Đăng kí thất bại", true)
 			}
