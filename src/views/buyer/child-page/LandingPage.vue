@@ -6,7 +6,7 @@
 </script>
 <template>
     <div>
-        <div class="mt-[60px] mb-[10px]">
+        <div class="mb-[10px]">
             <NewTopBar />
         </div>
         <PosterSection />

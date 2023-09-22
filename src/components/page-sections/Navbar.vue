@@ -132,7 +132,7 @@ const onLogout = async () => {
                             <!-- <Avatar /> -->
                         </template>
                         <ListGroup>
-                            <ListGroupItem>
+                            <ListGroupItem @click="router.push('/profile')">
                                 <template #prefix>
                                     <Icon icon="tabler:edit" class="text-[28px]" />
                                 </template>

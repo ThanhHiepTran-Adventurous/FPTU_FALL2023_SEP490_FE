@@ -43,6 +43,17 @@ const verifyEmailOtp = async (otp, email) => {
   return response ? response.data : response
 }
 
+const uploadCCCD = async (formData) => {
+  const serviceUrl = url.endpoint.user.verifyCitizenCard
+  const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+    }
+  )
+  return response ? response.data : response
+}
+
 export default {
-    updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp
+    updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp, uploadCCCD
 }

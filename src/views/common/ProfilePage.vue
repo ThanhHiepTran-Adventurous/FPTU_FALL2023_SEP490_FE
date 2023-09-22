@@ -53,8 +53,8 @@ const profileModel = ref({
     role: "",
 })
 
-const fileFront = ref(undefined)
-const fileBack = ref(undefined)
+const fileFrontImg = ref(undefined)
+const fileBackImg = ref(undefined)
 const fileAvatar = ref(undefined)
 
 const backImgSrc = ref('')
@@ -62,13 +62,13 @@ const frontImgSrc = ref('')
 const avtImgSrc = ref('')
 
 const handleFileFrontUpload = async (e) => {
-    fileFront.value = e.target.files[0]
-    frontImgSrc.value = await base64Image(fileFront.value)
+    fileFrontImg.value = e.target.files[0]
+    frontImgSrc.value = await base64Image(fileFrontImg.value)
 }
 
 const handleFileBackUpload = async (e) => {
-    fileBack.value = e.target.files[0]
-    backImgSrc.value = await base64Image(fileBack.value)
+    fileBackImg.value = e.target.files[0]
+    backImgSrc.value = await base64Image(fileBackImg.value)
 }
 
 const handleFileAvtUpload = async (e) => {
@@ -125,6 +125,14 @@ const onUploadImage = () => {
 }
 
 const onPostCCCD = () => {
+    console.log("check in")
+    let formData = new FormData()
+    formData.append('frontImage', fileFrontImg.value)
+    formData.append('backImage', fileBackImg.value)
+
+    userService.uploadCCCD(formData).then(response => {
+        fetchUserdata()
+    })
 
 }
 const onUpdateEmailClick = () => {
@@ -339,15 +347,15 @@ onMounted(async () => {
                                 <div class="flex flex-col w-[full] gap-3 mt-3">
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Tỉnh / Thành phố:</div>
-                                        <Dropdown v-model="selectedProvince" :data="provinces" class="w-[300px]" />
+                                        <Dropdown v-model="selectedProvince" :data="provinces" class="!w-[300px]" />
                                     </div>
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Quận / Huyện:</div>
-                                        <Dropdown v-model="selectedDistrict" :data="districts" class="w-[300px]" />
+                                        <Dropdown v-model="selectedDistrict" :data="districts" class="!w-[300px]" />
                                     </div>
                                     <div class="flex flex-col items-left gap-1">
                                         <div>Phường / Xã:</div>
-                                        <Dropdown v-model="selectedWard" :data="wards" class="w-[300px]" />
+                                        <Dropdown v-model="selectedWard" :data="wards" class="!w-[300px]" />
                                     </div>
                                 </div>
                             </div>
@@ -366,7 +374,7 @@ onMounted(async () => {
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col w-full 2xl:w-2/3" :class="{ 'hidden': profileModel.role !== Role.seller }">
+            <div class="flex flex-col w-full 2xl:w-2/3" >
                 <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
                     <div class="flex items-center justify-between">
                         <div class="text-xl text-gray-900 font-bold">Căn cước công dân</div>
@@ -421,7 +429,7 @@ onMounted(async () => {
                         </div>
                     </div>
                     <div v-if="!profileModel.isCCVerified === true" class="w-full text-center flex justify-center mt-3">
-                        <button
+                        <button @click="() => onPostCCCD()"
                             class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                             <Icon icon="tdesign:upload" />
                             <span>Gửi yêu cầu kiểm tra căn cước</span>
