@@ -51,6 +51,8 @@ const profileModel = ref({
     imageUrl: "",
     isCCVerified: false,
     role: "",
+    fileFront: "",
+    fileBack: "",
 })
 
 const fileFrontImg = ref(undefined)
@@ -125,12 +127,24 @@ const onUploadImage = () => {
 }
 
 const onPostCCCD = () => {
-    console.log("check in")
     let formData = new FormData()
     formData.append('frontImage', fileFrontImg.value)
     formData.append('backImage', fileBackImg.value)
 
+    const toastId = toast.toastLoadingMessage("Hệ thống đang kiểm tra căn cước của bạn")
+
     userService.uploadCCCD(formData).then(response => {
+        toast.updateLoadingToast(toastId, "Kiểm tra thành công", false)
+        fetchUserdata()
+    }).catch(err => {
+        const messageError = err.response.data.message
+        if(messageError.includes("Unable to find ID card in the image")){
+            toast.updateLoadingToast(toastId, "Không tìm thấy ID trong căn cước của bạn, kiểm tra thất bại.", true)
+        } else if(messageError.includes("Send pictures in the correct order from front to back")) {
+            toast.updateLoadingToast(toastId, "Bạn hãy nhập đúng thứ tự hình mặt trước và mặt sau", true)
+        } else {
+            toast.updateLoadingToast(toastId, "Kiểm tra thất bại, mời bạn thử lại bằng hình khác.", true)
+        }
         fetchUserdata()
     })
 
@@ -151,12 +165,13 @@ const onSaveUpdate = () => {
         district: selectedDistrict.value.label,
         ward: selectedWard.value.label
     }
-    userService.updateProfileData(data).then(response => {
+    const toastId = toast.toastLoadingMessage("Đang cập nhật thông tin của bạn")
+    userService.updateProfileData(data).then(_ => {
         fetchUserdata().then(() => onUpdateCancel())
-        toast.toastSuccess("Cập nhật thông tin thành công")
+        toast.updateLoadingToast(toastId, "Cập nhật thông tin thành công", false)
     })
-        .catch(err => {
-            toast.toastError("Có lỗi khi cập nhật thông tin")
+        .catch(_ => {
+            toast.updateLoadingToast(toastId, "Có lỗi khi cập nhật thông tin", true)
         })
 }
 const onOtpInputChange = (value) => {
@@ -220,6 +235,15 @@ const fetchUserdata = async () => {
     const userInfo = await loginService.fetchUserInfo()
     setProfileModel(userInfo.data)
     setProfileModelData(userInfo.data)
+    if(userInfo.data.role === Role.seller.value){
+        fetchCCCD()
+    }
+}
+
+const fetchCCCD = async () => {
+    const data = await userService.getCCCD()
+    profileModel.value.fileFront = data.data.imageFront
+    profileModel.value.fileBack = data.data.imageBack
 }
 
 onMounted(async () => {
@@ -282,7 +306,7 @@ onMounted(async () => {
 
                 <input type="file" hidden v-on:change="handleFileAvtUpload($event)" ref="fileAvt" />
                 <button @click="() => onUploadImage()"
-                    class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                    class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                     <Icon icon="tdesign:upload" />
                     <span>Upload image</span>
                 </button>
@@ -334,7 +358,7 @@ onMounted(async () => {
                         <li class="flex border-b py-2">
                             <span class="font-bold w-28">Email:</span>
                             <button v-if="isInEditMode" @click="onUpdateEmailClick"
-                                class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                                class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                                 <span>Thay đổi email</span>
                             </button>
                             <span v-else class="text-gray-700">{{ profileModel.email || "N/A" }}</span>
@@ -368,7 +392,7 @@ onMounted(async () => {
                             <span>Hủy</span>
                         </button>
                         <button @click="onSaveUpdate"
-                            class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                            class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                             <span>Lưu</span>
                         </button>
                     </div>
@@ -387,9 +411,10 @@ onMounted(async () => {
                     <div class="flex items-center flex-col md:flex-row gap-4">
                         <div class="w-full md:w-[50%] flex justify-center">
                             <article aria-label="File Upload Modal"
-                                class="relative w-[464px] h-[256px] flex flex-col bg-white shadow-xl rounded-md overflow-hidden">
+                                class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
+                                :class="{'w-[464px] h-[256px]' :!profileModel.isCCVerified && !frontImgSrc}">
                                 <input type="file" hidden v-on:change="handleFileFrontUpload($event)" ref="fileFront" />
-                                <section v-if="!frontImgSrc" class="overflow-auto p-8 w-full h-full flex flex-col">
+                                <section v-if="!profileModel.isCCVerified && !frontImgSrc" class="overflow-auto p-8 w-full h-full flex flex-col">
                                     <header
                                         class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
                                         <p class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
@@ -401,16 +426,17 @@ onMounted(async () => {
                                         </button>
                                     </header>
                                 </section>
-                                <div v-else class="w-full h-full" @click="$refs.fileFront.click()">
-                                    <img :src="frontImgSrc" alt="mặt trước" />
+                                <div v-else class="w-full h-full" @click="profileModel.isCCVerified || $refs.fileFront.click()">
+                                    <img :src="profileModel.fileFront || frontImgSrc" alt="mặt trước" />
                                 </div>
                             </article>
                         </div>
                         <div class="w-full md:w-[50%] flex justify-center">
                             <article aria-label="File Upload Modal"
-                                class="relative w-[464px] h-[256px] flex flex-col bg-white shadow-xl rounded-md overflow-hidden">
+                                class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
+                                :class="{'w-[464px] h-[256px]' :!profileModel.isCCVerified && !backImgSrc}">
                                 <input type="file" hidden v-on:change="handleFileBackUpload($event)" ref="fileBack" />
-                                <section v-if="!backImgSrc" class="overflow-auto p-8 w-full h-full flex flex-col">
+                                <section v-if="!profileModel.isCCVerified && !backImgSrc" class="overflow-auto p-8 w-full h-full flex flex-col">
                                     <header
                                         class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
                                         <p class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
@@ -422,15 +448,15 @@ onMounted(async () => {
                                         </button>
                                     </header>
                                 </section>
-                                <div v-else class="w-full h-full" @click="$refs.fileBack.click()">
-                                    <img :src="backImgSrc" alt="Mặt sau" />
+                                <div v-else class="w-full h-full" @click="profileModel.isCCVerified  || $refs.fileBack.click()">
+                                    <img :src="profileModel.fileBack || backImgSrc" alt="Mặt sau" class="object-contain" />
                                 </div>
                             </article>
                         </div>
                     </div>
                     <div v-if="!profileModel.isCCVerified === true" class="w-full text-center flex justify-center mt-3">
                         <button @click="() => onPostCCCD()"
-                            class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                            class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                             <Icon icon="tdesign:upload" />
                             <span>Gửi yêu cầu kiểm tra căn cước</span>
                         </button>
