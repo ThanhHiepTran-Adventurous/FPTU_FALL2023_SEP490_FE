@@ -1,7 +1,5 @@
 <template>
-  <div class="bg-white rounded-lg shadow-xl p-8 space-y-4">
-    <h4 class="text-xl text-gray-900 font-bold">Thông Tin Sản Phẩm</h4>
-
+  <div class="bg-white rounded-lg shadow-xl space-y-4">
     <!-- Tab buttons -->
     <div class="flex space-x-4">
       <button @click="showTableTab" :class="{
@@ -57,12 +55,27 @@
     <div v-if="currentTab === 'form'">
       <div class="py-4 space-y-4">
         <div class="flex flex-col">
-          <label class="text-sm font-semibold">Field 1 *</label>
+          <label class="text-sm font-semibold">Giá Khởi Điểm *</label>
           <input type="text"
             class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
         </div>
         <div class="flex flex-col">
-          <label class="text-sm font-semibold">Field 2 *</label>
+          <label class="text-sm font-semibold">Giá Mua Ngay *</label>
+          <input type="text"
+            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+        </div> 
+        <div class="flex flex-col">
+          <label class="text-sm font-semibold">Bước Nhảy Tối Thiểu *</label>
+          <input type="text"
+            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+        </div>     
+        <div class="flex flex-col">
+          <label class="text-sm font-semibold">Thời Gian Đấu Giá *</label>
+          <input type="text"
+            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
+        </div>
+         <div class="flex flex-col">
+          <label class="text-sm font-semibold">Ngày Kết Thúc Bắt Buộc *</label>
           <input type="text"
             class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
         </div>
@@ -70,6 +83,11 @@
         <button @click="showTableTab"
           class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
           Quay Lại
+        </button> 
+
+        <button 
+          class="bg-blue-500 ml-3 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
+          Gửi Yêu Cầu
         </button>
       </div>
     </div>
