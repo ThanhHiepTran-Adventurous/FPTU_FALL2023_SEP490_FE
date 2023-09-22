@@ -1,62 +1,48 @@
 <script setup>
-
-import InspectionRequest from '@/components/manage-product/InspectionRequest.vue';
-import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
 import SearchInput from '@/components/common-components/SearchInput.vue';
-import Modal from '@/components/common-components/Modal.vue';
-import { ref } from 'vue'
-import CreateNewProduct from '@/components/manage-product/CreateNewProduct.vue';
+import Tab1 from '@/components/manage-product/ProductStore.vue';
+import Tab2 from '@/components/manage-product/ProductAuction.vue';
+import Tab3 from '@/components/manage-product/ProductStore.vue';
+import Tab4 from '@/components/manage-product/ProductStore.vue';
+import { ref, markRaw } from 'vue'
 
-const allowedModalTypes = { create : 'create', info : 'info'};
+const tab = ref(Tab1)
 
-const isModalVisible = ref(false);
-const typeofModal = ref('info');
-
-
-function showModal(typeModal) {
-	typeofModal.value = typeModal;
-	isModalVisible.value = true;
+function changeTab(comp) {
+	tab.value = markRaw(comp)
 }
-
-function closeModal() {
-	isModalVisible.value = false;
-}
-
-function handleConfirm() {
-	closeModal();
-}
-
 </script>
-
 <template>
 	<div class="container mx-auto">
 		<div class="  rounded-lg bg-white p-10 shadow-lg">
 			<div class="mb-4 flex  items-center">
 				<SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[950px]" />
-				<button @click="showModal(allowedModalTypes.create)" class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tạo Sản Phẩm</button>
+				<button class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tìm Kiếm</button>
 			</div>
 			<div class="flex">
 				<div class="space-y-5">
 					<div class="overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-1">
 						<ul class="flex items-center gap-2 text-sm font-medium">
 							<li class="flex-2">
-								<a href="#"
+								<button @click="changeTab(Tab1)"
 									class="text-gra relative flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 shadow hover:bg-white hover:text-gray-700">
 									Kho
 									<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 14 </span>
-								</a>
+								</button>
 							</li>
 							<li class="flex-2">
-								<a href="#"
+								<button
+								@click="changeTab(Tab2)"
 									class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:bg-white hover:text-gray-700 hover:shadow">
-									Đấu Giá</a>
+									Đấu Giá
+								</button>
 							</li>
 							<li class="flex-2">
-								<a href="#"
+								<button 
 									class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:bg-white hover:text-gray-700 hover:shadow">
 									Đã Bán
 									<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
-								</a>
+								</button>
 							</li>
 							<li class="flex-2">
 								<a href="#"
@@ -73,31 +59,10 @@ function handleConfirm() {
 		<div id="tt-pageContent">
 			<div class="container-indent">
 				<div class="bg-white my-3">
-					<div class="container my-[20px] py-2">
-						<div class="flex flex-wrap mt-10">
-
-							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
-							<ItemBoxManageVue @click="showModal(allowedModalTypes.info)" class="ml-10 mb-10" product-name="Super long long long" />
-						</div>
-					</div>
+					<component :is="tab" />
 				</div>
 			</div>
 		</div>
-	</div>
-
-
-	<div>
-		<Modal v-if="isModalVisible"  :widthClass="'w-[700px]'" :hasOverFlowVertical=true :hasButton=false  @decline-modal="closeModal"
-			@confirm-modal="handleConfirm">
-			<div v-if="typeofModal === allowedModalTypes.info">
-				<InspectionRequest />
-			</div>
-			<div v-if="typeofModal === allowedModalTypes.create">
-				<CreateNewProduct />
-			</div>
-		</Modal>
 	</div>
 </template>
 
