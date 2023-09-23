@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div id="app" class="bg-[#F5F5FA]">
+  <div id="app" class="bg-gray-200">
     <router-view />
   </div>
 </template>

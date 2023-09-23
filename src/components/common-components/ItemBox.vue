@@ -1,6 +1,6 @@
 <script setup>
     import currencyFormat from '@/utils/currency-formatter.js'
-    import CountDown from '@/components/common-components/Countdown.vue';
+    import Countdown from '@/components/common-components/Countdown.vue';
     const props = defineProps({
         mainImage : {
             type: String,
@@ -42,7 +42,7 @@
             </a>
         </div>
         <div class="tt-description flex flex-col items-center">
-            <div class="block group-hover:block bg-[#F5F5FA] bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
+            <div class="block group-hover:block bg-gray-200 bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
                 <CountDown :coefficientSize="0.4" :deadlineInMilis="1697094493940" />
             </div>
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import CountDown from '@/components/common-components/Countdown.vue';
+import Countdown from '@/components/common-components/Countdown.vue';
    
   const props = defineProps({
     productInfo : Object,
