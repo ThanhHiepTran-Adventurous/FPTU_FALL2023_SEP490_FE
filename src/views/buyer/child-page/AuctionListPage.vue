@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/components/common-components/Dropdown.vue';
 import ItemBox from '@/components/common-components/ItemBox.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Slider from '@vueform/slider'
 import currencyFormat from '@/utils/currency-formatter.js'
@@ -41,6 +41,9 @@ const isBrandTabOpen = ref(false)
 const isCategoryTabOpen = ref(false)
 const isPriceTabOpen = ref(false)
 
+onMounted(() => {
+    console.log('Firebase cloud messaging object', this.$messaging)
+})
 
 </script>
 <template>

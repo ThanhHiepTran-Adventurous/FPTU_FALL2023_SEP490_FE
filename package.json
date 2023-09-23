@@ -13,6 +13,7 @@
     "axios": "^1.5.0",
     "bootstrap": "^5.3.1",
     "chart.js": "^4.4.0",
+    "firebase": "^10.4.0",
     "flowbite": "^1.5.3",
     "flowbite-vue": "^0.0.17-next.0",
     "jquery": "^3.7.0",
