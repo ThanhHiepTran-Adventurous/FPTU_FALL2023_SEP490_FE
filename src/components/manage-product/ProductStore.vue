@@ -17,7 +17,7 @@
     <Modal v-if="isModalVisible" :widthClass="'w-[700px]'" :hasOverFlowVertical=true :hasButton=false
       @decline-modal="closeModal" @confirm-modal="handleConfirm">
       <div v-if="typeofModal === allowedModalTypes.info">
-        <InspectionRequest />
+        <ProductInfoModal />
       </div>
       <div v-if="typeofModal === allowedModalTypes.create">
         <CreateNewProduct />
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup>
-import InspectionRequest from '@/components/manage-product/InspectionRequest.vue';
+import ProductInfoModal from '@/components/manage-product/ProductInfoModal.vue';
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
 import Modal from '@/components/common-components/Modal.vue';
 import { ref } from 'vue'

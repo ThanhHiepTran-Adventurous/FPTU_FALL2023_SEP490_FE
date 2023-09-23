@@ -79,11 +79,7 @@
           <input type="text"
             class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
         </div>
-        <!-- Add more form fields as needed -->
-        <button @click="showTableTab"
-          class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
-          Quay Lại
-        </button> 
+     
 
         <button 
           class="bg-blue-500 ml-3 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
