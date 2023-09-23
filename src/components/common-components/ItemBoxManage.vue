@@ -1,6 +1,6 @@
 <script setup>
 import currencyFormat from '@/utils/currency-formatter.js'
-import Countdown from '@/components/common-components/Countdown.vue';
+import CountDown from '@/components/common-components/Countdown.vue';
 const props = defineProps({
     mainImage: {
         type: String,
