@@ -10,10 +10,63 @@
             <!-- pre-view  -->
             <div class="row custom-single-page shadow drop-shadow-xl border-collapse ">
               <div class="col-6 hidden-xs mt-3">
-                <ListProductImage :images="product.productImages" />
+                <div class="tt-product-vertical-layout">
+                  <div class="tt-product-single-img">
+                    <div>
+                      <button class="tt-btn-zomm tt-top-right"><i class="icon-f-86"></i></button>
+                      <img class="zoom-product" :src="images[0]" :data-zoom-image="images[0]" alt="">
+                    </div>
+                  </div>
+                  <div class="tt-product-single-carousel-vertical">
+                    <ul id="smallGallery" class="slick-animated-show-js-custom">
+                      <li v-for="(images, index) in images" :key="index">
+                        <a href="#" :data-image="image" :data-zoom-image="image">
+                          <img :src="image" alt="image">
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
               <div class="col-6 mt-3">
-                <ProductInfo :productInfo="product.productInfo" />
+                <div class="tt-product-single-info">
+                  <div class="tt-add-info">
+                    <ul>
+                      <li><span>SKU:</span> {{ data.sku }}</li>
+                      <li><span>Care:</span> {{ data.productPeopleJoin }} người đang tham gia đấu giá</li>
+                    </ul>
+                  </div>
+                  <h1 class="tt-title">{{ data.productTitle }}</h1>
+                  <div class="tt-price">
+                    <span class="new-price">{{ data.productPrice }}</span>
+                  </div>
+                  <div class="tt-review">
+                    <div class="tt-rating">
+                      <i v-for="starClass in starClasses" :key="starClass" :class="starClass"></i>
+                    </div>
+                    <a class="product-page-gotocomments-js" href="#">({{ data.reviewNumber }} khách hàng đánh giá )</a>
+                  </div>
+                  <div class="tt-wrapper">
+                    {{ data.productDescription }}
+                  </div>
+                  <div class="tt-wrapper">
+                    <div class="tt-countdown_box_02">
+                      <div class="tt-countdown_inner">
+                        <CountDown :coefficientSize="0.7" :deadlineInMilis="1693094493940" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tt-wrapper">
+                    <div class="direction">
+                      <a class="button-scope btn btn-lg"></a>
+                      <a class="button-scope btn btn-lg"></a>
+                    </div>
+                  </div>
+
+                  <div class="tt-wrapper">
+
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -98,11 +151,12 @@
                     </div>
                   </div>
                 </div>
-              </div> 
+              </div>
               <div class="w-full p-3">
                 <label for="type2" class="flex items-center cursor-pointer">
                   <input type="radio" class="form-radio h-5 w-5 text-indigo-500" name="type" id="type2">
-                  <span class="ml-2 text-gray-700"> tôi đồng ý với  <a class=" text-red-500" href="/#"> điều khoản và chính sách </a> của Bidbay !</span>
+                  <span class="ml-2 text-gray-700"> tôi đồng ý với <a class=" text-red-500" href="/#"> điều khoản và chính
+                      sách </a> của Bidbay !</span>
                 </label>
               </div>
             </div>
@@ -118,28 +172,44 @@
   </div>
 </template>
 <script setup>
-import ListProductImage from '@/components/product-detail/ListProductImage.vue'
-import ProductInfo from '@/components/product-detail/ProductInfo.vue'
-const product = {
-  productImages: [
-    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-  ],
-  productInfo: {
-    sku: '001',
-    productTitle: 'Tên Sản Phẩm',
-    productPeopleJoin: '40',
-    productPrice: '90.000.000 VND',
-    productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
-    productRateStar: 3,
-    reviewNumber: '1',
-    vendor: 'Polo',
-    productType: 'T-Shirt',
-    tags: ['T-Shirt', 'Women', 'Top']
-  }
-
+import Button from '@/components/common-components/Button.vue'
+const images = [
+  "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+  "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+  "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+  "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
+]
+const data = {
+  sku: '001',
+  productTitle: 'Tên Sản Phẩm',
+  productPeopleJoin: '40',
+  productPrice: '90.000.000 VND',
+  productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
+  productRateStar: 3,
+  reviewNumber: '1',
+  vendor: 'Polo',
+  productType: 'T-Shirt',
+  tags: ['T-Shirt', 'Women', 'Top']
 }
 
+
 </script>
+<style scoped>
+.slick-animated-show-js-custom {
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
+
+.direction {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.button-scope {
+  margin: 10px;
+  width: 100%;
+}
+</style>
