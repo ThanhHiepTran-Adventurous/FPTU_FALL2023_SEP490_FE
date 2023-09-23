@@ -2,6 +2,7 @@ import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
+import CreateProductPage from '@/views/seller/child-page/CreateProductPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import CCCD from '@/components/page-sections/UploadCCCD.vue'
 const seller_router = [
@@ -33,6 +34,14 @@ const seller_router = [
         name: 'sign-up',
         path: '/register',
         component: CreateAccountPage,
+        meta: {
+          requiresAuth: false,
+        },
+      },  
+      {
+        name: 'create-product',
+        path: '/create-product',
+        component: CreateProductPage,
         meta: {
           requiresAuth: false,
         },
