@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .slick-animated-show-js-custom {
   opacity: 1;
   transition: opacity 0.2s linear;
