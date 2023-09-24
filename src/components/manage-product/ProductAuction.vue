@@ -146,6 +146,8 @@
 <script setup>
 
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
+import Line from '@/components/common-components/Line.vue';
+import CountDown from '@/components/common-components/Countdown.vue';
 function activateInfoAuction(productID) {
   // call api to load info of auction product
 }

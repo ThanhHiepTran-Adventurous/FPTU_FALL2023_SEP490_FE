@@ -206,6 +206,7 @@ const confirmOtp = async () => {
         isVerifyOtpShow.value = false
         isModalActive.value = false
         isInEditMode.value = false
+        fetchUserdata()
     }).catch(_ => {
         toast.toastError("Mã không đúng hoặc có lỗi khi xử lý.")
     })

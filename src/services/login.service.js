@@ -40,6 +40,12 @@ const fetchUserInfo = async () => {
     return response ? response.data : response;
 }
 
+const saveFcmToken = async (fcmToken) => {
+    const serviceUrl = url.endpoint.auth.saveFcmToken
+    const response = await utils.axiosLocalHost.post(serviceUrl, {token: fcmToken})
+    return response ? response.data : response
+}
+
 export default {
-    login, logout, register, verifyOtp, resendOtp, fetchUserInfo
+    login, logout, register, verifyOtp, resendOtp, fetchUserInfo, saveFcmToken
 }
