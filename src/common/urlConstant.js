@@ -10,6 +10,7 @@ export default {
             verifyOtp: '/users/register/otp/verify',
             resendOtp: '/users/register/otp/resend',
             refreshToken: '/auth/access-tokens/refresh',
+            saveFcmToken: '/notification/fcmToken',
         },
         user: {
             info: '/users/access-token/information',

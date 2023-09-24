@@ -12,9 +12,11 @@ import loginService from '../../services/login.service'
 import Modal from '@/components/common-components/Modal.vue';
 import toast from '../../utils/toast-option'
 import { useRouter } from 'vue-router';
+import { useFirebaseStore } from '../../stores/firebase.store';
 const router = useRouter();
 
 const userStore = useUserStore()
+const firebaseStore = useFirebaseStore()
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
@@ -37,14 +39,17 @@ const submitForm = async () => {
 	if(validate.value){
 		loginService.login(userInfo.value.phone, userInfo.value.password)
 		.then(async (response) => {
+            toast.toastSuccess("Đăng nhập thành công")
             userStore.setRefreshTokenAndSaveToLocalStorage(response.data.refreshToken)
 			userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
 			const informationUser = await loginService.fetchUserInfo()
 			userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
 			userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
 			userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
-            toast.toastSuccess("Đăng nhập thành công")
             isModalActive.value = false
+
+            const fcmToken = await firebaseStore.getFcmToken()
+            loginService.saveFcmToken(fcmToken)
          
              // Check the user's role and redirect accordingly
              if (informationUser.data.role === 'ADMIN') {
@@ -101,7 +106,7 @@ const onLogout = async () => {
         <div class="bg-blue-700">
             <nav
                 class="container px-6 py-2 mx-auto flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center text-white">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-center md:justify-between">
                     <router-link to="/" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
                         <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/svg-formatter-beautifier-1.png?alt=media&token=3f69cb28-1feb-4d06-93bb-a25ee66ec880"
                             alt="logo" class="w-[100px] h-[28px]" />
@@ -111,7 +116,7 @@ const onLogout = async () => {
                 <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" />
 
                 <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-                <ul v-if="isAuth" class="flex flex-row gap-8 items-center">
+                <ul v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
                     <RouterLink to="/cart" class="flex text-white hover:!text-gray-400">
                         <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
                         <span class="flex absolute -mt-1 ml-4">
