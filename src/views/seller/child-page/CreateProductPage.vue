@@ -58,8 +58,6 @@
                   </div>
                   <div class="tt-wrapper">
                     <div class="direction">
-                      <a class="button-scope btn btn-lg"></a>
-                      <a class="button-scope btn btn-lg"></a>
                     </div>
                   </div>
 

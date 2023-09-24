@@ -75,7 +75,7 @@
             <div class="w-full mx-auto rounded-lg bg-white border border-gray-200 p-3 text-gray-800 font-light mb-6">
               <div class="w-full flex mb-3 items-center">
                 <div class="w-32">
-                  <span class="text-gray-600 uppercase font-semibold">Doanh Thu</span>
+                  <span class="text-gray-600 uppercase font-semibold"> Doanh Thu</span>
                 </div>
                 <div class="flex-grow pl-3">
                   <span>90.000.000 VND</span>
@@ -83,7 +83,7 @@
               </div>
               <div class="w-full flex items-center">
                 <div class="w-32">
-                  <span class="text-gray-600 uppercase font-semibold">Sản Phẩm</span>
+                  <span class="text-gray-600 uppercase font-semibold">Số Sản Phẩm</span>
                 </div>
                 <div class="flex-grow pl-3">
                   <span>12 cái</span>

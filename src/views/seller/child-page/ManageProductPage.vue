@@ -3,7 +3,7 @@ import SearchInput from '@/components/common-components/SearchInput.vue';
 import Tab1 from '@/components/manage-product/ProductStore.vue';
 import Tab2 from '@/components/manage-product/ProductAuction.vue';
 import Tab3 from '@/components/manage-product/ProductSell.vue';
-import Tab4 from '@/components/manage-product/ProductStore.vue';
+import Tab4 from '@/components/manage-product/ProductReject.vue';
 import { ref, markRaw } from 'vue'
 
 const tab = ref(Tab1)
@@ -48,11 +48,14 @@ function changeTab(comp) {
 								</button>
 							</li>
 							<li class="flex-2">
-								<a href="#"
+								<button
+								 @click="changeTab(Tab4)" 
 									class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:bg-white hover:text-gray-700 hover:shadow">
-									Từ Chối</a>
+									Đã Bán
+									<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
+								</button>
 							</li>
-
+							
 						</ul>
 					</div>
 				</div>

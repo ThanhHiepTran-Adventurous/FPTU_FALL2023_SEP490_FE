@@ -31,9 +31,6 @@
       <div v-if="typeofModal === allowedModalTypes.info">
         <ProductInfoModal />
       </div>
-      <div v-if="typeofModal === allowedModalTypes.create">
-        <CreateNewProduct />
-      </div>
     </Modal>
   </div>
 </template>
@@ -42,8 +39,7 @@ import ProductInfoModal from '@/components/manage-product/ProductInfoModal.vue';
 import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
 import Modal from '@/components/common-components/Modal.vue';
 import { ref } from 'vue'
-import CreateNewProduct from '@/components/manage-product/CreateNewProduct.vue';
-const allowedModalTypes = { create: 'create', info: 'info' };
+const allowedModalTypes = {  info: 'info' };
 
 const isModalVisible = ref(false);
 const typeofModal = ref('info');

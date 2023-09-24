@@ -53,39 +53,66 @@
 
     <!-- Form Tab -->
     <div v-if="currentTab === 'form'">
-      <div class="py-4 space-y-4">
-        <div class="flex flex-col">
-          <label class="text-sm font-semibold">Giá Khởi Điểm *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-        </div>
-        <div class="flex flex-col">
-          <label class="text-sm font-semibold">Giá Mua Ngay *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-        </div> 
-        <div class="flex flex-col">
-          <label class="text-sm font-semibold">Bước Nhảy Tối Thiểu *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-        </div>     
-        <div class="flex flex-col">
-          <label class="text-sm font-semibold">Thời Gian Đấu Giá *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-        </div>
-         <div class="flex flex-col">
-          <label class="text-sm font-semibold">Ngày Kết Thúc Bắt Buộc *</label>
-          <input type="text"
-            class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" />
-        </div>
-     
-
-        <button 
-          class="bg-blue-500 ml-3 hover:bg-red-600 text-white px-4 py-3 rounded-md focus:outline-none transition">
-          Gửi Yêu Cầu
-        </button>
-      </div>
+      <form class="bg-white  shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                  <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                      Giá Khởi Điểm
+                    </label>
+                    <input
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="title" type="text" placeholder="">
+                  </div>
+                  <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                   Giá Mua Ngay
+                    </label>
+                    <input
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="description" placeholder=""/>
+                  </div>
+                  <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="weight">
+                     Bước Nhảy Tối Thiểu
+                    </label>
+                    <input
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="weight" type="text" placeholder="">
+                  </div> 
+                  <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="weight">
+                    Ngày Bắt Buộc Kết Thúc Đấu Giá
+                    </label>
+                    <input
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="weight" type="text" placeholder="">
+                  </div>
+                  <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="brand">
+                     Số Ngày Đấu Giá
+                    </label>
+                    <select
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="brand">
+                      <option value="" disabled selected>Chọn ngày đấu giá</option>
+                      <option value="brand1">1</option>
+                      <option value="brand2">2</option>
+                      <option value="brand3">3</option>
+                    </select>
+                  </div>
+               
+                  <div class="flex items-center justify-between">
+                    <button
+                      class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="button">
+                       Hủy
+                    </button> 
+                    <button
+                      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="button">
+                       Gửi Yêu Cầu
+                    </button>
+                  </div>
+                </form>
     </div>
   </div>
 </template>
