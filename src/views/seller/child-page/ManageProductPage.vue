@@ -1,5 +1,4 @@
 <script setup>
-import SearchInput from '@/components/common-components/SearchInput.vue';
 import Tab1 from '@/components/manage-product/ProductStore.vue';
 import Tab2 from '@/components/manage-product/ProductAuction.vue';
 import Tab3 from '@/components/manage-product/ProductSell.vue';
@@ -8,9 +7,6 @@ import { ref, markRaw } from 'vue'
 
 const tab = ref(Tab1)
 
-function getTab() {
-	return tab.value
-}
 function changeTab(comp) {
 	tab.value = markRaw(comp)
 }
@@ -18,10 +14,7 @@ function changeTab(comp) {
 <template>
 	<div class="container mx-auto">
 		<div class="rounded-lg bg-white p-10 shadow-lg">
-			<div class="mb-4 flex  items-center">
-				<SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[950px]" />
-				<button class="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">Tìm Kiếm</button>
-			</div>
+			
 			<div class="flex">
 				<div class="space-y-5">
 					<div class="overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-1">
@@ -51,7 +44,7 @@ function changeTab(comp) {
 								<button
 								 @click="changeTab(Tab4)" 
 									class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:bg-white hover:text-gray-700 hover:shadow">
-									Đã Bán
+									Yêu Cầu Bị Từ Chối
 									<span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
 								</button>
 							</li>
