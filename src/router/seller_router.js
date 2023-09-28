@@ -4,6 +4,7 @@ import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import CCCD from '@/components/page-sections/UploadCCCD.vue'
+import Messenger from '@/views/common/Messenger.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -33,6 +34,14 @@ const seller_router = [
         name: 'sign-up',
         path: '/register',
         component: CreateAccountPage,
+        meta: {
+          requiresAuth: false,
+        },
+      },  
+       {
+        name: 'messenger',
+        path: '/messenger',
+        component: Messenger,
         meta: {
           requiresAuth: false,
         },
