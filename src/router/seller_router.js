@@ -22,7 +22,7 @@ const seller_router = [
         path: '/profile',
         component: ProfilePage,
         meta: {
-          requiresAuth: true,
+          requiresAuth: false,
         },
       },
       {

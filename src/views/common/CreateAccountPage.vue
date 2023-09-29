@@ -126,10 +126,8 @@ const onOtpInputChange = (value) => {
 								<div class="form-group">
 									<label for="loginInputName">Tên Của Bạn <span class="text-red-500">*</span></label>
 									<div class="tt-required !text-red-500">* Bắt Buộc</div>
-
 									<Field name="name" type="text" v-model="userInfo.name" class="form-control" />
 									<ErrorMessage as="div" name="name" class="text-start text-danger pt-2 fs-6" />
-
 								</div>
 								<div class="form-group">
 									<label for="loginLastName">Số Điện Thoại <span class="text-red-500">*</span></label>
