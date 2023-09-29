@@ -213,4 +213,5 @@ input[type="file"] {
 	max-width: 100%;
 	max-height: 300px;
 	margin-top: 20px;
-}</style>
+}
+</style>
