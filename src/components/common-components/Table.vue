@@ -7,8 +7,6 @@
         <a>{{ text }}</a>
       </template>
     </template>
-    <template #title>Header</template>
-    <template #footer>Footer</template>
   </Table>
 </template>
 <script setup>
@@ -48,10 +46,17 @@ const data = [
     money: '￥120,000.00',
     address: 'Sidney No. 1 Lake Park',
   },
+  {
+    key: '4',
+    name: 'Joe Black',
+    money: '￥120,000.00',
+    address: 'Sidney No. 1 Lake Park',
+  },
+  {
+    key: '5',
+    name: 'Joe Black',
+    money: '￥120,000.00',
+    address: 'Sidney No. 1 Lake Park',
+  },
 ];
 </script>
-
-
-<style scoped>
-
-</style>

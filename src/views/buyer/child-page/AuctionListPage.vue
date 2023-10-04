@@ -42,7 +42,7 @@ const isCategoryTabOpen = ref(false)
 const isPriceTabOpen = ref(false)
 
 onMounted(() => {
-    console.log('Firebase cloud messaging object', this.$messaging)
+    // console.log('Firebase cloud messaging object', this.$messaging)
 })
 
 </script>

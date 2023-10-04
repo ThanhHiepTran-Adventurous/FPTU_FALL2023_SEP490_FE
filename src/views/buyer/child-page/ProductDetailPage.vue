@@ -1,10 +1,28 @@
 <script setup>
-
 import ListProductImage from '@/components/product-detail/ListProductImage.vue';
 import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import ProductCarousel from '@/components/product-detail/ProductCarousel.vue';
-import Table from '@/components/common-components/Table.vue';
-import CustomChart from '@/components/common-components/CustomChart.vue';
+import Breadcrumb from '@/layouts/Breadcrumb.vue';
+import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
+
+const breadcrumbItems = [
+	{
+		text: "Trang chủ",
+		to: "/",
+		disabled: false,
+	},
+	{
+		text: "Đấu giá",
+		to: "/auctions",
+		disabled: false,
+	},
+	{
+		text: "Áo ba lỗ",
+		to: "/product-detail",
+		disabled: true,
+	}
+]
+
 const product = {
 	productImages: [
 		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
@@ -29,16 +47,16 @@ const product = {
 
 
 const chartData = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)'
-    }]
+	labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+	datasets: [{
+		label: '# of Votes',
+		data: [12, 19, 3, 5, 2, 3],
+		backgroundColor: 'rgba(75, 192, 192, 0.2)'
+	}]
 };
 
 const chartOptions = {
-    // ... your chart options here
+	// ... your chart options here
 };
 
 
@@ -72,74 +90,36 @@ const productCarousels = [
 </script>
 
 <template>
-	<div id="tt-pageContent">
-		<div class="container-indent">
-			<div class="container container-fluid-mobile">
-				<div class="row">
-					<div class="col-12 col-lg-9">
-						<div class="row custom-single-page">
-							<div class="col-6 hidden-xs">
-								<ListProductImage :images="product.productImages" />
-							</div>
-							<div class="col-6">
-								<ProductInfo :productInfo="product.productInfo" />
-							</div>
-						</div>
+	<div class="p-4">
+		<div class="">
+			<Breadcrumb :items="breadcrumbItems" />
+			<div class="pt-3 w-full flex gap-3">
+				<div class="flex items-start w-[80%] rounded-md pt-2 !bg-white">
+					<div class="hidden-xs w-[40%]">
+						<ListProductImage :images="product.productImages" />
 					</div>
-					<div class="col-12 col-lg-3">
-						<div class="tt-product-single-aside">
-							<div class="tt-services-aside">
-								<a href="#" class="tt-services-block">
-									<div class="tt-col-icon">
-										<i class="icon-f-48"></i>
-									</div>
-									<div class="tt-col-description">
-										<h4 class="tt-title">FREE SHIPPING</h4>
-										<p>Miễn phí shipping với mặt hàng có giá trị từ 2.000.000 VND trở lên</p>
-									</div>
-								</a>
-								<a href="#" class="tt-services-block">
-									<div class="tt-col-icon">
-										<i class="icon-f-35"></i>
-									</div>
-									<div class="tt-col-description">
-										<h4 class="tt-title">SUPPORT 24/7</h4>
-										<p>Hỗ trợ chăm sóc khách hàng 24 tiếng / ngày , 7 ngày / tuần</p>
-									</div>
-								</a>
-								<a href="#" class="tt-services-block">
-									<div class="tt-col-icon">
-										<i class="icon-e-09"></i>
-									</div>
-									<div class="tt-col-description">
-										<h4 class="tt-title">30 DAYS RETURN</h4>
-										<p>30 Ngày hoàn trả nếu sản phẩm đấu giá không đúng với chính sách hoàn trả của chúng tôi.</p>
-									</div>
-								</a>
-							</div>
-
-						</div>
+					<div class="">
+						<ProductInfo :productInfo="product.productInfo" />
 					</div>
-
 				</div>
-				<div class="row">
-					<div class="col-12 col-lg-6">
-							 <!-- CHART HERE  -->
-							 <CustomChart :data="chartData" :options="chartOptions"></CustomChart>
-					</div>
-					<div class="col-12 col-lg-6">
-								<!-- TABLE HERE  -->
-								 <Table />
-					</div>
-
+				<div class="flex items-start rounded-md !bg-white w-[50%]">
+					<AuctionHistoryBid />
 				</div>
 			</div>
+			<!-- <div class="row">
+				<div class="col-12 col-lg-6">
+					<CustomChart :data="chartData" :options="chartOptions"></CustomChart>
+				</div>
+				<div class="col-12 col-lg-6">
+					<Table />
+				</div>
+
+			</div> -->
 		</div>
+	</div>
 
 
-		<div class="container-indent">
-			<ProductCarousel :products="productCarousels" />
-		</div>
-
+	<div class="container-indent">
+		<ProductCarousel :products="productCarousels" />
 	</div>
 </template>
