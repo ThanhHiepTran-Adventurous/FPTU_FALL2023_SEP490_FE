@@ -1,4 +1,4 @@
-const SERVICE_URL = import.meta.env.VITE_SERVER_URL;
+const SERVICE_URL = import.meta.env.VITE_SERVER_URL
 
 export default {
     base: SERVICE_URL,
@@ -28,7 +28,10 @@ export default {
             allDistrictsOfProvince: '/address/provinces/{code}'
         },
         brand: {
-            getAll: '/brands/listBrand'
+          getAll: '/brands/listBrand',
+          deleteById: '/brands/{brandId}',
+          updateById: '/brands/{brandId}',
+          create: '/brands',
         },
         category: {
             getAll: '/categories/listCategory'
