@@ -37,13 +37,13 @@ const emit = defineEmits(["decline-modal", "confirm-modal"])
 </script>
 <template>
   <transition name="nested">
-    <div class="fixed inset-0 flex justify-center bg-[#00000099] z-[1000] outer" @click="$emit('decline-modal')">
-      <div :class="`text-left bg-white h-min ${widthClass} mt-[5%] rounded-xl relative inner`" @click.stop>
+    <div class="fixed inset-0 flex justify-center bg-[#00000099] z-[100] outer" @click="$emit('decline-modal')">
+      <div :class="`text-left bg-white h-min ${widthClass} mt-[4%] rounded-xl relative inner`" @click.stop>
         <div class="px-4 pt-4">
           <h5 class="mb-0 !font-bold border-b-[1px]">{{ title }}</h5>
         </div>
 
-        <div class="px-4 !pt-4 max-h-[60vh]" :class="{'overflow-y-auto': hasOverFlowVertical}">
+        <div class="px-4 !pt-4 max-h-[80vh]" :class="{'overflow-y-auto': hasOverFlowVertical}">
           <slot />
         </div>
         <div v-if="hasButton" class="flex justify-end p-4 gap-x-2">

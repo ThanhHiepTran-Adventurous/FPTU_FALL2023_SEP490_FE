@@ -3,7 +3,7 @@
 <template>
 	<div class="bg-white py-2">
 
-		<div class="container my-[20px]">
+		<div class="container my-[20px] mx-auto">
 			<div class="tt-block-title">
 				<h1 class="tt-title">POPULAR</h1>
 				<div class="tt-description">CLOTHING BRANDS</div>

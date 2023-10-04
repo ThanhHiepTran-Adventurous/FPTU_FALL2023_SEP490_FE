@@ -31,9 +31,9 @@ const props = defineProps({
     status: {
         type: String,
         default: "SOLD",
-        validator: (value) => {
-            return ["SOLD", "UNDERWAY", "UPCOMING", "VERIFIED", "REJECT"].includes(value);
-        }
+        // validator: (value) => {
+        //     return ["SOLD", "UNDERWAY", "UPCOMING", "VERIFIED", "REJECT"].includes(value);
+        // }
     }
 
 })

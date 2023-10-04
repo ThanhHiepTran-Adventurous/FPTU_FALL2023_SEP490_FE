@@ -78,8 +78,8 @@ import Rating from 'vue-star-rating'
               </button>
             </div>
           </div>
-          <div class="flex items-start justify-around gap-3 w-full mr-2">
-            <div>
+          <div class="flex items-center justify-around gap-3 w-full mr-2 pb-8">
+            <div class="px-2">
               <div class="text-2xl flex font-bold text-red-500">
                 <span class="text-black block w-[150px] mr-3">Mua ngay: </span>1.000.000 VNĐ
               </div>
@@ -91,14 +91,6 @@ import Rating from 'vue-star-rating'
             </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="tt-wrapper">
-      <div class="tt-add-info">
-        <ul>
-          <li v-for="tag in getTags" :key="tag"><a href="#">{{ tag }}</a></li>
-        </ul>
       </div>
     </div>
   </div>

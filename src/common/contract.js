@@ -12,3 +12,8 @@ export const Role = {
         value: "BUYER"
     },
 }
+
+export const AuctionModelType = {
+    intermediate: "INTERMEDIATE",
+    immediate: "IMMEDIATE"
+}

@@ -4,6 +4,7 @@ import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import CCCD from '@/components/page-sections/UploadCCCD.vue'
+import ProductStore from '@/components/manage-product/ProductStore.vue'
 import Messenger from '@/views/common/Messenger.vue'
 const seller_router = [
   {
@@ -16,7 +17,11 @@ const seller_router = [
         path: '/manage',
         component: ProductManagerPage,
       },
-
+      {
+        name: 'product-store',
+        path: '/manage/product-inventory',
+        component: ProductStore
+      },
       {
         name: 'profile',
         path: '/profile',

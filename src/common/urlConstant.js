@@ -26,6 +26,15 @@ export default {
             allWardsOfDistrict: '/address/districts/{code}',
             allProvinces: '/address/provinces',
             allDistrictsOfProvince: '/address/provinces/{code}'
+        },
+        brand: {
+            getAll: '/brands/listBrand'
+        },
+        category: {
+            getAll: '/categories/listCategory'
+        },
+        product: {
+            inventory: '/products'
         }
     }
 }

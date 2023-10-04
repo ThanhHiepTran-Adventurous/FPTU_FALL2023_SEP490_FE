@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router/router'
 import Countdown from 'vue3-flip-countdown'
-import Toast from "vue-toastification";
+import Toast from "vue-toastification"
 
 import './assets/main.css'
 import "vue-toastification/dist/index.css";
