@@ -2,9 +2,9 @@ import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductManagerPage from '@/views/seller/child-page/ManageProductPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
-import CreateProductPage from '@/views/seller/child-page/CreateProductPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import CCCD from '@/components/page-sections/UploadCCCD.vue'
+import Messenger from '@/views/common/Messenger.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -22,7 +22,7 @@ const seller_router = [
         path: '/profile',
         component: ProfilePage,
         meta: {
-          requiresAuth: true,
+          requiresAuth: false,
         },
       },
       {
@@ -38,14 +38,15 @@ const seller_router = [
           requiresAuth: false,
         },
       },  
-      {
-        name: 'create-product',
-        path: '/create-product',
-        component: CreateProductPage,
+       {
+        name: 'messenger',
+        path: '/messenger',
+        component: Messenger,
         meta: {
           requiresAuth: false,
         },
-      },
+      },  
+    
     ],
   },
   {

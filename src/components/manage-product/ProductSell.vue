@@ -19,6 +19,9 @@
                     <th
                       class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
                       Giá </th>
+                    <th
+                      class=" bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
+                      Người Mua </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -26,47 +29,46 @@
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
                     <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
                     <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">5:30:12 02/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">1.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">6:30:12 03/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">2.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
                   <tr class="hover:bg-grey-lighter">
                     <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light">2:30:12 02/08/2023</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right">4.000.000 VND</td>
+                    <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
+                        #USE14</router-link></td>
                   </tr>
-                  <tr class="hover:bg-grey-lighter">
-                    <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
-                  </tr>
-                  <tr class="hover:bg-grey-lighter">
-                    <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
-                  </tr>
-                  <tr class="hover:bg-grey-lighter">
-                    <td class="py-2 px-4 border-b border-grey-light">#PRODUCT1231</td>
-                    <td class="py-2 px-4 border-b border-grey-light">7:20:12 04/08/2023</td>
-                    <td class="py-2 px-4 border-b border-grey-light text-right">8.000.000 VND</td>
-                  </tr>
+
+
                 </tbody>
               </table>
             </div>
@@ -104,10 +106,8 @@
                   </div>
                   <div class="mb-3">
                     <div class="flex gap-1 ">
-                      <Button
-                        > TẢI XUỐNG BÁO CÁO </Button>
-                        <Button
-                        > LÀM MỚI BỘ LỌC </Button>
+                      <Button> TẢI XUỐNG BÁO CÁO </Button>
+                      <Button> LÀM MỚI BỘ LỌC </Button>
                     </div>
                   </div>
                   <div class="mb-3 -mx-2 flex items-end">
@@ -119,7 +119,7 @@
                           <option value="01"> sth </option>
                           <option value="02"> sth</option>
                           <option value="03">tất cả</option>
-                       
+
                         </select>
                       </div>
                     </div>
@@ -134,14 +134,15 @@
                         <option value="2023">2023</option>
                       </select>
                     </div>
-                  
+
                   </div>
                 </div>
               </div>
               <div class="w-full p-3">
                 <label for="type2" class="flex items-center cursor-pointer">
                   <input type="radio" class="form-radio h-5 w-5 text-indigo-500" name="type" id="type2">
-                  <span class="ml-2 text-gray-700"> vui lòng <a class="text-cyan-300" href="/#">liên hệ</a> bộ phận hỗ trợ nếu gặp sự cố !</span>
+                  <span class="ml-2 text-gray-700"> vui lòng <a class="text-cyan-300" href="/#">liên hệ</a> bộ phận hỗ trợ
+                    nếu gặp sự cố !</span>
                 </label>
               </div>
             </div>
@@ -149,12 +150,11 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
-</template>
+</div></template>
 
 
 <script setup>
- import Button from '@/components/common-components/Button.vue'
+import Button from '@/components/common-components/Button.vue'
 </script>

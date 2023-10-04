@@ -1,6 +1,4 @@
 <script setup>
-import currencyFormat from '@/utils/currency-formatter.js'
-import CountDown from '@/components/common-components/Countdown.vue';
 const props = defineProps({
     mainImage: {
         type: String,
@@ -47,9 +45,7 @@ const props = defineProps({
         <div class="tt-image-box">
             <a class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left">
-                
             </a>
-            <a class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
             <a class="block w-[220px] h-[250px] overflow-hidden">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
@@ -58,17 +54,12 @@ const props = defineProps({
             </a>
         </div>
         <div class="tt-description flex flex-col items-center">
-            <div class="block group-hover:block bg-gray-200 bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
-                <CountDown :coefficientSize="0.4" :deadlineInMilis="1697094493940" />
-            </div>
+        
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>
             <div class="flex row justify-between px-2 w-full">
-                <div class="items-center pb-2">
-                    <div class="text-left text-[16px]">Giá: </div>
-                    <div class="font-semibold text-lg ml-1 text-blue-700 text-left">{{ currencyFormat(props.floorPrice) }}</div>
-                </div>
+               
                  <div class="items-center pb-2">
                     <div class="text-left text-[16px]">Trạng thái: </div>
                     <div class="font-semibold text-lg ml-1 text-blue-700 text-left">{{ props.status }}</div>
