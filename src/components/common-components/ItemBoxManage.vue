@@ -16,18 +16,6 @@ const props = defineProps({
         type: String,
         default: "Name product"
     },
-    floorPrice: {
-        type: Number,
-        default: 3000000
-    },
-    closePrice: {
-        type: Number,
-        default: 7000000
-    },
-    relativeTime: {
-        type: String,
-        default: "00d 00h 00m"
-    },
     status: {
         type: String,
         default: "SOLD",

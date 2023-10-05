@@ -32,15 +32,10 @@
         class="ml-10 mb-10"
         :product-name="product.name"
         :status="product.status"
+        :mainImage="product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : noImage"
+        :secondaryImage="product.imageUrls && product.imageUrls.length > 1 ? product.imageUrls[1] : product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : noImage"
         />
     </div>
-    <!-- <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
-                  <Icon icon="mdi:information" class="text-[20px]"/>
-                </button>
-                <div id="tooltip-hover" role="tooltip" class="absolute z-[1001] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    {{ 'message' }}
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div> -->
   </div>
 
   <div>
@@ -48,7 +43,7 @@
       :title="typeofModal === allowedModalTypes.info ? 'Thông tin' : 'Tạo mới'"
       @decline-modal="closeModal" @confirm-modal="handleConfirm">
       <div v-if="typeofModal === allowedModalTypes.info">
-        <ProductInfoModal :product="productDetail"/>
+        <ProductInfoModal :product="productDetail" @send-success="onSendSuccess" @send-error="onSendError" />
       </div>
       <div v-if="typeofModal === allowedModalTypes.create">
         <CreateNewProduct @create-success="onCreateSuccess" @create-error="onCreateError" />
@@ -65,10 +60,7 @@ import SearchInput from '@/components/common-components/SearchInput.vue';
 import productSerivice from '@/services/product.service';
 import { onMounted, ref } from 'vue';
 import toastOption from '../../utils/toast-option';
-import { Icon } from '@iconify/vue';
-import { initFlowbite } from 'flowbite';
-
-
+import { noImage } from '../../common/urlConstant';
 
 const allowedModalTypes = { info: 'info', create: 'create' };
 const isModalVisible = ref(false);
@@ -79,6 +71,7 @@ const productDetail = ref(null);
 
 const onCreateSuccess = () => {
   toastOption.toastSuccess("Tạo mới sản phẩm vào kho thành công");
+  fetchProducts();
   isModalVisible.value = false;
 }
 
@@ -87,6 +80,20 @@ const onCreateError = (detail) => {
     toastOption.toastError(detail);
   } else {
     toastOption.toastError("Có lỗi khi tạo mới sản phẩm");
+  }
+  isModalVisible.value = false;
+}
+const onSendSuccess = () => {
+  toastOption.toastSuccess("Gửi yêu cầu cho sản phẩm lên sàn đấu giá thành công");
+  fetchProducts();
+  isModalVisible.value = false;
+}
+
+const onSendError = (detail) => {
+  if(detail){
+    toastOption.toastError(detail);
+  } else {
+    toastOption.toastError("Có lỗi khi gửi yêu cầu cho sản phẩm lên sàn đấu giá");
   }
   isModalVisible.value = false;
 }

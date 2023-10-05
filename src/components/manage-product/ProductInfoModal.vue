@@ -27,7 +27,8 @@
           </li>
           <li class="flex border-b py-2">
             <span class="font-bold w-50">Ngày Khởi Tạo:</span>
-            <span class="text-gray-700">{{ product?.createAt ? moment(product?.createAt).format("DD/MM/YYYY HH:MM:ss") : "N/A"}}</span>
+            <span class="text-gray-700">{{ product?.createAt ? moment(product?.createAt).format("DD/MM/YYYY HH:MM:ss") :
+              "N/A" }}</span>
           </li>
           <li class="flex border-b py-2">
             <span class="font-bold w-50">Trạng Thái:</span>
@@ -63,56 +64,46 @@
           <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
             GIÁ KHỞI ĐIỂM (nếu có)
           </label>
-          <input
-            v-model="formData.startPrice"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          <input v-model="formData.startPrice"
+            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="title" type="text" placeholder="">
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
             GIÁ MUA NGAY (nếu có)
           </label>
-          <input
-            v-model="formData.buyNowPrice"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          <input v-model="formData.buyNowPrice"
+            class="shadow border rounded w-full text-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="description" placeholder="" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-            HÌNH THỨC MUA BÁN
+            HÌNH THỨC MUA BÁN <span class="text-red-500 text-lg">*</span>
           </label>
           <div class="w-full flex items-center py-2">
             <div class="flex items-center gap-3 mr-[20%]">
-              <input
-                type="radio"
-                id="immediate"
-                name="modelType"
-                :value="AuctionModelType.immediate"
-              >
+              <input type="radio" id="immediate" name="modelType" value="IMMEDIATE" v-model="formData.modelType">
               <label for="immediate" class="font-semibold text-black">TỰ TRAO ĐỔI MUA BÁN</label>
               <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
-                <Icon icon="mdi:information" class="text-[20px]"/>
+                <Icon icon="mdi:information" class="text-[20px]" />
               </button>
-              <div id="tooltip-hover" role="tooltip" class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                  {{ immediateMessage }}
-                  <div class="tooltip-arrow" data-popper-arrow></div>
+              <div id="tooltip-hover" role="tooltip"
+                class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                {{ immediateMessage }}
+                <div class="tooltip-arrow" data-popper-arrow></div>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <input
-                type="radio"
-                id="intermediate"
-                name="modelType"
-                :value="AuctionModelType.intermediate"
-              >
+              <input type="radio" id="intermediate" value="INTERMEDIATE" v-model="formData.modelType">
               <label for="intermediate" class="font-semibold text-black">TRUNG GIAN QUA HỆ THỐNG</label>
               <div>
                 <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
-                  <Icon icon="mdi:information" class="text-[20px]"/>
+                  <Icon icon="mdi:information" class="text-[20px]" />
                 </button>
-                <div id="tooltip-hover" role="tooltip" class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    {{ intermediateMessage }}
-                    <div class="tooltip-arrow" data-popper-arrow></div>
+                <div id="tooltip-hover" role="tooltip"
+                  class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  {{ intermediateMessage }}
+                  <div class="tooltip-arrow" data-popper-arrow></div>
                 </div>
               </div>
             </div>
@@ -120,36 +111,35 @@
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-            Bước nhảy tối thiểu
+            THỜI GIAN ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
           </label>
-          <input
-            v-model="formData.jump"
+          <div class="flex gap-3 items-center">
+            <Dropdown :data="durationData" v-model="duration" class="!w-[200px]" />
+            <input v-model="durationInput" v-if="!duration.value"
+            type="number"
+            class="shadow appearance-none border rounded w-[10%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="duration" placeholder="" />
+            <div class="block text-gray-700 text-sm font-bold">giờ</div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
+            BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
+          </label>
+          <div class="flex gap-3 items-center">
+            <input v-model="formData.jump"
             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="jump" type="text" placeholder="">
+            <div class="block text-gray-700 text-sm font-bold">VNĐ</div>
+          </div>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="startDate">
-            Thời gian khởi điểm đấu giá <span class="text-red-500 text-lg">*</span>
-          </label>
-          <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="startDate" type="datetime-local" placeholder="">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="endDate">
-            Thời gian kết thúc đấu giá <span class="text-red-500 text-lg">*</span> 
-          </label>
-          <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="endDate" type="datetime-local" placeholder="">
-        </div>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
           <button
             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button">
             Hủy
           </button>
-          <button
+          <button @click="onSubmit()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button">
             Gửi Yêu Cầu
@@ -162,10 +152,13 @@
 
 <script setup>
 import moment from "moment";
-import { onBeforeMount, onMounted, ref } from "vue";
-import { AuctionModelType } from "@/common/contract";
+import { onMounted, ref } from "vue";
 import { Icon } from '@iconify/vue'
 import { initFlowbite } from 'flowbite'
+import Dropdown from "@/components/common-components/Dropdown.vue";
+import AuctionService from "@/services/auction.service"
+
+const emit = defineEmits(['sendSuccess', 'sendError'])
 
 const immediateMessage = `
 Ở hình thức này, sau khi phiên đấu giá kết thúc, 
@@ -179,12 +172,53 @@ người mua phải trả tiền trước cho hệ thống, sau khi hàng tới 
 hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
 `
 
+const durationData = [
+  {
+    label: "1 tiếng",
+    value: 1
+  },
+  {
+    label: "3 tiếng",
+    value: 3
+  },
+  {
+    label: "5 tiếng",
+    value: 5
+  },
+  {
+    label: "10 tiếng",
+    value: 10
+  },
+  {
+    label: "1 ngày",
+    value: 24,
+  },
+  {
+    label: "2 ngày",
+    value: 48
+  },
+  {
+    label: "3 ngày",
+    value: 72
+  },
+  {
+    label: "7 ngày",
+    value: 24 * 7
+  },
+  {
+    label: "Khác",
+    value: null
+  }
+]
 
-const intermediateType = ref(false);
-const immediateType = ref(false);
+const duration = ref({
+  label: "3 tiếng",
+  value: 3
+})
+const durationInput = ref(1)
 
 const props = defineProps({
-  product : {
+  product: {
     required: true
   }
 })
@@ -193,7 +227,7 @@ const formData = ref({
   startPrice: '',
   jump: '',
   buyNowPrice: '',
-  modelType: '',
+  modelType: 0,
   daysOfDuration: 0,
   hoursOfDuration: 0,
   minutesOfDuration: 0,
@@ -208,6 +242,24 @@ const showTableTab = () => {
 const showFormTab = () => {
   currentTab.value = 'form';
 };
+
+const onSubmit = () => {
+  const durationValue = duration.value?.value ? duration.value.value : durationInput.value
+  const data = {
+    startPrice: formData.value.startPrice || 0,
+    jump: formData.value.jump,
+    buyNowPrice: formData.value.buyNowPrice || 0,
+    modelType: formData.value.modelType,
+    hoursOfDuration: durationValue
+  }
+  AuctionService.sendAuctionRequest(props.product.id, data)
+  .then(_ => {
+    emit('sendSuccess')
+  })
+  .catch(error => {
+    emit('sendError')
+  })
+}
 
 onMounted(() => {
   initFlowbite()

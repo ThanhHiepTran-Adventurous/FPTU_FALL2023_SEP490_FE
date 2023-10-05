@@ -14,6 +14,7 @@ export default {
         },
         user: {
             info: '/users/access-token/information',
+            getAll: '/users/listUser',
             getCitizenCard: '/citizenCard/imagesCitizenCard',
             verifyCitizenCard: '/citizenCard/verify-citizen-card',
             updateInfo: 'profiles/userProfile',
@@ -38,6 +39,11 @@ export default {
         },
         product: {
             inventory: '/products'
+        },
+        auction: {
+            sendAuctionRequest: '/auctions/{productId}/add-auction-product'
         }
     }
 }
+
+export const noImage = "https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/No-Image-Placeholder.svg.png?alt=media"
