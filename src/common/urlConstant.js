@@ -40,10 +40,13 @@ export default {
         product: {
             inventory: '/products'
         },
-        auction: {
-            getAuctions: '/auctions',
-            sendAuctionRequest: '/auctions/{productId}/add-auction-product',
-        }
+        auctions: {
+          getAll: '/auctions',
+          getDetail: '/auctions/public/{id}/auction-detail',
+          productAuctionRequest: '/auctions/{productId}/add-auction-product',
+          approve: '/auctions/auction-sessions/{auctionId}/approve',
+          reject: '/auctions/auction-sessions/{auctionId}/rejected',
+        },
     }
 }
 

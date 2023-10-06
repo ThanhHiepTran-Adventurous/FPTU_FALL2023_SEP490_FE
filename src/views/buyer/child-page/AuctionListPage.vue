@@ -8,6 +8,7 @@ import currencyFormat from '@/utils/currency-formatter.js'
 import brandService from '@/services/brand.service';
 import categoryService from '@/services/category.service';
 import auctionService from '@/services/auction.service';
+import imageHelper from '@/utils/image-helper';
 
 const orderOptions = ref([
     {
@@ -71,9 +72,8 @@ const fetchCategoriesData = async () => {
     })
 }
 const fetchAuctions = async () => {
-    const auctions = await auctionService.getAllActiveAuctions()
-
-    console.log(auctions.data)
+    const auctionsData = await auctionService.getAllActiveAuctions()
+    auctions.value = auctionsData.data
 }
 
 onMounted(async () => {
@@ -151,20 +151,14 @@ onMounted(async () => {
                 <!-- Auction section -->
                 <div class="w-[75%]">
                 <div class="flex flex-wrap gap-8">
-                    <ItemBox product-name="Super long long long long name long long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
-                    <ItemBox product-name="Super long long long" />
+                    <ItemBox v-for="auction in auctions" :key="auction.id"
+                        :product-name="auction.product.name"
+                        :main-image="imageHelper.getPrimaryImageFromList(auction.product.imageUrls)"
+                        :secondary-image="imageHelper.getSecondaryImageFromList(auction.product.imageUrls)"
+                        :floor-price="auction.highestPrice ? auction.highestPrice : auction.startPrice"
+                        :time-remain="auction.timeLeft"
+                        :item-id="auction.id"
+                        />
                 </div>
             </div>
         </div>

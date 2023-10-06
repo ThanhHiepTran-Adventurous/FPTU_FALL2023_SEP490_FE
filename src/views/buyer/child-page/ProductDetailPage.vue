@@ -5,14 +5,13 @@ import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
 import ItemBox from '@/components/common-components/ItemBox.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import auctionService from '@/services/auction.service';
 
 const router = useRouter();
 const route = useRoute();
 
-onMounted(() => {
-	console.log(route.params["id"])
-})
+const auction = ref(null)
 
 const breadcrumbItems = [
 	{
@@ -51,8 +50,18 @@ const product = {
 		productType: 'T-Shirt',
 		tags: ['T-Shirt', 'Women', 'Top']
 	}
-
 }
+
+const fetchDetail = async () => {
+	const auctionDetailData = await auctionService.getAuctionDetail(route.params["id"])
+	console.log(auctionDetailData)
+	auction.value = auctionDetailData.data
+}
+
+onMounted(async () => {
+	await fetchDetail()
+})
+
 </script>
 
 <template>
@@ -61,24 +70,27 @@ const product = {
 			<Breadcrumb :items="breadcrumbItems" />
 			<div class="pt-3 w-full flex gap-3">
 				<div class="flex items-start w-[80%] rounded-md pt-2 !bg-white">
-					<div class="hidden-xs w-[40%]">
-						<ListProductImage :images="product.productImages" />
+					<div class="hidden-xs w-[40%] pr-16">
+						<ListProductImage :images="auction?.product?.imageUrls" />
 					</div>
-					<div class="">
-						<ProductInfo :productInfo="product.productInfo" />
+					<div class="pl-5 border-l-[1px]">
+						<ProductInfo :auction-info="auction" />
 					</div>
 				</div>
 				<div class="flex items-start rounded-md !bg-white w-[50%]">
 					<AuctionHistoryBid />
 				</div>
 			</div>
-			<div class="text-xl mt-16">SẢN PHẨM KHÁC</div>
+			<div class="text-xl mt-8">SẢN PHẨM KHÁC</div>
 			<div class="mt-3 bg-white py-2 rounded-lg">
-				<div class="flex justify-around container mx-auto">
-					<ItemBox product-name="Super long long long long name long long long long"/>
-					<ItemBox product-name="Super long long long"/>
-					<ItemBox product-name="Super long long long"/>
-					<ItemBox product-name="Super long long long"/>
+				<div class="flex gap-9 justify-around container mx-auto">
+					<ItemBox product-name="Super long long long long name long long long long" item-id="1" :time-remain="999999" />
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+					<ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
 				</div>
 			</div>
 		</div>

@@ -15,7 +15,7 @@ const deleteBrandById = async brandId => {
 const updateBrandById = async (brandId, formData, updateBrandRequest) => {
   try {
     // Append the updateBrandRequest as a JSON string to the FormData
-    formData.append('updateBrandRequest', JSON.stringify(updateBrandRequest))
+    formData.append('updateBrandRequest', new Blob([JSON.stringify(updateBrandRequest)], { type: 'application/json' }))
 
     const serviceUrl = url.endpoint.brand.updateById.replace('{brandId}', brandId)
 
@@ -34,7 +34,10 @@ const updateBrandById = async (brandId, formData, updateBrandRequest) => {
 const creatNewBrand = async (formData, addBrandAndCategoryRequest) => {
   try {
     // Append the updateBrandRequest as a JSON string to the FormData
-    formData.append('addBrandAndCategoryRequest', JSON.stringify(addBrandAndCategoryRequest))
+    formData.append(
+      'addBrandAndCategoryRequest',
+      new Blob([JSON.stringify(addBrandAndCategoryRequest)], { type: 'application/json' }),
+    )
 
     const serviceUrl = url.endpoint.brand.create
 
@@ -50,9 +53,50 @@ const creatNewBrand = async (formData, addBrandAndCategoryRequest) => {
     throw error
   }
 }
+const getAllAuctions = async (page, size) => {
+  try {
+    const serviceUrl = url.endpoint.auctions.getAll
+    const response = await utils.axiosLocalHost.get(serviceUrl, {
+      params: {
+        page,
+        size,
+      },
+    })
+
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const approveAuction = async auctionId => {
+  try {
+    const serviceUrl = url.endpoint.auctions.approve.replace('{auctionId}', auctionId)
+    const response = await utils.axiosLocalHost.post(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const rejectAuction = async (auctionId, rejectReason) => {
+  try {
+    const serviceUrl = url.endpoint.auctions.reject.replace('{auctionId}', auctionId)
+    const response = await utils.axiosLocalHost.delete(serviceUrl, {
+      data: rejectReason, // Pass the rejectReason as the data parameter
+    })
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 export default {
   fetchAllBrands,
   deleteBrandById,
   updateBrandById,
   creatNewBrand,
+  getAllAuctions,
+  approveAuction,
+  rejectAuction,
 }

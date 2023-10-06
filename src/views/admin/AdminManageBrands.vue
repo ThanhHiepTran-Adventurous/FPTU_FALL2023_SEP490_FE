@@ -499,7 +499,6 @@ const handleSubmitCreateBrand = async newBrand => {
                 type="text"
                 v-model="selectedbrand.name"
                 name="name"
-                readonly
                 id="name"
                 class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
             </div>
@@ -520,7 +519,6 @@ const handleSubmitCreateBrand = async newBrand => {
             <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô tả</label>
             <textarea
               v-model="selectedbrand.description"
-              readonly
               type="string"
               name="description"
               id="description"

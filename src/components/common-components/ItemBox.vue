@@ -1,6 +1,8 @@
 <script setup>
     import currencyFormat from '@/utils/currency-formatter.js'
     import CountDown from '@/components/common-components/Countdown.vue';
+    import { computed } from 'vue';
+
     const props = defineProps({
         mainImage : {
             type: String,
@@ -10,10 +12,6 @@
             type: String,
             default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKBMDCwElNqXzxgqg6K-hkKoNWECLd2iKnaflZivfgPntwaTCe_hAl7xmQH1zeOIZfIX8&usqp=CAU"
         },
-        brand : {
-            type: String,
-            default: "BRAND"
-        },
         productName : {
             type: String,
             default: "Name product"
@@ -22,14 +20,25 @@
             type: Number,
             default: 3000000
         },
-        relativeTime : {
+        timeRemain : {
+            type: Number,
+            required: true,
+        },
+        itemId: {
             type: String,
-            default: "02d 02h 15m"
+            required: true
         }
+    })
+
+    const timeDeadline = computed(() => {
+        if(props.timeRemain){
+            return new Date().getTime() + props.timeRemain
+        }
+        return new Date().getTime()
     })
 </script>
 <template>
-     <router-link to="/product-detail/1"><div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
+     <router-link :to="`/auctions/${props.itemId}`"><div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
         <div class="tt-image-box">
             <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left"></a>
@@ -43,7 +52,7 @@
         </div>
         <div class="tt-description flex flex-col items-center">
             <div class="block group-hover:block bg-gray-200 bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
-                <CountDown :coefficientSize="0.4" :deadlineInMilis="1697094493940" />
+                <CountDown :coefficientSize="0.4" :deadlineInMilis="timeDeadline" />
             </div>
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}

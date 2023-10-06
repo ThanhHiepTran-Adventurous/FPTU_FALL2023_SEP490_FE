@@ -1,7 +1,12 @@
 <script setup>
+import imageHelper from "@/utils/image-helper";
+import { computed } from "vue";
+
     const props = defineProps({
         images: Array,
     });
+
+    const firstImage = computed(() => imageHelper.getPrimaryImageFromList(props.images))
 
 </script>
 
@@ -10,7 +15,7 @@
     <div class="w-full">
       <div>
         <button class="tt-btn-zomm tt-top-right"><i class="icon-f-86"></i></button>
-        <img class="zoom-product w-full" :src="images[0]" :data-zoom-image="images[0]" alt="main-image">
+        <img class="zoom-product w-full max-h-[400px]" :src="firstImage" alt="main-image">
       </div>
     </div>
     <div class="flex items-center justify-center">
