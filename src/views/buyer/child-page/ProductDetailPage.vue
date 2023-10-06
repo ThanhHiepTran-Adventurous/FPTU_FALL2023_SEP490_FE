@@ -4,6 +4,15 @@ import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
 import ItemBox from '@/components/common-components/ItemBox.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+
+const router = useRouter();
+const route = useRoute();
+
+onMounted(() => {
+	console.log(route.params["id"])
+})
 
 const breadcrumbItems = [
 	{

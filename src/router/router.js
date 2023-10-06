@@ -1,11 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import ENUM from "@/constants/enum.js";
 import buyer_routes, { defaultBuyerRoute } from "./buyer_router";
 import seller_routes, { defaultSellerRoute } from "./seller_router";
 import admin_router from "./admin_router"
-import TokenService from "@/services/token/token.service.js";
 import { useUserStore } from '@/stores/user.store'
-import { Role } from '@/common/contract'
 
 const ROUTE_NAMES = {
   SIGN_IN: "all-page-buyer",

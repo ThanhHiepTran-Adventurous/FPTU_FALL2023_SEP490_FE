@@ -1,4 +1,4 @@
-import ENUM from '@/constants/enum.js'
+import ENUM from '@/common/enum.js'
 import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
@@ -19,6 +19,15 @@ const buyer_router = [
         component: AuctionListPage,
         meta: {
           requiresAuth: false,
+        },
+      },
+      {
+        name: 'auction-detail',
+        path: '/auctions/:id',
+        component: ProductDetailPage,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
         },
       },
         {
@@ -51,15 +60,6 @@ const buyer_router = [
         name: 'compare',
         path: '/compare',
         component: ComparePage,
-        meta: {
-          requiresAuth: false,
-          roles: [ENUM.BUYER.ROLE_ID],
-        },
-      },
-      {
-        name: 'product-detail',
-        path: '/product-detail/:id',
-        component: ProductDetailPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],

@@ -41,7 +41,8 @@ export default {
             inventory: '/products'
         },
         auction: {
-            sendAuctionRequest: '/auctions/{productId}/add-auction-product'
+            getAuctions: '/auctions',
+            sendAuctionRequest: '/auctions/{productId}/add-auction-product',
         }
     }
 }

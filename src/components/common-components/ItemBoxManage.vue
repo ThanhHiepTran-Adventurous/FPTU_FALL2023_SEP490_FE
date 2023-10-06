@@ -1,4 +1,7 @@
 <script setup>
+import ProductStatusBadge from './ProductStatusBadge.vue';
+import { ProductStatus } from '@/common/contract';
+
 const props = defineProps({
     mainImage: {
         type: String,
@@ -46,11 +49,10 @@ const props = defineProps({
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>
-            <div class="flex row justify-between px-2 w-full">
+            <div class="flex row justify-end px-2 w-full">
                
                  <div class="items-center pb-2">
-                    <div class="text-left text-[16px]">Trạng thái: </div>
-                    <div class="font-semibold text-lg ml-1 text-blue-700 text-left">{{ props.status }}</div>
+                    <ProductStatusBadge :status="props.status" />
                 </div>
             </div>
         </div>
