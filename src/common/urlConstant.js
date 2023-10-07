@@ -46,7 +46,13 @@ export default {
           productAuctionRequest: '/auctions/{productId}/add-auction-product',
           approve: '/auctions/auction-sessions/{auctionId}/approve',
           reject: '/auctions/auction-sessions/{auctionId}/rejected',
+          getHistoryBid: '/auctions/public/auction/{auctionId}/product/{productId}'
         },
+        placeBid: {
+            manual: 'auctions/buyer/manual-auction',
+            auto: 'auctions/buyer/add-auto-auction-info/{auctionId}',
+            buyNow: 'auctions/{auctionId}/direct-purchase-auction',
+        }
     }
 }
 

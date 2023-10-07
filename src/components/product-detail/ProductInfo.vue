@@ -1,8 +1,14 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import CountDown from '@/components/common-components/Countdown.vue';
 import { Icon } from '@iconify/vue';
-import Rating from 'vue-star-rating'
+import Rating from 'vue-star-rating';
+import PlaceBidModal from './PlaceBidModal.vue';
+import Modal from '../common-components/Modal.vue';
+import toastOption from '@/utils/toast-option';
+import auctionService from '@/services/auction.service';
+
+const isModalVisible = ref(false);
 
 const props = defineProps({
   auctionInfo: Object,
@@ -10,13 +16,52 @@ const props = defineProps({
 
 const deadlineInMilis = computed(() => {
   if(props.auctionInfo){
-    return new Date(props.auctionInfo.endDate).getTime()
+    const date = new Date(props.auctionInfo.endDate)
+    return date.getTime() + date.getTimezoneOffset() * 60000
   }
 })
+
+const onPlaceBidMannualSuccess = () => {
+  isModalVisible.value = false
+  toastOption.toastSuccess("Đặt giá thành công")
+}
+const onPlaceBidAutoSuccess = () => {
+  isModalVisible.value = false
+  toastOption.toastSuccess("Đặt giá tự động thành công")
+}
+const onPlaceError = () => {
+  isModalVisible.value = false
+  toastOption.toastError("Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại")
+}
+
+const onBuyNowClick = () => {
+  auctionService.buyNowBid(props.auctionInfo?.id)
+  .then(_ => {
+    toastOption.toastSuccess("Bạn vừa mua ngay sản phẩm này thành công")
+  })
+  .catch(_ => {
+    toastOption.toastError("Quá trình mua ngay thất bại, hãy tải lại trang và thử lại")
+  })
+}
+
 </script>
 
 <template>
   <div class="tt-product-single-info">
+    <Modal v-if="isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
+    :title="'Tiến hành đấu giá'">
+      <PlaceBidModal
+      :start-price="auctionInfo?.startPrice"
+      :highest-price="auctionInfo?.highestPrice" 
+      :jump="auctionInfo?.jump" 
+      :buy-now-price="auctionInfo?.buyNowPrice" 
+      :auction-id="auctionInfo?.id"
+      @place-bid-success="onPlaceBidMannualSuccess()"
+      @place-auto-auction-success="onPlaceBidAutoSuccess()"
+      @place-error="onPlaceError()"
+      @modal-cancel="isModalVisible = false"
+      />
+    </Modal>
     <div class="flex">
       <ul>
         <li
@@ -52,7 +97,7 @@ const deadlineInMilis = computed(() => {
         <div class="flex flex-col gap-8 w-full">
           <div class="flex items-start gap-3 w-full border-b-[2px] pb-8 mr-2">
             <div class="w-[400px]">
-              <div class="text-2xl font-bold text-blue-500 flex">
+              <div class="text-2xl font-bold text-blue-600 flex">
                 <span class="text-blue-600 w-[150px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice }} ₫
               </div>
               <div>
@@ -61,6 +106,7 @@ const deadlineInMilis = computed(() => {
             </div>
             <div class="px-2">
               <button
+                @click="isModalVisible = true"
                 class="flex w-[200px] font-semibold items-center justify-center bg-white hover:bg-red-700 border-blue-500 text-blue-700 border-[1px] py-3 px-8 rounded-md">
                 <div class="text-[20px]">Đấu giá</div>
               </button>
@@ -74,6 +120,7 @@ const deadlineInMilis = computed(() => {
             </div>
             <div class="px-2">
               <button
+                @click="onBuyNowClick()"
                 class="flex w-[200px] items-center justify-center bg-red-500 hover:bg-red-700 border-blue-500 text-white py-3 px-8 rounded-md">
                 <div class="text-[20px]">MUA NGAY</div>
               </button>

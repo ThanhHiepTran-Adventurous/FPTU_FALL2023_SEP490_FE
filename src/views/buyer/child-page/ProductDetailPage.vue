@@ -68,8 +68,8 @@ onMounted(async () => {
 	<div class="p-4">
 		<div class="">
 			<Breadcrumb :items="breadcrumbItems" />
-			<div class="pt-3 w-full flex gap-3">
-				<div class="flex items-start w-[80%] rounded-md pt-2 !bg-white">
+			<div class="pt-3 w-full xl:flex gap-3">
+				<div class="flex items-start w-full xl:w-[80%] rounded-md pt-2 !bg-white">
 					<div class="hidden-xs w-[40%] pr-16">
 						<ListProductImage :images="auction?.product?.imageUrls" />
 					</div>
@@ -77,8 +77,8 @@ onMounted(async () => {
 						<ProductInfo :auction-info="auction" />
 					</div>
 				</div>
-				<div class="flex items-start rounded-md !bg-white w-[50%]">
-					<AuctionHistoryBid />
+				<div class="flex items-start rounded-md !bg-white mt-3 xl:mt-0 w-full xl:w-[50%]">
+					<AuctionHistoryBid :auction-id="auction?.id" :product-id="auction?.product?.id" />
 				</div>
 			</div>
 			<div class="text-xl mt-8">SẢN PHẨM KHÁC</div>

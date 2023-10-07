@@ -156,7 +156,7 @@ const onOtpInputChange = (value) => {
 								<div class="row">
 									<div class="col-auto">
 										<div class="form-group">
-											<button class="btn btn-border" @click="submitForm">TẠO TÀI KHOẢN</button>
+											<button class="btn btn-border">TẠO TÀI KHOẢN</button>
 										</div>
 									</div>
 									<div class="col-auto align-self-center">

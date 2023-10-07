@@ -48,3 +48,18 @@ export const ProductStatus = {
         value: "NO_AUCTIONEER"
     }
 }
+
+export const BidType = {
+    MANUAL: {
+        label: "Thủ công",
+        value: "MANUAL"
+    },
+    AUTO: {
+        label: "Tự động",
+        value: "AUTO"
+    },
+    DIRECT: {
+        label: "Mua ngay",
+        value: "DIRECT"
+    }
+}

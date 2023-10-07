@@ -44,6 +44,12 @@ const isAuth = computed(() => {
     return userStore.getUserIdAndGetFromLocalStorageIfNotExist()
 })
 
+const resetForm = () => {
+    errorMessage.value = ""
+    userInfo.value.phone = ""
+    userInfo.value.password = ""
+}
+
 const submitForm = async () => {
     // validate form before submit
     try {
@@ -57,6 +63,7 @@ const submitForm = async () => {
         loginService.login(userInfo.value.phone, userInfo.value.password)
             .then(async (response) => {
                 toast.toastSuccess("Đăng nhập thành công")
+                resetForm()
                 userStore.setRefreshTokenAndSaveToLocalStorage(response.data.refreshToken)
                 userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
                 const informationUser = await loginService.fetchUserInfo()
@@ -115,7 +122,7 @@ const onLogout = async () => {
                             <div class="row">
                                 <div class="col-auto">
                                     <div class="form-group">
-                                        <button class="btn btn-border" @click="submitForm">ĐĂNG NHẬP</button>
+                                        <button class="btn btn-border">ĐĂNG NHẬP</button>
                                     </div>
                                 </div>
                             </div>
