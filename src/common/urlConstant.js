@@ -52,6 +52,10 @@ export default {
             manual: 'auctions/buyer/manual-auction',
             auto: 'auctions/buyer/add-auto-auction-info/{auctionId}',
             buyNow: 'auctions/{auctionId}/direct-purchase-auction',
+        },
+        guest: {
+            auctions: 'guest/auctions',
+            auctionDetail: 'guest/{id}/auction-detail'
         }
     }
 }
