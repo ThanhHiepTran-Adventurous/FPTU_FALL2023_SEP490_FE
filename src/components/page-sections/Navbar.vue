@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Icon } from '@iconify/vue';
-import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue'
 import Button from "@/components/common-components/Button.vue"
 import constant from "@/common/constant"
 import SearchInput from '@/components/common-components/SearchInput.vue'
@@ -13,9 +12,11 @@ import Modal from '@/components/common-components/Modal.vue';
 import toast from '../../utils/toast-option'
 import { useRouter } from 'vue-router';
 import { useFirebaseStore } from '../../stores/firebase.store';
+import { useGlobalStore } from '@/stores/global.store';
+import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue';
 
 import * as yup from "yup";
-import { ErrorMessage, Field, Form } from "vee-validate";
+import { ErrorMessage, Field, Form } from 'vee-validate';
 
 
 const schema = yup.object().shape({
@@ -26,6 +27,7 @@ const router = useRouter();
 
 const userStore = useUserStore()
 const firebaseStore = useFirebaseStore()
+const globalStore = useGlobalStore()
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
@@ -50,6 +52,16 @@ const resetForm = () => {
     userInfo.value.password = ""
 }
 
+const isModalOpen = computed(() => {
+    return globalStore.showLoginModal
+})
+const openModal = () => {
+    globalStore.showLoginModal = true
+}
+const closeModal = () => {
+    globalStore.showLoginModal = false
+}
+
 const submitForm = async () => {
     // validate form before submit
     try {
@@ -70,15 +82,18 @@ const submitForm = async () => {
                 userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
                 userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
                 userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
-                isModalActive.value = false
-
+                // isModalActive.value = false
+                closeModal()
+            
                 const fcmToken = await firebaseStore.getFcmToken()
                 loginService.saveFcmToken(fcmToken)
 
                 // Check the user's role and redirect accordingly
                 if (informationUser.data.role === 'ADMIN') {
-
                     router.push('/admin/dashboard'); // Replace '/admin' with the actual admin page route
+                }
+                if (informationUser.data.role === 'SELLER') {
+                    router.push('/manage')
                 }
             })
             .catch(e => {
@@ -102,7 +117,7 @@ const onLogout = async () => {
     <!-- component -->
     <!-- Header -->
     <div class="fixed w-full top-0 z-10">
-        <Modal v-if="isModalActive" title="Đăng nhập" @decline-modal="() => isModalActive = false"
+        <Modal v-if="isModalOpen" title="Đăng nhập" @decline-modal="() => closeModal()"
             width-class="w-[600px] top-[100px]" :has-button="false">
             <Form @submit="submitForm" :validation-schema="schema">
                 <div class="w-full flex items-center">
@@ -187,7 +202,7 @@ const onLogout = async () => {
                             Đăng kí
                         </Button>
                     </router-link>
-                    <Button :type="constant.buttonTypes.OUTLINE" @on-click="() => isModalActive = true">
+                    <Button :type="constant.buttonTypes.OUTLINE" @on-click="() => openModal()">
                         Đăng nhập
                     </Button>
                 </div>

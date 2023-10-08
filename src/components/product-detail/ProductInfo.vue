@@ -7,7 +7,9 @@ import PlaceBidModal from './PlaceBidModal.vue';
 import Modal from '../common-components/Modal.vue';
 import toastOption from '@/utils/toast-option';
 import auctionService from '@/services/auction.service';
+import { useGlobalStore } from '@/stores/global.store';
 
+const globalStore = useGlobalStore();
 const isModalVisible = ref(false);
 
 const props = defineProps({
@@ -35,6 +37,12 @@ const onPlaceError = () => {
 }
 
 const onBuyNowClick = () => {
+  //if not login
+  if(!globalStore.isAlreadyLogin()){
+    globalStore.showLoginModal = true
+    return
+  }
+
   auctionService.buyNowBid(props.auctionInfo?.id)
   .then(_ => {
     toastOption.toastSuccess("Bạn vừa mua ngay sản phẩm này thành công")
