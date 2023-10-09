@@ -115,7 +115,7 @@ const onOtpInputChange = (value) => {
 
 <template>
 	<Form @submit="submitForm" :validation-schema="schema">
-		<div class="container pt-[50px]">
+		<div class="container pt-[50px] mx-auto">
 			<div class="!text-4xl text-black text-center py-3 mb-2 mx-auto col-md-8 col-lg-6">ĐĂNG KÝ TÀI KHOẢN</div>
 			<div class="tt-login-form">
 				<div class="row justify-content-center">
@@ -151,7 +151,7 @@ const onOtpInputChange = (value) => {
 								</div>
 								<div class="form-group flex items-center gap-3">
 									<label>Bạn muốn là:</label>
-									<Dropdown v-model="selected" :data="roleOptions" class="w-[180px]" />
+									<Dropdown v-model="selected" :data="roleOptions" class="!w-[180px]" />
 								</div>
 								<div class="row">
 									<div class="col-auto">

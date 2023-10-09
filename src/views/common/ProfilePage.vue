@@ -144,7 +144,10 @@ const onPostCCCD = () => {
             toast.updateLoadingToast(toastId, "Không tìm thấy ID trong căn cước của bạn, kiểm tra thất bại.", true)
         } else if (messageError.includes("Send pictures in the correct order from front to back")) {
             toast.updateLoadingToast(toastId, "Bạn hãy nhập đúng thứ tự hình mặt trước và mặt sau", true)
-        } else {
+        } else if (messageError.includes("This citizen card already existed in system")){
+            toast.updateLoadingToast(toastId, "Ảnh căn cước công dân đã tồn tại trong hệ thống, mời bạn thử lại bằng hình khác", true)
+        } 
+        else {
             toast.updateLoadingToast(toastId, "Kiểm tra thất bại, mời bạn thử lại bằng hình khác.", true)
         }
         fetchUserdata()

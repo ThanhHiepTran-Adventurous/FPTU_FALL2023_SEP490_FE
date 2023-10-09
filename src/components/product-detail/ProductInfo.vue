@@ -8,6 +8,7 @@ import Modal from '../common-components/Modal.vue';
 import toastOption from '@/utils/toast-option';
 import auctionService from '@/services/auction.service';
 import { useGlobalStore } from '@/stores/global.store';
+import formatCurrency from '@/utils/currency-formatter';
 
 const globalStore = useGlobalStore();
 const isModalVisible = ref(false);
@@ -107,7 +108,7 @@ const onPlaceBidClick = async () => {
       <div class="bg-indigo-100 text-indigo-800 text-sm font-medium mr-2 px-2.5 py-1 rounded">Còn bill</div>
       <div class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-1 rounded">Đổi trả</div>
     </div>
-    <div class="mt-4">
+    <div class="mt-4 pr-4">
       {{ auctionInfo?.product?.description }}
     </div>
     <div class="tt-wrapper">
@@ -123,7 +124,7 @@ const onPlaceBidClick = async () => {
           <div class="flex items-start mx-auto gap-3 w-full border-b-[2px] pb-8 mr-2">
             <div class="w-[500px]">
               <div class="text-2xl font-bold text-blue-600 flex">
-                <span class="text-blue-600 w-[150px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice || auctionInfo?.startPrice }} ₫
+                <span class="text-blue-600 w-[200px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice ? formatCurrency(auctionInfo?.highestPrice) : formatCurrency(auctionInfo?.startPrice) }}
               </div>
               <div v-if="auctionInfo?.highestPrice">
                 Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc: {{ auctionInfo?.latestBidderInfo?.createdAt }}
@@ -138,9 +139,9 @@ const onPlaceBidClick = async () => {
             </div>
           </div>
           <div class="flex items-center gap-3 w-full mr-2 pb-8" v-if="auctionInfo?.buyNowPrice">
-            <div class="w-[400px]">
+            <div class="w-[500px]">
               <div class="text-2xl flex font-bold text-red-500">
-                <span class="text-blue-600 block w-[150px] mr-3">Giá trần: </span>{{ auctionInfo?.buyNowPrice }} ₫
+                <span class="text-blue-600 block w-[200px] mr-3">Giá mua ngay: </span>{{ formatCurrency(auctionInfo?.buyNowPrice) }}
               </div>
             </div>
             <div class="px-2">

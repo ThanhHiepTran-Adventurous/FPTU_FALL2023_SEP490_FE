@@ -4,16 +4,21 @@ import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
 import ItemBox from '@/components/common-components/ItemBox.vue';
-import { useRoute } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import auctionService from '@/services/auction.service';
 import moment from 'moment';
+import toastOption from '@/utils/toast-option';
 
 const route = useRoute();
+const router = useRouter();
 
 const bidHistoryInfo = ref([])
 const numOfUsers = ref(0)
 const numOfBids = ref(0)
+
+let isFirstTime = true;
+let interval;
 
 const auction = ref(null)
 
@@ -46,16 +51,20 @@ const fetchBidHistory = async () => {
     numOfUsers.value = data.bidders || 0
     numOfBids.value = data.bids || 0
 
-    bidHistoryInfo.value = data.informationBidderDTOS ? data.informationBidderDTOS.map(d => {
+    const newData = data.informationBidderDTOS ? data.informationBidderDTOS.map(d => {
+		const isExisted = bidHistoryInfo.value.filter(inf => inf.bidAmount === d.bidAmount && inf.idBidder === d.idBidder)
+		const isNew = !(isExisted && isExisted.length > 0)
         return {
             idBidder: d.idBidder,
             bidAmount: d.bidAmount,
-            createAt: moment(d.bidTime).format("DD/MM/YYYY HH:mm:ss"),
-            bidType: d.auctionType
+            createAt: moment.utc(d.bidTime).format("DD/MM/YYYY HH:mm:ss"),
+            bidType: d.auctionType,
+			isNew: isFirstTime ? false : isNew,
         }
     }).sort((d1, d2) => {
         return d2.bidAmount - d1.bidAmount
     }) : []
+	bidHistoryInfo.value = [...newData]
 	if(bidHistoryInfo.value.length > 0){
 		const topBidderData = bidHistoryInfo.value[0]
 		const latestBidderInfo = {
@@ -63,22 +72,30 @@ const fetchBidHistory = async () => {
 			createdAt: moment(topBidderData.bidTime).format("DD/MM/YYYY HH:mm:ss")
 		}
 		auction.value = {...auction.value, latestBidderInfo }
-		console.log(auction.value)
 	}
 }
 
 const fetchPageData = async () => {
 	await fetchBidHistory()
+	isFirstTime = false
 	fetchDetail()
 }
 const onBuyNowSuccess = () => {
-
+	toastOption.toastSuccess("Mua ngay thành công")
+	router.push("/bought")
 }
 
 onMounted(async () => {
 	fetchPageData()
+	interval = setInterval(() => {
+		console.log("interval call")
+		fetchBidHistory()
+	}, 10000)
 })
 
+onBeforeUnmount(() => {
+	clearInterval(interval)
+})
 </script>
 
 <template>
@@ -87,7 +104,7 @@ onMounted(async () => {
 			<Breadcrumb :items="breadcrumbItems" />
 			<div class="pt-3 w-full xl:flex gap-3">
 				<div class="flex items-start w-full xl:w-[80%] rounded-md pt-2 !bg-white">
-					<div class="hidden-xs w-[40%] pr-16">
+					<div class="hidden-xs w-[100%] px-2 pt-16">
 						<ListProductImage :images="auction?.product?.imageUrls" />
 					</div>
 					<div class="pl-5 border-l-[1px]">

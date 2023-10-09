@@ -80,6 +80,7 @@ const submitForm = async () => {
                 userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
                 const informationUser = await loginService.fetchUserInfo()
                 userStore.setRoleAndSaveToLocalStorage(informationUser.data.role)
+                userStore.setIsVerifiedCCCDAndSaveToLocalStorage(informationUser.data.citizenCardVerified)
                 userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
                 userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
                 // isModalActive.value = false
@@ -161,7 +162,7 @@ const onLogout = async () => {
 
                 <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
                 <ul v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
-                    <RouterLink to="/cart" class="flex text-white hover:!text-gray-400">
+                    <RouterLink to="/bought" class="flex text-white hover:!text-gray-400">
                         <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
                         <span class="flex absolute -mt-1 ml-4">
                             <span

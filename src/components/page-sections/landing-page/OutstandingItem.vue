@@ -9,10 +9,10 @@ import ItemBox from '@/components/common-components/ItemBox.vue';
 				<div class="tt-description">CLOTHING BRANDS</div>
 			</div>
             <div class="flex justify-around">
-                <ItemBox product-name="Super long long long long name long long long long"/>
-                <ItemBox product-name="Super long long long"/>
-                <ItemBox product-name="Super long long long"/>
-                <ItemBox product-name="Super long long long"/>
+                <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+                <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+                <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
+                <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999"/>
             </div>
         </div>
     </div>

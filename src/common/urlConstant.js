@@ -38,7 +38,7 @@ export default {
             getAll: '/categories/listCategory'
         },
         product: {
-            inventory: '/products'
+            inventory: '/products/listProductBySeller'
         },
         auctions: {
           getAll: '/auctions',
@@ -48,7 +48,8 @@ export default {
           reject: '/auctions/auction-sessions/{auctionId}/rejected',
           getHistoryBid: '/auctions/public/auction/{auctionId}',
           autoAuctionDetail: '/auctions/{auctionId}/auctionAutoInfo-detail',
-          updateAutoAuction: '/auctions/buyer/edit-auto-auction-info/{autoAuctionId}'
+          updateAutoAuction: '/auctions/buyer/edit-auto-auction-info/{autoAuctionId}',
+          getListAuctionWin: '/auctions/getListAuctionWin',
         },
         placeBid: {
             manual: 'auctions/buyer/manual-auction',

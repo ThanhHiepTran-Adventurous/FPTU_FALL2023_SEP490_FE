@@ -5,6 +5,7 @@ import { Carousel } from 'flowbite-vue'
 import { initFlowbite } from 'flowbite'
 import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
+import toastOption from '@/utils/toast-option'
 
 const autionsList = ref([])
 const itemsPerPage = 4
@@ -64,10 +65,17 @@ const handleApproveAuction = async auctionId => {
   try {
     const response = await adminService.approveAuction(auctionId)
     // Handle the response as needed
+    toastOption.toastSuccess("Duyệt thành công")
     console.log('Auction approved:', response)
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error approving auction:', error)
+    toastOption.toastError("Duyệt thất bại")
     // Handle the error
+  }
+  finally {
+    showUpdateModal.value = false
+    getAllAuctions()
   }
 }
 const handleRejectAuction = async auctionId => {
@@ -127,12 +135,12 @@ const paginatedAuctions = computed(() => {
             <tbody>
               <tr v-for="(auction, index) in paginatedAuctions" :key="index" class="border-b dark:border-gray-700">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                  <img
+                  <!-- <img
                     class="w-10 h-10 rounded-full"
                     :src="auction?.product?.seller?.avatarUrl"
-                    :alt="auction?.product?.seller?.fullname + ' image'" />
+                    :alt="auction?.product?.seller?.fullname + ' image'" /> -->
                   <div class="pl-3">
-                    <div class="text-base font-semibold">{{ auction?.product?.seller?.fullname }}</div>
+                    <div class="text-base font-semibold">{{ auction?.product?.seller?.id.split("-")[0] }}</div>
                   </div>
                 </th>
                 <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">

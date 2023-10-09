@@ -7,6 +7,7 @@ export const useUserStore = defineStore("user", {
     token: "",
     role: "",
     refreshToken: "",
+    isVerifyCCCD: ""
   }),
   actions: {
     resetUsername(){
@@ -52,6 +53,14 @@ export const useUserStore = defineStore("user", {
       this.role = roleInLocalStorage || ""
       return this.role
     },
+    getIsVerifyCCCDAndGetFromLocalStorageIfNotExist() {
+      if(this.isVerifyCCCD) {
+        return this.isVerifyCCCD
+      }
+      const isVerifyCCCDInLocalStorage = localStorage.getItem("isVerifyCCCD")
+      this.isVerifyCCCD = isVerifyCCCDInLocalStorage || ""
+      return this.isVerifyCCCD
+    },
     setUsernameAndSaveToLocalStorage(value){
       this.username = value;
       localStorage.setItem("username", value);
@@ -72,17 +81,23 @@ export const useUserStore = defineStore("user", {
       this.refreshToken = value
       localStorage.setItem("refreshToken", value)
     },
+    setIsVerifiedCCCDAndSaveToLocalStorage(value){
+      this.isVerifyCCCD = value
+      localStorage.setItem("isVerifyCCCD", value)
+    },
     clear(){
       this.userId = "";
       this.username = "";
       this.token = "";
       this.role = "";
       this.refreshToken = "";
+      this.isVerifyCCCD = "";
       localStorage.removeItem("token");
       localStorage.removeItem("role");
-      localStorage.removeItem("refreshToken")
-      localStorage.removeItem("userId")
-      localStorage.removeItem("username")
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("username");
+      localStorage.removeItem("isVerifyCCCD");
     }
   },
 });

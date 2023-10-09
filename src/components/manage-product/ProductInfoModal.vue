@@ -27,7 +27,7 @@
           </li>
           <li class="flex border-b py-2">
             <span class="font-bold w-50">Ngày Khởi Tạo:</span>
-            <span class="text-gray-700">{{ product?.createAt ? moment(product?.createAt).format("DD/MM/YYYY HH:MM:ss") :
+            <span class="text-gray-700">{{ product?.createAt ? moment.utc(product?.createAt).format("DD/MM/YYYY HH:MM:ss") :
               "N/A" }}</span>
           </li>
           <li class="flex border-b py-2">
@@ -44,7 +44,7 @@
           </li>
           <li class="flex border-b py-2">
             <span class="font-bold w-50">Giới Thiệu :</span>
-            <span class="text-gray-700">{{ product?.description }}</span>
+            <span class="text-gray-700 w-50">{{ product?.description }}</span>
           </li>
         </ul>
         <!-- Add more table rows as needed -->

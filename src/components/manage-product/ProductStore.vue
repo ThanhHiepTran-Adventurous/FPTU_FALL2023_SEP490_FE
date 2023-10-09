@@ -61,6 +61,9 @@ import productSerivice from '@/services/product.service';
 import { onMounted, ref } from 'vue';
 import toastOption from '../../utils/toast-option';
 import { noImage } from '../../common/urlConstant';
+import { useUserStore } from '@/stores/user.store';
+
+const userStore = useUserStore();
 
 const allowedModalTypes = { info: 'info', create: 'create' };
 const isModalVisible = ref(false);
@@ -104,7 +107,11 @@ const showDetail = (product) => {
   typeofModal.value = allowedModalTypes.info;
 }
 
-const showCreate = () => {
+const showCreate = async () => {
+  if(userStore.getIsVerifyCCCDAndGetFromLocalStorageIfNotExist() != true){
+    toastOption.toastError("Bạn phải cập nhật căn cước công dân trước khi đăng sản phẩm")
+    return
+  }
   isModalVisible.value = true;
   typeofModal.value = allowedModalTypes.create;
 }
