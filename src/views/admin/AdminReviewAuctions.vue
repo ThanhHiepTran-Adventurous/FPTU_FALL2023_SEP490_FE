@@ -1,20 +1,17 @@
 <script setup>
 import AdminHeader from '@/views/admin/common/AdminHeader.vue'
-import loginService from '../../services/login.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import { Carousel } from 'flowbite-vue'
 import { initFlowbite } from 'flowbite'
-import VueDatePicker from '@vuepic/vue-datepicker'
 import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
+
 const autionsList = ref([])
-const searchQuery = ref('')
-const openDropdowns = ref([])
 const itemsPerPage = 4
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
-const date = ref(new Date())
 const convertedImages = ref([])
+
 onMounted(() => {
   getAllAuctions()
   initFlowbite()
@@ -28,7 +25,7 @@ const openAuctionModal = auction => {
       src: url,
       alt: 'Image Alt Text', // You can set the alt text as per your requirements
     })) || []
-  // console.log(selectedAution.value)
+  console.log(selectedAution.value)
   showUpdateModal.value = true // Show the modal
 }
 const getAllAuctions = async () => {
@@ -41,38 +38,9 @@ const getAllAuctions = async () => {
   }
 }
 
-const toggleDropdown = index => {
-  const isOpen = openDropdowns.value.includes(index)
-  console.log(index)
-  if (isOpen) {
-    // If the dropdown is already open, close it
-    openDropdowns.value = openDropdowns.value.filter(i => i !== index)
-  } else {
-    // If the dropdown is closed, open it
-    openDropdowns.value.push(index)
-  }
-}
-
-// Computed property for paginated users
-const paginatedUsers = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  return userList.value
-    .filter(user => user.fullname.toLowerCase().includes(searchQuery.value.toLowerCase()))
-    .slice(startIndex, endIndex)
-})
-
-// Watch for changes in searchQuery and reset currentPage when searching
-watch(searchQuery, () => {
-  currentPage.value = 1
-})
-
 // Computed property for total pages
 const totalPages = computed(() => {
-  return Math.ceil(
-    autionsList.value.filter(user => user.fullname.toLowerCase().includes(searchQuery.value.toLowerCase())).length /
-      itemsPerPage,
-  )
+  return Math.ceil(autionsList.value.length / itemsPerPage)
 })
 // Function to go to a specific page
 const goToPage = page => {
@@ -116,6 +84,18 @@ const handleRejectAuction = async auctionId => {
     // Handle the error
   }
 }
+
+// Compute the start and end index for the current page
+const startIndex = (currentPage.value - 1) * itemsPerPage
+const endIndex = startIndex + itemsPerPage
+
+// Compute paginated auctions
+const paginatedAuctions = computed(() => {
+  // Move startIndex and endIndex calculation here
+  const startIndex = (currentPage.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return autionsList.value.slice(startIndex, endIndex)
+})
 </script>
 
 <template>
@@ -126,92 +106,9 @@ const handleRejectAuction = async auctionId => {
       <!-- Start coding here -->
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-          <div class="w-full md:w-1/2">
-            <!-- <form class="flex items-center">
-              <label for="simple-search" class="sr-only"></label>
-              <div class="relative w-full">
-                <input
-                  v-model="searchQuery"
-                  type="text"
-                  id="simple-search"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Tìm thương hiệu theo tên"
-                  required="" />
-              </div>
-            </form> -->
-          </div>
+          <div class="w-full md:w-1/2"></div>
           <div
-            class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
-            <!-- <button
-              type="button"
-              @click="openCreatebrandModal()"
-              class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-              Thêm thương hiệu
-            </button> -->
-            <!-- <button
-              id="filterDropdownButton"
-              data-dropdown-toggle="filterDropdown"
-              class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-              type="button">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                class="h-4 w-4 mr-2 text-gray-400"
-                viewbox="0 0 20 20"
-                fill="currentColor">
-                <path
-                  fill-rule="evenodd"
-                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                  clip-rule="evenodd" />
-              </svg>
-              Lọc theo trạng thái
-              <svg
-                class="-mr-1 ml-1.5 w-5 h-5"
-                fill="currentColor"
-                viewbox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true">
-                <path
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-              </svg>
-            </button> -->
-            <!-- <div id="filterDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-              <h6 class="text-sm font-medium text-gray-900 dark:text-white">Chọn trạng thái</h6>
-              <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                <li class="flex items-center">
-                  <input
-                    id="option"
-                    v-model="selectedStatusFilter"
-                    type="radio"
-                    value="ALL"
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">ALL </label>
-                </li>
-                <li class="flex items-center">
-                  <input
-                    id="option"
-                    v-model="selectedStatusFilter"
-                    type="radio"
-                    value="ACTIVE"
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">ACTIVE </label>
-                </li>
-                <li class="flex items-center">
-                  <input
-                    id="option"
-                    v-model="selectedStatusFilter"
-                    type="radio"
-                    value="INACTIVE"
-                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                    >INACTIVE
-                  </label>
-                </li>
-              </ul>
-            </div> -->
-          </div>
+            class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"></div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -220,7 +117,7 @@ const handleRejectAuction = async auctionId => {
                 <th scope="col" class="px-5 py-3">Người bán</th>
 
                 <th scope="col" class="px-4 py-3">Tên sản phẩm</th>
-                <th scope="col" class="px-4 py-3">Mô tả</th>
+                <th scope="col" class="px-4 py-3">Hình thức mua bán</th>
                 <th scope="col" class="px-4 py-3">Ngày tạo</th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only">Actions</span>
@@ -228,7 +125,7 @@ const handleRejectAuction = async auctionId => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(auction, index) in autionsList" :key="index" class="border-b dark:border-gray-700">
+              <tr v-for="(auction, index) in paginatedAuctions" :key="index" class="border-b dark:border-gray-700">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                   <img
                     class="w-10 h-10 rounded-full"
@@ -242,7 +139,7 @@ const handleRejectAuction = async auctionId => {
                   {{ auction?.product?.name }}
                 </td>
                 <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
-                  {{ auction?.product?.description }}
+                  {{ auction?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống' }}
                 </td>
                 <td class="px-4 py-3">{{ new Date(auction?.product?.createAt).toLocaleString() }}</td>
                 <td class="px-4 py-3 flex items-center justify-end">
@@ -271,11 +168,13 @@ const handleRejectAuction = async auctionId => {
           class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
           aria-label="Table navigation">
           <ul class="inline-flex items-stretch -space-x-px">
-            <!-- <li>
+            <li>
               <button
                 type="button"
                 class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                @click="goToPreviousPage">
+                @click="goToPreviousPage"
+                :disabled="currentPage === 1"
+                aria-label="Previous Page">
                 <span class="sr-only">Previous</span>
                 <svg
                   class="w-5 h-5"
@@ -289,9 +188,9 @@ const handleRejectAuction = async auctionId => {
                     clip-rule="evenodd" />
                 </svg>
               </button>
-            </li> -->
+            </li>
             <!-- Generate pagination links -->
-            <!-- <li v-for="pageNumber in totalPages" :key="pageNumber">
+            <li v-for="pageNumber in totalPages" :key="pageNumber">
               <button
                 type="button"
                 class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
@@ -301,14 +200,18 @@ const handleRejectAuction = async auctionId => {
                   'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
                     pageNumber === currentPage,
                 }"
-                @click="goToPage(pageNumber)">
+                @click="goToPage(pageNumber)"
+                aria-label="Page {{ pageNumber }}">
                 {{ pageNumber }}
               </button>
-            </li> -->
-            <!-- <li>
+            </li>
+            <li>
               <button
                 type="button"
-                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                @click="goToNextPage"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                :disabled="currentPage === totalPages"
+                aria-label="Next Page">
                 <span class="sr-only">Next</span>
                 <svg
                   class="w-5 h-5"
@@ -322,7 +225,7 @@ const handleRejectAuction = async auctionId => {
                     clip-rule="evenodd" />
                 </svg>
               </button>
-            </li> -->
+            </li>
           </ul>
         </nav>
       </div>
@@ -334,7 +237,7 @@ const handleRejectAuction = async auctionId => {
     tabindex="-1"
     aria-hidden="true"
     class="fixed inset-0 flex m items-center justify-center z-50 bg-black bg-opacity-50">
-    <div class="relative p-4 w-full max-w-2xl md:h-auto">
+    <div class="relative p-4 w-full max-w-4xl md:h-auto">
       <!-- Modal content -->
       <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
         <!-- Modal header -->
@@ -359,11 +262,13 @@ const handleRejectAuction = async auctionId => {
             <span class="sr-only">Close modal</span>
           </button>
         </div>
-        <!-- {{ selectedAution?.product?.imageUrls }} -->
+
         <!-- Modal body -->
         <div class="max-h-[600px] overflow-y-auto mt-2">
           <form action="#">
-            <Carousel :pictures="convertedImages"></Carousel>
+            <div>
+              <Carousel :pictures="convertedImages"></Carousel>
+            </div>
 
             <div class="grid mt-2 gap-4 mb-4 sm:grid-cols-2">
               <div>
@@ -378,6 +283,68 @@ const handleRejectAuction = async auctionId => {
                   id="name"
                   class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
               </div>
+              <div>
+                <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Hình thức mua bán</label
+                >
+                <input
+                  type="text"
+                  name="modelType"
+                  id="modelType"
+                  :value="selectedAution?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống'"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              </div>
+              <div>
+                <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Giá khởi điểm</label
+                >
+                <input
+                  type="text"
+                  name="startPrice"
+                  id="startPrice"
+                  :value="selectedAution?.startPrice ? selectedAution.startPrice.toLocaleString('vi-VN') + ' VND' : ''"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              </div>
+              <div>
+                <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Giá mua ngay</label
+                >
+                <input
+                  type="text"
+                  name="buyNowPrice"
+                  id="buyNowPrice"
+                  :value="
+                    selectedAution?.buyNowPrice ? selectedAution.buyNowPrice.toLocaleString('vi-VN') + ' VND' : ''
+                  "
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              </div>
+              <div>
+                <label for="jump" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Bước nhảy tối thiểu</label
+                >
+                <input
+                  type="text"
+                  name="jump"
+                  id="jump"
+                  :value="selectedAution?.jump ? selectedAution.jump.toLocaleString('vi-VN') + ' VND' : ''"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              </div>
+              <div>
+                <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Thời gian đấu giá</label
+                >
+                <input
+                  type="text"
+                  name="duration"
+                  id="duration"
+                  :value="selectedAution?.duration / (1000 * 60 * 60) + ' tiếng'"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              </div>
             </div>
             <div>
               <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -391,6 +358,7 @@ const handleRejectAuction = async auctionId => {
                 id="description"
                 class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
             </div>
+
             <div class="flex items-center mt-2 space-x-4">
               <button
                 @click="handleApproveAuction(selectedAution.id)"

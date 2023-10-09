@@ -91,6 +91,16 @@ const rejectAuction = async (auctionId, rejectReason) => {
     throw error
   }
 }
+const getAllCategories = async () => {
+  try {
+    const serviceUrl = url.endpoint.category.getAll
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 export default {
   fetchAllBrands,
   deleteBrandById,
@@ -99,4 +109,5 @@ export default {
   getAllAuctions,
   approveAuction,
   rejectAuction,
+  getAllCategories,
 }
