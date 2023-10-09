@@ -38,7 +38,8 @@ export default {
             getAll: '/categories/listCategory'
         },
         product: {
-            inventory: '/products/listProductBySeller'
+            inventory: '/products',
+            inventoryByUser: '/products/listProductBySeller'
         },
         auctions: {
           getAll: '/auctions',

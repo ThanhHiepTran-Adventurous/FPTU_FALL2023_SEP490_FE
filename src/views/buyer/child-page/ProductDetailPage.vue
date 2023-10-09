@@ -69,9 +69,15 @@ const fetchBidHistory = async () => {
 		const topBidderData = bidHistoryInfo.value[0]
 		const latestBidderInfo = {
 			identifier: topBidderData.idBidder,
-			createdAt: moment(topBidderData.bidTime).format("DD/MM/YYYY HH:mm:ss")
+			createdAt: topBidderData.createAt
 		}
-		auction.value = {...auction.value, latestBidderInfo }
+		if(auction.value && auction.value.latestBidderInfo){
+			auction.value.latestBidderInfo.identifier = latestBidderInfo.identifier
+			auction.value.latestBidderInfo.createdAt = latestBidderInfo.createdAt
+		} else {
+			auction.value = {...auction.value, latestBidderInfo }
+		}
+		auction.value.highestPrice = topBidderData.bidAmount
 	}
 }
 
@@ -87,6 +93,8 @@ const onBuyNowSuccess = () => {
 
 onMounted(async () => {
 	fetchPageData()
+
+	// NEED TO REPLACE SET INTERVAL WITH FIREBASE MESSAGE TRIGGER!!!!!
 	interval = setInterval(() => {
 		console.log("interval call")
 		fetchBidHistory()

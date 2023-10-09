@@ -13,7 +13,7 @@ const addProductToInventory = async formData => {
 }
 
 const getProducts = async (query) => {
-  const serviceUrl = `${url.endpoint.product.inventory}?query=${query}&page=1&size=10000`;
+  const serviceUrl = `${url.endpoint.product.inventoryByUser}?query=${query}&page=1&size=10000`;
     const response = await utils.axiosLocalHost.get(serviceUrl)
     return response ? response.data : response
 }
