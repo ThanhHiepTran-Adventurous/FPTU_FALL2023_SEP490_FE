@@ -11,13 +11,16 @@ import { useGlobalStore } from '@/stores/global.store';
 
 const globalStore = useGlobalStore();
 const isModalVisible = ref(false);
+const autoAuctionInfo = ref(null);
+
+const emit = defineEmits(['placeBidSuccess', 'buyNowSuccess'])
 
 const props = defineProps({
   auctionInfo: Object,
 });
 
 const deadlineInMilis = computed(() => {
-  if(props.auctionInfo){
+  if(props.auctionInfo?.endDate){
     const date = new Date(props.auctionInfo.endDate)
     return date.getTime() + date.getTimezoneOffset() * 60000
   }
@@ -26,10 +29,12 @@ const deadlineInMilis = computed(() => {
 const onPlaceBidMannualSuccess = () => {
   isModalVisible.value = false
   toastOption.toastSuccess("Đặt giá thành công")
+  emit('placeBidSuccess')
 }
 const onPlaceBidAutoSuccess = () => {
   isModalVisible.value = false
   toastOption.toastSuccess("Đặt giá tự động thành công")
+  emit('placeBidSuccess')
 }
 const onPlaceError = () => {
   isModalVisible.value = false
@@ -37,7 +42,7 @@ const onPlaceError = () => {
 }
 
 const onBuyNowClick = () => {
-  //if not login
+  //if not login, force modal login open
   if(!globalStore.isAlreadyLogin()){
     globalStore.showLoginModal = true
     return
@@ -46,10 +51,21 @@ const onBuyNowClick = () => {
   auctionService.buyNowBid(props.auctionInfo?.id)
   .then(_ => {
     toastOption.toastSuccess("Bạn vừa mua ngay sản phẩm này thành công")
+    emit("buyNowSuccess")
   })
   .catch(_ => {
     toastOption.toastError("Quá trình mua ngay thất bại, hãy tải lại trang và thử lại")
   })
+}
+
+const onPlaceBidClick = async () => {
+  //if not login, force modal login open
+  if(!globalStore.isAlreadyLogin()){
+    globalStore.showLoginModal = true
+    return
+  }
+
+  isModalVisible.value = true
 }
 
 </script>
@@ -64,6 +80,7 @@ const onBuyNowClick = () => {
       :jump="auctionInfo?.jump" 
       :buy-now-price="auctionInfo?.buyNowPrice" 
       :auction-id="auctionInfo?.id"
+      :auto-aution="autoAuctionInfo"
       @place-bid-success="onPlaceBidMannualSuccess()"
       @place-auto-auction-success="onPlaceBidAutoSuccess()"
       @place-error="onPlaceError()"
@@ -77,7 +94,7 @@ const onBuyNowClick = () => {
           <span class="mr-3">
             <Icon icon="mdi:fire" class="text-red-500 text-[24px]" />
           </span>
-          {{ 40 }} người đang tham gia đấu giá
+          {{ auctionInfo?.numOfUsers }} người tham gia đấu giá
         </li>
       </ul>
     </div>
@@ -103,24 +120,24 @@ const onBuyNowClick = () => {
     <div class="tt-wrapper">
       <div class="flex gap-3 w-full">
         <div class="flex flex-col gap-8 w-full">
-          <div class="flex items-start gap-3 w-full border-b-[2px] pb-8 mr-2">
-            <div class="w-[400px]">
+          <div class="flex items-start mx-auto gap-3 w-full border-b-[2px] pb-8 mr-2">
+            <div class="w-[500px]">
               <div class="text-2xl font-bold text-blue-600 flex">
-                <span class="text-blue-600 w-[150px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice }} ₫
+                <span class="text-blue-600 w-[150px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice || auctionInfo?.startPrice }} ₫
               </div>
-              <div>
-                Đặt lần cuối bởi: 111xxx111111 - Lúc: 30/09/2023 21:59:00
+              <div v-if="auctionInfo?.highestPrice">
+                Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc: {{ auctionInfo?.latestBidderInfo?.createdAt }}
               </div>
             </div>
             <div class="px-2">
               <button
-                @click="isModalVisible = true"
+                @click="onPlaceBidClick()"
                 class="flex w-[200px] font-semibold items-center justify-center bg-white hover:bg-red-700 border-blue-500 text-blue-700 border-[1px] py-3 px-8 rounded-md">
-                <div class="text-[20px]">Đấu giá</div>
+                <div class="text-[20px]">Đấu giá ngay</div>
               </button>
             </div>
           </div>
-          <div class="flex items-center gap-3 w-full mr-2 pb-8">
+          <div class="flex items-center gap-3 w-full mr-2 pb-8" v-if="auctionInfo?.buyNowPrice">
             <div class="w-[400px]">
               <div class="text-2xl flex font-bold text-red-500">
                 <span class="text-blue-600 block w-[150px] mr-3">Giá trần: </span>{{ auctionInfo?.buyNowPrice }} ₫

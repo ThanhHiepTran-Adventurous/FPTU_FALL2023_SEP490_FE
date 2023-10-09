@@ -46,7 +46,9 @@ export default {
           productAuctionRequest: '/auctions/{productId}/add-auction-product',
           approve: '/auctions/auction-sessions/{auctionId}/approve',
           reject: '/auctions/auction-sessions/{auctionId}/rejected',
-          getHistoryBid: '/auctions/public/auction/{auctionId}/product/{productId}'
+          getHistoryBid: '/auctions/public/auction/{auctionId}',
+          autoAuctionDetail: '/auctions/{auctionId}/auctionAutoInfo-detail',
+          updateAutoAuction: '/auctions/buyer/edit-auto-auction-info/{autoAuctionId}'
         },
         placeBid: {
             manual: 'auctions/buyer/manual-auction',
@@ -55,7 +57,8 @@ export default {
         },
         guest: {
             auctions: 'guest/auctions',
-            auctionDetail: 'guest/{id}/auction-detail'
+            auctionDetail: 'guest/{id}/auction-detail',
+            auctionHistory: 'guest/auction/{auctionId}'
         }
     }
 }

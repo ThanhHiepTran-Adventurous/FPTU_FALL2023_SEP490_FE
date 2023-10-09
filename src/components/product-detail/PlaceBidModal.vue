@@ -1,79 +1,119 @@
 <script setup>
 import auctionService from "@/services/auction.service";
 import formatCurrency from "@/utils/currency-formatter";
-import { ref } from "vue"
-import { number, string } from "yup/lib/locale"
+import { computed, onMounted, ref, watch } from "vue"
 
 const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel'])
 
-const props = defineProps({
-    startPrice: number,
-    highestPrice: number,
-    jump: number,
-    buyNowPrice: number | null,
-    auctionId: string
+const props = defineProps([
+  'startPrice',
+  'highestPrice',
+  'jump',
+  'buyNowPrice',
+  'auctionId',
+  'autoAuction',
+])
+
+const preAutoAuctionData = ref(null)
+
+const isPreAutoAuctionHappen = computed(() => {
+  return !!(preAutoAuctionData.value)
 })
 
 const isAutoAuctionTabShow = ref(false)
 
 const showAutoAuctionTab = () => {
-    isAutoAuctionTabShow.value = true
+  isAutoAuctionTabShow.value = true
 }
 const showAuctionTab = () => {
-    isAutoAuctionTabShow.value = false
+  isAutoAuctionTabShow.value = false
 }
 
 const placebidPrice = ref('')
 
 const autoAuctionData = ref({
-    maxPrice: '',
-    deltaTime: '',
-    deltaPrice: '',
+  maxPrice: '',
+  deltaTime: '',
+  deltaPrice: '',
 })
 
 const resetAllState = () => {
-    autoAuctionData.value.maxPrice = ''
-    autoAuctionData.value.deltaTime = ''
-    autoAuctionData.value.deltaPrice = ''
-    placebidPrice.value = ''
+  autoAuctionData.value.maxPrice = ''
+  autoAuctionData.value.deltaTime = ''
+  autoAuctionData.value.deltaPrice = ''
+  placebidPrice.value = ''
 }
 
 const onAuctionSubmit = () => {
-    auctionService.placeBidMannual(props.auctionId, placebidPrice.value)
+  auctionService.placeBidMannual(props.auctionId, placebidPrice.value)
+  .then(_ => {
+    emit("placeBidSuccess")
+  })
+  .catch(_ => {
+    emit("placeError")
+  })
+  .finally(() => {
+    resetAllState()
+  })
+}
+
+const onUpdateAutoAuctionSubmit = () => {
+  const payload = {
+    maxPrice : autoAuctionData.value.maxPrice,
+    deltaTime : autoAuctionData.value.deltaTime * 60000,
+    deltaPrice : autoAuctionData.value.deltaPrice,
+  }
+
+  console.log(preAutoAuctionData.value)
+
+  auctionService.updateAutoBid(preAutoAuctionData.value.id, payload)
     .then(_ => {
-        emit("placeBidSuccess")
+      emit("placeAutoAuctionSuccess")
     })
     .catch(_ => {
-        emit("placeError")
+      emit("placeError")
     })
     .finally(() => {
-        resetAllState()
+      resetAllState()
     })
 }
 
 const onAutoAuctionSubmit = () => {
     const payload = {
-        maxPrice : autoAuctionData.value.maxPrice,
-        deltaTime : autoAuctionData.value.deltaTime * 60000,
-        deltaPrice : autoAuctionData.value.deltaPrice,
-
+      maxPrice : autoAuctionData.value.maxPrice,
+      deltaTime : autoAuctionData.value.deltaTime * 60000,
+      deltaPrice : autoAuctionData.value.deltaPrice,
     }
     auctionService.placeAutoBid(props.auctionId, payload)
     .then(_ => {
-        emit("placeAutoAuctionSuccess")
+      emit("placeAutoAuctionSuccess")
     })
     .catch(_ => {
-        emit("placeError")
+      emit("placeError")
     })
     .finally(() => {
-        resetAllState()
+      resetAllState()
     })
 }
 
 const onCancelClick = () => {
-    resetAllState()
-    emit('modalCancel')
+  resetAllState()
+  emit('modalCancel')
 }
+
+const fetchAutoAuctionData = async () => {
+  const response = await auctionService.getAutoBidDetail(props.auctionId)
+  if(response.data && response.data.length > 0){
+    preAutoAuctionData.value = response.data[0]
+    autoAuctionData.value.deltaPrice = preAutoAuctionData.value.deltaPrice
+    autoAuctionData.value.deltaTime = preAutoAuctionData.value.deltaTime
+    autoAuctionData.value.maxPrice = preAutoAuctionData.value.maxPrice
+  }
+}
+
+onMounted(async () => {
+  fetchAutoAuctionData()
+})
 
 </script>
 <template>
@@ -173,10 +213,15 @@ const onCancelClick = () => {
             type="button">
             Hủy
           </button>
-          <button @click="onAutoAuctionSubmit()"
+          <button @click="onAutoAuctionSubmit()" v-if="!isPreAutoAuctionHappen"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button">
             ĐẶT ĐẤU GIÁ
+          </button>
+          <button @click="onUpdateAutoAuctionSubmit()" v-else
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button">
+            CẬP NHẬT THÔNG TIN ĐẤU GIÁ TỰ ĐỘNG
           </button>
         </div>
       </form>

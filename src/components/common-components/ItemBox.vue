@@ -26,7 +26,7 @@
         },
         itemId: {
             type: String,
-            required: true
+            default: ''
         }
     })
 

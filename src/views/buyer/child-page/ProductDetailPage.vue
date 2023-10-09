@@ -4,12 +4,16 @@ import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
 import ItemBox from '@/components/common-components/ItemBox.vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import auctionService from '@/services/auction.service';
+import moment from 'moment';
 
-const router = useRouter();
 const route = useRoute();
+
+const bidHistoryInfo = ref([])
+const numOfUsers = ref(0)
+const numOfBids = ref(0)
 
 const auction = ref(null)
 
@@ -31,35 +35,48 @@ const breadcrumbItems = [
 	}
 ]
 
-const product = {
-	productImages: [
-		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-		"https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/9b26aa8f-0173-409b-b30a-7ce2d88573a4/custom-nike-dunk-low-by-you.png",
-	],
-	productInfo: {
-		sku: '001',
-		productTitle: 'Tên Sản Phẩm',
-		productPeopleJoin: '40',
-		productPrice: '90.000.000 VND',
-		productDescription: 'loreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit ametloreum ipsum dolor sit amet',
-		productRateStar: 3,
-		reviewNumber: '1',
-		vendor: 'Polo',
-		productType: 'T-Shirt',
-		tags: ['T-Shirt', 'Women', 'Top']
+const fetchDetail = async () => {
+	const auctionDetailData = await auctionService.getAuctionDetail(route.params["id"])
+	const autionData = auction.value
+	auction.value = {...autionData, ... auctionDetailData.data, numOfUsers : numOfUsers.value }
+}
+const fetchBidHistory = async () => {
+	const response = await auctionService.getHistoryBid(route.params["id"])
+    const data = response.data
+    numOfUsers.value = data.bidders || 0
+    numOfBids.value = data.bids || 0
+
+    bidHistoryInfo.value = data.informationBidderDTOS ? data.informationBidderDTOS.map(d => {
+        return {
+            idBidder: d.idBidder,
+            bidAmount: d.bidAmount,
+            createAt: moment(d.bidTime).format("DD/MM/YYYY HH:mm:ss"),
+            bidType: d.auctionType
+        }
+    }).sort((d1, d2) => {
+        return d2.bidAmount - d1.bidAmount
+    }) : []
+	if(bidHistoryInfo.value.length > 0){
+		const topBidderData = bidHistoryInfo.value[0]
+		const latestBidderInfo = {
+			identifier: topBidderData.idBidder,
+			createdAt: moment(topBidderData.bidTime).format("DD/MM/YYYY HH:mm:ss")
+		}
+		auction.value = {...auction.value, latestBidderInfo }
+		console.log(auction.value)
 	}
 }
 
-const fetchDetail = async () => {
-	const auctionDetailData = await auctionService.getAuctionDetail(route.params["id"])
-	console.log(auctionDetailData)
-	auction.value = auctionDetailData.data
+const fetchPageData = async () => {
+	await fetchBidHistory()
+	fetchDetail()
+}
+const onBuyNowSuccess = () => {
+
 }
 
 onMounted(async () => {
-	await fetchDetail()
+	fetchPageData()
 })
 
 </script>
@@ -74,11 +91,11 @@ onMounted(async () => {
 						<ListProductImage :images="auction?.product?.imageUrls" />
 					</div>
 					<div class="pl-5 border-l-[1px]">
-						<ProductInfo :auction-info="auction" />
+						<ProductInfo :auction-info="auction" @place-bid-success="fetchPageData()" @buy-now-success="onBuyNowSuccess()"/>
 					</div>
 				</div>
-				<div class="flex items-start rounded-md !bg-white mt-3 xl:mt-0 w-full xl:w-[50%]">
-					<AuctionHistoryBid :auction-id="auction?.id" :product-id="auction?.product?.id" />
+				<div class="flex items-start rounded-md !bg-white xl:mt-0 w-full xl:w-[50%]">
+					<AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
 				</div>
 			</div>
 			<div class="text-xl mt-8">SẢN PHẨM KHÁC</div>
