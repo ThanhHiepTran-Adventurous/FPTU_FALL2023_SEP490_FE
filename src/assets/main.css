@@ -6,8 +6,62 @@
 
 /* @import "./base.css";
 
-
 @import url("https://fonts.googleapis.com/css?family=Hind:300,400,500,600&display=swap"); */
+
+
+
+/* Vue toastify config */
+.loading-toastification {
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid #9facc2 !important;
+  border-radius: 50%;
+  border-top-color: white !important;
+  animation: spin 1s ease-in-out infinite !important;
+  -webkit-animation: spin 1s ease-in-out infinite !important;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.Vue-Toastification__toast--default {
+  --tw-gradient-to: #4a82f3 !important;
+  --tw-gradient-from: #0453d2 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+.Vue-Toastification__toast--error.my-toast-error-color {
+  --tw-gradient-to: #ff667c !important;
+  --tw-gradient-from: #ea0606 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+.Vue-Toastification__toast--success.my-toast-success-color {
+  --tw-gradient-to: #98ec2d !important;
+  --tw-gradient-from: #17ad37 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+
+
+
 
 #app {
   /* max-width: 1280px; */

@@ -39,14 +39,14 @@
   </div>
 
   <div>
-    <Modal v-if="isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
+    <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
       :title="typeofModal === allowedModalTypes.info ? 'Thông tin' : 'Tạo mới'"
       @decline-modal="closeModal" @confirm-modal="handleConfirm">
-      <div v-if="typeofModal === allowedModalTypes.info">
-        <ProductInfoModal :product="productDetail" @send-success="onSendSuccess" @send-error="onSendError" />
+      <div :hidden="!(typeofModal === allowedModalTypes.info)">
+        <ProductInfoModal :product="productDetail" @send-success="onSendSuccess" @send-error="onSendError" @just-submitted="closeModal"/>
       </div>
-      <div v-if="typeofModal === allowedModalTypes.create">
-        <CreateNewProduct @create-success="onCreateSuccess" @create-error="onCreateError" />
+      <div :hidden="!(typeofModal === allowedModalTypes.create)">
+        <CreateNewProduct @create-success="onCreateSuccess" @create-error="onCreateError" @just-submitted="closeModal"/>
       </div>
     </Modal>
   </div>
@@ -72,33 +72,29 @@ const typeofModal = ref('info');
 const products = ref([]);
 const productDetail = ref(null);
 
-const onCreateSuccess = () => {
-  toastOption.toastSuccess("Tạo mới sản phẩm vào kho thành công");
+const onCreateSuccess = (toastId) => {
+  toastOption.updateLoadingToast(toastId, "Tạo mới sản phẩm vào kho thành công", false);
   fetchProducts();
-  isModalVisible.value = false;
 }
 
-const onCreateError = (detail) => {
+const onCreateError = (toastId, detail) => {
   if(detail){
-    toastOption.toastError(detail);
+    toastOption.updateLoadingToast(toastId, detail, true);
   } else {
-    toastOption.toastError("Có lỗi khi tạo mới sản phẩm");
+    toastOption.updateLoadingToast(toastId, "Có lỗi khi tạo mới sản phẩm", true);
   }
-  isModalVisible.value = false;
 }
-const onSendSuccess = () => {
-  toastOption.toastSuccess("Gửi yêu cầu cho sản phẩm lên sàn đấu giá thành công");
+const onSendSuccess = (toastId) => {
+  toastOption.updateLoadingToast(toastId, "Gửi yêu cầu cho sản phẩm lên sàn đấu giá thành công");
   fetchProducts();
-  isModalVisible.value = false;
 }
 
-const onSendError = (detail) => {
+const onSendError = (toastId, detail) => {
   if(detail){
-    toastOption.toastError(detail);
+    toastOption.updateLoadingToast(toastId, detail, true);
   } else {
-    toastOption.toastError("Có lỗi khi gửi yêu cầu cho sản phẩm lên sàn đấu giá");
+    toastOption.updateLoadingToast(toastId, "Có lỗi khi gửi yêu cầu cho sản phẩm lên sàn đấu giá", true);
   }
-  isModalVisible.value = false;
 }
 
 const showDetail = (product) => {
@@ -108,7 +104,7 @@ const showDetail = (product) => {
 }
 
 const showCreate = async () => {
-  if(userStore.getIsVerifyCCCDAndGetFromLocalStorageIfNotExist() != true){
+  if(userStore.getIsVerifyCCCDAndGetFromLocalStorageIfNotExist() !== "true"){
     toastOption.toastError("Bạn phải cập nhật căn cước công dân trước khi đăng sản phẩm")
     return
   }

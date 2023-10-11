@@ -1,12 +1,14 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { Icon } from '@iconify/vue';
+import { onMounted, ref } from 'vue'
+import { Icon } from '@iconify/vue'
 import { base64Image } from '@/utils/imageFile'
 import brandService from '@/services/brand.service'
 import categoryService from '@/services/category.service'
 import productSerivice from '@/services/product.service'
+import toastOption from '@/utils/toast-option'
+import { HTTP_STATUS } from '@/common/httpStatus'
 
-const emit = defineEmits(['createSuccess', 'createError'])
+const emit = defineEmits(['createSuccess', 'createError', 'justSubmitted'])
 
 const categories = ref([])
 const brands = ref([])
@@ -38,17 +40,27 @@ const onSubmit = () => {
   }
   form.append("addProductRequest", new Blob([JSON.stringify(addProductRequest)], {type: 'application/json'}))
 
+  emit('justSubmitted')
+  const toastId = toastOption.toastLoadingMessage("Đang thêm sản phẩm vào kho")
+
   productSerivice.addProductToInventory(form)
     .then(_ => {
-      emit('createSuccess')
+      emit('createSuccess', toastId)
     })
     .catch(error => {
-      if(error.response.data.message.includes('Validation')){
-        emit('createError', 'Kiểm tra lại thông tin của bạn')
-      } else if(error.response.data.message.includes('citizen card')){
-        emit('createError', 'Bạn phải xác thực căn cước công dân trước khi đăng sản phẩm')
+      if(error.response.status ===  HTTP_STATUS.INTERNAL_ERROR){
+        emit('createError', toastId)
+        return
       }
-      emit('createError')
+      if(error.response.data.message.includes('Validation')){
+        emit('createError', toastId, 'Kiểm tra lại thông tin của bạn')
+      } else if(error.response.data.message.includes('citizen card')){
+        emit('createError', toastId, 'Bạn phải xác thực căn cước công dân trước khi đăng sản phẩm')
+      }
+      emit('createError', toastId)
+    })
+    .finally(() => {
+      resetFormData()
     })
 }
 
@@ -63,6 +75,18 @@ onMounted(async () => {
   brands.value = brandsData.data.filter(d => d.status === "ACTIVE")
   categories.value = categoriesData.data.filter(d => d.status === "ACTIVE")
 })
+
+const resetFormData = () => {
+  formData.value = {
+    name: '',
+    description: '',
+    weight: '',
+    brandId: '',
+    categoryId: '',
+  }
+  imgSrc.value = []
+  imgData.value = []
+}
 
 </script>
 <template>

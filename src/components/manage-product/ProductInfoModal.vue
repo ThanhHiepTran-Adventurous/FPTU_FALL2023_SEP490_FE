@@ -64,17 +64,13 @@
           <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
             GIÁ KHỞI ĐIỂM (nếu có)
           </label>
-          <input v-model="formData.startPrice"
-            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="title" type="text" placeholder="">
+          <CurrencyInput v-model="formData.startPrice" placeholder="" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
             GIÁ MUA NGAY (nếu có)
           </label>
-          <input v-model="formData.buyNowPrice"
-            class="shadow border rounded w-full text-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="description" placeholder="" />
+          <CurrencyInput v-model="formData.buyNowPrice" placeholder="" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -126,11 +122,8 @@
           <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
             BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
           </label>
-          <div class="flex gap-3 items-center">
-            <input v-model="formData.jump"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="jump" type="text" placeholder="">
-            <div class="block text-gray-700 text-sm font-bold">VNĐ</div>
+          <div class="w-full items-center">
+            <CurrencyInput v-model="formData.jump" placeholder="" w="w-full"/>
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -157,8 +150,11 @@ import { Icon } from '@iconify/vue'
 import { initFlowbite } from 'flowbite'
 import Dropdown from "@/components/common-components/Dropdown.vue";
 import AuctionService from "@/services/auction.service"
+import CurrencyInput from "../common-components/CurrencyInput.vue";
+import currencyFormatter from "@/common/currencyFormatter";
+import toastOption from "@/utils/toast-option";
 
-const emit = defineEmits(['sendSuccess', 'sendError'])
+const emit = defineEmits(['sendSuccess', 'sendError', 'justSubmitted'])
 
 const immediateMessage = `
 Ở hình thức này, sau khi phiên đấu giá kết thúc, 
@@ -244,21 +240,47 @@ const showFormTab = () => {
 };
 
 const onSubmit = () => {
+  const data = getPayload()
+  emit('justSubmitted')
+  const toastId = toastOption.toastLoadingMessage("Đang tiến hành gửi yêu cầu lên đấu giá")
+  AuctionService.sendAuctionRequest(props.product.id, data)
+  .then(_ => {
+    emit('sendSuccess', toastId)
+  })
+  .catch(error => {
+    emit('sendError', toastId)
+  })
+  .finally(() => {
+    resetData()
+  })
+}
+
+const getPayload = () => {
   const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  const data = {
-    startPrice: formData.value.startPrice || 0,
-    jump: formData.value.jump,
-    buyNowPrice: formData.value.buyNowPrice || 0,
+  return {
+    startPrice: currencyFormatter.fromStyledStringToNumber(formData.value.startPrice) || 0,
+    jump: currencyFormatter.fromStyledStringToNumber(formData.value.jump),
+    buyNowPrice: currencyFormatter.fromStyledStringToNumber(formData.value.buyNowPrice) || 0,
     modelType: formData.value.modelType,
     hoursOfDuration: durationValue
   }
-  AuctionService.sendAuctionRequest(props.product.id, data)
-  .then(_ => {
-    emit('sendSuccess')
-  })
-  .catch(error => {
-    emit('sendError')
-  })
+}
+
+const resetData = () => {
+  formData.value = {
+    startPrice: '',
+    jump: '',
+    buyNowPrice: '',
+    modelType: 0,
+    daysOfDuration: 0,
+    hoursOfDuration: 0,
+    minutesOfDuration: 0,
+  }
+  duration.value = {
+    label: "3 tiếng",
+    value: 3
+  }
+  durationInput.value = 1
 }
 
 onMounted(() => {

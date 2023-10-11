@@ -167,14 +167,14 @@ html {
 
 /* Vue toastify config */
 .loading-toastification {
-  display: inline-block;
+  display: inline-block !important;
   width: 20px !important;
   height: 20px !important;
   border: 3px solid #9facc2 !important;
   border-radius: 50%;
   border-top-color: white !important;
   animation: spin 1s ease-in-out infinite !important;
-  -webkit-animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite !important;
   margin-top: auto !important;
   margin-bottom: auto !important;
 }
@@ -191,28 +191,28 @@ html {
 }
 
 .Vue-Toastification__toast--default {
-  --tw-gradient-to: #a8b8d8;
-  --tw-gradient-from: #627594;
-  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
-  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
-  color: white;
-  width: 40vw;
+  --tw-gradient-to: #a8b8d8 !important;
+  --tw-gradient-from: #627594 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
 }
 .Vue-Toastification__toast--error.my-toast-error-color {
-  --tw-gradient-to: #ff667c;
-  --tw-gradient-from: #ea0606;
-  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
-  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
-  color: white;
-  width: 40vw;
+  --tw-gradient-to: #ff667c !important;
+  --tw-gradient-from: #ea0606 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
 }
 .Vue-Toastification__toast--success.my-toast-success-color {
-  --tw-gradient-to: #98ec2d;
-  --tw-gradient-from: #17ad37;
-  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to);
-  background-image: linear-gradient(to top left, var(--tw-gradient-stops));
-  color: white;
-  width: 40vw;
+  --tw-gradient-to: #98ec2d !important;
+  --tw-gradient-from: #17ad37 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
 }
 
 

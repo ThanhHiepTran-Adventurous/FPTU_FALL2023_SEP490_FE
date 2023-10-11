@@ -2,6 +2,8 @@
 import auctionService from "@/services/auction.service";
 import formatCurrency from "@/utils/currency-formatter";
 import { computed, onMounted, ref, watch } from "vue"
+import CurrencyInput from "../common-components/CurrencyInput.vue";
+import currencyFormatter from "@/common/currencyFormatter";
 
 const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel'])
 
@@ -34,7 +36,7 @@ const placebidPrice = ref('')
 const autoAuctionData = ref({
   maxPrice: '',
   deltaTime: '',
-  deltaPrice: '',
+  deltaPrice: '0',
 })
 
 const resetAllState = () => {
@@ -45,7 +47,7 @@ const resetAllState = () => {
 }
 
 const onAuctionSubmit = () => {
-  auctionService.placeBidMannual(props.auctionId, placebidPrice.value)
+  auctionService.placeBidMannual(props.auctionId, currencyFormatter.fromStyledStringToNumber(placebidPrice.value))
   .then(_ => {
     emit("placeBidSuccess")
   })
@@ -57,14 +59,16 @@ const onAuctionSubmit = () => {
   })
 }
 
-const onUpdateAutoAuctionSubmit = () => {
-  const payload = {
-    maxPrice : autoAuctionData.value.maxPrice,
-    deltaTime : autoAuctionData.value.deltaTime * 60000,
-    deltaPrice : autoAuctionData.value.deltaPrice,
+const getPayloadFromFormState = () => {
+  return {
+    maxPrice : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.maxPrice),
+    deltaTime : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaTime) * 60000,
+    deltaPrice : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaPrice),
   }
+}
 
-  console.log(preAutoAuctionData.value)
+const onUpdateAutoAuctionSubmit = () => {
+  const payload = getPayloadFromFormState()
 
   auctionService.updateAutoBid(preAutoAuctionData.value.id, payload)
     .then(_ => {
@@ -79,11 +83,7 @@ const onUpdateAutoAuctionSubmit = () => {
 }
 
 const onAutoAuctionSubmit = () => {
-    const payload = {
-      maxPrice : autoAuctionData.value.maxPrice,
-      deltaTime : autoAuctionData.value.deltaTime * 60000,
-      deltaPrice : autoAuctionData.value.deltaPrice,
-    }
+    const payload = getPayloadFromFormState()
     auctionService.placeAutoBid(props.auctionId, payload)
     .then(_ => {
       emit("placeAutoAuctionSuccess")
@@ -105,9 +105,9 @@ const fetchAutoAuctionData = async () => {
   const response = await auctionService.getAutoBidDetail(props.auctionId)
   if(response.data && response.data.length > 0){
     preAutoAuctionData.value = response.data[0]
-    autoAuctionData.value.deltaPrice = preAutoAuctionData.value.deltaPrice
-    autoAuctionData.value.deltaTime = preAutoAuctionData.value.deltaTime
-    autoAuctionData.value.maxPrice = preAutoAuctionData.value.maxPrice
+    autoAuctionData.value.deltaPrice = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.deltaPrice)
+    autoAuctionData.value.deltaTime = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.deltaTime)
+    autoAuctionData.value.maxPrice = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.maxPrice)
   }
 }
 
@@ -159,9 +159,7 @@ onMounted(async () => {
           <label class="block text-lg font-semibold mb-2" for="title">
             GIÁ BẠN ĐẶT:
           </label>
-          <input v-model="placebidPrice"
-            class="shadow border rounded w-full py-2.5 text-lg px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="title" type="text" placeholder="">
+          <CurrencyInput v-model="placebidPrice" placeholder="" />
         </div>
         <div class="flex items-center gap-3">
           <button
@@ -186,25 +184,19 @@ onMounted(async () => {
           <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
             GIÁ CAO NHẤT CÓ THỂ ĐẶT:
           </label>
-          <input v-model="autoAuctionData.maxPrice"
-            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="title" type="text" placeholder="">
+          <CurrencyInput v-model="autoAuctionData.maxPrice" placeholder="Max price" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
             KHOẢNG THỜI GIAN DELAY ĐẶT LẠI GIÁ SAU KHI CÓ GIÁ MỚI (phút):
           </label>
-          <input v-model="autoAuctionData.deltaTime"
-            class="shadow border rounded w-full text-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="description" placeholder="" />
+          <CurrencyInput v-model="autoAuctionData.deltaTime" placeholder="Delay time in minute" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-            GIÁ MỚI CHÊNH LỆCH:
+            BƯỚC NHẢY:
           </label>
-          <input v-model="autoAuctionData.deltaPrice"
-            class="shadow border rounded w-full text-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="description" placeholder="" />
+          <CurrencyInput v-model="autoAuctionData.deltaPrice" placeholder="Jump" />
         </div>
         <div class="flex items-center gap-3">
           <button
