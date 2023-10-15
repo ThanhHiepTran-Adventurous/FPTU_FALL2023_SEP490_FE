@@ -1,5 +1,5 @@
 <script setup>
-import ItemBox from '@/components/common-components/ItemBox.vue';
+import ItemBox from '@/components/common-components/item-box/ItemBox.vue';
 </script>
 <template>
     <div class="bg-white my-3">

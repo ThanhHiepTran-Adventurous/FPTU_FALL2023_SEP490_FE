@@ -1,9 +1,8 @@
 <template>
-  <div class="min-w-screen min-h-screen bg-gray-50 py-5">
-
+  <div class="min-w-screen min-h-screen bg-gray-50 py-5 bg-white rounded-md">
     <div class="w-full bg-white border-t border-b border-gray-200 px-5 py-10 text-gray-800">
       <div class="w-full">
-        <div class="-mx-3 md:flex items-start">
+        <div class="mx-3 md:flex items-start">
           <div class="px-3 md:w-7/12 lg:pr-10">
             <div class="mx-auto container align-middle">
               <table class="w-full table-auto text-sm">
@@ -67,13 +66,11 @@
                     <td class="py-2 px-4 border-b border-grey-light text-right"> <router-link to="/messenger">
                         #USE14</router-link></td>
                   </tr>
-
-
                 </tbody>
               </table>
             </div>
           </div>
-          <div class="px-3 md:w-5/12">
+          <div class="px-3 md:w-5/12 hidden">
             <div class="w-full mx-auto rounded-lg bg-white border border-gray-200 p-3 text-gray-800 font-light mb-6">
               <div class="w-full flex mb-3 items-center">
                 <div class="w-32">
@@ -152,7 +149,8 @@
         </div>
     </div>
   </div>
-</div></template>
+</div>
+</template>
 
 
 <script setup>

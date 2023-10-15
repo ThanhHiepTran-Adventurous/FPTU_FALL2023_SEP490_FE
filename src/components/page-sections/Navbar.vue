@@ -94,7 +94,7 @@ const submitForm = async () => {
                     router.push('/admin/dashboard'); // Replace '/admin' with the actual admin page route
                 }
                 if (informationUser.data.role === 'SELLER') {
-                    router.push('/manage')
+                    router.push('/manage/product-inventory')
                 }
             })
             .catch(e => {

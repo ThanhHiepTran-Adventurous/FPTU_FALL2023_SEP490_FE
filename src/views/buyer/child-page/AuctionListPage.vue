@@ -1,6 +1,6 @@
 <script setup>
 import Dropdown from '@/components/common-components/Dropdown.vue';
-import ItemBox from '@/components/common-components/ItemBox.vue';
+import ItemBox from '@/components/common-components/item-box/ItemBox.vue';
 import { onMounted, ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import Slider from '@vueform/slider'

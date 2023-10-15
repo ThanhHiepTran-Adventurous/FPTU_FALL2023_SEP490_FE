@@ -3,7 +3,7 @@ import ListProductImage from '@/components/product-detail/ListProductImage.vue';
 import ProductInfo from '@/components/product-detail/ProductInfo.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue';
-import ItemBox from '@/components/common-components/ItemBox.vue';
+import ItemBox from '@/components/common-components/item-box/ItemBox.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import auctionService from '@/services/auction.service';

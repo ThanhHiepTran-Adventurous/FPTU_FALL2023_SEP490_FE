@@ -1,6 +1,5 @@
 <script setup>
-import ProductStatusBadge from './ProductStatusBadge.vue';
-import { ProductStatus } from '@/common/contract';
+import ProductStatusBadge from '../ProductStatusBadge.vue';
 
 const props = defineProps({
     mainImage: {
@@ -22,11 +21,7 @@ const props = defineProps({
     status: {
         type: String,
         default: "SOLD",
-        // validator: (value) => {
-        //     return ["SOLD", "UNDERWAY", "UPCOMING", "VERIFIED", "REJECT"].includes(value);
-        // }
     }
-
 })
 
 
@@ -50,7 +45,6 @@ const props = defineProps({
                 {{ props.productName }}
             </div>
             <div class="flex row justify-end px-2 w-full">
-               
                  <div class="items-center pb-2">
                     <ProductStatusBadge :status="props.status" />
                 </div>

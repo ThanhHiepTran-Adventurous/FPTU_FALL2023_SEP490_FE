@@ -1,3 +1,156 @@
+
+<script setup>
+import moment from "moment";
+import { computed, onMounted, ref } from "vue";
+import { Icon } from '@iconify/vue'
+import { initFlowbite } from 'flowbite'
+import Dropdown from "@/components/common-components/Dropdown.vue";
+import AuctionService from "@/services/auction.service"
+import CurrencyInput from "../common-components/CurrencyInput.vue";
+import currencyFormatter from "@/common/currencyFormatter";
+import toastOption from "@/utils/toast-option";
+import { ProductStatus } from "@/common/contract";
+
+const emit = defineEmits(['sendSuccess', 'sendError', 'justSubmitted'])
+
+const immediateMessage = `
+Ở hình thức này, sau khi phiên đấu giá kết thúc, 
+người mua và người bán sẽ liên hệ với nhau qua hệ thống chat và giải quyết việc mua bạn trực tiếp với nhau, 
+để có được thông tin người mua, người bán phải thanh toán cho hệ thống
+`;
+
+const intermediateMessage = `
+Ở hình thức này, sau khi phiên đấu giá kết thúc, 
+người mua phải trả tiền trước cho hệ thống, sau khi hàng tới nơi người mua mà không có khiếu nại, đổi trả, 
+hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
+`
+
+const durationData = [
+  {
+    label: "1 tiếng",
+    value: 1
+  },
+  {
+    label: "3 tiếng",
+    value: 3
+  },
+  {
+    label: "5 tiếng",
+    value: 5
+  },
+  {
+    label: "10 tiếng",
+    value: 10
+  },
+  {
+    label: "1 ngày",
+    value: 24,
+  },
+  {
+    label: "2 ngày",
+    value: 48
+  },
+  {
+    label: "3 ngày",
+    value: 72
+  },
+  {
+    label: "7 ngày",
+    value: 24 * 7
+  },
+  {
+    label: "Khác",
+    value: null
+  }
+]
+
+const duration = ref({
+  label: "3 tiếng",
+  value: 3
+})
+const durationInput = ref(1)
+
+const props = defineProps({
+  product: {
+    required: true
+  }
+})
+
+const canSendRequest = computed(() => {
+  return props.product?.status === ProductStatus.ACTIVE.value
+})
+
+const formData = ref({
+  startPrice: '',
+  jump: '',
+  buyNowPrice: '',
+  modelType: 0,
+  daysOfDuration: 0,
+  hoursOfDuration: 0,
+  minutesOfDuration: 0,
+})
+
+const currentTab = ref('table');
+
+const showTableTab = () => {
+  currentTab.value = 'table';
+};
+
+const showFormTab = () => {
+  console.log(props.product)
+  currentTab.value = 'form';
+};
+
+const onSubmit = () => {
+  const data = getPayload()
+  emit('justSubmitted')
+  const toastId = toastOption.toastLoadingMessage("Đang tiến hành gửi yêu cầu lên đấu giá")
+  AuctionService.sendAuctionRequest(props.product.id, data)
+  .then(_ => {
+    emit('sendSuccess', toastId)
+  })
+  .catch(error => {
+    emit('sendError', toastId)
+  })
+  .finally(() => {
+    resetData()
+  })
+}
+
+const getPayload = () => {
+  const durationValue = duration.value?.value ? duration.value.value : durationInput.value
+  return {
+    startPrice: currencyFormatter.fromStyledStringToNumber(formData.value.startPrice) || 0,
+    jump: currencyFormatter.fromStyledStringToNumber(formData.value.jump),
+    buyNowPrice: currencyFormatter.fromStyledStringToNumber(formData.value.buyNowPrice) || 0,
+    modelType: formData.value.modelType,
+    hoursOfDuration: durationValue
+  }
+}
+
+const resetData = () => {
+  formData.value = {
+    startPrice: '',
+    jump: '',
+    buyNowPrice: '',
+    modelType: 0,
+    daysOfDuration: 0,
+    hoursOfDuration: 0,
+    minutesOfDuration: 0,
+  }
+  duration.value = {
+    label: "3 tiếng",
+    value: 3
+  }
+  durationInput.value = 1
+}
+
+onMounted(() => {
+  initFlowbite()
+})
+
+</script>
+
 <template>
   <div class="bg-white rounded-lg space-y-4">
     <!-- Tab buttons -->
@@ -9,7 +162,7 @@
         Chi tiết
       </button>
 
-      <button @click="showFormTab" :class="{
+      <button :hidden="!canSendRequest" @click="showFormTab" :class="{
         'bg-blue-500 hover:bg-blue-600 text-white': currentTab === 'form',
         'bg-gray-300 hover:bg-gray-400 text-gray-600': currentTab !== 'form'
       }" class="px-4 py-3 rounded-md focus:outline-none transition flex-grow">
@@ -142,149 +295,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import moment from "moment";
-import { onMounted, ref } from "vue";
-import { Icon } from '@iconify/vue'
-import { initFlowbite } from 'flowbite'
-import Dropdown from "@/components/common-components/Dropdown.vue";
-import AuctionService from "@/services/auction.service"
-import CurrencyInput from "../common-components/CurrencyInput.vue";
-import currencyFormatter from "@/common/currencyFormatter";
-import toastOption from "@/utils/toast-option";
-
-const emit = defineEmits(['sendSuccess', 'sendError', 'justSubmitted'])
-
-const immediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc, 
-người mua và người bán sẽ liên hệ với nhau qua hệ thống chat và giải quyết việc mua bạn trực tiếp với nhau, 
-để có được thông tin người mua, người bán phải thanh toán cho hệ thống
-`;
-
-const intermediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc, 
-người mua phải trả tiền trước cho hệ thống, sau khi hàng tới nơi người mua mà không có khiếu nại, đổi trả, 
-hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
-`
-
-const durationData = [
-  {
-    label: "1 tiếng",
-    value: 1
-  },
-  {
-    label: "3 tiếng",
-    value: 3
-  },
-  {
-    label: "5 tiếng",
-    value: 5
-  },
-  {
-    label: "10 tiếng",
-    value: 10
-  },
-  {
-    label: "1 ngày",
-    value: 24,
-  },
-  {
-    label: "2 ngày",
-    value: 48
-  },
-  {
-    label: "3 ngày",
-    value: 72
-  },
-  {
-    label: "7 ngày",
-    value: 24 * 7
-  },
-  {
-    label: "Khác",
-    value: null
-  }
-]
-
-const duration = ref({
-  label: "3 tiếng",
-  value: 3
-})
-const durationInput = ref(1)
-
-const props = defineProps({
-  product: {
-    required: true
-  }
-})
-
-const formData = ref({
-  startPrice: '',
-  jump: '',
-  buyNowPrice: '',
-  modelType: 0,
-  daysOfDuration: 0,
-  hoursOfDuration: 0,
-  minutesOfDuration: 0,
-})
-
-const currentTab = ref('table');
-
-const showTableTab = () => {
-  currentTab.value = 'table';
-};
-
-const showFormTab = () => {
-  currentTab.value = 'form';
-};
-
-const onSubmit = () => {
-  const data = getPayload()
-  emit('justSubmitted')
-  const toastId = toastOption.toastLoadingMessage("Đang tiến hành gửi yêu cầu lên đấu giá")
-  AuctionService.sendAuctionRequest(props.product.id, data)
-  .then(_ => {
-    emit('sendSuccess', toastId)
-  })
-  .catch(error => {
-    emit('sendError', toastId)
-  })
-  .finally(() => {
-    resetData()
-  })
-}
-
-const getPayload = () => {
-  const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  return {
-    startPrice: currencyFormatter.fromStyledStringToNumber(formData.value.startPrice) || 0,
-    jump: currencyFormatter.fromStyledStringToNumber(formData.value.jump),
-    buyNowPrice: currencyFormatter.fromStyledStringToNumber(formData.value.buyNowPrice) || 0,
-    modelType: formData.value.modelType,
-    hoursOfDuration: durationValue
-  }
-}
-
-const resetData = () => {
-  formData.value = {
-    startPrice: '',
-    jump: '',
-    buyNowPrice: '',
-    modelType: 0,
-    daysOfDuration: 0,
-    hoursOfDuration: 0,
-    minutesOfDuration: 0,
-  }
-  duration.value = {
-    label: "3 tiếng",
-    value: 3
-  }
-  durationInput.value = 1
-}
-
-onMounted(() => {
-  initFlowbite()
-})
-
-</script>

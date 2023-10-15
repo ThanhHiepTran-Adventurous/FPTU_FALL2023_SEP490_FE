@@ -1,18 +1,60 @@
+<script setup>
+import { onMounted, ref } from 'vue';
+import ItemStatic from '../common-components/item-box/ItemStatic.vue';
+import SearchInput from '../common-components/SearchInput.vue';
+import Modal from '../common-components/Modal.vue';
+import productSerivice from '@/services/product.service';
+
+function activateInfoAuction(productID) {
+  // call api to load info of auction product
+}
+const isModalVisible = ref(true)
+const products = ref([])
+
+function closeModal() {
+  isModalVisible.value = false;
+}
+
+function handleConfirm() {
+  closeModal();
+}
+
+const fetchProducts = async () => {
+  const onSellingQuery = "status:ON_SELL"
+  const data = await productSerivice.getProducts(onSellingQuery);
+  products.value = data.data;
+}
+
+onMounted(async () => {
+  await fetchProducts();
+})
+</script>
 <template>
-  <div class="flex w-full">
-    <div class="flex-1 bg-white rounded-lg shadow-xl mx-1 my-1">
+  <div class="container mx-auto bg-white mt-4 rounded-md">
+    <div class="mx-1 py-1">
+      <div class="mb-4 flex items-center mr-5 ml-5 mt-8">
+        <div class="w-full">
+          <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
+        </div>
+      </div>
       <div class="flex flex-wrap mt-10">
-        <ItemBoxManageVue @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" />
-        <ItemBoxManageVue @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" />
-        <ItemBoxManageVue @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" />
+        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
+          product-name="Super long long long" :time-remain="99999999" :price="100000" />
+        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
+          product-name="Super long long long" :time-remain="99999999" :price="100000" />
+        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
+          product-name="Super long long long" :time-remain="99999999" :price="100000" />
+        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
+          product-name="Super long long long" :time-remain="99999999" :price="100000" />
       </div>
     </div>
 
     <!-- product info  -->
-    <div class="flex-1 bg-gray rounded-lg shadow-xl mx-1 my-1">
+    <div>
+    <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
+      title="Chi tiết"
+      @decline-modal="closeModal" @confirm-modal="handleConfirm">
+      <div class="flex-1 bg-gray rounded-lg shadow-xl mx-1 my-1">
       <div class="relative mx-2">
         <div class="mx-auto container align-middle">
           <div class="flex w-full justify-around mt-5">
@@ -139,19 +181,7 @@
       </div>
 
     </div>
-
+    </Modal>
+  </div>
   </div>
 </template>
-
-<script setup>
-
-import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
-import Line from '@/components/common-components/Line.vue';
-import CountDown from '@/components/common-components/Countdown.vue';
-function activateInfoAuction(productID) {
-  // call api to load info of auction product
-}
-</script>
-
-
-<style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-[20px] py-2 mx-auto">
+  <div class="container my-[20px] py-2 mx-auto bg-white rounded-md">
     <div class="mb-4 flex items-center mr-5 ml-5 mt-10">
       <select class="w-[200px] border h-11 rounded  text-gray-700 focus:outline-none focus:shadow-outline mr-1">
         <option value=""  selected>Tất Cả</option>
@@ -54,7 +54,7 @@
 <script setup>
 import CreateNewProduct from '@/components/manage-product/CreateNewProduct.vue';
 import ProductInfoModal from '@/components/manage-product/ProductInfoModal.vue';
-import ItemBoxManageVue from '@/components/common-components/ItemBoxManage.vue';
+import ItemBoxManageVue from '@/components/common-components/item-box/ItemBoxManage.vue';
 import Modal from '@/components/common-components/Modal.vue';
 import SearchInput from '@/components/common-components/SearchInput.vue';
 import productSerivice from '@/services/product.service';
