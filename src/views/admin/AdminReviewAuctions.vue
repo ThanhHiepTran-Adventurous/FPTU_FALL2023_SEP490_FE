@@ -11,8 +11,9 @@ const autionsList = ref([])
 const itemsPerPage = 4
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
+const showRejectReasonModal = ref(false)
 const convertedImages = ref([])
-
+const rejectInput = ref('')
 onMounted(() => {
   getAllAuctions()
   initFlowbite()
@@ -65,15 +66,13 @@ const handleApproveAuction = async auctionId => {
   try {
     const response = await adminService.approveAuction(auctionId)
     // Handle the response as needed
-    toastOption.toastSuccess("Duyệt thành công")
+    toastOption.toastSuccess('Duyệt thành công')
     console.log('Auction approved:', response)
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error approving auction:', error)
-    toastOption.toastError("Duyệt thất bại")
+    toastOption.toastError('Duyệt thất bại')
     // Handle the error
-  }
-  finally {
+  } finally {
     showUpdateModal.value = false
     getAllAuctions()
   }
@@ -81,7 +80,7 @@ const handleApproveAuction = async auctionId => {
 const handleRejectAuction = async auctionId => {
   try {
     const rejectReason = {
-      rejectReason: 'test',
+      rejectReason: rejectInput.value,
     }
 
     const response = await adminService.rejectAuction(auctionId, rejectReason)
@@ -140,7 +139,7 @@ const paginatedAuctions = computed(() => {
                     :src="auction?.product?.seller?.avatarUrl"
                     :alt="auction?.product?.seller?.fullname + ' image'" /> -->
                   <div class="pl-3">
-                    <div class="text-base font-semibold">{{ auction?.product?.seller?.id.split("-")[0] }}</div>
+                    <div class="text-base font-semibold">{{ auction?.product?.seller?.id.split('-')[0] }}</div>
                   </div>
                 </th>
                 <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
@@ -375,7 +374,7 @@ const paginatedAuctions = computed(() => {
                 Duyệt
               </button>
               <button
-                @click="handleRejectAuction(selectedAution.id)"
+                @click="showRejectReasonModal = true"
                 type="button"
                 class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
                 <svg
@@ -391,6 +390,56 @@ const paginatedAuctions = computed(() => {
                 Từ chối
               </button>
             </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="showRejectReasonModal"
+    id="authentication-modal"
+    tabindex="-1"
+    aria-hidden="true"
+    class="fixed inset-0 flex m items-center justify-center z-50 bg-black bg-opacity-50">
+    <div class="relative w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <button
+          @click="showRejectReasonModal = false"
+          type="button"
+          class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="authentication-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+        <div class="px-6 py-6 lg:px-8">
+          <form class="space-y-6" @submit="handleRejectAuction(selectedAution.id)">
+            <div>
+              <label for="reject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Lý do từ chối</label
+              >
+              <textarea
+                v-model="rejectInput"
+                type="string"
+                name="reject"
+                id="reject"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="Điền lý do từ chối"
+                required></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              Từ chối
+            </button>
           </form>
         </div>
       </div>
