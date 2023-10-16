@@ -1,8 +1,8 @@
 <template>
   <div class="container my-[20px] py-2 mx-auto bg-white rounded-md">
     <div class="mb-4 flex items-center mr-5 ml-5 mt-10">
-      <Dropdown v-model="selected" :data="options" class="!w-[300px]"/>
-      <div class="w-full">
+      <Dropdown v-model="selected" :data="options" class="!w-[200px]"/>
+      <div class="w-full ml-2">
         <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
       </div>
     </div>
@@ -27,8 +27,8 @@
         class="ml-10 mb-10"
         :product-name="product.name"
         :status="product.status"
-        :mainImage="product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : noImage"
-        :secondaryImage="product.imageUrls && product.imageUrls.length > 1 ? product.imageUrls[1] : product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : noImage"
+        :mainImage="imageHelper.getPrimaryImageFromList(product.imageUrls)"
+        :secondaryImage="imageHelper.getSecondaryImageFromList(product.imageUrls)"
         />
     </div>
   </div>
@@ -59,6 +59,7 @@ import { noImage } from '../../common/urlConstant';
 import { useUserStore } from '@/stores/user.store';
 import { ProductStatus } from '@/common/contract';
 import Dropdown from '../common-components/Dropdown.vue';
+import imageHelper from '@/utils/image-helper';
 
 const options = ref([])
 const filterOptions = () => {

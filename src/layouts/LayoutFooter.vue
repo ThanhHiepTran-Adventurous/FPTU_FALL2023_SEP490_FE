@@ -1,7 +1,7 @@
 <template>
     <footer id="tt-footer">
         <div class="tt-footer-col tt-color-scheme-01">
-            <div class="container">
+            <div class="container mx-auto">
                 <div class="row">
                     <div class="col-md-6 col-lg-2 col-xl-3">
                         <div class="tt-mobile-collapse">

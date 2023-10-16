@@ -233,7 +233,7 @@ const tabButtonClasses = tabName => ({
 })
 </script>
 <template>
-  <div class="mx-auto container bg-white mt-2 align-middle">
+  <div class="mx-auto container bg-white mt-2 align-middle pt-8 px-2 min-h-[50vh]">
     <table class="w-full table-auto text-sm">
       <thead>
         <tr class="text-sm leading-normal">
@@ -451,8 +451,10 @@ const tabButtonClasses = tabName => ({
                 <div v-for="src in selectedProduct.product.imageUrls" :key="src" class="inline-block mr-2">
                   <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
                 </div>
-                <div v-for="src in imgSrc" :key="src" class="inline-block mr-2" v-if="imgSrc.length > 0">
-                  <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
+                <div v-if="imgSrc.length > 0">
+                  <div v-for="src in imgSrc" :key="src" class="inline-block mr-2">
+                    <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
+                  </div>
                 </div>
               </div>
               <div class="mb-4">
