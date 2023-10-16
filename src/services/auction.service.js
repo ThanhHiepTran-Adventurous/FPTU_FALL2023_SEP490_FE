@@ -63,6 +63,22 @@ const getListAuctionWin = async () => {
   return response ? response.data : response
 }
 
+const getAuctionBySeller = async (query) => {
+  const serviceUrl = `${url.endpoint.auctions.auctionBySeller}?query=${query}&page=1&size=1000`
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
-  sendAuctionRequest, getAllActiveAuctions, getAuctionDetail, placeBidMannual, placeAutoBid, buyNowBid, getHistoryBid, getAutoBidDetail, updateAutoBid, getListAuctionWin
+  sendAuctionRequest,
+  getAllActiveAuctions,
+  getAuctionDetail,
+  placeBidMannual,
+  placeAutoBid,
+  buyNowBid,
+  getHistoryBid,
+  getAutoBidDetail,
+  updateAutoBid,
+  getListAuctionWin,
+  getAuctionBySeller,
 }

@@ -1,12 +1,7 @@
 <template>
   <div class="container my-[20px] py-2 mx-auto bg-white rounded-md">
     <div class="mb-4 flex items-center mr-5 ml-5 mt-10">
-      <select class="w-[200px] border h-11 rounded  text-gray-700 focus:outline-none focus:shadow-outline mr-1">
-        <option value=""  selected>Tất Cả</option>
-        <option value="brand1">Đã Bán</option>
-        <option value="brand2">Chưa Đấu Giá</option>
-        <option value="brand3">Đang Đấu Giá</option>
-      </select>
+      <Dropdown v-model="selected" :data="options" class="!w-[300px]"/>
       <div class="w-full">
         <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
       </div>
@@ -58,10 +53,41 @@ import ItemBoxManageVue from '@/components/common-components/item-box/ItemBoxMan
 import Modal from '@/components/common-components/Modal.vue';
 import SearchInput from '@/components/common-components/SearchInput.vue';
 import productSerivice from '@/services/product.service';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import toastOption from '../../utils/toast-option';
 import { noImage } from '../../common/urlConstant';
 import { useUserStore } from '@/stores/user.store';
+import { ProductStatus } from '@/common/contract';
+import Dropdown from '../common-components/Dropdown.vue';
+
+const options = ref([])
+const filterOptions = () => {
+  const arr = [
+    {
+      label: "TẤT CẢ",
+      value: ""
+    }
+  ]
+  for(const props in ProductStatus){
+    arr.push(ProductStatus[props])
+  }
+  return arr;
+}
+const selected = ref({
+  label: "TẤT CẢ",
+  value: ""
+})
+watch(selected, (newVal) => {
+  filterProduct();
+})
+
+const filterProduct = () => {
+  if(!selected.value.value){
+    products.value = JSON.parse(JSON.stringify(productsOrigin.value))
+    return
+  }
+  products.value = productsOrigin.value.filter(p => p.status === selected.value.value)
+}
 
 const userStore = useUserStore();
 
@@ -70,6 +96,7 @@ const isModalVisible = ref(false);
 const typeofModal = ref('info');
 
 const products = ref([]);
+const productsOrigin = ref([]);
 const productDetail = ref(null);
 
 const onCreateSuccess = (toastId) => {
@@ -122,10 +149,14 @@ function handleConfirm() {
 
 const fetchProducts = async () => {
   const data = await productSerivice.getProducts();
-  products.value = data.data;
+  productsOrigin.value = data.data.sort((a, b) => {
+    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  });
+  filterProduct()
 }
 
 onMounted(async () => {
+  options.value = filterOptions()
   await fetchProducts();
 })
 

@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import ItemStatic from '../common-components/item-box/ItemStatic.vue';
 import SearchInput from '../common-components/SearchInput.vue';
 import Modal from '../common-components/Modal.vue';
-import productSerivice from '@/services/product.service';
+import auctionService from '@/services/auction.service';
 
 function activateInfoAuction(productID) {
   // call api to load info of auction product
@@ -20,9 +20,12 @@ function handleConfirm() {
 }
 
 const fetchProducts = async () => {
-  const onSellingQuery = "status:ON_SELL"
-  const data = await productSerivice.getProducts(onSellingQuery);
-  products.value = data.data;
+  const onSellingQuery = "status:IN_PROCESS"
+  const data = await auctionService.getAuctionBySeller(onSellingQuery)
+  products.value = data.data
+}
+const calculateCurrentPrice = (auction) => {
+  return auction.highestPrice === 0 ? auction.startPrice : auction.highestPrice
 }
 
 onMounted(async () => {
@@ -37,15 +40,13 @@ onMounted(async () => {
           <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
         </div>
       </div>
-      <div class="flex flex-wrap mt-10">
-        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" :time-remain="99999999" :price="100000" />
-        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" :time-remain="99999999" :price="100000" />
-        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" :time-remain="99999999" :price="100000" />
-        <ItemStatic @click="activateInfoAuction(idProduct = '1')" class="ml-10 mb-10"
-          product-name="Super long long long" :time-remain="99999999" :price="100000" />
+      <div class="flex flex-wrap my-10 px-10">
+        <ItemStatic
+          v-for="item in products" :key="item.id"
+          :product-name="item.product.name"
+          :time-remain="item.timeLeft"
+          :price="calculateCurrentPrice(item)"
+        />
       </div>
     </div>
 
