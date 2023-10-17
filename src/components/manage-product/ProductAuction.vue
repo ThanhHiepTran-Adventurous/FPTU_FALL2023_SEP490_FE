@@ -6,7 +6,7 @@ import Modal from '../common-components/Modal.vue';
 import auctionService from '@/services/auction.service';
 import formatCurrency from '@/utils/currency-formatter';
 import moment from 'moment';
-import BidTypeBadge from '../common-components/BidTypeBadge.vue';
+import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue';
 
 const activateInfoAuction = async (auctionInfo) => {
   isModalVisible.value = true

@@ -2,6 +2,8 @@
     import currencyFormat from '@/utils/currency-formatter.js'
     import CountDown from '@/components/common-components/Countdown.vue';
     import { computed } from 'vue';
+    import { AuctionModelType } from '@/common/contract';
+    import AuctionType from '../badge/AuctionType.vue';
 
     const props = defineProps({
         mainImage : {
@@ -27,6 +29,10 @@
         itemId: {
             type: String,
             default: ''
+        },
+        auctionType: {
+            type: String,
+            default: AuctionModelType.immediate
         }
     })
 
@@ -53,6 +59,9 @@
         <div class="tt-description flex flex-col items-center">
             <div class="block group-hover:block bg-gray-200 bg-opacity-75 absolute top-[-60px] rounded-md pt-1.5">
                 <CountDown :coefficientSize="0.4" :deadlineInMilis="timeDeadline" />
+            </div>
+            <div class="w-full flex justify-start ml-3">
+                <AuctionType :type="auctionType" />
             </div>
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}

@@ -1,5 +1,5 @@
 <script setup>
-import ProductStatusBadge from '../ProductStatusBadge.vue';
+import ProductStatusBadge from '../badge/ProductStatusBadge.vue';
 
 const props = defineProps({
     mainImage: {
