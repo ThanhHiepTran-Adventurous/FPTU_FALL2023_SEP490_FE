@@ -79,7 +79,7 @@ const fetchAuctions = async () => {
   auctions.value = auctionsData.data
   totalAuctions.value = auctions.length
 }
-
+console.log(totalAuctions.value)
 onMounted(async () => {
   fetchBrandsData()
   fetchCategoriesData()
@@ -210,7 +210,16 @@ const filteredAuctions = computed(() => {
         </div>
         <!-- Auction section -->
         <div class="w-[75%]">
-          <div class="flex flex-wrap gap-8 min-h-[80vh]">
+          <div class="mb-2 mt-2">
+            <Pagination
+              v-model="currentPage"
+              :layout="'table'"
+              :per-page="10"
+              :total-items="totalAuctions"
+              previous-label="⬅️"
+              next-label="➡️"></Pagination>
+          </div>
+          <div class="flex flex-wrap gap-8">
             <ItemBox
               v-for="auction in paginatedAuctions"
               :key="auction.id"
@@ -219,17 +228,7 @@ const filteredAuctions = computed(() => {
               :secondary-image="imageHelper.getSecondaryImageFromList(auction.product.imageUrls)"
               :floor-price="auction.highestPrice ? auction.highestPrice : auction.startPrice"
               :time-remain="auction.timeLeft"
-              :item-id="auction.id"
-              :auction-type="auction.modelType"
-              />
-          </div>
-          <div class="mb-2 mt-2 w-full flex justify-end">
-            <Pagination
-              v-model="currentPage"
-              :per-page="10"
-              :total-items="totalAuctions"
-              previous-label="<"
-              next-label=">"></Pagination>
+              :item-id="auction.id" />
           </div>
         </div>
       </div>
