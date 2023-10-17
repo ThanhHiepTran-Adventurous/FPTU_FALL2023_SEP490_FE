@@ -7,6 +7,7 @@ import auctionService from '@/services/auction.service';
 import formatCurrency from '@/utils/currency-formatter';
 import moment from 'moment';
 import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue';
+import imageHelper from '@/utils/image-helper';
 
 const activateInfoAuction = async (auctionInfo) => {
   isModalVisible.value = true
@@ -47,25 +48,23 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="container mx-auto bg-white mt-4 rounded-md min-h-[50vh]">
-    <div class="mx-1 py-1">
-      <div class="mb-4 flex items-center mr-5 ml-5 mt-8">
-        <div class="w-full">
-          <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
-        </div>
+  <div class="container my-[20px] py-2 mx-auto bg-white rounded-md h-[80vh]">
+    <div class="mb-4 flex items-center mx-5 mt-4">
+      <div class="w-full ml-2">
+        <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
       </div>
-      <div class="flex flex-wrap my-10 px-10">
-        <ItemStatic
+    </div>
+    <div class="flex flex-wrap items-center mt-10 mx-5 gap-3">
+      <ItemStatic
           v-for="item in products" :key="item.id"
           @click="activateInfoAuction(item)"
           :product-name="item.product.name"
           :time-remain="item.timeLeft"
           :price="calculateCurrentPrice(item)"
+          :mainImage="imageHelper.getPrimaryImageFromList(item.product.imageUrls)"
+          :secondaryImage="imageHelper.getSecondaryImageFromList(item.product.imageUrls)"
         />
-      </div>
     </div>
-
-    <!-- product info  -->
     <div>
     <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
       title="Chi tiết"
@@ -83,9 +82,6 @@ onMounted(async () => {
                   <h4 class="py-2 mt-3 px-4 text-teal-500 text-center">{{ formatCurrPrice(detail) }}</h4>
                 </div>
               </div>
-              <!-- <div class="text-left flex flex-row justify-start items-center">
-                <p><span class="text-teal-500 font-bold">+3%</span> trong 7 ngày</p>
-              </div> -->
             </div>
             <div class="rounded-lg py-3 px-5 bg-white shadow">
               <div class="flex flex-row justify-center items-center">
@@ -103,9 +99,6 @@ onMounted(async () => {
 
                 </div>
               </div>
-              <!-- <div class="text-left flex flex-row justify-start items-center">
-                <p><span class="text-teal-500 font-bold">+3%</span> trong 7 ngày</p>
-              </div> -->
             </div>
           </div>
         </div>

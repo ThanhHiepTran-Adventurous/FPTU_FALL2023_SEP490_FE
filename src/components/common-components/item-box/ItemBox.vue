@@ -49,7 +49,7 @@
             <a href="#" class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left"></a>
             <a href="#" class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
-            <a class="block w-[220px] h-[250px] overflow-hidden" href="product.html">
+            <a class="block w-[220px] h-[210px] overflow-hidden" href="product.html">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
                     <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="">

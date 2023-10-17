@@ -32,7 +32,7 @@ const props = defineProps({
             <a class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
                 data-tposition="left">
             </a>
-            <a class="block w-[220px] h-[250px] overflow-hidden">
+            <a class="block w-[220px] h-[210px] overflow-hidden">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
                     <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="">
