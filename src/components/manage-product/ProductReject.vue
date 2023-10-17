@@ -1,7 +1,7 @@
 <script setup>
 import Modal from '@/components/common-components/Modal.vue'
 import Button from '@/components/common-components/Button.vue'
-import productSerivice from '@/services/product.service'
+import ProductSerivice from '@/services/product.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import ProductInfoModal from '@/components/manage-product/ProductInfoModal.vue'
 const allowedModalTypes = { info: 'info' }
@@ -131,33 +131,46 @@ const formData = ref({
 // const showFormTab = () => {
 //   currentTab.value = 'form';
 // };
-const productFormData = ref({
-  name: '',
-  description: '',
-  weight: '',
-  brandId: '',
-  categoryId: '',
-})
+
 const onSubmit = () => {
   const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  console.log(selectedProduct?.value?.duration)
-  console.log(durationValue)
+  // console.log(selectedProduct?.value)
+  // console.log(durationValue)
   // const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  // const data = {
-  //   startPrice: formData.value.startPrice || 0,
-  //   jump: formData.value.jump,
-  //   buyNowPrice: formData.value.buyNowPrice || 0,
-  //   modelType: formData.value.modelType,
-  //   hoursOfDuration: durationValue,
-  // }
-
-  // AuctionService.sendAuctionRequest(selectedProduct.value?.product?.id, data)
-  //   .then(_ => {
-  //     emit('sendSuccess')
-  //   })
-  //   .catch(error => {
-  //     emit('sendError')
-  //   })
+  const dataAuction = {
+    startPrice: selectedProduct?.value.startPrice || 0,
+    jump: selectedProduct?.value.jump,
+    buyNowPrice: selectedProduct?.value.buyNowPrice || 0,
+    modelType: selectedProduct?.value.modelType,
+    hoursOfDuration: durationValue,
+  }
+  const dataProduct = {
+    updateProductRequest: {
+      name: selectedProduct?.value?.product?.name, // Replace with the desired name
+      description: selectedProduct?.value?.product?.description, // Replace with the desired description
+      weight: selectedProduct?.value?.product?.weight, // Replace with the desired weight
+      brandId: selectedProduct?.value?.product?.brand?.id,
+      statusProduct: 'APPROVING', // Replace with the desired status
+      categoryId: selectedProduct?.value?.product?.category?.id,
+    },
+    oldImagesRemoved: [''], // Replace with actual image paths
+    newImages: [...selectedProduct?.value?.product?.imageUrls], // Replace with actual image paths
+  }
+  console.log(dataProduct)
+  ProductSerivice.updateProductById(selectedProduct.value?.product?.id, dataProduct)
+    .then(_ => {
+      emit('sendSuccess')
+      AuctionService.sendAuctionRequest(selectedProduct.value?.product?.id, dataAuction)
+        .then(_ => {
+          emit('sendSuccess')
+        })
+        .catch(error => {
+          emit('sendError')
+        })
+    })
+    .catch(error => {
+      emit('sendError')
+    })
 }
 
 onMounted(() => {

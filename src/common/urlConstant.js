@@ -39,7 +39,8 @@ export default {
         },
         product: {
             inventory: '/products',
-            inventoryByUser: '/products/listProductBySeller'
+            inventoryByUser: '/products/listProductBySeller',
+            updateProductById: 'products/{productId}',
         },
         auctions: {
           getAll: '/auctions',
@@ -66,4 +67,5 @@ export default {
     }
 }
 
-export const noImage = "https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/No-Image-Placeholder.svg.png?alt=media"
+export const noImage =
+  'https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/No-Image-Placeholder.svg.png?alt=media'
