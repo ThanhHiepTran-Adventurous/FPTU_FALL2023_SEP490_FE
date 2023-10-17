@@ -210,15 +210,7 @@ const filteredAuctions = computed(() => {
         </div>
         <!-- Auction section -->
         <div class="w-[75%]">
-          <div class="mb-2 mt-2">
-            <Pagination
-              v-model="currentPage"
-              :per-page="10"
-              :total-items="totalAuctions"
-              previous-label="⬅️"
-              next-label="➡️"></Pagination>
-          </div>
-          <div class="flex flex-wrap gap-8">
+          <div class="flex flex-wrap gap-8 min-h-[80vh]">
             <ItemBox
               v-for="auction in paginatedAuctions"
               :key="auction.id"
@@ -230,6 +222,14 @@ const filteredAuctions = computed(() => {
               :item-id="auction.id"
               :auction-type="auction.modelType"
               />
+          </div>
+          <div class="mb-2 mt-2 w-full flex justify-end">
+            <Pagination
+              v-model="currentPage"
+              :per-page="10"
+              :total-items="totalAuctions"
+              previous-label="<"
+              next-label=">"></Pagination>
           </div>
         </div>
       </div>
