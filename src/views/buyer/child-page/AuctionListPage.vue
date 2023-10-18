@@ -202,24 +202,17 @@ const filteredAuctions = computed(() => {
               </div>
             </div>
           </div>
-          <!-- <div
+          <div
             class="p-2 mt-8 ml-4 bg-blue-600 text-md text-white rounded-lg w-[100px] text-center"
             @click="onFilter()">
             Lọc
-          </div> -->
+          </div>
         </div>
         <!-- Auction section -->
         <div class="w-[75%]">
-          <div class="mb-2 mt-2">
-            <Pagination
-              v-model="currentPage"
-              :total-items="totalAuctions"
-              previous-label="⬅️"
-              next-label="➡️"></Pagination>
-          </div>
           <div class="flex flex-wrap gap-8">
             <ItemBox
-              v-for="auction in paginatedAuctions"
+              v-for="auction in auctions"
               :key="auction.id"
               :product-name="auction.product.name"
               :main-image="imageHelper.getPrimaryImageFromList(auction.product.imageUrls)"
