@@ -213,8 +213,6 @@ const filteredAuctions = computed(() => {
           <div class="mb-2 mt-2">
             <Pagination
               v-model="currentPage"
-              :layout="'table'"
-              :per-page="10"
               :total-items="totalAuctions"
               previous-label="⬅️"
               next-label="➡️"></Pagination>

@@ -63,6 +63,20 @@ export default {
       auctionDetail: 'guest/{id}/auction-detail',
       auctionHistory: 'guest/auction/{auctionId}',
     },
+    chart: {
+      countSeller: 'charts/countSellerInSystem',
+      countBuyer: 'charts/countBuyerInSystem',
+      countAuctionCompleted: 'charts/countAuctionCompleted',
+      countAuctionInProcess: 'charts/countAuctionInProcess',
+      countAuctionNew: 'charts/countAuctionNew',
+      countAuctionRejected: 'charts/countAuctionRejected',
+      countProductActive: 'charts/countProductActive',
+      countProductApproving: 'charts/countProductApproving',
+      countProductInActive: 'charts/countProductInActive',
+      countProductOnSell: 'charts/countProductOnSell',
+      countProductRejected: 'charts/countProductRejected',
+      countProductSold: 'charts/countProductSold',
+    },
   },
 }
 

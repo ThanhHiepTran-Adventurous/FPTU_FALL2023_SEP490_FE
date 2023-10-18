@@ -101,6 +101,130 @@ const getAllCategories = async () => {
     throw error
   }
 }
+const countSellers = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countSeller
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countBuyers = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countBuyer
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countAuctionCompleted = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countAuctionCompleted
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countAuctionInProcess = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countAuctionInProcess
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countAuctionNew = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countAuctionNew
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countAuctionRejected = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countAuctionRejected
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countProductActive = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductActive
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countProductApproving = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductApproving
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countProductInActive = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductInActive
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countProductOnSell = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductOnSell
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countProductRejected = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductRejected
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countProductSold = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countProductSold
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 export default {
   fetchAllBrands,
   deleteBrandById,
@@ -110,4 +234,16 @@ export default {
   approveAuction,
   rejectAuction,
   getAllCategories,
+  countSellers,
+  countBuyers,
+  countAuctionCompleted,
+  countAuctionInProcess,
+  countAuctionNew,
+  countAuctionRejected,
+  countProductActive,
+  countProductApproving,
+  countProductInActive,
+  countProductOnSell,
+  countProductRejected,
+  countProductSold,
 }
