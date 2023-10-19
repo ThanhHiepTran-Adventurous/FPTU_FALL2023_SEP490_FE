@@ -10,3 +10,10 @@ export default {
         DATE: 'date',
     },
 }
+
+export const buyerTabs = {
+    bought: "Sản phẩm thắng đấu giá",
+    order: "Lịch sử Đơn hàng",
+    reported: "Lịch sử báo cáo",
+    refundRequest: "Đề nghị trả hàng",
+}
