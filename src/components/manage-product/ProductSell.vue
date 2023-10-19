@@ -90,7 +90,6 @@ onMounted(() => {
                     <h4 class=" py-2 mr-1">{{ detail?.numberOfBids }}</h4>
                     <Icon icon="mdi:payment-clock" class="text-[28px] ml-2"/>
                   </div>
-
                 </div>
               </div>
             </div>

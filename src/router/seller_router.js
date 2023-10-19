@@ -54,17 +54,16 @@ const seller_router = [
         meta: {
           requiresAuth: false,
         },
-      },  
-       {
-        name: 'messenger',
-        path: '/messenger',
-        component: Messenger,
-        meta: {
-          requiresAuth: false,
-        },
-      },  
-    
+      },
     ],
+  },
+  {
+    name: 'messenger',
+    path: '/messenger',
+    component: Messenger,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     name: 'not-found',
