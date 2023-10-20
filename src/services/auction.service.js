@@ -2,19 +2,19 @@ import utils from '@/utils/customAxios'
 import url from '@/common/urlConstant'
 
 const sendAuctionRequest = async (productId, data) => {
-  const serviceUrl = url.endpoint.auctions.productAuctionRequest.replace("{productId}", productId)
+  const serviceUrl = url.endpoint.auctions.productAuctionRequest.replace('{productId}', productId)
   const response = await utils.axiosLocalHost.post(serviceUrl, data)
   return response ? response.data : response
 }
 
 const getAllActiveAuctions = async () => {
-  const serviceUrl = url.endpoint.guest.auctions + "?page=1&size=100&query=status:IN_PROCESS"
+  const serviceUrl = url.endpoint.guest.auctions + '?page=1&size=100&query=status:IN_PROCESS'
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
 
 const getAuctionDetail = async id => {
-  const serviceUrl = url.endpoint.guest.auctionDetail.replace("{id}", id)
+  const serviceUrl = url.endpoint.guest.auctionDetail.replace('{id}', id)
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
@@ -23,36 +23,36 @@ const placeBidMannual = async (auctionId, price) => {
   const serviceUrl = url.endpoint.placeBid.manual
   const response = await utils.axiosLocalHost.post(serviceUrl, {
     auctionAmount: price,
-    auctionId
+    auctionId,
   })
   return response ? response.data : response
 }
 
 const placeAutoBid = async (auctionId, payload) => {
-  const serviceUrl = url.endpoint.placeBid.auto.replace("{auctionId}", auctionId)
+  const serviceUrl = url.endpoint.placeBid.auto.replace('{auctionId}', auctionId)
   const response = await utils.axiosLocalHost.post(serviceUrl, payload)
   return response ? response.data : response
 }
 const updateAutoBid = async (autoAuctionId, payload) => {
-  const serviceUrl = url.endpoint.auctions.updateAutoAuction.replace("{autoAuctionId}", autoAuctionId)
+  const serviceUrl = url.endpoint.auctions.updateAutoAuction.replace('{autoAuctionId}', autoAuctionId)
   const response = await utils.axiosLocalHost.put(serviceUrl, payload)
   return response ? response.data : response
 }
 
-const buyNowBid = async (auctionId) => {
-  const serviceUrl = url.endpoint.placeBid.buyNow.replace("{auctionId}", auctionId)
+const buyNowBid = async auctionId => {
+  const serviceUrl = url.endpoint.placeBid.buyNow.replace('{auctionId}', auctionId)
   const response = await utils.axiosLocalHost.post(serviceUrl)
   return response ? response.data : response
 }
 
 const getHistoryBid = async (auctionId, productId) => {
-  const serviceUrl = url.endpoint.guest.auctionHistory.replace("{auctionId}", auctionId)
+  const serviceUrl = url.endpoint.guest.auctionHistory.replace('{auctionId}', auctionId)
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
 
 const getAutoBidDetail = async auctionId => {
-  const serviceUrl = url.endpoint.auctions.autoAuctionDetail.replace("{auctionId}", auctionId)
+  const serviceUrl = url.endpoint.auctions.autoAuctionDetail.replace('{auctionId}', auctionId)
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
@@ -63,12 +63,33 @@ const getListAuctionWin = async () => {
   return response ? response.data : response
 }
 
-const getAuctionBySeller = async (query) => {
+const getAuctionBySeller = async query => {
   const serviceUrl = `${url.endpoint.auctions.auctionBySeller}?query=${query}&page=1&size=1000`
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
+const paymentOption2 = async (auctionId, returnUrl) => {
+  const serviceUrl = url.endpoint.transaction.option2VnPay
 
+  try {
+    const response = await utils.axiosLocalHost.post(serviceUrl, {
+      auctionId,
+      returnUrl,
+    })
+
+    if (response && response.data) {
+      // Payment successful, you can return response.data or perform other actions
+      return response.data
+    } else {
+      // Handle payment failure
+      throw new Error('Payment failed')
+    }
+  } catch (error) {
+    // Handle any errors that may occur during the payment process
+    console.error('Payment error:', error)
+    throw error // Customize error handling based on your needs
+  }
+}
 export default {
   sendAuctionRequest,
   getAllActiveAuctions,
@@ -81,4 +102,5 @@ export default {
   updateAutoBid,
   getListAuctionWin,
   getAuctionBySeller,
+  paymentOption2,
 }

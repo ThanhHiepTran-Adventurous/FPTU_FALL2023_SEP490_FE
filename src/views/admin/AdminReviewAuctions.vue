@@ -420,7 +420,7 @@ const paginatedAuctions = computed(() => {
           <span class="sr-only">Close modal</span>
         </button>
         <div class="px-6 py-6 lg:px-8">
-          <form class="space-y-6" @submit="handleRejectAuction(selectedAution.id)">
+          <form class="space-y-6" @submit.prevent="handleRejectAuction(selectedAution.id)">
             <div>
               <label for="reject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >Lý do từ chối</label

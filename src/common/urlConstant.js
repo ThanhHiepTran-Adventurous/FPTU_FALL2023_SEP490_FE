@@ -77,6 +77,9 @@ export default {
       countProductRejected: 'charts/countProductRejected',
       countProductSold: 'charts/countProductSold',
     },
+    transaction: {
+      option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
+    },
   },
 }
 
