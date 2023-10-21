@@ -16,7 +16,6 @@ import { initFlowbite } from 'flowbite'
         src: url,
         alt: 'Image Alt Text', // You can set the alt text as per your requirements
       }))
-      console.log(data)
       imgComputed.value = data
     })
 

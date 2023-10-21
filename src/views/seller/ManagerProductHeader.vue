@@ -22,8 +22,8 @@ const curTab = computed(() => {
         <div class="flex">
             <div class="space-y-5">
                 <div class="overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-1">
-                    <ul class="flex items-center gap-2 text-sm font-medium">
-                        <li class="flex-2">
+                    <div class="flex items-center gap-2 text-sm font-medium">
+                        <div class="flex-2">
                             <router-link to="/manage/product-inventory">
                                 <button
                                     class="text-gray-500 relative flex items-center justify-center gap-2 rounded-lg px-3 py-2 hover:shadow"
@@ -33,8 +33,8 @@ const curTab = computed(() => {
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 14 </span>
                                 </button>
                             </router-link>
-                        </li>
-                        <li class="flex-2">
+                        </div>
+                        <div class="flex-2">
                             <router-link to="/manage/product-rejected">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
@@ -44,8 +44,8 @@ const curTab = computed(() => {
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
-                        </li>
-                        <li class="flex-2">
+                        </div>
+                        <div class="flex-2">
                             <router-link to="/manage/on-selling">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
@@ -54,8 +54,8 @@ const curTab = computed(() => {
                                     Đang đấu giá
                                 </button>
                             </router-link>
-                        </li>
-                        <li class="flex-2">
+                        </div>
+                        <div class="flex-2">
                             <router-link to="/manage/product-sold">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
@@ -65,8 +65,8 @@ const curTab = computed(() => {
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
-                        </li>
-                        <li class="flex-2">
+                        </div>
+                        <div class="flex-2">
                             <router-link to="/manage/product-sold">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
@@ -76,8 +76,8 @@ const curTab = computed(() => {
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

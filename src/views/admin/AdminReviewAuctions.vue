@@ -27,7 +27,6 @@ const openAuctionModal = auction => {
       src: url,
       alt: 'Image Alt Text', // You can set the alt text as per your requirements
     })) || []
-  console.log(selectedAution.value)
   showUpdateModal.value = true // Show the modal
 }
 const getAllAuctions = async () => {

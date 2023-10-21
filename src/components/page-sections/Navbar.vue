@@ -17,7 +17,10 @@ import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue';
 
 import * as yup from "yup";
 import { ErrorMessage, Field, Form } from 'vee-validate';
-
+import userService from '@/services/user.service';
+import AntDropdown from '../AntDropdown.vue';
+import { useNotificationStore } from '@/stores/notification.store';
+import { Role } from '@/common/contract';
 
 const schema = yup.object().shape({
     phone: yup.string().required('Số điện thoại không được để trống'),
@@ -28,11 +31,32 @@ const router = useRouter();
 const userStore = useUserStore()
 const firebaseStore = useFirebaseStore()
 const globalStore = useGlobalStore()
+const notiStore = useNotificationStore()
+
+const defaultRoute = {
+    buyer : "/",
+    seller : "/manage/product-inventory",
+    admin : "/admin/dashboard"
+}
 
 const cartItem = ref(true)
 const mobileMenu = ref(false)
 const isModalActive = ref(false)
 const validate = ref(true)
+
+const curRole = computed(() => {
+    return userStore.getRoleAndGetFromLocalStorageIfNotExist()
+})
+const curDefaultRoute = computed(() => {
+    const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
+    if(role === Role.admin.value){
+        return defaultRoute.admin
+    }
+    if(role === Role.seller.value){
+        return defaultRoute.seller
+    }
+    return defaultRoute.buyer
+})
 
 const userInfo = ref({
     phone: "",
@@ -40,6 +64,11 @@ const userInfo = ref({
 })
 const errorMessage = ref({
     form: "",
+})
+
+//For noti
+const isContainNotRead = computed(() => {
+    return notiStore.isContainNewNoti
 })
 
 const isAuth = computed(() => {
@@ -87,15 +116,18 @@ const submitForm = async () => {
                 closeModal()
             
                 const fcmToken = await firebaseStore.getFcmToken()
-                loginService.saveFcmToken(fcmToken)
+                if(fcmToken){
+                    loginService.saveFcmToken(fcmToken)
+                }
 
                 // Check the user's role and redirect accordingly
-                if (informationUser.data.role === 'ADMIN') {
-                    router.push('/admin/dashboard'); // Replace '/admin' with the actual admin page route
+                if (informationUser.data.role === Role.admin.value) {
+                    router.push(defaultRoute.admin); // Replace '/admin' with the actual admin page route
                 }
-                if (informationUser.data.role === 'SELLER') {
-                    router.push('/manage/product-inventory')
+                if (informationUser.data.role === Role.seller.value) {
+                    router.push(defaultRoute.seller)
                 }
+                notiStore.syncNotifications()
             })
             .catch(e => {
                 if (e.response.status === 401 || e.response.status === 400) {
@@ -112,6 +144,14 @@ const onLogout = async () => {
             userStore.clear()
         })
 }
+
+const onNotiClick = async () => {
+    notiStore.justRead()
+    notiStore.getNotifications()
+}
+const notiList = computed(() => {
+    return notiStore.notifications
+})
 
 </script>
 <template>
@@ -152,7 +192,7 @@ const onLogout = async () => {
             <nav
                 class="container px-6 py-2 mx-auto flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center text-white">
                 <div class="flex items-center justify-center md:justify-between">
-                    <router-link to="/" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
+                    <router-link :to="curDefaultRoute" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
                         <img src="https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/svg-formatter-beautifier-1.png?alt=media&token=3f69cb28-1feb-4d06-93bb-a25ee66ec880"
                             alt="logo" class="w-[100px] h-[28px]" />
                     </router-link>
@@ -161,42 +201,48 @@ const onLogout = async () => {
                 <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" />
 
                 <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-                <ul v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
-                    <RouterLink to="/bought" class="flex text-white hover:!text-gray-400">
-                        <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
-                        <span class="flex absolute -mt-1 ml-4">
-                            <span
-                                class=" animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-                            <span class=" relative inline-flex rounded-full h-3 w-3 bg-pink-500">
-
-                            </span>
-                        </span>
-                    </RouterLink>
-                    <RouterLink to="/" class="flex text-white hover:!text-gray-400">
-                        <Icon icon="wpf:like" class="text-[28px]" />
-                    </RouterLink>
-                    <!-- dropdown account -->
-                    <Dropdown placement="bottom" text="bottom">
-                        <template #trigger>
-                            <Icon icon="codicon:account" class="text-[28px] hover:cursor-pointer hover:text-gray-400" />
-                            <!-- <Avatar /> -->
-                        </template>
-                        <ListGroup>
-                            <ListGroupItem @click="router.push('/profile')">
-                                <template #prefix>
-                                    <Icon icon="tabler:edit" class="text-[28px]" />
-                                </template>
-                                Edit
-                            </ListGroupItem>
-                            <ListGroupItem @click="() => onLogout()">
-                                <template #prefix>
-                                    <Icon icon="tabler:logout" class="text-[28px]" />
-                                </template>
-                                Logout
-                            </ListGroupItem>
-                        </ListGroup>
-                    </Dropdown>
-                </ul>
+                <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
+                    <div class="w-full rounded-full bg-gray-300 p-1 flex items-center gap-6">
+                        <RouterLink to="/bought" class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700" v-if="curRole===Role.buyer.value">
+                            <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
+                        </RouterLink>
+                        <AntDropdown :menuData="notiList">
+                            <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700" @click="onNotiClick">
+                                <Icon icon="ion:notifcations" class="text-[28px]" />
+                                <span v-if="isContainNotRead" class="flex absolute -mt-1 ml-4">
+                                    <span
+                                        class=" animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
+                                    <span class=" relative inline-flex rounded-full h-3 w-3 bg-pink-500">
+                                    </span>
+                                </span>
+                            </div>
+                        </AntDropdown>
+                        <RouterLink to="/" class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700" v-if="curRole===Role.buyer.value">
+                            <Icon icon="wpf:like" class="text-[28px]" />
+                        </RouterLink>
+                        <Dropdown placement="bottom" text="bottom">
+                            <template #trigger>
+                                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700">
+                                    <Icon icon="codicon:account" class="text-[28px] hover:cursor-pointer hover:text-gray-400" />
+                                </div>
+                            </template>
+                            <ListGroup>
+                                <ListGroupItem @click="router.push('/profile')">
+                                    <template #prefix>
+                                        <Icon icon="tabler:edit" class="text-[28px]" />
+                                    </template>
+                                    Edit
+                                </ListGroupItem>
+                                <ListGroupItem @click="() => onLogout()">
+                                    <template #prefix>
+                                        <Icon icon="tabler:logout" class="text-[28px]" />
+                                    </template>
+                                    Logout
+                                </ListGroupItem>
+                            </ListGroup>
+                        </Dropdown>
+                    </div>
+                </div>
                 <div v-else class="flex gap-3">
                     <router-link to="/register">
                         <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">

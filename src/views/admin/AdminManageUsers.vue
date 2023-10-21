@@ -17,7 +17,6 @@ onMounted(() => {
 const selectedUser = ref(null)
 const openUserModal = user => {
   selectedUser.value = user // Set the selected user data
-  // console.log(selectedUser.value)
   showUpdateModal.value = true // Show the modal
 }
 const getAllUsers = async () => {
@@ -31,7 +30,6 @@ const getAllUsers = async () => {
 
 const toggleDropdown = index => {
   const isOpen = openDropdowns.value.includes(index)
-  console.log(index)
   if (isOpen) {
     // If the dropdown is already open, close it
     openDropdowns.value = openDropdowns.value.filter(i => i !== index)

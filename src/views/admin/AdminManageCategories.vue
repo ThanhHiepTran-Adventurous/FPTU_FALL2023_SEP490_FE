@@ -25,7 +25,6 @@ const getAllCategories = async () => {
   try {
     const response = await adminService.getAllCategories()
     categoriesList.value = response.data
-    console.log(categoriesList.value)
   } catch (e) {
     console.error(e)
   }

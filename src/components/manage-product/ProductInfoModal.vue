@@ -97,7 +97,6 @@ const showTableTab = () => {
 }
 
 const showFormTab = () => {
-  console.log(props.product)
   currentTab.value = 'form'
 }
 

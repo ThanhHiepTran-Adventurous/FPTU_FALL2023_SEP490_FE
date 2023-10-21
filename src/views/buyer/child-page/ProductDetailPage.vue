@@ -96,7 +96,6 @@ onMounted(async () => {
 
 	// NEED TO REPLACE SET INTERVAL WITH FIREBASE MESSAGE TRIGGER!!!!!
 	interval = setInterval(() => {
-		console.log("interval call")
 		fetchBidHistory()
 	}, 10000)
 })

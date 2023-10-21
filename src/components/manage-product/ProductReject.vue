@@ -28,13 +28,11 @@ const brands = ref([])
 const fetchProducts = async () => {
   try {
     const userID = localStorage.getItem('userId')
-    // console.log(userID)
     const response = await adminService.getAllAuctions(1, 100)
     products.value = response.data
     products.value = products.value.filter(
       auction => auction?.status === 'REJECTED' && auction?.product?.seller?.id === userID,
     )
-    console.log(products.value)
   } catch (e) {
     console.error(e)
   }
@@ -134,9 +132,6 @@ const formData = ref({
 
 const onSubmit = () => {
   const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  // console.log(selectedProduct?.value)
-  // console.log(durationValue)
-  // const durationValue = duration.value?.value ? duration.value.value : durationInput.value
   const dataAuction = {
     startPrice: selectedProduct?.value.startPrice || 0,
     jump: selectedProduct?.value.jump,
@@ -156,7 +151,6 @@ const onSubmit = () => {
     oldImagesRemoved: [''], // Replace with actual image paths
     newImages: [...selectedProduct?.value?.product?.imageUrls], // Replace with actual image paths
   }
-  console.log(dataProduct)
   ProductSerivice.updateProductById(selectedProduct.value?.product?.id, dataProduct)
     .then(_ => {
       emit('sendSuccess')
@@ -237,7 +231,6 @@ const showProductModal = ref(false)
 const selectedProduct = ref(null)
 const openProductModal = product => {
   selectedProduct.value = product // Set the selected brand data
-  // console.log(selectedbrand.value)
   showProductModal.value = true // Show the modal
 }
 const tabButtonClasses = tabName => ({

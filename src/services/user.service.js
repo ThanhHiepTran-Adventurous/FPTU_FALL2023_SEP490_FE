@@ -57,9 +57,15 @@ const uploadCCCD = async (formData) => {
 const getCCCD = async () => {
   const serviceUrl = url.endpoint.user.getCitizenCard
   const response = await utils.axiosLocalHost.get(serviceUrl)
-  return response ? response.data : response;
+  return response ? response.data : response
+}
+
+const getAllNotification = async () => {
+  const serviceUrl = url.endpoint.notification.getAllNoti
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
 }
 
 export default {
-  updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp, uploadCCCD, getCCCD
+  updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp, uploadCCCD, getCCCD, getAllNotification
 }

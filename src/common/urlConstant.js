@@ -84,6 +84,9 @@ export default {
       option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
       paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay'
     },
+    notification: {
+      getAllNoti: 'notification/list-notification-user'
+    }
   },
 }
 

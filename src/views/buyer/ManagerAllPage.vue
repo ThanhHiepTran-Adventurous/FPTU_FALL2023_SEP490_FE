@@ -4,7 +4,7 @@
       <Navbar />
     </LayoutHeader>
     <!-- To prevent margin collapsing -->
-    <div class="mt-[150px] md:mt-[60px] float-left"></div>
+    <div class="mt-[150px] md:mt-[70px] float-left"></div>
     <div class="clear-both"></div>
     <div class="mb-[10px]">
       <LayoutContent>

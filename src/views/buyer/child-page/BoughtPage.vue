@@ -24,9 +24,6 @@ const getQueryParameters = () => {
 
   responeCode = queryParams.vnp_ResponseCode
   transactionStatus = queryParams.vnp_TransactionStatus
-
-  console.log('responeCode:', responeCode)
-  console.log('transactionStatus:', transactionStatus)
 }
 const breadcrumbItems = [
   {
@@ -75,7 +72,6 @@ const closeModal = () => {
 const fetchAuctionWinData = async () => {
   const response = await auctionService.getListAuctionWin()
   auctionWins.value = response.data
-  console.log(auctionWins.value)
   auctionWinFiltered.value = JSON.parse(JSON.stringify(auctionWins.value))
   filterData()
 }

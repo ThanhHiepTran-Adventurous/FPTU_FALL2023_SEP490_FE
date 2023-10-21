@@ -37,7 +37,6 @@ const onSubmit = async () => {
     validate.value = true
   } catch (validationErrors) {
     validate.value = false
-    console.log(validationErrors)
     return
   }
   if ((validate.value = true)) {

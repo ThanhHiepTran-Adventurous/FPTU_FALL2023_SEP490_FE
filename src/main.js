@@ -7,7 +7,7 @@ import Toast from "vue-toastification"
 
 import './assets/main.css'
 import "vue-toastification/dist/index.css";
-import './assets/icon.css'
+import 'ant-design-vue/dist/reset.css';
 
 const pinia = createPinia()
 

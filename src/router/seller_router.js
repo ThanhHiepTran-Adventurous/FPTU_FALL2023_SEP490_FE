@@ -2,7 +2,6 @@ import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
-import CCCD from '@/components/page-sections/UploadCCCD.vue'
 import ProductStore from '@/components/manage-product/ProductStore.vue'
 import ProductAuction from '@/components/manage-product/ProductAuction.vue'
 import ProductSell from '@/components/manage-product/ProductSell.vue'
@@ -41,11 +40,6 @@ const seller_router = [
         meta: {
           requiresAuth: false,
         },
-      },
-      {
-        name: 'cccd',
-        path: '/cccd',
-        component: CCCD,
       },
       {
         name: 'sign-up',

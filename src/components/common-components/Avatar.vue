@@ -17,10 +17,6 @@ const getFirstLetterName = () => {
   return firstLetter
 }
 
-const hexColor = ref(stringToColour(userStore.getUsernameAndGetFromLocalStorageIfNotExist()))
-
-watch(hexColor, () => console.log(hexColor))
-
 </script>
 
 <template>

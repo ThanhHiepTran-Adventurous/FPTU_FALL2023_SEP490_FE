@@ -75,11 +75,9 @@ const fetchCategoriesData = async () => {
 }
 const fetchAuctions = async () => {
   const auctionsData = await auctionService.getAllActiveAuctions()
-  console.log(auctionsData)
   auctions.value = auctionsData.data
   totalAuctions.value = auctions.length
 }
-console.log(totalAuctions.value)
 onMounted(async () => {
   fetchBrandsData()
   fetchCategoriesData()

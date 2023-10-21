@@ -67,3 +67,7 @@ export const BidType = {
         value: "DIRECT"
     }
 }
+
+export const NotiReadEnum = {
+    READ: "READ"
+}

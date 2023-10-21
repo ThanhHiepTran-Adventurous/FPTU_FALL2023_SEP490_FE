@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getMessaging, getToken, onMessage, deleteToken } from "firebase/messaging";
 
 export const useFirebaseStore = defineStore("firebase", {
   state: () => ({
