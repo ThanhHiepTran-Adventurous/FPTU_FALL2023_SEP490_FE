@@ -13,10 +13,16 @@ import OtpInput from '@/components/common-components/OtpInput.vue';
 import { Role } from '../../common/contract';
 import * as yup from "yup";
 import { ErrorMessage, Field, Form } from "vee-validate";
+import { defaultAvatar } from '@/common/urlConstant';
+import { useUserStore } from '@/stores/user.store';
+
+const userStore = useUserStore()
 
 //------------------------------------------------------------
+const isImageUpdating = ref(false)
 const isVerifyOtpShow = ref(false)
 const isModalActive = ref(false)
+
 const otp = ref("")
 const newEmail = ref("")
 const emailPassword = ref("")
@@ -120,9 +126,11 @@ const onUploadImage = () => {
     let formData = new FormData()
     formData.append('image', fileAvatar.value)
 
+    isImageUpdating.value = true
     userService.updateAvatar(formData).then(response => {
         fetchUserdata()
         toast.toastSuccess("Cập nhật avatar thành công.")
+        isImageUpdating.value = false
     }).catch(err => {
         toast.toastError("Không thể cập nhật avatar, có thể file quá lớn hoặc do hệ thống.")
     })
@@ -265,6 +273,11 @@ const fetchUserdata = async () => {
     if (userInfo.data.role === Role.seller.value) {
         fetchCCCD()
     }
+
+    // sync the data in local storage
+    userStore.setUsernameAndSaveToLocalStorage(userInfo.data.fullname)
+    userStore.setAvatarUrlAndSaveToLocalStorage(userInfo.data.avatarUrl)
+    userStore.setIsVerifiedCCCDAndSaveToLocalStorage(userInfo.data.citizenCardVerified)
 }
 
 const fetchCCCD = async () => {
@@ -338,17 +351,12 @@ onMounted(async () => {
             </div>
             <div class="flex flex-col items-center -mt-20">
                 <img @click="$refs.fileAvt.click()"
-                    :src="avtImgSrc || profileModel.imageUrl || 'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg'"
+                    :src="avtImgSrc || profileModel.imageUrl || defaultAvatar"
                     alt="avt" class="w-40 h-40 border-4 border-white rounded-full">
 
                 <input type="file" hidden v-on:change="handleFileAvtUpload($event)" ref="fileAvt" />
-                <button @click="() => onUploadImage()"
-                    class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                    <Icon icon="tdesign:upload" />
-                    <span>Upload image</span>
-                </button>
-                <div class="flex items-center space-x-2">
-                    <p class="text-2xl">{{ profileModel.name }}</p>
+                <div class="flex items-center space-x-2 mt-3">
+                    <div class="text-2xl">{{ profileModel.name }}</div>
                     <span v-if="profileModel.isCCVerified === true" class="bg-blue-500 rounded-full p-1" title="Verified">
                         <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-100 h-2.5 w-2.5" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -356,7 +364,21 @@ onMounted(async () => {
                         </svg>
                     </span>
                 </div>
-                <p class="text-sm text-gray-500">{{ profileModel.address }}</p>
+                <button
+                    v-if="isImageUpdating"
+                    class="flex items-center justify-center w-[300px] bg-blue-400 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100 hover:cursor-not-allowed">
+                    <svg class="animate-spin h-5 w-5 mr-3 !text-white" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-100" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Đang cập nhật...</span>
+                </button>
+                <button v-else @click="() => onUploadImage()"
+                    class="flex items-center justify-center bg-blue-600 w-[300px] hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                    <Icon icon="tdesign:upload" />
+                    <span>Cập nhật ảnh đại diện</span>
+                </button>
+                <div class="text-sm text-gray-500">{{ profileModel.address }}</div>
             </div>
         </div>
 
@@ -455,9 +477,9 @@ onMounted(async () => {
                                     class="overflow-auto p-8 w-full h-full flex flex-col">
                                     <header
                                         class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                                        <p class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
+                                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
                                             <span>Tải lên <span class="text-red-500">mặt trước</span> căn cước</span>
-                                        </p>
+                                        </div>
                                         <button @click="$refs.fileFront.click()"
                                             class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
                                             Tải lên
@@ -479,9 +501,9 @@ onMounted(async () => {
                                     class="overflow-auto p-8 w-full h-full flex flex-col">
                                     <header
                                         class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                                        <p class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
+                                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
                                             <span>Tải lên <span class="text-red-500">mặt sau</span> căn cước</span>
-                                        </p>
+                                        </div>
                                         <button @click="$refs.fileBack.click()"
                                             class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
                                             Tải lên

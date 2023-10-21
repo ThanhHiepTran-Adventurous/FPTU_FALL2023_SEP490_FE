@@ -93,7 +93,7 @@ onMounted(() => {
 <template>
   <div class="container my-[20px] py-2 mx-auto bg-white rounded-md min-h-[80vh]">
     <div class="mb-4 mx-5 mt-4">
-      <div class="mt-3 flex items-center">
+      <div class="mt-3 flex items-center gap-3">
         <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
         <div class="w-full">
           <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />

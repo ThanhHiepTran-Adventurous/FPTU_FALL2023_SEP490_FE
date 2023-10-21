@@ -30,7 +30,6 @@ const curTab = computed(() => {
                                     :class="curTab===tabs.inventory ? 'bg-blue-200' : ''"
                                     >
                                     Kho
-                                    <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 14 </span>
                                 </button>
                             </router-link>
                         </div>
@@ -41,7 +40,6 @@ const curTab = computed(() => {
                                     :class="curTab===tabs.rejected ? 'bg-blue-200' : ''"
                                     >
                                     Yêu cầu bị từ chối
-                                    <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
                         </div>
@@ -62,7 +60,6 @@ const curTab = computed(() => {
                                     :class="curTab===tabs.sold ? 'bg-blue-200' : ''"
                                     >
                                     Đấu giá hoàn thành
-                                    <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
                         </div>
@@ -73,7 +70,6 @@ const curTab = computed(() => {
                                     :class="curTab===tabs.order ? 'bg-blue-200' : ''"
                                     >
                                     Đơn hàng
-                                    <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
                         </div>

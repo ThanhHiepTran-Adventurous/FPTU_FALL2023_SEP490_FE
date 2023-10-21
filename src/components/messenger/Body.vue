@@ -6,8 +6,8 @@
     <div class="flex flex-col h-full overflow-x-auto mb-4">
       <div class="flex flex-col h-full">
         <div class="grid grid-cols-12 gap-y-2">
-          <MessageBubble isSender="true" sender="Sender" message="Hello there!"/>
-          <MessageBubble isSender="false" sender="Receiver" message="Hi! How are you?"/>
+          <MessageBubble :isSender="true" sender="Sender" message="Hello there!"/>
+          <MessageBubble :isSender="false" sender="Receiver" message="Hi! How are you?"/>
         </div>
       </div>
     </div>

@@ -21,6 +21,8 @@ import userService from '@/services/user.service';
 import AntDropdown from '../AntDropdown.vue';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Role } from '@/common/contract';
+import { defaultRoute } from '@/common/constant';
+import { defaultAvatar } from '@/common/urlConstant'
 
 const schema = yup.object().shape({
     phone: yup.string().required('Số điện thoại không được để trống'),
@@ -33,12 +35,6 @@ const firebaseStore = useFirebaseStore()
 const globalStore = useGlobalStore()
 const notiStore = useNotificationStore()
 
-const defaultRoute = {
-    buyer : "/",
-    seller : "/manage/product-inventory",
-    admin : "/admin/dashboard"
-}
-
 const cartItem = ref(true)
 const mobileMenu = ref(false)
 const isModalActive = ref(false)
@@ -46,6 +42,9 @@ const validate = ref(true)
 
 const curRole = computed(() => {
     return userStore.getRoleAndGetFromLocalStorageIfNotExist()
+})
+const curAvatar = computed(() => {
+    return userStore.getAvatarUrlAndGetFromLocalStorageIfNotExist()
 })
 const curDefaultRoute = computed(() => {
     const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
@@ -142,6 +141,7 @@ const onLogout = async () => {
         .catch(e => console.log(e))
         .finally(() => {
             userStore.clear()
+            router.push(defaultRoute.buyer)
         })
 }
 
@@ -222,8 +222,8 @@ const notiList = computed(() => {
                         </RouterLink>
                         <Dropdown placement="bottom" text="bottom">
                             <template #trigger>
-                                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700">
-                                    <Icon icon="codicon:account" class="text-[28px] hover:cursor-pointer hover:text-gray-400" />
+                                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-full">
+                                    <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full"/>
                                 </div>
                             </template>
                             <ListGroup>

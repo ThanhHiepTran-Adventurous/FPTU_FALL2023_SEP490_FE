@@ -1,50 +1,27 @@
 <script setup>
 import UserMessageCard from './UserMessageCard.vue';
 
-
 </script>
 <template>
   <div class="flex flex-col mt-8">
    <UserMessageCard/>
   </div>
   <div class="flex flex-col mt-8">
-    <div class="flex flex-row items-center justify-between text-xs">
-      <span class="font-bold">Đang Hoạt Động</span>
-      <span class="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
+    <div class="flex flex-row items-center justify-between">
+      <span class="font-bold">Hành động</span>
     </div>
-    <div class="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-      <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-        <div class="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-          H
-        </div>
-        <div class="ml-2 text-sm font-semibold">Henry Boyd</div>
+    <div class="flex flex-col space-y-1 mt-4 -mx-2">
+      <button class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mr-2 mb-2">
+        Cập nhật thông tin đơn hàng
       </button>
-      <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-        <div class="flex items-center justify-center h-8 w-8 bg-gray-200 rounded-full">
-          M
-        </div>
-        <div class="ml-2 text-sm font-semibold">Marta Curtis</div>
-        <div class="flex items-center justify-center ml-auto text-xs text-white bg-red-500 h-4 w-4 rounded leading-none">
-          2
-        </div>
+      <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hover:cursor-pointer">
+        Xác nhận đơn hàng đang vận chuyển
       </button>
-      <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-        <div class="flex items-center justify-center h-8 w-8 bg-orange-200 rounded-full">
-          P
-        </div>
-        <div class="ml-2 text-sm font-semibold">Philip Tucker</div>
+      <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hover:cursor-pointer">
+        Xác nhận đã vận chuyển xong
       </button>
-      <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-        <div class="flex items-center justify-center h-8 w-8 bg-pink-200 rounded-full">
-          C
-        </div>
-        <div class="ml-2 text-sm font-semibold">Christine Reid</div>
-      </button>
-      <button class="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-        <div class="flex items-center justify-center h-8 w-8 bg-purple-200 rounded-full">
-          J
-        </div>
-        <div class="ml-2 text-sm font-semibold">Jerry Guzman</div>
+      <button class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+        Tố cáo người mua
       </button>
     </div>
    </div>

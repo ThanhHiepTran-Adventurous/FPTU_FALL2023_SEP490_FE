@@ -17,3 +17,9 @@ export const buyerTabs = {
     reported: "Lịch sử báo cáo",
     refundRequest: "Đề nghị trả hàng",
 }
+
+export const defaultRoute = {
+    buyer : "/",
+    seller : "/manage/product-inventory",
+    admin : "/admin/dashboard"
+}

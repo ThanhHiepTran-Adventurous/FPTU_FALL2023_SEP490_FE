@@ -62,7 +62,9 @@ watch(selected, newVal => {
 const filterData = () => {
   auctionWinFiltered.value = auctionWins.value.filter(
     v => v.informationAuction.modelType === selected.value.value && v.informationAuction.product.status !== 'PAID',
-  )
+  ).sort((a, b) => {
+    return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()
+  })
 }
 const closeModal = () => {
   router.push('/bought').then(() => {
@@ -101,22 +103,25 @@ const payment = async auctionId => {
     <!-- Main section -->
     <div class="bg-white container mx-auto">
       <div class="mb-4 mr-5 ml-5 mt-2 pt-2">
-        <div class="mt-3 flex items-center">
+        <div class="mt-3 flex items-center gap-3">
           <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
           <div class="w-full">
             <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
           </div>
         </div>
       </div>
-      <div class="bg-white flex flex-wrap gap-5 pt-2 pb-5 w-full mx-5">
+
+      <div class="bg-white flex flex-wrap justify-center gap-5 pt-2 pb-5 w-full px-5">
         <div
           v-for="auction in auctionWinFiltered"
           :key="auction.id"
           class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-          <img
+          <div class="pl-2">
+            <img
             class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
             :src="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)"
             alt="" />
+          </div>
           <div class="flex flex-col justify-between p-4 leading-normal">
             <div class="text-xl font-semibold mb-1 tracking-tight text-gray-900 dark:text-white">
               {{ auction.informationAuction.product.name }}
