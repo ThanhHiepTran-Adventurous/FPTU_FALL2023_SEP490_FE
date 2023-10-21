@@ -1,6 +1,7 @@
 <script setup>
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import auctionService from '@/services/auction.service'
+import paymentService from '@/services/payment.service'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import imageHelper from '@/utils/image-helper'
@@ -12,7 +13,7 @@ import { AuctionModelType } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import BoughtNav from '../BoughtNav.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
-const DOMAIN_URL = import.meta.env.DOMAIN_URL
+import urlConstant from '@/common/urlConstant'
 
 const route = useRoute()
 const router = useRouter()
@@ -85,10 +86,9 @@ onMounted(() => {
 })
 
 const payment = async auctionId => {
-  const returnUrl = 'http://localhost:5173/#/bought'
+  const returnUrl = `${urlConstant.domain}${route.fullPath}`
 
-  const response = await auctionService.paymentOption2(auctionId, returnUrl)
-  console.log(response.data)
+  const response = await paymentService.paymentOption2(auctionId, returnUrl)
   const redirectURL = response.data
 
   window.location.href = redirectURL

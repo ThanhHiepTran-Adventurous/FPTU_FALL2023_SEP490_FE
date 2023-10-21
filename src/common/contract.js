@@ -43,9 +43,13 @@ export const ProductStatus = {
         label: "ĐÃ BÁN",
         value: "SOLD",
     },
-    NO_AUCTIONEER: {
-        label: "KHÔNG CÓ LƯỢT ĐẤU GIÁ",
-        value: "NO_AUCTIONEER"
+    NOT_REACH_NUM_AUCTIONEER: {
+        label: "KHÔNG ĐỦ LƯỢT ĐẤU GIÁ",
+        value: "NOT_REACH_NUM_AUCTIONEER"
+    },
+    NOT_PAYMENT: {
+        label: "KHÔNG THANH TOÁN",
+        value: "NOT_PAYMENT"
     }
 }
 

@@ -267,28 +267,36 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-            THỜI GIAN ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
-          </label>
-          <div class="flex gap-3 items-center">
-            <Dropdown :data="durationData" v-model="duration" class="!w-[200px]" />
-            <input
-              v-model="durationInput"
-              v-if="!duration.value"
-              type="number"
-              class="shadow appearance-none border rounded w-[10%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="duration"
-              placeholder="" />
-            <div class="block text-gray-700 text-sm font-bold">giờ</div>
+        <div class="mb-4 flex items-center">
+          <div class="mr-[20%]">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
+              THỜI GIAN ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
+            </label>
+            <div class="flex gap-3 items-center">
+              <Dropdown :data="durationData" v-model="duration" class="!w-[200px]" />
+              <input
+                v-model="durationInput"
+                v-if="!duration.value"
+                type="number"
+                class="shadow appearance-none border rounded w-[10%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="duration"
+                placeholder="" />
+              <div class="block text-gray-700 text-sm font-bold">giờ</div>
+            </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-            SỐ NGƯỜI TỐI THIỂU THAM GIA ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
-          </label>
-          <div class="w-full items-center">
-            <CurrencyInput v-model="formData.minimumAuctioneers" placeholder="" w="w-full" />
+          <div>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
+              SỐ NGƯỜI TỐI THIỂU THAM GIA ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
+            </label>
+            <div class="flex items-center gap-3">
+              <input
+                  v-model="formData.minimumAuctioneers"
+                  type="number"
+                  class="shadow appearance-none border rounded !w-[200px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  id="duration"
+                  placeholder="" />
+              <div class="block text-gray-700 text-sm font-bold">người</div>
+            </div>
           </div>
         </div>
         <div class="mb-4">

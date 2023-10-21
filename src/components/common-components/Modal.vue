@@ -47,14 +47,16 @@ const emit = defineEmits(["decline-modal", "confirm-modal"])
           <slot />
         </div>
         <div v-if="hasButton" class="flex justify-end p-4 gap-x-2">
-          <div>
-            <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">
-              Hủy
-            </Button>
-          </div>
-          <div>
-            <Button @on-click="$emit('confirm-modal')">{{ buttonLabel }}</Button>
-          </div>
+          <slot name="button">
+            <div>
+              <Button :type="constant.buttonTypes.OUTLINE" @on-click="$emit('decline-modal')">
+                Hủy
+              </Button>
+            </div>
+            <div>
+              <Button @on-click="$emit('confirm-modal')">{{ buttonLabel }}</Button>
+            </div>
+          </slot>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ const tabs = {
     onSelling: "product-on-stock",
     sold: "product-sold",
     rejected: "product-rejected",
+    order: "order"
 }
 
 const route = useRoute()
@@ -34,12 +35,23 @@ const curTab = computed(() => {
                             </router-link>
                         </li>
                         <li class="flex-2">
+                            <router-link to="/manage/product-rejected">
+                                <button
+                                    class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
+                                    :class="curTab===tabs.rejected ? 'bg-blue-200' : ''"
+                                    >
+                                    Yêu cầu bị từ chối
+                                    <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
+                                </button>
+                            </router-link>
+                        </li>
+                        <li class="flex-2">
                             <router-link to="/manage/on-selling">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
                                     :class="curTab===tabs.onSelling ? 'bg-blue-200' : ''"
                                     >
-                                    Đấu Giá
+                                    Đang đấu giá
                                 </button>
                             </router-link>
                         </li>
@@ -49,18 +61,18 @@ const curTab = computed(() => {
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
                                     :class="curTab===tabs.sold ? 'bg-blue-200' : ''"
                                     >
-                                    Đã Bán
+                                    Đấu giá hoàn thành
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>
                         </li>
                         <li class="flex-2">
-                            <router-link to="/manage/product-rejected">
+                            <router-link to="/manage/product-sold">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
-                                    :class="curTab===tabs.rejected ? 'bg-blue-200' : ''"
+                                    :class="curTab===tabs.order ? 'bg-blue-200' : ''"
                                     >
-                                    Yêu Cầu Bị Từ Chối
+                                    Đơn hàng
                                     <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500"> 8 </span>
                                 </button>
                             </router-link>

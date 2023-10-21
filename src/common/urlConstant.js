@@ -1,6 +1,8 @@
 const SERVICE_URL = import.meta.env.VITE_SERVER_URL
+const DOMAIN_URL = import.meta.env.VITE_DOMAIN_URL
 
 export default {
+  domain: DOMAIN_URL,
   base: SERVICE_URL,
   endpoint: {
     auth: {
@@ -52,6 +54,7 @@ export default {
       autoAuctionDetail: '/auctions/{auctionId}/auctionAutoInfo-detail',
       updateAutoAuction: '/auctions/buyer/edit-auto-auction-info/{autoAuctionId}',
       getListAuctionWin: '/auctions/getListAuctionWin',
+      auctionBySeller: 'auctions/seller/getListAuction-authorize',
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',
@@ -79,6 +82,7 @@ export default {
     },
     transaction: {
       option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
+      paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay'
     },
   },
 }
