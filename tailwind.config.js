@@ -8,6 +8,10 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    // fontSize: {
+    //   base: '16px',
+    //   md: '16px',
+    // },
     colors: ({ colors }) => ({
       primary: '#252F34',
       secondary: '#DBEAFE',

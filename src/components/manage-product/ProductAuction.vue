@@ -8,6 +8,7 @@ import formatCurrency from '@/utils/currency-formatter';
 import moment from 'moment';
 import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue';
 import imageHelper from '@/utils/image-helper';
+import Loading from '../common-components/Loading.vue';
 
 const activateInfoAuction = async (auctionInfo) => {
   isModalVisible.value = true
@@ -16,7 +17,9 @@ const activateInfoAuction = async (auctionInfo) => {
   const historyFetched = await auctionService.getHistoryBid(auctionInfo.id, auctionInfo.product.id)
   history.value = historyFetched.data
 }
+
 const isModalVisible = ref(false)
+const isLoading = ref(false)
 const products = ref([])
 const detail = ref(null)
 const history = ref(null)
@@ -30,9 +33,11 @@ function handleConfirm() {
 }
 
 const fetchProducts = async () => {
+  isLoading.value = true
   const onSellingQuery = "status:IN_PROCESS"
   const data = await auctionService.getAuctionBySeller(onSellingQuery)
   products.value = data.data
+  isLoading.value = false
 }
 const calculateCurrentPrice = (auction) => {
   const curr = auction?.highestPrice === 0 ? auction?.startPrice : auction?.highestPrice
@@ -54,7 +59,8 @@ onMounted(async () => {
         <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
       </div>
     </div>
-    <div class="flex flex-wrap items-center mt-10 mx-5 gap-3">
+    <Loading v-if="isLoading" />
+    <div v-else class="flex flex-wrap items-center mt-10 mx-5 gap-3">
       <ItemStatic
           v-for="item in products" :key="item.id"
           @click="activateInfoAuction(item)"

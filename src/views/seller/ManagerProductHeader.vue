@@ -7,7 +7,7 @@ const tabs = {
     onSelling: "product-on-stock",
     sold: "product-sold",
     rejected: "product-rejected",
-    order: "order"
+    order: "product-in-order"
 }
 
 const route = useRoute()
@@ -64,7 +64,7 @@ const curTab = computed(() => {
                             </router-link>
                         </div>
                         <div class="flex-2">
-                            <router-link to="/manage/product-sold">
+                            <router-link to="/manage/orders">
                                 <button
                                     class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
                                     :class="curTab===tabs.order ? 'bg-blue-200' : ''"

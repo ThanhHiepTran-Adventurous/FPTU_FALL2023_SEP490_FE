@@ -12,6 +12,7 @@ import { Icon } from '@iconify/vue'
 import Dropdown from '../common-components/Dropdown.vue';
 import Button from "@/components/common-components/Button.vue"
 import constant from '@/common/constant';
+import OrderService from '@/services/order.service';
 
 const auctions = ref([])
 const auctionsFiltered = ref([])
@@ -71,8 +72,14 @@ const handlePayment = () => {
   //payment here
 }
 
+const fetchOrders = async () => {
+  const response = await OrderService.getAllOrders('', 1, 1000, '')
+  console.log(response)
+}
+
 onMounted(() => {
   fetchAuctions()
+  fetchOrders()
 })
 
 </script>

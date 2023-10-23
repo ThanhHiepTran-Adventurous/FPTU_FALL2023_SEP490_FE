@@ -7,6 +7,7 @@ import ProductAuction from '@/components/manage-product/ProductAuction.vue'
 import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
 import Messenger from '@/views/common/Messenger.vue'
+import ProductInOrder from '@/components/manage-product/ProductInOrder.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -32,6 +33,11 @@ const seller_router = [
         name: 'product-rejected',
         path: '/manage/product-rejected',
         component: ProductReject
+      },
+      {
+        name: 'product-in-order',
+        path: '/manage/orders',
+        component: ProductInOrder
       },
       {
         name: 'profile',

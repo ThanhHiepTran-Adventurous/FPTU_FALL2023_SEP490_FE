@@ -21,6 +21,7 @@ const props = defineProps({
 
         <template #overlay>
             <Menu class="max-h-[90vh] overflow-auto">
+                <div v-if="!menuData || menuData.length === 0" class="p-2">Hiện không có thông báo nào</div>
                 <Menu-item v-for="(item, indx) in menuData" :key="item">
                     <div
                         class="w-[600px] p-1 rounded-md"

@@ -111,7 +111,7 @@ const payment = async auctionId => {
         </div>
       </div>
 
-      <div class="bg-white flex flex-wrap justify-center gap-5 pt-2 pb-5 w-full px-5">
+      <div class="bg-white grid grid-cols-3 gap-2 pt-2 pb-5 w-full px-5">
         <div
           v-for="auction in auctionWinFiltered"
           :key="auction.id"
@@ -132,7 +132,7 @@ const payment = async auctionId => {
               <span class="text-blue-600 text-2xl font-semibold ml-3">{{ formatCurrency(auction.finalPrice) }}</span>
             </div>
             <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-              Thắng đấu giá lúc:
+              Đạt được lúc:
               <span class="text-blue-600">{{ moment.utc(auction.winAt).format('DD/MM/YYYY HH:MM:ss') }}</span>
             </div>
             <div
@@ -147,7 +147,7 @@ const payment = async auctionId => {
                 @click="payment(auction.informationAuction.id)"
                 class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                 <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[24px] mr-3" />
-                <span class="text-lg">Thanh toán</span>
+                <span class="text-lg w-max">Thanh toán</span>
               </button>
             </div>
           </div>

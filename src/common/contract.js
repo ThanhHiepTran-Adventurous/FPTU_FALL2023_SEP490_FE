@@ -50,6 +50,10 @@ export const ProductStatus = {
     NOT_PAYMENT: {
         label: "KHÔNG THANH TOÁN",
         value: "NOT_PAYMENT"
+    },
+    PAID: {
+        label: "ĐÃ THANH TOÁN",
+        value: "PAID"
     }
 }
 

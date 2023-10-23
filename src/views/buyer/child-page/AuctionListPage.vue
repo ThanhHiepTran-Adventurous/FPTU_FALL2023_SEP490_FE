@@ -217,7 +217,8 @@ const filteredAuctions = computed(() => {
               :secondary-image="imageHelper.getSecondaryImageFromList(auction.product.imageUrls)"
               :floor-price="auction.highestPrice ? auction.highestPrice : auction.startPrice"
               :time-remain="auction.timeLeft"
-              :item-id="auction.id" />
+              :item-id="auction.id" 
+              :auction-type="auction.modelType" />
           </div>
         </div>
       </div>

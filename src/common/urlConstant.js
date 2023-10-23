@@ -85,7 +85,10 @@ export default {
       paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay'
     },
     notification: {
-      getAllNoti: 'notification/list-notification-user'
+      getAllNoti: 'notification/list-top-10-notification-user'
+    },
+    order: {
+      getOrders: 'orders/user/getListOrder-authorize'
     }
   },
 }
