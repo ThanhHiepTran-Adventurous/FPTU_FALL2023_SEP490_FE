@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 						<ProductInfo :auction-info="auction" @place-bid-success="fetchPageData()" @buy-now-success="onBuyNowSuccess()"/>
 					</div>
 				</div>
-				<div class="flex items-start rounded-md !bg-white xl:mt-0 w-full xl:w-[50%]">
+				<div class="flex items-start rounded-md !bg-white xl:mt-0 mt-2 w-full xl:w-[50%]">
 					<AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 <script setup>
 import { parseMillisecondsIntoReadableTime } from '@/utils/millis-to-duration';
-import formatCurrency from '@/utils/currency-formatter';
+import formatCurrency from '@/utils/currency-output-formatter';
 import AuctionType from '../badge/AuctionType.vue';
 import { AuctionModelType } from '@/common/contract';
 
@@ -67,4 +67,4 @@ const props = defineProps({
             </div>
         </div>
     </div>
-</template>
+</template>@/utils/currency-output-formatter

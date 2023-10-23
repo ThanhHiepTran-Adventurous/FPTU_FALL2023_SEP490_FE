@@ -4,7 +4,7 @@ import ItemStatic from '../common-components/item-box/ItemStatic.vue';
 import SearchInput from '../common-components/SearchInput.vue';
 import Modal from '../common-components/Modal.vue';
 import auctionService from '@/services/auction.service';
-import formatCurrency from '@/utils/currency-formatter';
+import formatCurrency from '@/utils/currency-output-formatter';
 import moment from 'moment';
 import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue';
 import imageHelper from '@/utils/image-helper';
@@ -183,4 +183,4 @@ onMounted(async () => {
     </Modal>
   </div>
   </div>
-</template>
+</template>@/utils/currency-output-formatter

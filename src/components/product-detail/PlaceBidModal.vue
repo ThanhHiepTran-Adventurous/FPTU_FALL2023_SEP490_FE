@@ -1,9 +1,9 @@
 <script setup>
 import auctionService from "@/services/auction.service";
-import formatCurrency from "@/utils/currency-formatter";
+import formatCurrency from "@/utils/currency-output-formatter";
 import { computed, onMounted, ref, watch } from "vue"
 import CurrencyInput from "../common-components/CurrencyInput.vue";
-import currencyFormatter from "@/common/currencyFormatter";
+import currencyFormatter from "@/utils/currencyFormatter";
 
 const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel'])
 
@@ -219,4 +219,4 @@ onMounted(async () => {
       </form>
     </div>
   </div>
-</template>
+</template>@/utils/currency-output-formatter

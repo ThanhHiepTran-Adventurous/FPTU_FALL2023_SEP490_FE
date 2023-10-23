@@ -1,6 +1,6 @@
 <script setup>
 import { parseMillisecondsIntoReadableTime } from '@/utils/millis-to-duration';
-import formatCurrency from '@/utils/currency-formatter';
+import formatCurrency from '@/utils/currency-output-formatter';
 
 const props = defineProps({
     mainImage: {
@@ -63,4 +63,4 @@ const props = defineProps({
             </div>
         </div>
     </div>
-</template>
+</template>@/utils/currency-output-formatter

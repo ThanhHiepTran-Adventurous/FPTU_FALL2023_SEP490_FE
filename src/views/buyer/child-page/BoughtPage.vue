@@ -5,7 +5,7 @@ import paymentService from '@/services/payment.service'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import imageHelper from '@/utils/image-helper'
-import formatCurrency from '@/utils/currency-formatter'
+import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import SearchInput from '@/components/common-components/SearchInput.vue'
@@ -242,3 +242,4 @@ const payment = async auctionId => {
     </div>
   </div>
 </template>
+@/utils/currency-output-formatter

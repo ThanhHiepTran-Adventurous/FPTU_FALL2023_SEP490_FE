@@ -8,10 +8,15 @@ import Modal from '../common-components/Modal.vue';
 import toastOption from '@/utils/toast-option';
 import auctionService from '@/services/auction.service';
 import { useGlobalStore } from '@/stores/global.store';
-import formatCurrency from '@/utils/currency-formatter';
+import formatCurrency from '@/utils/currency-output-formatter';
+import moment from 'moment';
+import DateHelper from '@/utils/date-helper';
+import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue';
+import AuctionType from '../common-components/badge/AuctionType.vue';
 
 const globalStore = useGlobalStore();
 const isModalVisible = ref(false);
+const isBuyNowModalVisible = ref(false);
 const autoAuctionInfo = ref(null);
 
 const emit = defineEmits(['placeBidSuccess', 'buyNowSuccess'])
@@ -43,12 +48,20 @@ const onPlaceError = () => {
 }
 
 const onBuyNowClick = () => {
+  const curTimeInMilis = DateHelper.getCurDateUTCMilis()
+  if(props.auctionInfo?.endDate && curTimeInMilis > moment.utc(props.auctionInfo?.endDate).valueOf()){
+    toastOption.toastError("Phiên đấu giá đã hoàn thành")
+    return
+  }
   //if not login, force modal login open
   if(!globalStore.isAlreadyLogin()){
     globalStore.showLoginModal = true
     return
   }
+  isBuyNowModalVisible.value = true
+}
 
+const onBuyNowConfirm = () => {
   auctionService.buyNowBid(props.auctionInfo?.id)
   .then(_ => {
     toastOption.toastSuccess("Bạn vừa mua ngay sản phẩm này thành công")
@@ -60,6 +73,12 @@ const onBuyNowClick = () => {
 }
 
 const onPlaceBidClick = async () => {
+  const curTimeInMilis = DateHelper.getCurDateUTCMilis()
+  if(props.auctionInfo?.endDate && curTimeInMilis > moment.utc(props.auctionInfo?.endDate).valueOf()){
+    toastOption.toastError("Phiên đấu giá đã hoàn thành")
+    return
+  }
+
   //if not login, force modal login open
   if(!globalStore.isAlreadyLogin()){
     globalStore.showLoginModal = true
@@ -74,7 +93,7 @@ const onPlaceBidClick = async () => {
 <template>
   <div class="tt-product-single-info">
     <Modal v-if="isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=false
-    :title="'Tiến hành đấu giá'">
+    title="Tiến hành đấu giá">
       <PlaceBidModal
       :start-price="auctionInfo?.startPrice"
       :highest-price="auctionInfo?.highestPrice" 
@@ -87,6 +106,17 @@ const onPlaceBidClick = async () => {
       @place-error="onPlaceError()"
       @modal-cancel="isModalVisible = false"
       />
+    </Modal>
+    <Modal
+      v-if="isBuyNowModalVisible"
+      widthClass="w-[900px]"
+      :hasOverFlowVertical=true
+      :hasButton=true
+      button-label="Mua ngay"
+      @decline-modal="isBuyNowModalVisible=false"
+      @confirm-modal="onBuyNowConfirm"
+      title="Xác nhận mua ngay">
+      <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn mua ngay món hàng này hay không?</div>
     </Modal>
     <div class="flex">
       <ul>
@@ -101,20 +131,21 @@ const onPlaceBidClick = async () => {
     </div>
     <div class="text-3xl my-3 text-black">{{ auctionInfo?.product?.name }}</div>
     <div class="flex items-center">
-      <div class="pr-3 border-r-[1px]">
+      <div class="pr-3 border-r-[1px] mr-3">
         <Rating :rating="4.5" :fixed-point="1" :round-start-rating="false" :show-rating="false" :star-size="19" />
       </div>
-      <div class="ml-3 bg-green-100 !text-green-800 text-sm font-medium mr-2 px-2.5 py-1 rounded">Còn tem</div>
-      <div class="bg-indigo-100 text-indigo-800 text-sm font-medium mr-2 px-2.5 py-1 rounded">Còn bill</div>
-      <div class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-1 rounded">Đổi trả</div>
+      <AuctionType :type="auctionInfo?.modelType" />
     </div>
     <div class="mt-4 pr-4">
       {{ auctionInfo?.product?.description }}
     </div>
     <div class="tt-wrapper">
       <div class="tt-countdown_box_02">
-        <div class="tt-countdown_inner">
+        <div v-if="auctionInfo?.timeLeft > 0" class="tt-countdown_inner">
           <CountDown :coefficientSize="0.7" :deadlineInMilis="deadlineInMilis" />
+        </div>
+        <div v-else class="text-red-600 text-lg">
+          &lt; Phiên đấu giá đã kết thúc >
         </div>
       </div>
     </div>
@@ -126,8 +157,13 @@ const onPlaceBidClick = async () => {
               <div class="text-2xl font-bold text-blue-600 flex">
                 <span class="text-blue-600 w-[200px] block mr-3">Hiện tại: </span>{{ auctionInfo?.highestPrice ? formatCurrency(auctionInfo?.highestPrice) : formatCurrency(auctionInfo?.startPrice) }}
               </div>
-              <div v-if="auctionInfo?.highestPrice">
-                Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc: {{ auctionInfo?.latestBidderInfo?.createdAt }}
+              <div>
+                <div v-if="auctionInfo?.highestPrice" class="mt-1">
+                  Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc: {{ auctionInfo?.latestBidderInfo?.createdAt }}
+                </div>
+                <div v-else class="ml-[13rem] mt-1">
+                  Hiện tại chưa có người đặt giá
+                </div>
               </div>
             </div>
             <div class="px-2">
@@ -173,3 +209,4 @@ const onPlaceBidClick = async () => {
   margin: 10px;
   width: 100%;
 }</style>
+@/utils/currency-output-formatter

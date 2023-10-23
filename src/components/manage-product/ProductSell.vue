@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import SearchInput from '../common-components/SearchInput.vue';
 import auctionService from '@/services/auction.service';
 import Modal from '../common-components/Modal.vue';
-import formatCurrency from '@/utils/currency-formatter';
+import formatCurrency from '@/utils/currency-output-formatter';
 import moment from 'moment';
 import ItemSold from '../common-components/item-box/ItemSold.vue';
 import imageHelper from '@/utils/image-helper';
@@ -330,3 +330,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+@/utils/currency-output-formatter

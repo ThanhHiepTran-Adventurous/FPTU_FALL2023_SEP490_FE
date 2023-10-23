@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup>
-import currencyFormatter from '@/common/currencyFormatter'
+import currencyFormatter from '@/utils/currencyFormatter'
 import { computed } from 'vue'
 
 const emit = defineEmits(['update:modelValue'])

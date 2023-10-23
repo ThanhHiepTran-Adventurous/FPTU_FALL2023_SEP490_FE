@@ -4,7 +4,7 @@ import ItemBox from '@/components/common-components/item-box/ItemBox.vue'
 import { onMounted, ref, computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import Slider from '@vueform/slider'
-import currencyFormat from '@/utils/currency-formatter.js'
+import currencyFormat from '@/utils/currency-output-formatter.js'
 import brandService from '@/services/brand.service'
 import categoryService from '@/services/category.service'
 import auctionService from '@/services/auction.service'
@@ -226,3 +226,4 @@ const filteredAuctions = computed(() => {
   </div>
 </template>
 <style src="@vueform/slider/themes/default.css"></style>
+@/utils/currency-output-formatter.js

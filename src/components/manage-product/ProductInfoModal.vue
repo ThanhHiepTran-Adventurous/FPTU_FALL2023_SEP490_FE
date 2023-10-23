@@ -6,7 +6,7 @@ import { initFlowbite } from 'flowbite'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import AuctionService from '@/services/auction.service'
 import CurrencyInput from '../common-components/CurrencyInput.vue'
-import currencyFormatter from '@/common/currencyFormatter'
+import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
 import { ProductStatus } from '@/common/contract'
 
