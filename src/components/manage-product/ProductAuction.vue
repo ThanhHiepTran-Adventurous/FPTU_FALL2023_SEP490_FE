@@ -59,7 +59,9 @@ onMounted(async () => {
         <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
       </div>
     </div>
-    <Loading v-if="isLoading" />
+    <!-- Loading -->
+    <Loading v-if="isLoading" /> 
+    <!-- Data -->
     <div v-else class="flex flex-wrap items-center mt-10 mx-5 gap-3">
       <ItemStatic
           v-for="item in products" :key="item.id"
