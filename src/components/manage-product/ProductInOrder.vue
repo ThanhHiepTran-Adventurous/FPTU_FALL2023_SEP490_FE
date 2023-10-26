@@ -149,7 +149,7 @@ onMounted(() => {
         </div>
         <div class="mx-auto container align-middle mt-8">
           <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
-          <div class="ml-4">
+          <div class="ml-8">
             <OrderTimeline :curStatus="detail?.statusOrder" />
           </div>
         </div>
@@ -163,9 +163,16 @@ onMounted(() => {
       </div>
       <div>
         <Button>
-          <div class="flex items-center w-[120px]">
-            <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[18px] mr-3" />
-            <div>Thanh toán</div>
+          <div class="flex items-center">
+            <div>Cập nhật trạng thái đơn hàng</div>
+          </div>
+        </Button>
+      </div>
+      <div>
+        <Button>
+          <div class="flex items-center">
+            <Icon icon="uiw:message" class="text-[18px] mr-3" />
+            <div>Nhắn tin</div>
           </div>
         </Button>
       </div>

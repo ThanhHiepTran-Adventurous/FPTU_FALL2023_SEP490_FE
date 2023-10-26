@@ -59,7 +59,7 @@ const seller_router = [
   },
   {
     name: 'messenger',
-    path: '/messenger',
+    path: '/messenger/:groupId',
     component: Messenger,
     meta: {
       requiresAuth: false,

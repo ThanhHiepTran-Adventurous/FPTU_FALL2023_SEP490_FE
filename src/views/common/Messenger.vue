@@ -3,11 +3,18 @@ import Nav from "@/components/messenger/Nav.vue";
 import Body from "@/components/messenger/Body.vue";
 import { Icon } from "@iconify/vue"
 import { defaultRoute } from "@/common/constant";
-import { computed } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
 import { Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
+import { useRoute } from "vue-router";
+import { Client } from '@stomp/stompjs';
+import urlConstant from "@/common/urlConstant";
 
 const userStore = useUserStore()
+const route = useRoute()
+
+const stompClient = undefined
+let groupId = undefined
 
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
@@ -20,6 +27,26 @@ const backLink = computed(() => {
     return defaultRoute.buyer
 })
 
+onMounted(() => {
+  groupId = route.params["groupId"]
+
+  const client = new Client({
+    brokerURL: urlConstant.ws.base,
+    connectHeaders: {
+      'X-Authorization': urlConstant.ws.authToken
+    }
+  })
+  client.onConnect = () => {
+    console.log("Connected")
+  }
+  client.onStompError = () => {
+    console.log("Error")
+  }
+  client.activate()
+})
+onBeforeUnmount(() => {
+  stompClient?.deactivate()
+})
 </script>
 
 <template>
