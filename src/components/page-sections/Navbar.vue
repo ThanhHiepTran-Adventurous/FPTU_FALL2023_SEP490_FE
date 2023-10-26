@@ -252,7 +252,7 @@ const notiList = computed(() => {
                   <template #prefix>
                     <Icon icon="tabler:logout" class="text-[28px]" />
                   </template>
-                  Logout a
+                  Logout
                 </ListGroupItem>
               </ListGroup>
             </Dropdown>

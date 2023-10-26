@@ -4,6 +4,8 @@ import Button from '@/components/common-components/Button.vue'
 import ProductSerivice from '@/services/product.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import ProductInfoModal from '@/components/manage-product/ProductInfoModal.vue'
+import { Carousel } from 'flowbite-vue'
+
 const allowedModalTypes = { info: 'info' }
 const isModalVisible = ref(false)
 const typeofModal = ref('info')
@@ -11,7 +13,7 @@ const currentTab = ref('table')
 const products = ref([])
 const itemsPerPage = 4
 const currentPage = ref(1)
-
+const isTableTabActive = ref(true)
 const imgSrc = ref([])
 const imgData = ref([])
 import moment from 'moment'
@@ -25,6 +27,7 @@ import AuctionService from '@/services/auction.service'
 import adminService from '../../services/admin.service'
 const categories = ref([])
 const brands = ref([])
+
 const fetchProducts = async () => {
   try {
     const userID = localStorage.getItem('userId')
@@ -59,6 +62,8 @@ hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
 onMounted(() => {
   initFlowbite()
 })
+
+const convertedImages = ref([])
 const durationData = [
   {
     label: '1 tiếng',
@@ -232,6 +237,11 @@ const selectedProduct = ref(null)
 const openProductModal = product => {
   selectedProduct.value = product // Set the selected brand data
   showProductModal.value = true // Show the modal
+  convertedImages.value =
+    selectedProduct.value?.product?.imageUrls.map(url => ({
+      src: url,
+      alt: 'Image Alt Text', // You can set the alt text as per your requirements
+    })) || []
 }
 const tabButtonClasses = tabName => ({
   'bg-blue-500 hover:bg-blue-600 text-white': currentTab.value === tabName,
@@ -240,111 +250,128 @@ const tabButtonClasses = tabName => ({
 </script>
 <template>
   <div class="mx-auto container bg-white mt-2 align-middle pt-8 px-2 min-h-[50vh]">
-    <table class="w-full table-auto text-sm">
-      <thead>
-        <tr class="text-sm leading-normal">
-          <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-            Tên sản phẩm
-          </th>
-          <th class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-            Mô tả
-          </th>
-          <th
-            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-            Lý do
-          </th>
-          <th
-            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-            Ngày tạo
-          </th>
-          <th
-            class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light text-right">
-            Hành động
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(auction, index) in paginateProduct"
-          :key="index"
-          class="hover:bg-grey-lighter"
-          @click="openProductModal(auction)">
-          <td class="py-2 px-4 border-b border-grey-light">{{ auction?.product?.name }}</td>
-          <td class="py-2 px-4 border-b border-grey-light">{{ auction?.product?.description }}</td>
-          <td class="py-2 px-4 border-b border-grey-light text-right">{{ auction?.rejectReason }}</td>
-          <td class="py-2 px-4 border-b border-grey-light text-right">
-            {{ new Date(auction?.product?.createAt).toLocaleString() }}
-          </td>
-          <td class="py-2 px-4 border-b border-grey-light text-right">
-            <Button @click="openProductModal(auction)"> Phản Hồi </Button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <nav
-      class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-      aria-label="Table navigation">
-      <ul class="inline-flex items-stretch -space-x-px">
-        <li>
-          <button
-            type="button"
-            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            @click="goToPreviousPage"
-            :disabled="currentPage === 1"
-            aria-label="Previous Page">
-            <span class="sr-only">Previous</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                fill-rule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clip-rule="evenodd" />
-            </svg>
-          </button>
-        </li>
-        <!-- Generate pagination links -->
-        <li v-for="pageNumber in totalPages" :key="pageNumber">
-          <button
-            type="button"
-            class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
-            :class="{
-              'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
-                pageNumber !== currentPage,
-              'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
-                pageNumber === currentPage,
-            }"
-            @click="goToPage(pageNumber)"
-            aria-label="Page {{ pageNumber }}">
-            {{ pageNumber }}
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            @click="goToNextPage"
-            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            :disabled="currentPage === totalPages"
-            aria-label="Next Page">
-            <span class="sr-only">Next</span>
-            <svg
-              class="w-5 h-5"
-              aria-hidden="true"
-              fill="currentColor"
-              viewbox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                fill-rule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clip-rule="evenodd" />
-            </svg>
-          </button>
-        </li>
-      </ul>
-    </nav>
+    <section class="bg-white p-3 sm:p-5">
+      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-5 py-3">Tên sản phẩm</th>
+
+                <th scope="col" class="px-4 py-3">Mô tả</th>
+                <th scope="col" class="px-4 py-3">Lý do</th>
+                <th scope="col" class="px-4 py-3">Ngày tạo</th>
+                <th scope="col" class="px-4 py-3">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(auction, index) in paginateProduct"
+                :key="index"
+                class="border-b dark:border-gray-700"
+                @click="openProductModal(auction)">
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                  <div class="pl-3">
+                    <div class="text-base font-semibold">{{ auction?.product?.name }}</div>
+                  </div>
+                </th>
+                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                  {{ auction?.product?.description }}
+                </td>
+                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                  {{ auction?.rejectReason }}
+                </td>
+                <td class="px-4 py-3">{{ new Date(auction?.product?.createAt).toLocaleString() }}</td>
+                <td class="px-4 py-3 flex items-center justify-end">
+                  <button
+                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                    type="button">
+                    <svg
+                      class="w-6 h-6 text-gray-800 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 20 18">
+                      <path
+                        d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                      <path
+                        d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <nav
+          class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+          aria-label="Table navigation">
+          <ul class="inline-flex items-stretch -space-x-px">
+            <li>
+              <button
+                type="button"
+                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                @click="goToPreviousPage"
+                :disabled="currentPage === 1"
+                aria-label="Previous Page">
+                <span class="sr-only">Previous</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+            <!-- Generate pagination links -->
+            <li v-for="pageNumber in totalPages" :key="pageNumber">
+              <button
+                type="button"
+                class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
+                :class="{
+                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                    pageNumber !== currentPage,
+                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                    pageNumber === currentPage,
+                }"
+                @click="goToPage(pageNumber)"
+                aria-label="Page {{ pageNumber }}">
+                {{ pageNumber }}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                @click="goToNextPage"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                :disabled="currentPage === totalPages"
+                aria-label="Next Page">
+                <span class="sr-only">Next</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </section>
   </div>
 
   <div>
@@ -356,47 +383,150 @@ const tabButtonClasses = tabName => ({
       @decline-modal="closeModal"
       @confirm-modal="handleConfirm">
       <div v-if="typeofModal === allowedModalTypes.info">
-        <div class="bg-white rounded-lg shadow-xl space-y-4">
-          <div class="flex space-x-4">
-            <Button @click="showTableTab" :class="tabButtonClasses('table')">Thông Tin</Button>
-            <Button @click="showFormTab" :class="tabButtonClasses('form')">Gửi Lại Yêu Cầu Đấu Giá</Button>
+        <div class="bg-white rounded-lg shadow-md space-y-4">
+          <div
+            class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px">
+              <li class="mr-2">
+                <button
+                  @click="showTableTab"
+                  :class="{
+                    'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                      currentTab === 'table',
+                    'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                      currentTab !== 'table',
+                  }">
+                  Thông Tin
+                </button>
+              </li>
+              <li class="mr-2">
+                <button
+                  @click="showFormTab"
+                  :class="{
+                    'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                      currentTab !== 'table',
+                    'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                      currentTab === 'table',
+                  }"
+                  aria-current="page">
+                  Gửi Lại Yêu Cầu Đấu Giá
+                </button>
+              </li>
+            </ul>
           </div>
 
           <div v-if="currentTab === 'table'">
-            <div class="mb-5">
-              <ul class="mx-5 text-gray-700">
-                <!-- Table content -->
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Tên Sản Phẩm:</span>
-                  <span class="text-gray-700">{{ selectedProduct?.product?.name }}</span>
-                </li>
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Giá Khởi Điểm:</span>
-                  <span class="text-gray-700">{{
-                    selectedProduct?.startPrice ? selectedProduct.startPrice.toLocaleString('vi-VN') + ' VND' : ''
-                  }}</span>
-                </li>
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Giá Mua Ngay:</span>
-                  <span class="text-gray-700">{{
-                    selectedProduct?.buyNowPrice ? selectedProduct.buyNowPrice.toLocaleString('vi-VN') + ' VND' : ''
-                  }}</span>
-                </li>
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Bước Nhảy Tối Thiểu:</span>
-                  <span class="text-gray-700">{{
-                    selectedProduct?.jump ? selectedProduct.jump.toLocaleString('vi-VN') + ' VND' : ''
-                  }}</span>
-                </li>
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Lý Do Từ Chối:</span>
-                  <span class="text-gray-700">{{ selectedProduct?.rejectReason }}</span>
-                </li>
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-50">Người Kiểm Duyệt:</span>
-                  <span class="text-gray-700">Admin</span>
-                </li>
-              </ul>
+            <div class="flex mb-5 items-center justify-center">
+              <div class="relative p-4 w-full max-w-4xl md:h-auto">
+                <!-- Modal content -->
+                <div class="relative p-4 bg-white rounded-lg dark:bg-gray-800 sm:p-5">
+                  <!-- Modal body -->
+                  <div class="overflow-y-auto">
+                    <form action="#">
+                      <div class="grid mt-2 gap-4 mb-4 sm:grid-cols-2">
+                        <div>
+                          <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Tên sản phẩm
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            readonly
+                            :value="selectedProduct?.product?.name"
+                            id="name"
+                            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+
+                        <div>
+                          <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Giá khởi điểm</label
+                          >
+                          <input
+                            type="text"
+                            name="startPrice"
+                            id="startPrice"
+                            :value="
+                              selectedProduct?.startPrice
+                                ? selectedProduct.startPrice.toLocaleString('vi-VN') + ' VND'
+                                : ''
+                            "
+                            readonly
+                            class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                        <div>
+                          <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Giá mua ngay</label
+                          >
+                          <input
+                            type="text"
+                            name="buyNowPrice"
+                            id="buyNowPrice"
+                            readonly
+                            :value="
+                              selectedProduct?.buyNowPrice
+                                ? selectedProduct.buyNowPrice.toLocaleString('vi-VN') + ' VND'
+                                : ''
+                            "
+                            class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                        <div>
+                          <label for="jump" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Bước nhảy tối thiểu</label
+                          >
+                          <input
+                            type="text"
+                            name="jump"
+                            id="jump"
+                            readonly
+                            :value="selectedProduct?.jump ? selectedProduct.jump.toLocaleString('vi-VN') + ' VND' : ''"
+                            class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                        <div>
+                          <label for="reject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Lý do từ chối</label
+                          >
+                          <input
+                            type="text"
+                            name="reject"
+                            id="reject"
+                            readonly
+                            :value="selectedProduct?.rejectReason"
+                            class="bg-gray-50 border border-gray-300 text-red-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                        <div>
+                          <label for="censor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Người kiểm duyệt</label
+                          >
+                          <input
+                            type="text"
+                            name="censor"
+                            id="censor"
+                            readonly
+                            value="Admin"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                      </div>
+                      <div>
+                        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >Mô tả</label
+                        >
+                        <textarea
+                          type="string"
+                          name="description"
+                          readonly
+                          id="description"
+                          :value="selectedProduct?.product?.description"
+                          class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
+                      </div>
+
+                      <div class="flex items-center mt-2 space-x-4"></div>
+                      <div>
+                        <Carousel :pictures="convertedImages"></Carousel>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
