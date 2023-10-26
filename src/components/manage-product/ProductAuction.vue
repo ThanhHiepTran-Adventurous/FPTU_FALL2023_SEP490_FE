@@ -148,7 +148,7 @@ onMounted(async () => {
                   class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                   thời gian kết thúc :
                 </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ detail?.endDate ? moment(detail?.endDate).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
+                <td class="py-2 px-4 border-b border-grey-light">{{ detail?.endDate ? moment.utc(detail?.endDate).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
               </tr>
             </tbody>
           </table>
@@ -183,4 +183,4 @@ onMounted(async () => {
     </Modal>
   </div>
   </div>
-</template>@/utils/currency-output-formatter
+</template>

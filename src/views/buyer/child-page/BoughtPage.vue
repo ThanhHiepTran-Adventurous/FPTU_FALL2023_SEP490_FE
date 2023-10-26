@@ -400,4 +400,3 @@ watch(selectedDistrict, async () => {
     </div>
   </div>
 </template>
-@/utils/currency-output-formatter

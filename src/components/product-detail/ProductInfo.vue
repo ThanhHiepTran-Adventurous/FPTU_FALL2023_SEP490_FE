@@ -209,4 +209,3 @@ const onPlaceBidClick = async () => {
   margin: 10px;
   width: 100%;
 }</style>
-@/utils/currency-output-formatter

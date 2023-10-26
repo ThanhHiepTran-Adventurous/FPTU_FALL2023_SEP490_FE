@@ -96,7 +96,9 @@ export const useUserStore = defineStore("user", {
     },
     setAvatarUrlAndSaveToLocalStorage(value){
       this.avatarUrl = value
-      localStorage.setItem("avatarUrl", value)
+      if(value){
+        localStorage.setItem("avatarUrl", value)
+      }
     },
     clear(){
       this.userId = "";

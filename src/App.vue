@@ -9,6 +9,7 @@ const notiStore = useNotificationStore()
 
 onMounted( async () => {
   const handleFunction = (payloadReceive) => {
+    console.log(payloadReceive)
     toastOption.toastInformation(payloadReceive.notification.title)
     notiStore.syncNotifications()
   }

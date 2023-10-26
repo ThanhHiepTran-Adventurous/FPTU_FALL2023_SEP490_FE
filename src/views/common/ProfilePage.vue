@@ -97,31 +97,29 @@ const setProfileModel = userInfo => {
   profileModel.value.isCCVerified = userInfo.citizenCardVerified
   profileModel.value.role = userInfo.role
 }
-const setProfileModelData = userInfo => {
-  profileModelData.value.address = ''
-  profileModelData.value.birthday = userInfo.birthday ? moment(userInfo.birthday).format('YYYY-MM-DD') : ''
-  profileModelData.value.name = userInfo.fullname
+const setProfileModelData = (userInfo) => {
+    profileModelData.value.address = ""
+    profileModelData.value.birthday = userInfo.birthday ? moment.utc(userInfo.birthday).format("YYYY-MM-DD") : ""
+    profileModelData.value.name = userInfo.fullname
 }
 const resetProfileModelData = () => {
-  profileModelData.value.address = ''
-  profileModelData.value.birthday = profileModel.value.birthday
-    ? moment(profileModel.value.birthday).format('YYYY-MM-DD')
-    : ''
-  profileModelData.value.name = profileModel.value.name
-  selectedDistrict.value = {
-    label: '',
-    data: '',
-  }
-  selectedProvince.value = {
-    label: '',
-    data: '',
-  }
-  selectedWard.value = {
-    label: '',
-    data: '',
-  }
-  districts.value = []
-  wards.value = []
+    profileModelData.value.address = ""
+    profileModelData.value.birthday = profileModel.value.birthday ? moment.utc(profileModel.value.birthday).format("YYYY-MM-DD") : ""
+    profileModelData.value.name = profileModel.value.name
+    selectedDistrict.value = {
+        label: "",
+        data: ""
+    }
+    selectedProvince.value = {
+        label: "",
+        data: "",
+    }
+    selectedWard.value = {
+        label: "",
+        data: "",
+    }
+    districts.value = []
+    wards.value = []
 }
 
 const onUploadImage = () => {
@@ -441,7 +439,7 @@ onMounted(async () => {
                 type="date"
                 class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1" />
               <span v-else class="text-gray-700">{{
-                profileModel.birthday ? moment(profileModel.birthday).format('DD/MM/YYYY HH:MM:ss') : 'N/A'
+                profileModel.birthday ? moment(profileModel.birthday).format('DD/MM/YYYY') : 'N/A'
               }}</span>
             </li>
             <li class="flex border-b py-2">
