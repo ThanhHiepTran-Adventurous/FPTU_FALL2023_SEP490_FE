@@ -226,4 +226,3 @@ const filteredAuctions = computed(() => {
   </div>
 </template>
 <style src="@vueform/slider/themes/default.css"></style>
-@/utils/currency-output-formatter.js

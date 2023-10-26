@@ -16,7 +16,7 @@ export const useNotificationStore = defineStore("notification", {
     },
     async syncNotifications(){
         const response = await userService.getAllNotification()
-        this.notifications = response.data
+        this.notifications = response.data || []
         const notReadArr = this.notifications.filter(n => n.isRead !== NotiReadEnum.READ)
         if(notReadArr.length > 0){
             this.isContainNewNoti = true

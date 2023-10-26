@@ -1,6 +1,8 @@
 <script setup>
 import { parseMillisecondsIntoReadableTime } from '@/utils/millis-to-duration';
 import formatCurrency from '@/utils/currency-output-formatter';
+import AuctionType from '../badge/AuctionType.vue';
+import { AuctionModelType } from '@/common/contract';
 
 const props = defineProps({
     mainImage: {
@@ -11,21 +13,17 @@ const props = defineProps({
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKBMDCwElNqXzxgqg6K-hkKoNWECLd2iKnaflZivfgPntwaTCe_hAl7xmQH1zeOIZfIX8&usqp=CAU"
     },
-    brand: {
-        type: String,
-        default: "BRAND"
-    },
     productName: {
         type: String,
         default: "Name product"
     },
-    timeRemain : {
-        type: Number,
-        required: true,
-    },
     price: {
         type: Number,
         required: true,
+    },
+    auctionType: {
+        type: String,
+        default: AuctionModelType.immediate
     }
 })
 
@@ -45,7 +43,9 @@ const props = defineProps({
             </a>
         </div>
         <div class="tt-description flex flex-col items-center">
-        
+            <div class="w-full flex justify-start ml-3">
+                <AuctionType :type="props.auctionType" />
+            </div>
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>
@@ -53,11 +53,6 @@ const props = defineProps({
                 <div class="pb-2 ml-2">
                     <span class="bg-white border-[1px] shadow text-green-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
                         {{ formatCurrency(props.price) }}
-                    </span>
-                </div>
-                <div class="pb-2">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
-                        {{ parseMillisecondsIntoReadableTime(props.timeRemain) }}
                     </span>
                 </div>
             </div>

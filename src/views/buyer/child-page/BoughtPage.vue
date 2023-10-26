@@ -242,4 +242,3 @@ const payment = async auctionId => {
     </div>
   </div>
 </template>
-@/utils/currency-output-formatter

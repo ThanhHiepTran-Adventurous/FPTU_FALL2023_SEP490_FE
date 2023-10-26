@@ -1,5 +1,5 @@
 <script setup>
-    import currencyFormat from '@/utils/currency-output-formatter.js'
+    import currencyFormat from '@/utils/currency-output-formatter.js';
     import CountDown from '@/components/common-components/Countdown.vue';
     import { computed } from 'vue';
     import { AuctionModelType } from '@/common/contract';
@@ -74,4 +74,4 @@
             </div>
         </div>
     </div></router-link>
-</template>@/utils/currency-output-formatter.js
+</template>

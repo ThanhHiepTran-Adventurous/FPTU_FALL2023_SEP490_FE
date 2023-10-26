@@ -99,12 +99,12 @@ const setProfileModel = (userInfo) => {
 }
 const setProfileModelData = (userInfo) => {
     profileModelData.value.address = ""
-    profileModelData.value.birthday = userInfo.birthday ? moment(userInfo.birthday).format("YYYY-MM-DD") : ""
+    profileModelData.value.birthday = userInfo.birthday ? moment.utc(userInfo.birthday).format("YYYY-MM-DD") : ""
     profileModelData.value.name = userInfo.fullname
 }
 const resetProfileModelData = () => {
     profileModelData.value.address = ""
-    profileModelData.value.birthday = profileModel.value.birthday ? moment(profileModel.value.birthday).format("YYYY-MM-DD") : ""
+    profileModelData.value.birthday = profileModel.value.birthday ? moment.utc(profileModel.value.birthday).format("YYYY-MM-DD") : ""
     profileModelData.value.name = profileModel.value.name
     selectedDistrict.value = {
         label: "",
@@ -407,7 +407,7 @@ onMounted(async () => {
                         </li>
                         <li class="flex border-b py-2">
                             <span class="font-bold w-28">Tạo ngày:</span>
-                            <span class="text-gray-700">{{ moment(profileModel.createdAt).format("DD/MM/YYYY HH:MM:ss")
+                            <span class="text-gray-700">{{ moment.utc(profileModel.createdAt).format("DD/MM/YYYY HH:MM:ss")
                             }}</span>
                         </li>
                         <li class="flex border-b py-2">

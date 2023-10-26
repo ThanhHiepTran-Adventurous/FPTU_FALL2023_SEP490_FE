@@ -50,4 +50,4 @@ onMounted(() => {
             </table>
         </div>
     </div>
-</template>@/utils/currency-output-formatter
+</template>

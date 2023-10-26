@@ -31,7 +31,7 @@ const props = defineProps({
                         }">
                         <div class="font-bold">{{ item.title }}</div>
                         <div class="mt-1">{{ item.body }}</div>
-                        <div class="w-full flex justify-end italic">{{ item.createAt ? moment(item.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}</div>
+                        <div class="w-full flex justify-end italic">{{ item.createAt ? moment.utc(item.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}</div>
                     </div>
                     <div class="border-t-[1px] mt-2.5"></div>
                 </Menu-item>
