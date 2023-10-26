@@ -8,7 +8,7 @@ const props = defineProps(['curStatus'])
 const orderStatusDisplay = ref([])
 const curStatusData = ref(null)
 const isCompleted = ref(false)
-const isJustStarted = ref(false)
+//const isJustStarted = ref(false)
 
 const orderStatusArr = computed(() => {
     const arr = []
@@ -19,14 +19,17 @@ const orderStatusArr = computed(() => {
 })
 
 watch(() => props.curStatus, () => {
+    console.log(props.curStatus)
     isCompleted.value = props.curStatus === OrderStatus.DONE.value
-    isJustStarted.value = props.curStatus === OrderStatus.NEW.value
+    let isCatched
     for(const status of orderStatusArr.value){
-        if(status.value !== props.curStatus){
-            orderStatusDisplay.value.push(status)
-        } else {
+        if(isCatched === true){
             curStatusData.value = status
-            break;
+            break
+        }
+        orderStatusDisplay.value.push(status)
+        if(status.value === props.curStatus){
+            isCatched = true
         }
     }
 })

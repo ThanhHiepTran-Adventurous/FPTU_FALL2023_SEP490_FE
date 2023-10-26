@@ -1,9 +1,17 @@
 const SERVICE_URL = import.meta.env.VITE_SERVER_URL
 const DOMAIN_URL = import.meta.env.VITE_DOMAIN_URL
+const WS_URL = import.meta.env.VITE_WEB_SOCKET_SERVER_URL
+const WS_AUTH = import.meta.env.VITE_WEB_SOCKET_AUTH
 
 export default {
   domain: DOMAIN_URL,
   base: SERVICE_URL,
+  ws: {
+    base: WS_URL,
+    subscribeFromChatGroupUrl: "/topic/messages/group/{groupId}",
+    sendToChatGroupUrl: "/app/chat/{groupId}",
+    authToken: WS_AUTH
+  },
   endpoint: {
     auth: {
       register: '/users/register',

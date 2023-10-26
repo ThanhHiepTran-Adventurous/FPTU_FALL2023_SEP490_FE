@@ -43,7 +43,7 @@ const emit = defineEmits(["decline-modal", "confirm-modal"])
           <h5 class="mb-0 !font-bold border-b-[1px]">{{ title }}</h5>
         </div>
 
-        <div class="px-4 !pt-4 max-h-[80vh]" :class="{'overflow-y-auto': hasOverFlowVertical}">
+        <div class="px-4 !pt-4 max-h-[70vh]" :class="{'overflow-y-auto': hasOverFlowVertical}">
           <slot />
         </div>
         <div v-if="hasButton" class="flex justify-end p-4 gap-x-2">
