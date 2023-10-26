@@ -2,10 +2,24 @@
 import { RouterLink } from 'vue-router'
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
-// initialize components based on data attribute selectors
+import loginService from '../../../services/login.service'
+import { useUserStore } from '../../../stores/user.store'
+import { useRouter } from 'vue-router'
+import { defaultRoute } from '@/common/constant'
+const router = useRouter()
 onMounted(() => {
   initFlowbite()
 })
+const onLogout = async () => {
+  loginService
+    .logout()
+    .catch(e => console.log(e))
+    .finally(() => {
+      userStore.clear()
+      router.push(defaultRoute.buyer)
+    })
+}
+const userStore = useUserStore()
 </script>
 <template>
   <div class="antialiased bg-gray-50 dark:bg-gray-900">
@@ -89,9 +103,10 @@ onMounted(() => {
               <li>
                 <a
                   href="#"
-                  class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                  >Sign out</a
-                >
+                  @click="() => onLogout()"
+                  class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  Logout
+                </a>
               </li>
             </ul>
           </div>
