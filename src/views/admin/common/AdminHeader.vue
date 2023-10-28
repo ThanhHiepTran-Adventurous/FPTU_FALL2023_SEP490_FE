@@ -56,10 +56,10 @@ const userStore = useUserStore()
             </svg>
             <span class="sr-only">Toggle sidebar</span>
           </button>
-          <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
+          <RouterLink to="/admin/dashboard" class="flex items-center justify-between mr-4">
             <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-3 h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Admin</span>
-          </a>
+          </RouterLink>
         </div>
         <div class="flex items-center lg:order-2">
           <button
@@ -80,7 +80,7 @@ const userStore = useUserStore()
             id="dropdown">
             <div class="py-3 px-4">
               <span class="block text-sm font-semibold text-gray-900 dark:text-white">Admin</span>
-              <span class="block text-sm text-gray-900 truncate dark:text-white">name@flowbite.com</span>
+              <span class="block text-sm text-gray-900 truncate dark:text-white">admin@bidbay.com</span>
             </div>
             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
               <!-- <li>
