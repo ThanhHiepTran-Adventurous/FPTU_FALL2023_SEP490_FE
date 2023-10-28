@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import { Icon } from '@iconify/vue'
-import Button from '@/components/common-components/Button.vue'
-import constant from '@/common/constant'
+import { computed, onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import { Icon } from '@iconify/vue';
+import Button from "@/components/common-components/Button.vue"
+import constant from "@/common/constant"
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Avatar from '@/components/common-components/Avatar.vue'
 import { useUserStore } from '../../stores/user.store'
@@ -154,6 +154,11 @@ const onNotiClick = async () => {
 const notiList = computed(() => {
   return notiStore.notifications
 })
+
+onMounted(() => {
+    notiStore.syncNotifications()
+})
+
 </script>
 <template>
   <!-- component -->

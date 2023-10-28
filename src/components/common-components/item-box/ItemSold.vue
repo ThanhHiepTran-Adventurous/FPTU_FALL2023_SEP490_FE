@@ -67,4 +67,4 @@ const props = defineProps({
             </div>
         </div>
     </div>
-</template>@/utils/currency-output-formatter
+</template>
