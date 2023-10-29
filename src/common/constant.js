@@ -12,10 +12,22 @@ export default {
 }
 
 export const buyerTabs = {
-    bought: "Sản phẩm thắng đấu giá",
-    order: "Lịch sử Đơn hàng",
-    reported: "Lịch sử báo cáo",
-    refundRequest: "Đề nghị trả hàng",
+    bought: {
+        value: "Sản phẩm thắng đấu giá",
+        navLink: "/bought"
+    },
+    order: {
+        value: "Lịch sử Đơn hàng",
+        navLink: "/orders"
+    },
+    reported: {
+        value: "Lịch sử báo cáo",
+        navLink: "/reports"
+    },
+    refundRequest: {
+        value: "Đề nghị trả hàng",
+        navLink: "/refunds"
+    },
 }
 
 export const defaultRoute = {

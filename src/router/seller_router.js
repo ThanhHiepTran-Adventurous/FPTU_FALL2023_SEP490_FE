@@ -47,14 +47,6 @@ const seller_router = [
           requiresAuth: false,
         },
       },
-      {
-        name: 'sign-up',
-        path: '/register',
-        component: CreateAccountPage,
-        meta: {
-          requiresAuth: false,
-        },
-      },
     ],
   },
   {

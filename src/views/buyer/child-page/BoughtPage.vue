@@ -18,6 +18,8 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 import urlConstant from '@/common/urlConstant'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 const showPaymentModel = ref(false)
+import { buyerTabs } from '@/common/constant'
+
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')
@@ -110,7 +112,6 @@ const setProfileModel = userInfo => {
 }
 const fetchUserdata = async () => {
   const userInfo = await loginService.fetchUserInfo()
-  console.log(userInfo)
   setProfileModel(userInfo.data)
 }
 onMounted(async () => {
@@ -178,7 +179,7 @@ watch(selectedDistrict, async () => {
     <div class="mt-3 mb-3 container mx-auto">
       <Breadcrumb :items="breadcrumbItems" />
     </div>
-    <BoughtNav />
+    <BoughtNav :cur-tab="buyerTabs.bought.value" />
 
     <!-- Main section -->
     <div class="bg-white container mx-auto">
@@ -409,4 +410,3 @@ watch(selectedDistrict, async () => {
     </div>
   </div>
 </template>
-@/utils/currency-output-formatter

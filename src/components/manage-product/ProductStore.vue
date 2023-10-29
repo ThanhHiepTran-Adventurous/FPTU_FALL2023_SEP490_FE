@@ -141,9 +141,9 @@ function handleConfirm() {
 const fetchProducts = async () => {
   isLoading.value = true
   const data = await productSerivice.getProducts()
-  productsOrigin.value = data.data.sort((a, b) => {
+  productsOrigin.value = data.data ? data.data.sort((a, b) => {
     return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
-  })
+  }) : []
   filterProduct()
   isLoading.value = false
 }

@@ -1,9 +1,9 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { Icon } from '@iconify/vue';
-import Button from "@/components/common-components/Button.vue"
-import constant from "@/common/constant"
+import { computed, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import { Icon } from '@iconify/vue'
+import Button from '@/components/common-components/Button.vue'
+import constant from '@/common/constant'
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Avatar from '@/components/common-components/Avatar.vue'
 import { useUserStore } from '../../stores/user.store'
@@ -35,9 +35,7 @@ const firebaseStore = useFirebaseStore()
 const globalStore = useGlobalStore()
 const notiStore = useNotificationStore()
 
-const cartItem = ref(true)
-const mobileMenu = ref(false)
-const isModalActive = ref(false)
+const isShowingNoti = ref(false)
 const validate = ref(true)
 
 const curRole = computed(() => {
@@ -147,18 +145,16 @@ const onLogout = async () => {
     })
 }
 
-const onNotiClick = async () => {
+const onNotiClick = () => {
+  isShowingNoti.value = !isShowingNoti.value
   notiStore.justRead()
-  notiStore.getNotifications()
+  if (isShowingNoti.value === true) {
+    notiStore.syncNotifications()
+  }
 }
 const notiList = computed(() => {
   return notiStore.notifications
 })
-
-onMounted(() => {
-    notiStore.syncNotifications()
-})
-
 </script>
 <template>
   <!-- component -->
