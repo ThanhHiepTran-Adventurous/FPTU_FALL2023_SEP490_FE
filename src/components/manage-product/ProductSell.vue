@@ -94,7 +94,7 @@ const fetchAuctions = async () => {
   isLoading.value = true
   const query = 'status:COMPLETED'
   const response = await auctionService.getAuctionBySeller(query)
-  auctions.value = response.data
+  auctions.value = response.data ? response.data : []
   filterData()
   isLoading.value = false
 }
@@ -357,54 +357,6 @@ onMounted(() => {
           </div>
         </template>
       </Modal>
-      </div>
-      <div class="relative mt-5 mb-2 px-2">
-        <div class="mx-auto container align-middle">
-          <table class="w-full table-auto text-sm">
-            <tbody>
-              <tr>
-                <td
-                  class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                  Tên Sản Phẩm :
-                </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ detail?.product.name }}</td>
-              </tr>
-              <tr>
-                <td
-                  class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                  Giá khởi điểm :
-                </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.startPrice) }}</td>
-              </tr>
-              <tr>
-                <td
-                  class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                  giá mua ngay :
-                </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.buyNowPrice) }}</td>
-              </tr>
-              <tr>
-                <td
-                  class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                  bước nhảy tối thiểu :
-                </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.jump) }}</td>
-              </tr>
-              <tr>
-                <td
-                  class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                  thời gian kết thúc :
-                </td>
-                <td class="py-2 px-4 border-b border-grey-light">{{ detail?.endDate ? moment.utc(detail?.endDate).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="p-2 rounded-xl w-full">
-        <div class="text-red-500 text-lg">
-          Để biết thông tin và tiến hành trao đổi với người thắng cuộc, vui lòng thanh toán phí cho phiên đấu giá.
-        </div>
       </div>
     </div>
   <div

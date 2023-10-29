@@ -6,6 +6,7 @@ import { initFlowbite } from 'flowbite'
 import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
 import toastOption from '@/utils/toast-option'
+import moment from 'moment'
 
 const autionsList = ref([])
 const itemsPerPage = 4
@@ -143,7 +144,7 @@ const paginatedAuctions = computed(() => {
                 <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
                   {{ auction?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống' }}
                 </td>
-                <td class="px-4 py-3">{{ new Date(auction?.product?.createAt).toLocaleString() }}</td>
+                <td class="px-4 py-3">{{ auction?.product?.createAt ? moment.utc(auction?.product?.createAt).format("DD/MM/YYYY HH:mm:ss") : ''}}</td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
                     class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"

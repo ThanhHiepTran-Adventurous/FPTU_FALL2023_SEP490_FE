@@ -18,6 +18,8 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 import urlConstant from '@/common/urlConstant'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 const showPaymentModel = ref(false)
+import { buyerTabs } from '@/common/constant'
+
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')

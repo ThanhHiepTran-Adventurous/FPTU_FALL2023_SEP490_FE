@@ -11,7 +11,7 @@ onMounted( async () => {
   const handleFunction = (payloadReceive) => {
     console.log(payloadReceive)
     toastOption.toastInformation(payloadReceive.notification.title)
-    notiStore.syncNotifications()
+    notiStore.newMessageArrive()
   }
   
   console.log(`FCM Token from APP: ${await firebaseStore.getFcmToken()}`)

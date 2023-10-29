@@ -3,6 +3,7 @@ import { parseMillisecondsIntoReadableTime } from '@/utils/millis-to-duration';
 import formatCurrency from '@/utils/currency-output-formatter';
 import AuctionType from '../badge/AuctionType.vue';
 import { AuctionModelType } from '@/common/contract';
+import { Icon } from '@iconify/vue'
 
 const props = defineProps({
     mainImage: {
@@ -24,6 +25,14 @@ const props = defineProps({
     auctionType: {
         type: String,
         default: AuctionModelType.immediate
+    },
+    orderId: {
+        type: String,
+        required: true
+    },
+    chatGroupId: {
+        type: String,
+        required: true
     }
 })
 
@@ -32,9 +41,9 @@ const props = defineProps({
 <template>
     <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200 !mb-3">
         <div class="tt-image-box">
-            <a class="tt-btn-quickview" data-toggle="modal" data-target="#ModalquickView" data-tooltip="Quick View"
-                data-tposition="left">
-            </a>
+            <router-link :to="`/messenger/${chatGroupId}`">
+                <Icon icon="et:chat" class="tt-btn-quickview !text-[14px] p-2" />
+            </router-link>
             <a class="block w-[220px] h-[210px] overflow-hidden">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">

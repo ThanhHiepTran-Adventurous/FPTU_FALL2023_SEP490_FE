@@ -3,6 +3,7 @@ import buyer_routes, { defaultBuyerRoute } from "./buyer_router";
 import seller_routes, { defaultSellerRoute } from "./seller_router";
 import admin_router from "./admin_router"
 import { useUserStore } from '@/stores/user.store'
+import guest_router from "./guest_router";
 
 const ROUTE_NAMES = {
   SIGN_IN: "all-page-buyer",
@@ -11,7 +12,7 @@ const ROUTE_NAMES = {
   HOME: "home",
 };
 
-const routes = [...buyer_routes, ...seller_routes, ...admin_router]
+const routes = [...buyer_routes, ...seller_routes, ...admin_router, ...guest_router]
 
 const router = createRouter({
   mode: 'history',

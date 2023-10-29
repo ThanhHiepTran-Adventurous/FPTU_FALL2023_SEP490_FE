@@ -91,6 +91,8 @@ onMounted(() => {
           :mainImage="imageHelper.getPrimaryImageFromList(item.productResponse.imageUrls)"
           :secondaryImage="imageHelper.getSecondaryImageFromList(item.productResponse.imageUrls)"
           :auction-type="item.modelTypeAuctionOfOrder"
+          :orderId="item.id"
+          :chatGroupId="item.chatGroupDTOs.id"
         />
     </div>
     <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=true
@@ -169,12 +171,14 @@ onMounted(() => {
         </Button>
       </div>
       <div>
-        <Button>
-          <div class="flex items-center">
-            <Icon icon="uiw:message" class="text-[18px] mr-3" />
-            <div>Nhắn tin</div>
-          </div>
-        </Button>
+        <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
+          <Button>
+            <div class="flex items-center">
+              <Icon icon="uiw:message" class="text-[18px] mr-3" />
+              <div>Nhắn tin</div>
+            </div>
+          </Button>
+        </router-link>
       </div>
     </template>
     </Modal>

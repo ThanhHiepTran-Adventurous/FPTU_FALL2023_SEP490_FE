@@ -19,7 +19,6 @@ const orderStatusArr = computed(() => {
 })
 
 watch(() => props.curStatus, () => {
-    console.log(props.curStatus)
     isCompleted.value = props.curStatus === OrderStatus.DONE.value
     let isCatched
     for(const status of orderStatusArr.value){

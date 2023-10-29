@@ -35,9 +35,7 @@ const firebaseStore = useFirebaseStore()
 const globalStore = useGlobalStore()
 const notiStore = useNotificationStore()
 
-const cartItem = ref(true)
-const mobileMenu = ref(false)
-const isModalActive = ref(false)
+const isShowingNoti = ref(false)
 const validate = ref(true)
 
 const curRole = computed(() => {
@@ -148,15 +146,20 @@ const onLogout = async () => {
 }
 
 const onNotiClick = async () => {
+  isShowingNoti.value = !(isShowingNoti.value)
   notiStore.justRead()
-  notiStore.getNotifications()
+  if(isShowingNoti.value === true){
+    notiStore.syncNotifications()
+  }
 }
 const notiList = computed(() => {
   return notiStore.notifications
 })
 
 onMounted(() => {
+  if(isAuth.value === true){
     notiStore.syncNotifications()
+  }
 })
 
 </script>

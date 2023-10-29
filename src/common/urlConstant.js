@@ -97,6 +97,9 @@ export default {
     },
     order: {
       getOrders: 'orders/user/getListOrder-authorize'
+    },
+    chat: {
+      getAllMessages: 'chatMessage/listMessage/{groupId}',
     }
   },
 }
