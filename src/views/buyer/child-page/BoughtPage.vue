@@ -127,19 +127,28 @@ onMounted(async () => {
 })
 
 const payment = async auctionId => {
-  // const returnUrl = `${urlConstant.domain}${route.fullPath}`
+  try {
+    const returnUrl = `${urlConstant.domain}${route.fullPath}`
 
-  // const response = await paymentService.paymentOption2(auctionId, returnUrl)
-  // const redirectURL = response.data
+    const paymentData = {
+      address: profileModelData.value.address,
+      district: selectedDistrict.value.label,
+      province: selectedProvince.value.label,
+      ward: selectedWard.value.label,
+      phone: profileModelData.value.phone,
+    }
 
-  // window.location.href = redirectURL
-  console.log(auctionId)
-  console.log(profileModelData.value.address)
-  console.log(selectedDistrict.value.label)
-  console.log(selectedProvince.value.label)
-  console.log(selectedWard.value.label)
-  console.log(profileModelData.value.phone)
+    const jsonData = JSON.stringify(paymentData)
+    localStorage.setItem('paymentAddressData', jsonData)
+    const response = await paymentService.paymentOption2(auctionId, returnUrl)
+    const redirectURL = response.data
+
+    window.location.href = redirectURL
+  } catch (error) {
+    console.error('Error during payment:', error)
+  }
 }
+
 const provinces = ref([])
 const wards = ref([])
 const districts = ref([])
