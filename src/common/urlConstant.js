@@ -96,10 +96,18 @@ export default {
       getAllNoti: 'notification/list-top-10-notification-user'
     },
     order: {
-      getOrders: 'orders/user/getListOrder-authorize'
+      getOrders: 'orders/user/getListOrder-authorize',
+      newToDelivering: 'orders/{orderId}/Updated/NewToDelivering',
+      deleveringToDelivered: 'orders/{orderId}/Updated/DeliveringToDelivered',
+      deliveredToConfirmDelivery: 'orders/{orderId}/Updated/DeliveredToConfirmDelivery',
+      deliveryToDone: 'orders/{orderId}/Confirm/ConfirmDeliveryToDone'
     },
     chat: {
       getAllMessages: 'chatMessage/listMessage/{groupId}',
+      getChatGroupInfo: 'messageWebSocket/chat-group-info/{chatGroupId}'
+    },
+    system: {
+      getAllConfigData: 'systemConfig/getListSystemConfig'
     }
   },
 }

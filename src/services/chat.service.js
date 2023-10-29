@@ -7,6 +7,12 @@ const getAllChatMessage = async (groupId) => {
   return response ? response.data : response
 }
 
+const getGroupInfo = async groupId => {
+  const serviceUrl = url.endpoint.chat.getChatGroupInfo.replace("{chatGroupId}", groupId)
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
-    getAllChatMessage,
+    getAllChatMessage, getGroupInfo
 }

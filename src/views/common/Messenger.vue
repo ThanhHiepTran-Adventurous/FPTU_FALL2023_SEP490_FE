@@ -1,5 +1,4 @@
 <script setup>
-import Nav from "@/components/messenger/Nav.vue";
 import { Icon } from "@iconify/vue"
 import { defaultRoute } from "@/common/constant";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
@@ -10,6 +9,11 @@ import { Client } from '@stomp/stompjs';
 import urlConstant from "@/common/urlConstant";
 import MessageBubble from "@/components/messenger/MessageBubble.vue";
 import ChatService from "@/services/chat.service"
+import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
+import { Tooltip } from 'ant-design-vue';
+import BuyerOrderDetailModal from "@/components/messenger/BuyerOrderDetailModal.vue";
+import orderService from "@/services/order.service";
+import toastOption from "@/utils/toast-option";
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -20,29 +24,78 @@ let subscription = undefined
 
 const messagesData = ref([])
 const messageDtos = ref([])
+const groupInfo = ref(undefined)
+const orderDetail = ref(undefined)
 const textMessage = ref('')
+
+const isSideBarShowing = ref(false)
+const isBuyerModalDetailShowing = ref(false)
+const isSellerModalDetailShowing = ref(false)
+const isBuyerUpdating = ref(false)
+const isSellerUpdating = ref(false)
+
+const curRole = computed(() => {
+  return userStore.getRoleAndGetFromLocalStorageIfNotExist()
+})
+
+const closeBuyerModal = () => {
+  isBuyerModalDetailShowing.value = false
+}
+const openBuyerModal = () => {
+  isBuyerModalDetailShowing.value = true
+}
+const closeSellerModal = () => {
+  isSellerModalDetailShowing.value = false
+}
+const openSellerModal = () => {
+  isSellerModalDetailShowing.value = true
+}
 
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
-    if(role === Role.admin.value){
-      return defaultRoute.admin
-    }
-    if(role === Role.seller.value){
-      return defaultRoute.seller
-    }
-    return defaultRoute.buyer
+  if (role === Role.admin.value) {
+    return "/admin/dashboard"
+  }
+  if (role === Role.seller.value) {
+    return "/manage/orders"
+  }
+  return "/orders"
 })
 const scrollMessageBoxToBottom = async () => {
   await nextTick()
   const message = document.getElementById("messageBox")
-  message.scrollTop=message.scrollHeight
+  message.scrollTop = message.scrollHeight
+}
+
+const onConfirmShipped = async () => {
+  try {
+    await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
+    toastOption.toastSuccess("Xác nhận đã nhận hàng thành công, đoạn chat sẽ được đóng.")
+    closeBuyerModal()
+    fetchChatInfo()
+  } catch (_){
+    toastOption.toastError("Có lỗi hệ thống...")
+  }
+}
+const onChangeStatus = async () => {
+  try {
+    isBuyerUpdating.value = true
+    await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
+    toastOption.toastSuccess("Cập nhật trạng thái đơn hàng thành công!")
+    closeBuyerModal()
+    fetchChatInfo()
+  } catch (_){
+    toastOption.toastError("Có lỗi hệ thống...")
+  } finally {
+    isBuyerUpdating.value = false
+  }
 }
 
 // chat functions
 const sendMessage = () => {
   const messageData = textMessage.value
   textMessage.value = ''
-  if(messageData){
+  if (messageData) {
     const payload = {
       fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
       contentMessage: messageData
@@ -60,6 +113,12 @@ const fetchAllMessages = async () => {
   const response = await ChatService.getAllChatMessage(groupId)
   messagesData.value = response.data
 }
+const fetchChatInfo = async () => {
+  groupId = route.params["groupId"]
+  const response = await ChatService.getGroupInfo(groupId)
+  groupInfo.value = response.data
+  orderDetail.value = groupInfo.value.order
+}
 const initMessageDtos = async () => {
   await fetchAllMessages()
   messageDtos.value = messagesData.value.map(messData => {
@@ -69,9 +128,6 @@ const initMessageDtos = async () => {
       createAt: messData.createAt
     }
   })
-  // setTimeout(() => {
-  //   scrollMessageBoxToBottom()
-  // }, 500)
   scrollMessageBoxToBottom()
 }
 const initStompClient = () => {
@@ -99,13 +155,19 @@ const initStompClient = () => {
     console.log("Error")
   }
   stompClient.activate()
-  
+
 }
 
 // Hook
 onMounted(() => {
   initMessageDtos()
   initStompClient()
+  fetchChatInfo()
+  if(window.innerWidth < 800){
+    isSideBarShowing.value = false
+  } else {
+    isSideBarShowing.value = true
+  }
 })
 onBeforeUnmount(() => {
   subscription?.unsubscribe()
@@ -115,49 +177,107 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex h-screen antialiased text-gray-800">
-    <div class="flex flex-row justify-between h-full w-full overflow-x-hidden">
-      <div class="flex flex-col justify-between py-8 px-6 w-96 bg-white flex-shrink-0">
-        <div><Nav></Nav></div>
-        <router-link :to="backLink" class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-          <div><Icon icon="simple-line-icons:logout" class="text-[20px] mr-3"/></div>
-          <div>Thoát</div>
-        </router-link>
+    <div class="flex flex-row justify-between h-full w-full overflow-x-auto">
+      <!-- Side bar -->
+      <div class="transition-all flex flex-col justify-between py-8 w-12 overflow-hidden bg-white flex-shrink-0 rounded-r-2xl my-6" :class="isSideBarShowing ? 'px-6 !w-96' : 'h-20 py-4 items-center'">
+        <div class="h-full flex flex-col justify-between" v-if="isSideBarShowing">
+          <div class="h-full">
+            <div class="flex flex-col mt-8">
+              <UserMessageCard />
+            </div>
+            <div class="flex flex-col mt-8">
+              <div class="flex flex-row items-center justify-between">
+                <span class="font-bold">Hành động</span>
+              </div>
+              <div class="flex flex-col space-y-1 mt-4">
+                <!-- For seller only -->
+                <button v-if="curRole === Role.seller.value"
+                  class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
+                  Cập nhật thông tin đơn hàng
+                </button>
+                <button v-if="curRole === Role.seller.value"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
+                  Cập nhật trạng thái đơn hàng
+                </button>
+                <!-- For buyer only -->
+                <button v-if="curRole === Role.buyer.value" @click="openBuyerModal"
+                  class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
+                  Xem thông tin đơn hàng
+                </button>
+                <button v-if="curRole === Role.buyer.value"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
+                  Đã nhận hàng
+                </button>
+                <button
+                  class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
+                  Tố cáo
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+            <button
+              @click="isSideBarShowing=false"
+              class="w-[328px] flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              <div>Ẩn</div>
+            </button>
+            <router-link :to="backLink"
+              class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              <div>
+                <Icon icon="simple-line-icons:logout" class="text-[20px] mr-3" />
+              </div>
+              <div>Thoát</div>
+            </router-link>
+          </div>
+        </div>
+        <Tooltip placement="right" class="w-full h-full flex justify-center items-center mx-auto" v-else>
+          <template #title>Mở rộng</template>
+          <Icon icon="mingcute:right-fill" class="text-[24px]" @click="isSideBarShowing = true" />
+        </Tooltip>
       </div>
+
       <div class="flex flex-col flex-auto h-full p-6">
         <div class="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
-    <div class="flex flex-col h-full overflow-x-auto mb-4">
-      <div class="flex flex-col h-full">
-        <div class="grid grid-cols-12 gap-y-2 overflow-auto max-h-[90vh] scroll-smooth" id="messageBox">
-          <MessageBubble
-            v-for="mess in messageDtos" :key="mess.createAt"
-            :isSender="!mess.isFromSelf"
-            :message="mess.message"
-            :createAt="mess.createAt" />
+          <div class="flex flex-col h-full overflow-x-auto mb-4">
+            <div class="flex flex-col h-full">
+              <div class="grid grid-cols-12 gap-y-2 overflow-auto max-h-[90vh] scroll-smooth" id="messageBox">
+                <MessageBubble v-for="mess in messageDtos" :key="mess.createAt" :isSender="!mess.isFromSelf"
+                  :message="mess.message" :createAt="mess.createAt" />
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+            <div class="flex-grow">
+              <div class="relative w-full">
+                <input v-model="textMessage" @keypress.enter="sendMessage" type="text"
+                  class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
+              </div>
+            </div>
+            <div class="ml-4">
+              <button @click="() => sendMessage()"
+                class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
+                <span class="ml-1">
+                  <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
+                    </path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-      <div class="flex-grow">
-        <div class="relative w-full">
-          <input v-model="textMessage" @keypress.enter="sendMessage" type="text" class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
-        </div>
-      </div>
-      <div class="ml-4">
-        <button
-          @click="() => sendMessage()"
-          class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
-          <span class="ml-1">
-            <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-              </path>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
+
+    <!-- Modals -->
+    <BuyerOrderDetailModal
+      :hidden="!(curRole === Role.buyer.value && isBuyerModalDetailShowing === true)"
+      :detail="orderDetail"
+      :isUpdating="isBuyerUpdating"
+      @modal-declined="closeBuyerModal"
+      @confirm-shipped="onConfirmShipped"
+    />
   </div>
-  </div>
-</div>
-</div>
 </template>

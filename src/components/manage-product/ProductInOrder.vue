@@ -15,12 +15,14 @@ import constant from '@/common/constant';
 import OrderService from '@/services/order.service';
 import ItemOrder from '../common-components/item-box/ItemOrder.vue';
 import OrderTimeline from '../OrderTimeline.vue';
+import toastOption from '@/utils/toast-option';
 
 const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
 
 const isModalVisible = ref(false)
+const isUpdating = ref(false)
 
 // Filter
 const options = ref([
@@ -41,18 +43,29 @@ const selected = ref({
 watch(selected, newVal => {
   filterData()
 })
-
 const filterData = () => {
   ordersFiltered.value = orders.value.filter(
     v => v.modelTypeAuctionOfOrder === selected.value.value,
-  )
+  ).sort((a,b) => {
+    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  })
 }
 
+// Update status
+const updateOrderStatus = async () => {
+  isUpdating.value = true
+  await OrderService.updateStatus(detail.value.statusOrder, detail.value.id)
+  closeModal()
+  fetchOrders()
+  isUpdating.value = false
+}
+
+
+// Page operations
 const activateInfoAuction = (order) => {
   detail.value = order
   isModalVisible.value = true
 }
-
 function closeModal() {
   isModalVisible.value = false;
 }
@@ -84,7 +97,7 @@ onMounted(() => {
     </div>
     <div class="flex flex-wrap items-center mt-10 mx-5 gap-3 py-10">
       <ItemOrder
-          v-for="item in orders" :key="item.id"
+          v-for="item in ordersFiltered" :key="item.id"
           @click="activateInfoAuction(item)"
           :product-name="item.productResponse.name"
           :price="item.price"
@@ -93,6 +106,7 @@ onMounted(() => {
           :auction-type="item.modelTypeAuctionOfOrder"
           :orderId="item.id"
           :chatGroupId="item.chatGroupDTOs.id"
+          :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'"
         />
     </div>
     <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=true
@@ -144,7 +158,7 @@ onMounted(() => {
                 class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                 Cập nhật lúc :
               </td>
-              <td class="py-2 px-4 border-b border-grey-light">{{ detail?.lastUpdatedAt }}</td>
+              <td class="py-2 px-4 border-b border-grey-light">{{ detail?.lastUpdatedAt ? moment.utc(detail?.lastUpdatedAt).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
             </tr>
             </tbody>
           </table>
@@ -157,14 +171,14 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <template v-slot:button>
+    <template #button>
       <div>
         <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal">
           Hủy
         </Button>
       </div>
       <div>
-        <Button>
+        <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value" @on-click="updateOrderStatus">
           <div class="flex items-center">
             <div>Cập nhật trạng thái đơn hàng</div>
           </div>

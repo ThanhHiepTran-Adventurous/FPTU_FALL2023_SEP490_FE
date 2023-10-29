@@ -145,7 +145,7 @@ const onLogout = async () => {
     })
 }
 
-const onNotiClick = async () => {
+const onNotiClick = () => {
   isShowingNoti.value = !(isShowingNoti.value)
   notiStore.justRead()
   if(isShowingNoti.value === true){

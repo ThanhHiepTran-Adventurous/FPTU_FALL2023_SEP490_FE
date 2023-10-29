@@ -2,7 +2,7 @@
 import { Timeline, TimelineItem } from 'ant-design-vue'
 import { Icon } from "@iconify/vue"
 import { OrderStatus } from '@/common/contract';
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps(['curStatus'])
 const orderStatusDisplay = ref([])
@@ -19,6 +19,11 @@ const orderStatusArr = computed(() => {
 })
 
 watch(() => props.curStatus, () => {
+    execData()
+}, {deep: true})
+
+const execData = () => {
+    orderStatusDisplay.value = []
     isCompleted.value = props.curStatus === OrderStatus.DONE.value
     let isCatched
     for(const status of orderStatusArr.value){
@@ -31,7 +36,7 @@ watch(() => props.curStatus, () => {
             isCatched = true
         }
     }
-})
+}
 
 </script>
 
@@ -60,13 +65,13 @@ watch(() => props.curStatus, () => {
                 {{ status.text }}
             </div>
         </TimelineItem>
-        <TimelineItem>
+        <!-- <TimelineItem>
             <template #dot>
                 <Icon :icon="curStatusData?.icon" class="text-[24px]"/>
             </template>
             <div class="text-lg text-gray-500 min-h-[70px]">
                 {{ curStatusData?.text }}
             </div>
-        </TimelineItem>
+        </TimelineItem> -->
     </Timeline>
 </template>

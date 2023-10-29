@@ -8,6 +8,9 @@ import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
 import ReportUserPage from '@/views/buyer/child-page/ReportUserPage.vue'
+import OrdersPage from '@/views/buyer/child-page/OrdersPage.vue'
+import ReportPage from '@/views/buyer/child-page/ReportPage.vue'
+import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
 const buyer_router = [
   {
     name: 'all-page-buyer',
@@ -52,6 +55,21 @@ const buyer_router = [
         name: 'bought',
         path: '/bought',
         component: BoughtPage
+      },
+      {
+        name: 'orders',
+        path: '/orders',
+        component: OrdersPage
+      },
+      {
+        name: 'reports',
+        path: '/reports',
+        component: ReportPage
+      },
+      {
+        name: 'refunds',
+        path: '/refunds',
+        component: RefundPage
       },
       {
         name: 'wishlist',

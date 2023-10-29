@@ -33,6 +33,10 @@ const props = defineProps({
     chatGroupId: {
         type: String,
         required: true
+    },
+    createdAt: {
+        type: String,
+        required: true
     }
 })
 
@@ -64,6 +68,9 @@ const props = defineProps({
                         {{ formatCurrency(props.price) }}
                     </span>
                 </div>
+            </div>
+            <div class="w-full flex justify-start ml-3">
+                Lúc: {{ createdAt }}
             </div>
         </div>
     </div>

@@ -112,7 +112,6 @@ const setProfileModel = userInfo => {
 }
 const fetchUserdata = async () => {
   const userInfo = await loginService.fetchUserInfo()
-  console.log(userInfo)
   setProfileModel(userInfo.data)
 }
 onMounted(async () => {
@@ -171,7 +170,7 @@ watch(selectedDistrict, async () => {
     <div class="mt-3 mb-3 container mx-auto">
       <Breadcrumb :items="breadcrumbItems" />
     </div>
-    <BoughtNav />
+    <BoughtNav :cur-tab="buyerTabs.bought.value" />
 
     <!-- Main section -->
     <div class="bg-white container mx-auto">

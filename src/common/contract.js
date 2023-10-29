@@ -86,12 +86,18 @@ export const OrderStatus = {
     DELIVERING: {
         value: "DELIVERING",
         icon: "la:shipping-fast",
+        text: "Đơn hàng sẵn sàng được giao",
+        pendingText: "Đơn hàng đang chuẩn bị..."
+    },
+    DELIVERED: {
+        value: "DELIVERED",
+        icon: "flat-color-icons:shipped",
         text: "Đơn hàng được giao",
         pendingText: "Đơn hàng đang giao..."
     },
-    COMFIRM_DELIVERY: {
+    CONFIRM_DELIVERY: {
         value: "CONFIRM_DELIVERY",
-        icon: "flat-color-icons:shipped",
+        icon: "mdi:box-success-outline",
         text: "Xác nhận giao hàng",
         pendingText: "Chờ xác nhận giao hàng..."
     },
@@ -99,6 +105,21 @@ export const OrderStatus = {
         value: "DONE",
         icon: "ep:success-filled",
         text: "Đơn hàng hoàn tất",
-        pendingText: ""
+        pendingText: "Chờ bên mua xác nhận..."
+    }
+}
+
+export const Configuration = {
+    PaymentDeadline: {
+        key: "PAYMENTDEADLINE",
+        value: 3
+    },
+    ReturnPolicyDay: {
+        key: "RETURNPOLICYDAY",
+        value: 0
+    },
+    PercentageProfit: {
+        key: "PERCENTAGECONFIGVALUE",
+        value: 0
     }
 }

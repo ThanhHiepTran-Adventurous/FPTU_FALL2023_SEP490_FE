@@ -7,7 +7,7 @@ import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import ItemSold from '../common-components/item-box/ItemSold.vue'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, ProductStatus } from '@/common/contract'
+import { AuctionModelType, Configuration, ProductStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Dropdown from '../common-components/Dropdown.vue'
 import Button from '@/components/common-components/Button.vue'
@@ -318,7 +318,7 @@ onMounted(() => {
                       thời gian kết thúc :
                     </td>
                     <td class="py-2 px-4 border-b border-grey-light">
-                      {{ detail?.endDate ? moment(detail?.endDate).format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}
+                      {{ detail?.endDate ? moment.utc(detail?.endDate).format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}
                     </td>
                   </tr>
                 </tbody>
@@ -329,9 +329,12 @@ onMounted(() => {
             <div class="text-red-500 text-lg">
               Để biết thông tin và tiến hành trao đổi với người thắng cuộc, vui lòng thanh toán phí cho phiên đấu giá.
             </div>
+            <div class="text-red-500 text-lg">
+              Bạn phải thanh toán trước: <span class="font-bold">{{ detail?.endDate ? moment.utc(detail?.endDate).add(Configuration.PaymentDeadline.value, "days").format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}</span>. Nếu không, đơn hàng sẽ không được tạo
+            </div>
           </div>
         </div>
-        <template v-slot:button>
+        <template #button>
           <div>
             <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Hủy </Button>
           </div>
