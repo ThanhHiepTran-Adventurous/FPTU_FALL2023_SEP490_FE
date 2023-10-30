@@ -8,9 +8,9 @@ export default {
   base: SERVICE_URL,
   ws: {
     base: WS_URL,
-    subscribeFromChatGroupUrl: "/topic/messages/group/{groupId}",
-    sendToChatGroupUrl: "/app/chat/{groupId}",
-    authToken: WS_AUTH
+    subscribeFromChatGroupUrl: '/topic/messages/group/{groupId}',
+    sendToChatGroupUrl: '/app/chat/{groupId}',
+    authToken: WS_AUTH,
   },
   endpoint: {
     auth: {
@@ -90,29 +90,32 @@ export default {
     },
     transaction: {
       option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
-      paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay'
+      paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay',
     },
     notification: {
-      getAllNoti: 'notification/list-top-10-notification-user'
+      getAllNoti: 'notification/list-top-10-notification-user',
     },
     order: {
       getOrders: 'orders/user/getListOrder-authorize',
       newToDelivering: 'orders/{orderId}/Updated/NewToDelivering',
       deleveringToDelivered: 'orders/{orderId}/Updated/DeliveringToDelivered',
       deliveredToConfirmDelivery: 'orders/{orderId}/Updated/DeliveredToConfirmDelivery',
-      deliveryToDone: 'orders/{orderId}/Confirm/ConfirmDeliveryToDone'
+      deliveryToDone: 'orders/{orderId}/Confirm/ConfirmDeliveryToDone',
+      getOrdersByAuctionId: 'orders/user/get-detail-order-by-auction-Id/{auctionId}',
+      updateAdressBuyerOpt2: 'orders/buyer/{orderId}/edited-OrderOption-Two',
     },
     chat: {
       getAllMessages: 'chatMessage/listMessage/{groupId}',
-      getChatGroupInfo: 'messageWebSocket/chat-group-info/{chatGroupId}'
+      getChatGroupInfo: 'messageWebSocket/chat-group-info/{chatGroupId}',
     },
     system: {
-      getAllConfigData: 'systemConfig/getListSystemConfig'
-    }
+      getAllConfigData: 'systemConfig/getListSystemConfig',
+    },
   },
 }
 
 export const noImage =
   'https://firebasestorage.googleapis.com/v0/b/bidbay-project.appspot.com/o/No-Image-Placeholder.svg.png?alt=media'
 
-export const defaultAvatar = 'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg'
+export const defaultAvatar =
+  'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg'
