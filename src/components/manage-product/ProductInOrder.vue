@@ -187,24 +187,30 @@ onMounted(() => {
           Hủy
         </Button>
       </div>
-      <div>
+      <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
         <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || detail?.statusOrder === OrderStatus.DONE.value" @on-click="updateOrderStatus">
           <div class="flex items-center">
             <div>Cập nhật trạng thái đơn hàng</div>
           </div>
         </Button>
       </div>
+      <div v-else>
+        <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || detail?.statusOrder === OrderStatus.DONE.value" @on-click="updateOrderStatus">
+          <div class="flex items-center">
+            <div>Yêu cầu rút tiền</div>
+          </div>
+        </Button>
+      </div>
       <div>
-          <Button
+          <Button v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate"
             :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value"
-            @on-click="updateOrderStatus">
+            >
             <div class="flex items-center">
-              <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[18px] mr-2" />
-              <div>Thanh toán</div>
+              <div>Tạo yêu cầu giao hàng</div>
             </div>
           </Button>
         </div>
-        <div>
+        <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
             <Button>
               <div class="flex items-center">

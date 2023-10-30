@@ -212,7 +212,7 @@ onMounted(() => {
             </div>
           </Button>
         </div>
-        <div>
+        <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
             <Button>
               <div class="flex items-center">

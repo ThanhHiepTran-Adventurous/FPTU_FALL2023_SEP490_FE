@@ -122,12 +122,12 @@ function handleConfirm() {
 }
 
 const handlePayment = async () => {
-  const returnUrl = `${urlConstant.domain}${route.fullPath}`
+  const returnUrl = `${urlConstant.domain}/manage/orders`
 
   isPaymentLoading.value = true
   const response = await paymentService.paymentForChat(detail.value.id, returnUrl)
   isPaymentLoading.value = false
-  const redirectURL = response.data
+  const redirectURL = response.data.paymentUrl
   window.location.href = redirectURL
 }
 
@@ -325,7 +325,7 @@ onMounted(() => {
               </table>
             </div>
           </div>
-          <div class="p-2 rounded-xl w-full">
+          <div v-if="detail?.modelType === AuctionModelType.immediate" class="p-2 rounded-xl w-full">
             <div class="text-red-500 text-lg">
               Để biết thông tin và tiến hành trao đổi với người thắng cuộc, vui lòng thanh toán phí cho phiên đấu giá.
             </div>
@@ -342,12 +342,17 @@ onMounted(() => {
               >. Nếu không, đơn hàng sẽ không được tạo
             </div>
           </div>
+          <div v-else class="p-2 rounded-xl w-full">
+            <div class="text-red-500 text-lg">
+              Phiên đấu giá hoàn thành. Đơn hàng đang chờ người mua thanh toán...
+            </div>
+          </div>
         </div>
         <template #button>
           <div>
-            <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Hủy </Button>
+            <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
           </div>
-          <div>
+          <div v-if="detail?.modelType === AuctionModelType.immediate">
             <Button @on-click="handlePayment" v-if="isPaymentLoading === false">
               <div class="flex items-center w-[120px]">
                 <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[18px] mr-3" />

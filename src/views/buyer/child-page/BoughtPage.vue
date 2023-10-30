@@ -238,7 +238,7 @@ watch(selectedDistrict, async () => {
             </div>
             <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">
               Đạt được lúc:
-              <span class="text-blue-600">{{ moment.utc(auction.winAt).format('DD/MM/YYYY HH:MM:ss') }}</span>
+              <span class="text-blue-600">{{ moment.utc(auction.winAt).format('DD/MM/YYYY HH:mm:ss') }}</span>
             </div>
             <div
               v-if="auction.informationAuction.modelType === AuctionModelType.immediate"
