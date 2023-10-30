@@ -27,7 +27,10 @@ const messagesData = ref([])
 const messageDtos = ref([])
 const groupInfo = ref(undefined)
 const orderDetail = ref(undefined)
+
 const sttChange = ref('')
+const curAddress = ref('')
+const curPhone = ref('')
 const textMessage = ref('')
 
 const isSideBarShowing = ref(false)
@@ -52,7 +55,6 @@ const closeSellerModal = () => {
 const openSellerModal = () => {
   isSellerModalDetailShowing.value = true
 }
-
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
   if (role === Role.admin.value) {
@@ -69,6 +71,18 @@ const scrollMessageBoxToBottom = async () => {
   message.scrollTop = message.scrollHeight
 }
 
+
+// business functions
+const onShippedClick = () => {
+  if (confirm("Bạn có chắc chắn xác nhận đơn hàng đã giao tới bạn không?")){
+    onConfirmShipped()
+  }
+}
+const onChangeStatusClick = () => {
+  if (confirm("Bạn có chắc chắn chuyển đơn hàng sang trạng thái tiếp theo không?")){
+    onChangeStatus()
+  }
+}
 const onConfirmShipped = async () => {
   try {
     await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
@@ -90,6 +104,27 @@ const onChangeStatus = async () => {
     toastOption.toastError('Có lỗi hệ thống...')
   } finally {
     isBuyerUpdating.value = false
+  }
+}
+const onUpdateDetail = async (messageData) => {
+  if(confirm("Bạn có chắc chắn muốn cập nhật thông tin đơn hàng không?")){
+    try {
+      const payload = {
+        buyerPhoneNumber: messageData.newPhone,
+        buyerAddress: messageData.newAddress,
+        sellerPhoneNumber: orderDetail.value.sellerPhoneNumber,
+        sellerAddress: orderDetail.value.sellerAddress || ""
+      }
+      isSellerUpdating.value = true
+      await orderService.updateAddressAndPhoneSellerOpt1(orderDetail.value.id, payload)
+      toastOption.toastSuccess("Cập nhật thông tin đơn hàng thành công!")
+      closeSellerModal()
+      fetchChatInfo()
+    } catch (_) {
+    toastOption.toastError('Có lỗi hệ thống...')
+    } finally {
+      isSellerUpdating.value = false
+    }
   }
 }
 
@@ -121,6 +156,9 @@ const fetchChatInfo = async () => {
   groupInfo.value = response.data
   orderDetail.value = groupInfo.value.order
   sttChange.value = groupInfo.value.order.statusOrder
+  curAddress.value = groupInfo.value.order.buyerAddress
+  curPhone.value = groupInfo.value.order.buyerPhoneNumber
+  //console.log(sttChange.value)
 }
 const initMessageDtos = async () => {
   await fetchAllMessages()
@@ -199,7 +237,7 @@ onBeforeUnmount(() => {
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Cập nhật thông tin đơn hàng
                 </button>
-                <button v-if="curRole === Role.seller.value" @click="onChangeStatus"
+                <button v-if="curRole === Role.seller.value" @click="onChangeStatusClick"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Cập nhật trạng thái đơn hàng
                 </button>
@@ -210,7 +248,7 @@ onBeforeUnmount(() => {
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Xem thông tin đơn hàng
                 </button>
-                <button v-if="curRole === Role.buyer.value" @click="onConfirmShipped"
+                <button v-if="curRole === Role.buyer.value" @click="onShippedClick"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Đã nhận hàng
                 </button>
@@ -306,8 +344,11 @@ onBeforeUnmount(() => {
       :detail="orderDetail"
       :isUpdating="isSellerUpdating"
       :status="sttChange"
+      :address="curAddress"
+      :phone="curPhone"
       @modal-declined="closeSellerModal"
-      @updateStatus="onChangeStatus"
+      @update-status="onChangeStatus"
+      @update-detail="onUpdateDetail"
     />
   </div>
 </template>

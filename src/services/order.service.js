@@ -30,7 +30,6 @@ const confirmDeliveryToDoneRequest = async orderId => {
 }
 
 const updateStatus = async (curStatus, orderId) => {
-  console.log(curStatus)
   if (curStatus === OrderStatus.NEW.value) {
     return await newToDeliveringUpdateRequest(orderId)
   }
@@ -59,6 +58,11 @@ const updateAddressBuyerOpt2 = async (orderId, updatedAddressData) => {
     throw error
   }
 }
+const updateAddressAndPhoneSellerOpt1 = async (orderId, payload) => {
+  const serviceUrl = url.endpoint.order.updateAdressSellerOpt1.replace('{orderId}', orderId)
+  const response = await utils.axiosLocalHost.put(serviceUrl, payload)
+  return response ? response.data : response
+}
 export default {
   getAllOrders,
   newToDeliveringUpdateRequest,
@@ -68,4 +72,5 @@ export default {
   updateStatus,
   getOrdersByAuctionId,
   updateAddressBuyerOpt2,
+  updateAddressAndPhoneSellerOpt1
 }

@@ -47,10 +47,8 @@ const updateAddressOrderAfterPayment = async () => {
   if (responeCode === '00' && transactionStatus === '00') {
     const response = await orderService.getOrdersByAuctionId(retrievedAuctionId)
     const orderId = response.data.id
-    console.log(orderId)
     if (orderId) {
       const ress = await orderService.updateAddressBuyerOpt2(orderId, updatedAddressData)
-      console.log(ress)
     }
   }
 }

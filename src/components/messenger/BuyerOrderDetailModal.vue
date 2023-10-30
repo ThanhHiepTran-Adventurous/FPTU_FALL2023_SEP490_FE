@@ -13,17 +13,17 @@ const emit = defineEmits(["modal-declined", "confirm-shipped"])
 
 const statusOrder = ref(OrderStatus.CONFIRM_DELIVERY.value)
 watch(() => props.detail, () => {
-    console.log(statusOrder.value)
     statusOrder.value = props.detail?.statusOrder
 }, {deep: true})
 
-watch(() => props.status, (n, o) => {
-    console.log("stt change")
-})
+const onShippedClick = () => {
+    if (confirm("Bạn có chắc chắn xác nhận đơn hàng đã giao tới bạn không?") == true){
+        emit('confirm-shipped')
+    }
+}
 
 onMounted(() => {
     statusOrder.value = props.detail?.statusOrder
-    console.log(statusOrder.value)
 })
 
 </script>
@@ -97,11 +97,11 @@ onMounted(() => {
             </Button>
         </div>
         <div>
-          <Button :disabled="isUpdating || status !== OrderStatus.CONFIRM_DELIVERY.value" @on-click="emit('confirm-shipped')">
+        <Button :disabled="isUpdating || status !== OrderStatus.CONFIRM_DELIVERY.value" @on-click="onShippedClick">
             <div class="flex items-center">
-              <div>Đã nhận hàng</div>
+            <div>Đã nhận hàng</div>
             </div>
-          </Button>
+        </Button>
         </div>
         </template>
     </Modal>

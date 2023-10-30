@@ -103,6 +103,7 @@ export default {
       deliveryToDone: 'orders/{orderId}/Confirm/ConfirmDeliveryToDone',
       getOrdersByAuctionId: 'orders/user/get-detail-order-by-auction-Id/{auctionId}',
       updateAdressBuyerOpt2: 'orders/buyer/{orderId}/edited-OrderOption-Two',
+      updateAdressSellerOpt1: 'orders/{orderId}/edited-Order-Option-One',
     },
     chat: {
       getAllMessages: 'chatMessage/listMessage/{groupId}',
