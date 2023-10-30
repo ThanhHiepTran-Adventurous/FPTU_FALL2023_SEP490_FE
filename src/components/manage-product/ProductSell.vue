@@ -330,7 +330,16 @@ onMounted(() => {
               Để biết thông tin và tiến hành trao đổi với người thắng cuộc, vui lòng thanh toán phí cho phiên đấu giá.
             </div>
             <div class="text-red-500 text-lg">
-              Bạn phải thanh toán trước: <span class="font-bold">{{ detail?.endDate ? moment.utc(detail?.endDate).add(Configuration.PaymentDeadline.value, "days").format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}</span>. Nếu không, đơn hàng sẽ không được tạo
+              Bạn phải thanh toán trước:
+              <span class="font-bold">{{
+                detail?.endDate
+                  ? moment
+                      .utc(detail?.endDate)
+                      .add(Configuration.PaymentDeadline.value, 'days')
+                      .format('DD/MM/YYYY HH:mm:ss')
+                  : 'N/A'
+              }}</span
+              >. Nếu không, đơn hàng sẽ không được tạo
             </div>
           </div>
         </div>
@@ -360,8 +369,8 @@ onMounted(() => {
           </div>
         </template>
       </Modal>
-      </div>
     </div>
+  </div>
   <div
     v-if="responeCode === '00' && transactionStatus === '00'"
     id="successModal"

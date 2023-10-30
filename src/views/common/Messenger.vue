@@ -56,38 +56,38 @@ const openSellerModal = () => {
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
   if (role === Role.admin.value) {
-    return "/admin/dashboard"
+    return '/admin/dashboard'
   }
   if (role === Role.seller.value) {
-    return "/manage/orders"
+    return '/manage/orders'
   }
-  return "/orders"
+  return '/orders'
 })
 const scrollMessageBoxToBottom = async () => {
   await nextTick()
-  const message = document.getElementById("messageBox")
+  const message = document.getElementById('messageBox')
   message.scrollTop = message.scrollHeight
 }
 
 const onConfirmShipped = async () => {
   try {
     await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
-    toastOption.toastSuccess("Xác nhận đã nhận hàng thành công, đoạn chat sẽ được đóng.")
+    toastOption.toastSuccess('Xác nhận đã nhận hàng thành công, đoạn chat sẽ được đóng.')
     closeBuyerModal()
     fetchChatInfo()
-  } catch (_){
-    toastOption.toastError("Có lỗi hệ thống...")
+  } catch (_) {
+    toastOption.toastError('Có lỗi hệ thống...')
   }
 }
 const onChangeStatus = async () => {
   try {
     isBuyerUpdating.value = true
     await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
-    toastOption.toastSuccess("Cập nhật trạng thái đơn hàng thành công!")
+    toastOption.toastSuccess('Cập nhật trạng thái đơn hàng thành công!')
     closeBuyerModal()
     fetchChatInfo()
-  } catch (_){
-    toastOption.toastError("Có lỗi hệ thống...")
+  } catch (_) {
+    toastOption.toastError('Có lỗi hệ thống...')
   } finally {
     isBuyerUpdating.value = false
   }
@@ -100,23 +100,23 @@ const sendMessage = () => {
   if (messageData) {
     const payload = {
       fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
-      contentMessage: messageData
+      contentMessage: messageData,
     }
     stompClient.publish({
       destination: `/app/chat/${groupId}`,
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     })
   }
 }
 
 // init functions
 const fetchAllMessages = async () => {
-  groupId = route.params["groupId"]
+  groupId = route.params['groupId']
   const response = await ChatService.getAllChatMessage(groupId)
   messagesData.value = response.data
 }
 const fetchChatInfo = async () => {
-  groupId = route.params["groupId"]
+  groupId = route.params['groupId']
   const response = await ChatService.getGroupInfo(groupId)
   groupInfo.value = response.data
   orderDetail.value = groupInfo.value.order
@@ -128,7 +128,7 @@ const initMessageDtos = async () => {
     return {
       isFromSelf: messData.fromUser.id === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
       message: messData.messageContent,
-      createAt: messData.createAt
+      createAt: messData.createAt,
     }
   })
   scrollMessageBoxToBottom()
@@ -137,28 +137,27 @@ const initStompClient = () => {
   stompClient = new Client({
     brokerURL: urlConstant.ws.base,
     connectHeaders: {
-      'X-Authorization': urlConstant.ws.authToken
+      'X-Authorization': urlConstant.ws.authToken,
     },
     reconnectDelay: 100,
   })
   stompClient.onConnect = () => {
-    console.log("connected")
-    subscription = stompClient.subscribe(`/topic/messages/group/${groupId}`, (payload) => {
+    console.log('connected')
+    subscription = stompClient.subscribe(`/topic/messages/group/${groupId}`, payload => {
       const response = JSON.parse(payload.body)
       const messageDtoAppend = {
         isFromSelf: response.fromUserId === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
         message: response.contentMessage,
-        createAt: new Date().toString()
+        createAt: new Date().toString(),
       }
       messageDtos.value.push(messageDtoAppend)
       scrollMessageBoxToBottom()
     })
   }
   stompClient.onStompError = () => {
-    console.log("Error")
+    console.log('Error')
   }
   stompClient.activate()
-
 }
 
 // Hook
@@ -166,7 +165,7 @@ onMounted(() => {
   initMessageDtos()
   initStompClient()
   fetchChatInfo()
-  if(window.innerWidth < 800){
+  if (window.innerWidth < 800) {
     isSideBarShowing.value = false
   } else {
     isSideBarShowing.value = true
@@ -182,7 +181,9 @@ onBeforeUnmount(() => {
   <div class="flex h-screen antialiased text-gray-800">
     <div class="flex flex-row justify-between h-full w-full overflow-x-auto">
       <!-- Side bar -->
-      <div class="transition-all flex flex-col justify-between py-8 w-12 overflow-hidden bg-white flex-shrink-0 rounded-r-2xl my-6" :class="isSideBarShowing ? 'px-6 !w-96' : 'h-20 py-4 items-center'">
+      <div
+        class="transition-all flex flex-col justify-between py-8 w-12 overflow-hidden bg-white flex-shrink-0 rounded-r-2xl my-6"
+        :class="isSideBarShowing ? 'px-6 !w-96' : 'h-20 py-4 items-center'">
         <div class="h-full flex flex-col justify-between" v-if="isSideBarShowing">
           <div class="h-full">
             <div class="flex flex-col mt-8">
@@ -203,7 +204,9 @@ onBeforeUnmount(() => {
                   Cập nhật trạng thái đơn hàng
                 </button>
                 <!-- For buyer only -->
-                <button v-if="curRole === Role.buyer.value" @click="openBuyerModal"
+                <button
+                  v-if="curRole === Role.buyer.value"
+                  @click="openBuyerModal"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Xem thông tin đơn hàng
                 </button>
@@ -220,11 +223,12 @@ onBeforeUnmount(() => {
           </div>
           <div class="w-full">
             <button
-              @click="isSideBarShowing=false"
+              @click="isSideBarShowing = false"
               class="w-[328px] flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
               <div>Ẩn</div>
             </button>
-            <router-link :to="backLink"
+            <router-link
+              :to="backLink"
               class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
               <div>
                 <Icon icon="simple-line-icons:logout" class="text-[20px] mr-3" />
@@ -244,27 +248,41 @@ onBeforeUnmount(() => {
           <div class="flex flex-col h-full overflow-x-auto mb-4">
             <div class="flex flex-col h-full">
               <div class="grid grid-cols-12 gap-y-2 overflow-auto max-h-[90vh] scroll-smooth" id="messageBox">
-                <MessageBubble v-for="mess in messageDtos" :key="mess.createAt" :isSender="!mess.isFromSelf"
-                  :message="mess.message" :createAt="mess.createAt" />
+                <MessageBubble
+                  v-for="mess in messageDtos"
+                  :key="mess.createAt"
+                  :isSender="!mess.isFromSelf"
+                  :message="mess.message"
+                  :createAt="mess.createAt" />
               </div>
             </div>
           </div>
           <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
             <div class="flex-grow">
               <div class="relative w-full">
-                <input v-model="textMessage" @keypress.enter="sendMessage" type="text"
+                <input
+                  v-model="textMessage"
+                  @keypress.enter="sendMessage"
+                  type="text"
                   class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
               </div>
             </div>
             <div class="ml-4">
-              <button @click="() => sendMessage()"
+              <button
+                @click="() => sendMessage()"
                 class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
                 <span class="ml-1">
-                  <svg class="w-4 h-4 transform rotate-45 -mt-px" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  <svg
+                    class="w-4 h-4 transform rotate-45 -mt-px"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8">
-                    </path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                   </svg>
                 </span>
               </button>

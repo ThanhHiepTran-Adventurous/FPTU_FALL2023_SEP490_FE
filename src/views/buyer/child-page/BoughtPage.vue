@@ -2,6 +2,7 @@
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import auctionService from '@/services/auction.service'
 import paymentService from '@/services/payment.service'
+import orderService from '@/services/order.service'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import imageHelper from '@/utils/image-helper'
@@ -25,12 +26,33 @@ const router = useRouter()
 let responeCode = ref('')
 let transactionStatus = ref('')
 let autionIdd = ref('')
+
 const isInEditMode = ref(false)
 const getQueryParameters = () => {
   const queryParams = route.query
-
   responeCode = queryParams.vnp_ResponseCode
   transactionStatus = queryParams.vnp_TransactionStatus
+}
+const updateAddressOrderAfterPayment = async () => {
+  const storedData = localStorage.getItem('paymentAddressData')
+  const storedPaymentData = JSON.parse(storedData)
+  const retrievedAuctionId = storedPaymentData?.auctionId
+  const buyerPhoneNumber = storedPaymentData?.phone
+  const buyerAddress = `${storedPaymentData?.address}, ${storedPaymentData?.district}, ${storedPaymentData?.province}, ${storedPaymentData?.ward}`
+  localStorage.removeItem('paymentAddressData')
+  const updatedAddressData = {
+    buyerPhoneNumber,
+    buyerAddress,
+  }
+  if (responeCode === '00' && transactionStatus === '00') {
+    const response = await orderService.getOrdersByAuctionId(retrievedAuctionId)
+    const orderId = response.data.id
+    console.log(orderId)
+    if (orderId) {
+      const ress = await orderService.updateAddressBuyerOpt2(orderId, updatedAddressData)
+      console.log(ress)
+    }
+  }
 }
 const selectedDistrict = ref({
   label: '',
@@ -118,6 +140,7 @@ onMounted(async () => {
   fetchUserdata()
   fetchAuctionWinData()
   getQueryParameters()
+  updateAddressOrderAfterPayment()
   const provincesFetch = await locationService.fetchAllProvinces()
   provinces.value = provincesFetch.data.map(p => {
     return {
@@ -128,19 +151,29 @@ onMounted(async () => {
 })
 
 const payment = async auctionId => {
-  // const returnUrl = `${urlConstant.domain}${route.fullPath}`
+  try {
+    const returnUrl = `${urlConstant.domain}${route.fullPath}`
 
-  // const response = await paymentService.paymentOption2(auctionId, returnUrl)
-  // const redirectURL = response.data
+    const paymentData = {
+      auctionId: auctionId,
+      address: profileModelData.value.address,
+      district: selectedDistrict.value.label,
+      province: selectedProvince.value.label,
+      ward: selectedWard.value.label,
+      phone: profileModelData.value.phone,
+    }
 
-  // window.location.href = redirectURL
-  console.log(auctionId)
-  console.log(profileModelData.value.address)
-  console.log(selectedDistrict.value.label)
-  console.log(selectedProvince.value.label)
-  console.log(selectedWard.value.label)
-  console.log(profileModelData.value.phone)
+    const jsonData = JSON.stringify(paymentData)
+    localStorage.setItem('paymentAddressData', jsonData)
+    const response = await paymentService.paymentOption2(auctionId, returnUrl)
+    const redirectURL = response.data.paymentUrl
+
+    window.location.href = redirectURL
+  } catch (error) {
+    console.error('Error during payment:', error)
+  }
 }
+
 const provinces = ref([])
 const wards = ref([])
 const districts = ref([])

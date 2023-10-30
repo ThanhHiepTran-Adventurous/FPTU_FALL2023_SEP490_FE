@@ -374,19 +374,173 @@ onMounted(async () => {
           alt="avt"
           class="w-40 h-40 border-4 border-white rounded-full" />
 
-        <input type="file" hidden v-on:change="handleFileAvtUpload($event)" ref="fileAvt" />
-        <div class="flex items-center space-x-2 mt-3">
-          <div class="text-2xl">{{ profileModel.name }}</div>
-          <span v-if="profileModel.isCCVerified === true" class="bg-blue-500 rounded-full p-1" title="Verified">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="text-gray-100 h-2.5 w-2.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </span>
+        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
+          <div class="w-full flex flex-col" :class="{ '2xl:w-[40%]': profileModel.role === Role.seller }">
+            <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+              <div class="flex items-center">
+                <div class="text-xl text-gray-900 font-bold mr-3">Thông tin cá nhân</div>
+                <Icon
+                  icon="iconamoon:edit-duotone"
+                  class="text-[26px] text-blue-500 hover:cursor-pointer hover:text-blue-600"
+                  @click="isInEditMode = true" />
+              </div>
+              <ul class="mt-2 text-gray-700">
+                <li class="flex border-y py-2">
+                  <span class="font-bold w-28">Tên:</span>
+                  <input
+                    v-if="isInEditMode"
+                    v-model="profileModelData.name"
+                    type="text"
+                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[60%]" />
+                  <span v-else class="text-gray-700">{{ profileModel.name }}</span>
+                </li>
+                <li class="flex border-b py-2">
+                  <span class="font-bold w-28">Ngày sinh:</span>
+                  <input
+                    v-if="isInEditMode"
+                    v-model="profileModelData.birthday"
+                    type="date"
+                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1" />
+                  <span v-else class="text-gray-700">{{
+                    profileModel.birthday ? moment(profileModel.birthday).format('DD/MM/YYYY HH:MM:ss') : 'N/A'
+                  }}</span>
+                </li>
+                <li class="flex border-b py-2">
+                  <span class="font-bold w-28">Tạo ngày:</span>
+                  <span class="text-gray-700">{{
+                    moment.utc(profileModel.createdAt).format('DD/MM/YYYY HH:MM:ss')
+                  }}</span>
+                </li>
+                <li class="flex border-b py-2">
+                  <span class="font-bold w-28">Điện thoại:</span>
+                  <span class="text-gray-700">{{ profileModel.phone }}</span>
+                </li>
+                <li class="flex border-b py-2">
+                  <span class="font-bold w-28">Email:</span>
+                  <button
+                    v-if="isInEditMode"
+                    @click="onUpdateEmailClick"
+                    class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                    <span>Thay đổi email</span>
+                  </button>
+                  <span v-else class="text-gray-700">{{ profileModel.email || 'N/A' }}</span>
+                </li>
+                <li class="flex border-b py-2">
+                  <span class="font-bold w-28">Địa chỉ:</span>
+                  <div v-if="isInEditMode" class="w-full ml-4">
+                    <input
+                      v-model="profileModelData.address"
+                      type="text"
+                      class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[63%]" />
+                    <div class="flex flex-col w-[full] gap-3 mt-3">
+                      <div class="flex flex-col items-left gap-1">
+                        <div>Tỉnh / Thành phố:</div>
+                        <Dropdown v-model="selectedProvince" :data="provinces" class="!w-[300px]" />
+                      </div>
+                      <div class="flex flex-col items-left gap-1">
+                        <div>Quận / Huyện:</div>
+                        <Dropdown v-model="selectedDistrict" :data="districts" class="!w-[300px]" />
+                      </div>
+                      <div class="flex flex-col items-left gap-1">
+                        <div>Phường / Xã:</div>
+                        <Dropdown v-model="selectedWard" :data="wards" class="!w-[300px]" />
+                      </div>
+                    </div>
+                  </div>
+                  <span v-else class="text-gray-700">{{ profileModel.address || 'N/A' }}</span>
+                </li>
+              </ul>
+              <div class="flex items-center" v-if="isInEditMode">
+                <button
+                  @click="onUpdateCancel"
+                  class="flex items-center bg-[#E4E6EA] hover:!bg-gray-300 text-gray-800 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100 mr-2">
+                  <span>Hủy</span>
+                </button>
+                <button
+                  @click="onSaveUpdate"
+                  class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                  <span>Lưu</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col w-full 2xl:w-2/3">
+            <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+              <div class="flex items-center justify-between">
+                <div class="text-xl text-gray-900 font-bold">Căn cước công dân</div>
+                <div
+                  v-if="profileModel.isCCVerified === true"
+                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                  Đã phê duyệt
+                </div>
+                <div v-else class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                  Chưa phê duyệt
+                </div>
+              </div>
+              <div class="flex items-center flex-col md:flex-row gap-4">
+                <div class="w-full md:w-[50%] flex justify-center">
+                  <article
+                    aria-label="File Upload Modal"
+                    class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
+                    :class="{ 'w-[464px] h-[256px]': !profileModel.isCCVerified && !frontImgSrc }">
+                    <input type="file" hidden v-on:change="handleFileFrontUpload($event)" ref="fileFront" />
+                    <section
+                      v-if="!profileModel.isCCVerified && !frontImgSrc"
+                      class="overflow-auto p-8 w-full h-full flex flex-col">
+                      <header
+                        class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
+                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
+                          <span>Tải lên <span class="text-red-500">mặt trước</span> căn cước</span>
+                        </div>
+                        <button
+                          @click="$refs.fileFront.click()"
+                          class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
+                          Tải lên
+                        </button>
+                      </header>
+                    </section>
+                    <div v-else class="w-full h-full" @click="profileModel.isCCVerified || $refs.fileFront.click()">
+                      <img :src="profileModel.fileFront || frontImgSrc" alt="mặt trước" />
+                    </div>
+                  </article>
+                </div>
+                <div class="w-full md:w-[50%] flex justify-center">
+                  <article
+                    aria-label="File Upload Modal"
+                    class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
+                    :class="{ 'w-[464px] h-[256px]': !profileModel.isCCVerified && !backImgSrc }">
+                    <input type="file" hidden v-on:change="handleFileBackUpload($event)" ref="fileBack" />
+                    <section
+                      v-if="!profileModel.isCCVerified && !backImgSrc"
+                      class="overflow-auto p-8 w-full h-full flex flex-col">
+                      <header
+                        class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
+                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
+                          <span>Tải lên <span class="text-red-500">mặt sau</span> căn cước</span>
+                        </div>
+                        <button
+                          @click="$refs.fileBack.click()"
+                          class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
+                          Tải lên
+                        </button>
+                      </header>
+                    </section>
+                    <div v-else class="w-full h-full" @click="profileModel.isCCVerified || $refs.fileBack.click()">
+                      <img :src="profileModel.fileBack || backImgSrc" alt="Mặt sau" class="object-contain" />
+                    </div>
+                  </article>
+                </div>
+              </div>
+              <div v-if="!profileModel.isCCVerified === true" class="w-full text-center flex justify-center mt-3">
+                <button
+                  @click="() => onPostCCCD()"
+                  class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                  <Icon icon="tdesign:upload" />
+                  <span>Gửi yêu cầu kiểm tra căn cước</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <button
           v-if="isImageUpdating"

@@ -1,9 +1,9 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { Icon } from '@iconify/vue';
-import Button from "@/components/common-components/Button.vue"
-import constant from "@/common/constant"
+import { computed, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import { Icon } from '@iconify/vue'
+import Button from '@/components/common-components/Button.vue'
+import constant from '@/common/constant'
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Avatar from '@/components/common-components/Avatar.vue'
 import { useUserStore } from '../../stores/user.store'
@@ -146,22 +146,15 @@ const onLogout = async () => {
 }
 
 const onNotiClick = () => {
-  isShowingNoti.value = !(isShowingNoti.value)
+  isShowingNoti.value = !isShowingNoti.value
   notiStore.justRead()
-  if(isShowingNoti.value === true){
+  if (isShowingNoti.value === true) {
     notiStore.syncNotifications()
   }
 }
 const notiList = computed(() => {
   return notiStore.notifications
 })
-
-onMounted(() => {
-  if(isAuth.value === true){
-    notiStore.syncNotifications()
-  }
-})
-
 </script>
 <template>
   <!-- component -->
