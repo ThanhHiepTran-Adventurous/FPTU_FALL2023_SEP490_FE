@@ -1,10 +1,36 @@
 <script setup>
+import constant from '@/common/constant';
 import Modal from '../common-components/Modal.vue';
+import { OrderStatus } from '@/common/contract';
+import formatCurrency from '@/utils/currency-output-formatter';
+import moment from 'moment';
+import OrderTimeline from '../OrderTimeline.vue';
+import Button from '../common-components/Button.vue';
+import { ref, computed, watch, onMounted } from 'vue';
+
+const props = defineProps(['detail', 'isUpdating', 'status'])
+const emit = defineEmits(["modal-declined", "update-status"])
+
+const statusOrder = ref(OrderStatus.CONFIRM_DELIVERY.value)
+watch(() => props.detail, () => {
+    console.log(statusOrder.value)
+    statusOrder.value = props.detail?.statusOrder
+}, {deep: true})
+
+watch(() => props.status, (n, o) => {
+    console.log("stt change")
+})
+
+onMounted(() => {
+    statusOrder.value = props.detail?.statusOrder
+    console.log(statusOrder.value)
+})
+
 </script>
 <template>
-    <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=true
+    <Modal :widthClass="'w-[900px]'" :hasOverFlowVertical=true :hasButton=true
         title="Chi tiết"
-        @decline-modal="closeModal" @confirm-modal="handleConfirm">
+        @decline-modal="emit('modal-declined')" @confirm-modal="() => {}">
         <div class="bg-gray rounded-lg mx-1 my-1">
         <div class="relative mb-2 px-2">
             <div class="mx-auto container align-middle">
@@ -59,24 +85,31 @@ import Modal from '../common-components/Modal.vue';
             <div class="mx-auto container align-middle mt-8">
             <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
             <div class="ml-8">
-                <OrderTimeline :curStatus="detail?.statusOrder" />
+                <OrderTimeline :curStatus="status" />
             </div>
             </div>
         </div>
         </div>
         <template #button>
         <div>
-            <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal">
+            <Button :type="constant.buttonTypes.OUTLINE" @on-click="emit('modal-declined')">
             Đóng
             </Button>
         </div>
         <div>
-          <Button :disabled="isUpdating || detail?.statusOrder !== OrderStatus.CONFIRM_DELIVERY.value" @on-click="updateOrderStatus">
-            <div class="flex items-center">
-              <div>Đã nhận hàng</div>
-            </div>
-          </Button>
+            <Button :disabled="isUpdating" @on-click="emit('update-status')">
+                <div class="flex items-center">
+                    <div>Cập nhật thông tin đơn hàng</div>
+                </div>
+            </Button>
+        </div>
+        <div>
+            <Button :disabled="isUpdating || status === OrderStatus.CONFIRM_DELIVERY.value || status === OrderStatus.DONE.value" @on-click="emit('update-status')">
+                <div class="flex items-center">
+                    <div>Cập nhật trạng thái đơn hàng</div>
+                </div>
+            </Button>
         </div>
         </template>
-        </Modal>
+    </Modal>
 </template>

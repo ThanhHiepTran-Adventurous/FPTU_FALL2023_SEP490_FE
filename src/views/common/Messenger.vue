@@ -2,7 +2,7 @@
 import { Icon } from "@iconify/vue"
 import { defaultRoute } from "@/common/constant";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { Role } from "@/common/contract";
+import { OrderStatus, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -12,6 +12,7 @@ import ChatService from "@/services/chat.service"
 import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
 import { Tooltip } from 'ant-design-vue';
 import BuyerOrderDetailModal from "@/components/messenger/BuyerOrderDetailModal.vue";
+import SellerOrderDetailModal from "@/components/messenger/SellerOrderDetailModal.vue";
 import orderService from "@/services/order.service";
 import toastOption from "@/utils/toast-option";
 
@@ -26,6 +27,7 @@ const messagesData = ref([])
 const messageDtos = ref([])
 const groupInfo = ref(undefined)
 const orderDetail = ref(undefined)
+const sttChange = ref('')
 const textMessage = ref('')
 
 const isSideBarShowing = ref(false)
@@ -118,6 +120,7 @@ const fetchChatInfo = async () => {
   const response = await ChatService.getGroupInfo(groupId)
   groupInfo.value = response.data
   orderDetail.value = groupInfo.value.order
+  sttChange.value = groupInfo.value.order.statusOrder
 }
 const initMessageDtos = async () => {
   await fetchAllMessages()
@@ -191,11 +194,11 @@ onBeforeUnmount(() => {
               </div>
               <div class="flex flex-col space-y-1 mt-4">
                 <!-- For seller only -->
-                <button v-if="curRole === Role.seller.value"
+                <button v-if="curRole === Role.seller.value" @click="isSellerModalDetailShowing = true"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Cập nhật thông tin đơn hàng
                 </button>
-                <button v-if="curRole === Role.seller.value"
+                <button v-if="curRole === Role.seller.value" @click="onChangeStatus"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Cập nhật trạng thái đơn hàng
                 </button>
@@ -204,7 +207,7 @@ onBeforeUnmount(() => {
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Xem thông tin đơn hàng
                 </button>
-                <button v-if="curRole === Role.buyer.value"
+                <button v-if="curRole === Role.buyer.value" @click="onConfirmShipped"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Đã nhận hàng
                 </button>
@@ -276,8 +279,17 @@ onBeforeUnmount(() => {
       :hidden="!(curRole === Role.buyer.value && isBuyerModalDetailShowing === true)"
       :detail="orderDetail"
       :isUpdating="isBuyerUpdating"
+      :status="sttChange"
       @modal-declined="closeBuyerModal"
       @confirm-shipped="onConfirmShipped"
+    />
+    <SellerOrderDetailModal
+      :hidden="!(curRole === Role.seller.value && isSellerModalDetailShowing === true)"
+      :detail="orderDetail"
+      :isUpdating="isSellerUpdating"
+      :status="sttChange"
+      @modal-declined="closeSellerModal"
+      @updateStatus="onChangeStatus"
     />
   </div>
 </template>

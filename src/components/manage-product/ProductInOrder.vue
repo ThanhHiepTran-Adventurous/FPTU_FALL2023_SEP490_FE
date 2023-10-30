@@ -178,7 +178,7 @@ onMounted(() => {
         </Button>
       </div>
       <div>
-        <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value" @on-click="updateOrderStatus">
+        <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || detail?.statusOrder === OrderStatus.DONE.value" @on-click="updateOrderStatus">
           <div class="flex items-center">
             <div>Cập nhật trạng thái đơn hàng</div>
           </div>

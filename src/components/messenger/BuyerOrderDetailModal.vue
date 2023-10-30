@@ -8,7 +8,7 @@ import OrderTimeline from '../OrderTimeline.vue';
 import Button from '../common-components/Button.vue';
 import { ref, computed, watch, onMounted } from 'vue';
 
-const props = defineProps(['detail', 'isUpdating'])
+const props = defineProps(['detail', 'isUpdating', 'status'])
 const emit = defineEmits(["modal-declined", "confirm-shipped"])
 
 const statusOrder = ref(OrderStatus.CONFIRM_DELIVERY.value)
@@ -16,6 +16,11 @@ watch(() => props.detail, () => {
     console.log(statusOrder.value)
     statusOrder.value = props.detail?.statusOrder
 }, {deep: true})
+
+watch(() => props.status, (n, o) => {
+    console.log("stt change")
+})
+
 onMounted(() => {
     statusOrder.value = props.detail?.statusOrder
     console.log(statusOrder.value)
@@ -80,7 +85,7 @@ onMounted(() => {
             <div class="mx-auto container align-middle mt-8">
             <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
             <div class="ml-8">
-                <OrderTimeline :curStatus="detail?.orderStatus" />
+                <OrderTimeline :curStatus="status" />
             </div>
             </div>
         </div>
@@ -92,7 +97,7 @@ onMounted(() => {
             </Button>
         </div>
         <div>
-          <Button :disabled="isUpdating || statusOrder !== detail?.orderStatus" @on-click="emit('confirm-shipped')">
+          <Button :disabled="isUpdating || status !== OrderStatus.CONFIRM_DELIVERY.value" @on-click="emit('confirm-shipped')">
             <div class="flex items-center">
               <div>Đã nhận hàng</div>
             </div>
