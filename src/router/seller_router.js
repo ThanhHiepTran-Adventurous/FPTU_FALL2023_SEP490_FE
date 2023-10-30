@@ -1,13 +1,13 @@
 import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
-import CreateAccountPage from '@/views/common/CreateAccountPage.vue'
 import ProfilePage from '@/views/common/ProfilePage.vue'
 import ProductStore from '@/components/manage-product/ProductStore.vue'
 import ProductAuction from '@/components/manage-product/ProductAuction.vue'
 import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
 import Messenger from '@/views/common/Messenger.vue'
-import ProductInOrder from '@/components/manage-product/ProductInOrder.vue'
+import ProductInOrderImmediate from '@/components/manage-product/ProductInOrderImmediate.vue'
+import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrderIntermediate.vue'
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -35,9 +35,14 @@ const seller_router = [
         component: ProductReject
       },
       {
-        name: 'product-in-order',
-        path: '/manage/orders',
-        component: ProductInOrder
+        name: 'product-in-order-immediate',
+        path: '/manage/orders/immediate',
+        component: ProductInOrderImmediate
+      },
+      {
+        name: 'product-in-order-intermediate',
+        path: '/manage/orders/intermediate',
+        component: ProductInOrderIntermediate
       },
       {
         name: 'profile',

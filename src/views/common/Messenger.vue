@@ -59,7 +59,7 @@ const backLink = computed(() => {
     return '/admin/dashboard'
   }
   if (role === Role.seller.value) {
-    return '/manage/orders'
+    return '/manage/orders/immediate'
   }
   return '/orders'
 })

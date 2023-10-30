@@ -15,6 +15,9 @@ import constant from '@/common/constant'
 import OrderService from '@/services/order.service'
 import ItemOrder from '../common-components/item-box/ItemOrder.vue'
 import OrderTimeline from '../OrderTimeline.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const orders = ref([])
 const ordersFiltered = ref([])
@@ -39,8 +42,10 @@ const selected = ref({
   label: 'Tự trao đổi',
   value: AuctionModelType.immediate,
 })
-watch(selected, newVal => {
-  filterData()
+watch(selected, (newVal, oldVal) => {
+  if(newVal.value === AuctionModelType.intermediate){
+    router.push("/manage/orders/intermediate")
+  }
 })
 const filterData = () => {
   ordersFiltered.value = orders.value
