@@ -157,7 +157,7 @@ onMounted(() => {
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                     Địa chỉ :
                   </td>
-                  <td class="py-2 px-4 border-b border-grey-light">{{ detail?.address ? detail.address : 'N/A' }}</td>
+                  <td class="py-2 px-4 border-b border-grey-light">{{ detail?.buyerAddress }}</td>
                 </tr>
                 <tr>
                   <td
@@ -165,7 +165,7 @@ onMounted(() => {
                     Số điện thoại :
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    {{ detail?.phoneNumber ? detail.phoneNumber : 'N/A' }}
+                    {{ detail?.buyerPhoneNumber }}
                   </td>
                 </tr>
                 <tr>
