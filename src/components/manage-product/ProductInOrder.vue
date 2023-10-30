@@ -13,6 +13,8 @@ import Dropdown from '../common-components/Dropdown.vue'
 import Button from '@/components/common-components/Button.vue'
 import constant from '@/common/constant'
 import OrderService from '@/services/order.service'
+import ItemOrder from '../common-components/item-box/ItemOrder.vue'
+import OrderTimeline from '../OrderTimeline.vue'
 
 const orders = ref([])
 const ordersFiltered = ref([])
