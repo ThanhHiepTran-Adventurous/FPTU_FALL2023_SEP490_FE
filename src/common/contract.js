@@ -1,4 +1,8 @@
 export const Role = {
+  staff: {
+    id: 4,
+    value: 'STAFF',
+  },
   admin: {
     id: 3,
     value: 'ADMIN',

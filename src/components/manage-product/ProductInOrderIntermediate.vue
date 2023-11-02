@@ -16,6 +16,8 @@ import OrderService from '@/services/order.service'
 import ItemOrder from '../common-components/item-box/ItemOrder.vue'
 import OrderTimeline from '../OrderTimeline.vue'
 import { useRouter } from 'vue-router'
+import ShipRequestService from '@/services/shiprequest.service'
+import toastOption from '@/utils/toast-option'
 
 const router = useRouter()
 
@@ -25,7 +27,16 @@ const detail = ref(null)
 
 const isModalVisible = ref(false)
 const isUpdating = ref(false)
-
+const hasShip = ref(false)
+const hasShipRequest = async orderId => {
+  try {
+    const query = 'shipRequest_orderId:' + orderId
+    const response = await ShipRequestService.getAllShipRequest(query)
+    hasShip.value = response && response.data && response.data.length > 0
+  } catch (error) {
+    console.error('Error checking ship request:', error)
+  }
+}
 // Filter
 const options = ref([
   {
@@ -39,15 +50,15 @@ const options = ref([
 ])
 
 const selected = ref({
-    label: 'Trung gian qua hệ thống',
-    value: AuctionModelType.intermediate,
-},)
+  label: 'Trung gian qua hệ thống',
+  value: AuctionModelType.intermediate,
+})
 watch(selected, newVal => {
-  if(newVal.value === AuctionModelType.immediate){
-    router.push("/manage/orders/immediate")
+  if (newVal.value === AuctionModelType.immediate) {
+    router.push('/manage/orders/immediate')
   }
 })
-const filterData = () => {
+const filterData = async () => {
   ordersFiltered.value = orders.value
     .filter(v => v.modelTypeAuctionOfOrder === selected.value.value)
     .sort((a, b) => {
@@ -57,16 +68,24 @@ const filterData = () => {
 
 // Business functions
 const handleDepositRequest = () => {
-    // deposit request code here
+  // deposit request code here
 }
-const handleCreateShipRequest = () => {
-    // ship request creation here
+const handleCreateShipRequest = async orderId => {
+  try {
+    const response = await ShipRequestService.sellerCreateShipRequest(orderId)
+    toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
+    console.log(response)
+  } catch (error) {
+    toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
+    console.error('Error creating ship request:', error)
+  }
 }
-
 
 // Page operations
 const activateInfoAuction = order => {
   detail.value = order
+  hasShipRequest(detail.value.id)
+  console.log(detail.value)
   isModalVisible.value = true
 }
 function closeModal() {
@@ -108,6 +127,7 @@ onMounted(() => {
         :secondaryImage="imageHelper.getSecondaryImageFromList(item.productResponse.imageUrls)"
         :auction-type="item.modelTypeAuctionOfOrder"
         :orderId="item.id"
+        :hasShipRequest="item.hasShipRequest"
         :chatGroupId="item.chatGroupDTOs.id ? item.chatGroupDTOs.id : ''"
         :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
     </div>
@@ -144,7 +164,7 @@ onMounted(() => {
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
                     Địa chỉ :
                   </td>
-                  <td class="py-2 px-4 border-b border-grey-light">{{ detail?.address ? detail.address : 'N/A' }}</td>
+                  <td class="py-2 px-4 border-b border-grey-light">{{ detail?.buyerAddress }}</td>
                 </tr>
                 <tr>
                   <td
@@ -152,7 +172,7 @@ onMounted(() => {
                     Số điện thoại :
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    {{ detail?.phoneNumber ? detail.phoneNumber : 'N/A' }}
+                    {{ detail?.buyerPhoneNumber }}
                   </td>
                 </tr>
                 <tr>
@@ -186,25 +206,28 @@ onMounted(() => {
           </div>
         </div>
       </div>
-    <template #button>
-      <div>
-        <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal">
-          Hủy
-        </Button>
-      </div>
-      <div>
-        <Button :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || detail?.statusOrder === OrderStatus.DONE.value"
-        @on-click="handleDepositRequest">
-          <div class="flex items-center">
-            <div>Yêu cầu rút tiền</div>
-          </div>
-        </Button>
-      </div>
-      <div>
-          <Button v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate"
+      <template #button>
+        <div>
+          <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Hủy </Button>
+        </div>
+        <div>
+          <Button
+            :disabled="
+              isUpdating ||
+              detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value ||
+              detail?.statusOrder === OrderStatus.DONE.value
+            "
+            @on-click="handleDepositRequest">
+            <div class="flex items-center">
+              <div>Yêu cầu rút tiền</div>
+            </div>
+          </Button>
+        </div>
+        <div>
+          <Button
+            v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate && !hasShip"
             :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value"
-            @on-click="handleCreateShipRequest"
-            >
+            @on-click="handleCreateShipRequest(detail?.id)">
             <div class="flex items-center">
               <div>Tạo yêu cầu giao hàng</div>
             </div>

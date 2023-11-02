@@ -121,6 +121,7 @@ onMounted(() => {
           :auction-type="item.modelTypeAuctionOfOrder"
           :orderId="item.id"
           :chatGroupId="item.chatGroupDTOs.id"
+          :hasShipRequest="item.hasShipRequest"
           :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
       </div>
     </div>
@@ -204,13 +205,13 @@ onMounted(() => {
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
         <div>
-          <Button
+          <!-- <Button
             :disabled="isUpdating || detail?.statusOrder !== OrderStatus.CONFIRM_DELIVERY.value"
             @on-click="updateOrderStatus">
             <div class="flex items-center">
               <div>Đã nhận hàng</div>
             </div>
-          </Button>
+          </Button> -->
         </div>
         <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">

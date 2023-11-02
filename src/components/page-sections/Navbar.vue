@@ -120,7 +120,10 @@ const submitForm = async () => {
 
         // Check the user's role and redirect accordingly
         if (informationUser.data.role === Role.admin.value) {
-          router.push(defaultRoute.admin) // Replace '/admin' with the actual admin page route
+          router.push(defaultRoute.admin)
+        }
+        if (informationUser.data.role === Role.staff.value) {
+          router.push(defaultRoute.staff)
         }
         if (informationUser.data.role === Role.seller.value) {
           router.push(defaultRoute.seller)

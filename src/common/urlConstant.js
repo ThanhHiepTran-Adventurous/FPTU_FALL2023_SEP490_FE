@@ -112,6 +112,14 @@ export default {
     system: {
       getAllConfigData: 'systemConfig/getListSystemConfig',
     },
+    ship: {
+      sellerCreateShipRequest: 'shipRequest/seller/create-ship-request/{orderId}',
+      getAllShipRequest: 'shipRequest',
+      cancelShipRequest: '',
+      staffConfirmShipRequest: 'shipRequest/staff/confirm-to-waiting-for-delivery/{shipRequestId}',
+      StaffChangeShipRequestToOnDelivery: 'shipRequest/staff/change-to-on-delivery/{shipRequestId}',
+      StaffChangeShipRequestToDelivered: 'shipRequest/staff/change-to-delivered/{shipRequestId}',
+    },
   },
 }
 
