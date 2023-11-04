@@ -444,7 +444,7 @@ onMounted(async () => {
             </li>
             <li class="flex border-b py-2">
               <span class="font-bold w-28">Tạo ngày:</span>
-              <span class="text-gray-700">{{ moment(profileModel.createdAt).format('DD/MM/YYYY HH:MM:ss') }}</span>
+              <span class="text-gray-700">{{ profileModel.createdAt ? moment(profileModel.createdAt).format('DD/MM/YYYY') : 'N/A' }}</span>
             </li>
             <li class="flex border-b py-2">
               <span class="font-bold w-28">Điện thoại:</span>

@@ -70,14 +70,16 @@ const getAllNotification = async () => {
 
 const isAllRequiredInformationFilled = async (roleName) => {
   try {
-    response = await loginService.fetchUserInfo()
-    if(roleName === Role.seller.value && !response.citizenCardVerified){
+    const response = await loginService.fetchUserInfo()
+    if(roleName === Role.seller.value && (!response.data.citizenCardVerified || !response.data.address)){
       return false
     }
-    if(!response.bankAccountNumber || !response.bankOwnerName || !response.bankInformation){
+    if(!response.data.bankAccountNumber || !response.data.bankOwnerName || !response.data.bankInformation){
       return false
     }
-  } catch (_){
+    return true
+  } catch (e){
+    console.log(e)
     return false
   }
 }

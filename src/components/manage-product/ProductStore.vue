@@ -13,6 +13,7 @@ import { ProductStatus } from '@/common/contract'
 import Dropdown from '../common-components/Dropdown.vue'
 import imageHelper from '@/utils/image-helper'
 import Loading from '../common-components/Loading.vue'
+import userService from '@/services/user.service'
 
 const itemsPerPage = 9
 const searchQuery = ref('')
@@ -121,9 +122,8 @@ const showDetail = product => {
 }
 
 const showCreate = async () => {
-  const isVerified = userStore.getIsVerifyCCCDAndGetFromLocalStorageIfNotExist()
-  if (isVerified.toString() !== 'true') {
-    toastOption.toastError('Bạn phải cập nhật căn cước công dân trước khi đăng sản phẩm')
+  if(! await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist())){
+    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng, địa ch] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
     return
   }
   isModalVisible.value = true

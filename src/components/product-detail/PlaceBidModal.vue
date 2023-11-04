@@ -4,6 +4,11 @@ import formatCurrency from "@/utils/currency-output-formatter";
 import { computed, onMounted, ref, watch } from "vue"
 import CurrencyInput from "../common-components/CurrencyInput.vue";
 import currencyFormatter from "@/utils/currencyFormatter";
+import userService from "@/services/user.service";
+import { useUserStore } from "@/stores/user.store";
+import toastOption from "@/utils/toast-option";
+
+const userStore = useUserStore()
 
 const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel'])
 
@@ -46,7 +51,7 @@ const resetAllState = () => {
   placebidPrice.value = ''
 }
 
-const onAuctionSubmit = () => {
+const onAuctionSubmit = async () => {
   auctionService.placeBidMannual(props.auctionId, currencyFormatter.fromStyledStringToNumber(placebidPrice.value))
   .then(_ => {
     emit("placeBidSuccess")
@@ -67,7 +72,7 @@ const getPayloadFromFormState = () => {
   }
 }
 
-const onUpdateAutoAuctionSubmit = () => {
+const onUpdateAutoAuctionSubmit = async () => {
   const payload = getPayloadFromFormState()
 
   auctionService.updateAutoBid(preAutoAuctionData.value.id, payload)
@@ -82,18 +87,18 @@ const onUpdateAutoAuctionSubmit = () => {
     })
 }
 
-const onAutoAuctionSubmit = () => {
-    const payload = getPayloadFromFormState()
-    auctionService.placeAutoBid(props.auctionId, payload)
-    .then(_ => {
-      emit("placeAutoAuctionSuccess")
-    })
-    .catch(_ => {
-      emit("placeError")
-    })
-    .finally(() => {
-      resetAllState()
-    })
+const onAutoAuctionSubmit = async () => {
+  const payload = getPayloadFromFormState()
+  auctionService.placeAutoBid(props.auctionId, payload)
+  .then(_ => {
+    emit("placeAutoAuctionSuccess")
+  })
+  .catch(_ => {
+    emit("placeError")
+  })
+  .finally(() => {
+    resetAllState()
+  })
 }
 
 const onCancelClick = () => {

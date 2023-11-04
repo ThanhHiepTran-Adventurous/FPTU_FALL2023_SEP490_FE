@@ -13,8 +13,12 @@ import moment from 'moment'
 import DateHelper from '@/utils/date-helper'
 import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue'
 import AuctionType from '../common-components/badge/AuctionType.vue'
+import userService from '@/services/user.service'
+import { useUserStore } from '@/stores/user.store'
+import { Role } from '@/common/contract'
 
 const globalStore = useGlobalStore()
+const userStore = useUserStore()
 const isModalVisible = ref(false)
 const isBuyNowModalVisible = ref(false)
 const autoAuctionInfo = ref(null)
@@ -47,7 +51,11 @@ const onPlaceError = () => {
   toastOption.toastError('Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại')
 }
 
-const onBuyNowClick = () => {
+const onBuyNowClick = async () => {
+  if(! await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist())){
+    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
+    return
+  }
   const curTimeInMilis = DateHelper.getCurDateUTCMilis()
   if (props.auctionInfo?.endDate && curTimeInMilis > moment.utc(props.auctionInfo?.endDate).valueOf()) {
     toastOption.toastError('Phiên đấu giá đã hoàn thành')
@@ -74,6 +82,10 @@ const onBuyNowConfirm = () => {
 }
 
 const onPlaceBidClick = async () => {
+  if(! await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist())){
+    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
+    return
+  }
   const curTimeInMilis = DateHelper.getCurDateUTCMilis()
   if (props.auctionInfo?.endDate && curTimeInMilis > moment.utc(props.auctionInfo?.endDate).valueOf()) {
     toastOption.toastError('Phiên đấu giá đã hoàn thành')
