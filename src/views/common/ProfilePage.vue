@@ -61,6 +61,9 @@ const profileModel = ref({
   role: '',
   fileFront: '',
   fileBack: '',
+  bankAccountNumber: '',
+  bankOwnerName: '',
+  bankInformation: ''
 })
 
 const fileFrontImg = ref(undefined)
@@ -96,16 +99,25 @@ const setProfileModel = userInfo => {
   profileModel.value.imageUrl = userInfo.avatarUrl
   profileModel.value.isCCVerified = userInfo.citizenCardVerified
   profileModel.value.role = userInfo.role
+  profileModel.value.bankAccountNumber = userInfo.bankAccountNumber
+  profileModel.value.bankOwnerName = userInfo.bankOwnerName
+  profileModel.value.bankInformation = userInfo.bankInformation
 }
 const setProfileModelData = (userInfo) => {
     profileModelData.value.address = ""
     profileModelData.value.birthday = userInfo.birthday ? moment.utc(userInfo.birthday).format("YYYY-MM-DD") : ""
     profileModelData.value.name = userInfo.fullname
+    profileModelData.value.bankAccountNumber = userInfo.bankAccountNumber
+    profileModelData.value.bankOwnerName = userInfo.bankOwnerName
+    profileModelData.value.bankInformation = userInfo.bankInformation
 }
 const resetProfileModelData = () => {
     profileModelData.value.address = ""
     profileModelData.value.birthday = profileModel.value.birthday ? moment.utc(profileModel.value.birthday).format("YYYY-MM-DD") : ""
     profileModelData.value.name = profileModel.value.name
+    profileModelData.value.bankAccountNumber = profileModel.value.bankAccountNumber
+    profileModelData.value.bankOwnerName = profileModel.value.bankOwnerName
+    profileModelData.value.bankInformation = profileModel.value.bankInformation
     selectedDistrict.value = {
         label: "",
         data: ""
@@ -185,6 +197,9 @@ const onSaveUpdate = () => {
     province: selectedProvince.value.label,
     district: selectedDistrict.value.label,
     ward: selectedWard.value.label,
+    bankAccountNumber: profileModelData.value.bankAccountNumber,
+    bankOwnerName: profileModelData.value.bankOwnerName,
+    bankInformation: profileModelData.value.bankInformation
   }
   const toastId = toast.toastLoadingMessage('Đang cập nhật thông tin của bạn')
   userService
@@ -373,176 +388,7 @@ onMounted(async () => {
           :src="avtImgSrc || profileModel.imageUrl || defaultAvatar"
           alt="avt"
           class="w-40 h-40 border-4 border-white rounded-full" />
-
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
-          <div class="w-full flex flex-col" :class="{ '2xl:w-[40%]': profileModel.role === Role.seller }">
-            <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-              <div class="flex items-center">
-                <div class="text-xl text-gray-900 font-bold mr-3">Thông tin cá nhân</div>
-                <Icon
-                  icon="iconamoon:edit-duotone"
-                  class="text-[26px] text-blue-500 hover:cursor-pointer hover:text-blue-600"
-                  @click="isInEditMode = true" />
-              </div>
-              <ul class="mt-2 text-gray-700">
-                <li class="flex border-y py-2">
-                  <span class="font-bold w-28">Tên:</span>
-                  <input
-                    v-if="isInEditMode"
-                    v-model="profileModelData.name"
-                    type="text"
-                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[60%]" />
-                  <span v-else class="text-gray-700">{{ profileModel.name }}</span>
-                </li>
-                <li class="flex border-b py-2">
-                  <span class="font-bold w-28">Ngày sinh:</span>
-                  <input
-                    v-if="isInEditMode"
-                    v-model="profileModelData.birthday"
-                    type="date"
-                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1" />
-                  <span v-else class="text-gray-700">{{
-                    profileModel.birthday ? moment(profileModel.birthday).format('DD/MM/YYYY HH:MM:ss') : 'N/A'
-                  }}</span>
-                </li>
-                <li class="flex border-b py-2">
-                  <span class="font-bold w-28">Tạo ngày:</span>
-                  <span class="text-gray-700">{{
-                    moment.utc(profileModel.createdAt).format('DD/MM/YYYY HH:MM:ss')
-                  }}</span>
-                </li>
-                <li class="flex border-b py-2">
-                  <span class="font-bold w-28">Điện thoại:</span>
-                  <span class="text-gray-700">{{ profileModel.phone }}</span>
-                </li>
-                <li class="flex border-b py-2">
-                  <span class="font-bold w-28">Email:</span>
-                  <button
-                    v-if="isInEditMode"
-                    @click="onUpdateEmailClick"
-                    class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                    <span>Thay đổi email</span>
-                  </button>
-                  <span v-else class="text-gray-700">{{ profileModel.email || 'N/A' }}</span>
-                </li>
-                <li class="flex border-b py-2">
-                  <span class="font-bold w-28">Địa chỉ:</span>
-                  <div v-if="isInEditMode" class="w-full ml-4">
-                    <input
-                      v-model="profileModelData.address"
-                      type="text"
-                      class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[63%]" />
-                    <div class="flex flex-col w-[full] gap-3 mt-3">
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Tỉnh / Thành phố:</div>
-                        <Dropdown v-model="selectedProvince" :data="provinces" class="!w-[300px]" />
-                      </div>
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Quận / Huyện:</div>
-                        <Dropdown v-model="selectedDistrict" :data="districts" class="!w-[300px]" />
-                      </div>
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Phường / Xã:</div>
-                        <Dropdown v-model="selectedWard" :data="wards" class="!w-[300px]" />
-                      </div>
-                    </div>
-                  </div>
-                  <span v-else class="text-gray-700">{{ profileModel.address || 'N/A' }}</span>
-                </li>
-              </ul>
-              <div class="flex items-center" v-if="isInEditMode">
-                <button
-                  @click="onUpdateCancel"
-                  class="flex items-center bg-[#E4E6EA] hover:!bg-gray-300 text-gray-800 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100 mr-2">
-                  <span>Hủy</span>
-                </button>
-                <button
-                  @click="onSaveUpdate"
-                  class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                  <span>Lưu</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col w-full 2xl:w-2/3">
-            <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-              <div class="flex items-center justify-between">
-                <div class="text-xl text-gray-900 font-bold">Căn cước công dân</div>
-                <div
-                  v-if="profileModel.isCCVerified === true"
-                  class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                  Đã phê duyệt
-                </div>
-                <div v-else class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                  Chưa phê duyệt
-                </div>
-              </div>
-              <div class="flex items-center flex-col md:flex-row gap-4">
-                <div class="w-full md:w-[50%] flex justify-center">
-                  <article
-                    aria-label="File Upload Modal"
-                    class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
-                    :class="{ 'w-[464px] h-[256px]': !profileModel.isCCVerified && !frontImgSrc }">
-                    <input type="file" hidden v-on:change="handleFileFrontUpload($event)" ref="fileFront" />
-                    <section
-                      v-if="!profileModel.isCCVerified && !frontImgSrc"
-                      class="overflow-auto p-8 w-full h-full flex flex-col">
-                      <header
-                        class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
-                          <span>Tải lên <span class="text-red-500">mặt trước</span> căn cước</span>
-                        </div>
-                        <button
-                          @click="$refs.fileFront.click()"
-                          class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
-                          Tải lên
-                        </button>
-                      </header>
-                    </section>
-                    <div v-else class="w-full h-full" @click="profileModel.isCCVerified || $refs.fileFront.click()">
-                      <img :src="profileModel.fileFront || frontImgSrc" alt="mặt trước" />
-                    </div>
-                  </article>
-                </div>
-                <div class="w-full md:w-[50%] flex justify-center">
-                  <article
-                    aria-label="File Upload Modal"
-                    class="relative flex flex-col bg-white shadow-xl rounded-md overflow-hidden"
-                    :class="{ 'w-[464px] h-[256px]': !profileModel.isCCVerified && !backImgSrc }">
-                    <input type="file" hidden v-on:change="handleFileBackUpload($event)" ref="fileBack" />
-                    <section
-                      v-if="!profileModel.isCCVerified && !backImgSrc"
-                      class="overflow-auto p-8 w-full h-full flex flex-col">
-                      <header
-                        class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                        <div class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
-                          <span>Tải lên <span class="text-red-500">mặt sau</span> căn cước</span>
-                        </div>
-                        <button
-                          @click="$refs.fileBack.click()"
-                          class="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">
-                          Tải lên
-                        </button>
-                      </header>
-                    </section>
-                    <div v-else class="w-full h-full" @click="profileModel.isCCVerified || $refs.fileBack.click()">
-                      <img :src="profileModel.fileBack || backImgSrc" alt="Mặt sau" class="object-contain" />
-                    </div>
-                  </article>
-                </div>
-              </div>
-              <div v-if="!profileModel.isCCVerified === true" class="w-full text-center flex justify-center mt-3">
-                <button
-                  @click="() => onPostCCCD()"
-                  class="flex items-center bg-blue-600 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                  <Icon icon="tdesign:upload" />
-                  <span>Gửi yêu cầu kiểm tra căn cước</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button
+          <button
           v-if="isImageUpdating"
           class="flex items-center justify-center w-[300px] bg-blue-400 hover:bg-[#437b9c] text-gray-100 mt-3 px-4 py-2 rounded text-sm space-x-2 transition duration-100 hover:cursor-not-allowed">
           <svg class="animate-spin h-5 w-5 mr-3 !text-white" viewBox="0 0 24 24">
@@ -637,6 +483,36 @@ onMounted(async () => {
                 </div>
               </div>
               <span v-else class="text-gray-700">{{ profileModel.address || 'N/A' }}</span>
+            </li>
+            <li class="flex border-b py-2">
+              <span class="font-bold w-28">Số tài khoản:</span>
+              <input
+                v-if="isInEditMode"
+                v-model="profileModelData.bankAccountNumber"
+                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 px-2" />
+              <span v-else class="text-gray-700">{{
+                profileModel.bankAccountNumber ? profileModel.bankAccountNumber : 'N/A'
+              }}</span>
+            </li>
+            <li class="flex border-b py-2">
+              <span class="font-bold w-28">Tên ngân hàng:</span>
+              <input
+                v-if="isInEditMode"
+                v-model="profileModelData.bankInformation"
+                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 px-2" />
+              <span v-else class="text-gray-700">{{
+                profileModel.bankInformation ? profileModel.bankInformation : 'N/A'
+              }}</span>
+            </li>
+            <li class="flex border-b py-2">
+              <span class="font-bold w-28">Tên chủ khoản:</span>
+              <input
+                v-if="isInEditMode"
+                v-model="profileModelData.bankOwnerName"
+                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 px-2" />
+              <span v-else class="text-gray-700">{{
+                profileModel.bankOwnerName ? profileModel.bankOwnerName : 'N/A'
+              }}</span>
             </li>
           </ul>
           <div class="flex items-center" v-if="isInEditMode">

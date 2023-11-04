@@ -241,7 +241,7 @@ const notiList = computed(() => {
             </RouterLink>
             <Dropdown placement="bottom" text="bottom">
               <template #trigger>
-                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-full">
+                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-[44px] h-[44px]">
                   <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full" />
                 </div>
               </template>
