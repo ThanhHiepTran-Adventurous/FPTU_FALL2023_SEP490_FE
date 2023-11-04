@@ -18,6 +18,7 @@ import OrderTimeline from '../OrderTimeline.vue'
 import { useRouter } from 'vue-router'
 import ShipRequestService from '@/services/shiprequest.service'
 import toastOption from '@/utils/toast-option'
+import withdraw from '../../services/withdraw.service'
 
 const router = useRouter()
 
@@ -67,8 +68,15 @@ const filterData = async () => {
 }
 
 // Business functions
-const handleDepositRequest = () => {
-  // deposit request code here
+const handleDepositRequest = async orderId => {
+  try {
+    const response = await withdraw.sellerWithdrwaOpt2(orderId)
+    toastOption.toastSuccess('Tạo yêu cầu rút tiền thành công')
+    console.log(response)
+  } catch (error) {
+    toastOption.toastError('Tạo yêu cầu rút tiền thất bại')
+    console.error('Error creating ship request:', error)
+  }
 }
 const handleCreateShipRequest = async orderId => {
   try {
@@ -217,7 +225,7 @@ onMounted(() => {
               detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value ||
               detail?.statusOrder === OrderStatus.DONE.value
             "
-            @on-click="handleDepositRequest">
+            @on-click="handleDepositRequest(detail?.id)">
             <div class="flex items-center">
               <div>Yêu cầu rút tiền</div>
             </div>

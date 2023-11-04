@@ -70,9 +70,9 @@ export default {
       buyNow: 'auctions/{auctionId}/direct-purchase-auction',
     },
     guest: {
-      auctions: 'guest/auctions',
-      auctionDetail: 'guest/{id}/auction-detail',
-      auctionHistory: 'guest/auction/{auctionId}',
+      auctions: 'guest/auctions-guest',
+      auctionDetail: 'guest/{id}/auction-detail-guest',
+      auctionHistory: 'guest/auction-guest/{auctionId}',
     },
     chart: {
       countSeller: 'charts/countSellerInSystem',
@@ -119,6 +119,12 @@ export default {
       staffConfirmShipRequest: 'shipRequest/staff/confirm-to-waiting-for-delivery/{shipRequestId}',
       StaffChangeShipRequestToOnDelivery: 'shipRequest/staff/change-to-on-delivery/{shipRequestId}',
       StaffChangeShipRequestToDelivered: 'shipRequest/staff/change-to-delivered/{shipRequestId}',
+    },
+    withdrawAndRefunds: {
+      getAllWithdraws: 'withdrawAndRefunds',
+      adminConfirmSellerwithdrawOpt2:
+        'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-withdraw-request-option-two',
+      sellerWithdrwaOpt2: 'withdrawAndRefunds/seller/{orderId}/create-withdraw-request-option-two',
     },
   },
 }

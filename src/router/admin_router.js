@@ -4,6 +4,7 @@ import AdminManageUsers from '@/views/admin/AdminManageUsers.vue'
 import AdminManageBrands from '@/views/admin/AdminManageBrands.vue'
 import AdminManageCategories from '@/views/admin/AdminManageCategories.vue'
 import AdminReviewAuctions from '@/views/admin/AdminReviewAuctions.vue'
+import AdminManageWitdraw from '@/views/admin/AdminManageWithdraw.vue'
 // Import other admin views as needed
 
 const admin_router = [
@@ -47,6 +48,15 @@ const admin_router = [
     name: 'admin-review-auctions',
     path: '/admin/review-auctions',
     component: AdminReviewAuctions,
+    // meta: {
+    //   requiresAuth: true,
+    //   roles: [ENUM.ADMIN.ROLE_ID],
+    // },
+  },
+  {
+    name: 'admin-manage-withdraw',
+    path: '/admin/manage-withdraw',
+    component: AdminManageWitdraw,
     // meta: {
     //   requiresAuth: true,
     //   roles: [ENUM.ADMIN.ROLE_ID],
