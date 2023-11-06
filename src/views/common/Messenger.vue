@@ -14,7 +14,9 @@ import { Tooltip } from 'ant-design-vue';
 import BuyerOrderDetailModal from "@/components/messenger/BuyerOrderDetailModal.vue";
 import SellerOrderDetailModal from "@/components/messenger/SellerOrderDetailModal.vue";
 import orderService from "@/services/order.service";
+import reportService from "@/services/report.service";
 import toastOption from "@/utils/toast-option";
+import ReportModal from "@/components/ReportModal.vue";
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -38,6 +40,7 @@ const isBuyerModalDetailShowing = ref(false)
 const isSellerModalDetailShowing = ref(false)
 const isBuyerUpdating = ref(false)
 const isSellerUpdating = ref(false)
+const isReportModalOpen = ref(false)
 
 const curRole = computed(() => {
   return userStore.getRoleAndGetFromLocalStorageIfNotExist()
@@ -55,6 +58,39 @@ const closeSellerModal = () => {
 const openSellerModal = () => {
   isSellerModalDetailShowing.value = true
 }
+const openReportModal = () => {
+  isReportModalOpen.value = true
+}
+const closeReportModal = () => {
+  isReportModalOpen.value = false
+}
+
+const onReportModalConfirm = (listImg, text) => {
+  if(!text || !text.trim()){
+    toastOption.toastError("Bạn phải nhập nội dung tố cáo!")
+  }
+  isReportModalOpen.value = false
+  if(curRole.value === Role.buyer.value){
+    reportInBuyerRole(listImg, text)
+    return
+  }
+  if(curRole.value === Role.seller.value){
+    reportInSellerRole(listImg, text)
+  }
+}
+
+const reportInBuyerRole = (listImg, text) => {
+  reportService.buyerReportSellerOption1(orderDetail.value.id, listImg, text)
+  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
+  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+}
+const reportInSellerRole = (listImg, text) => {
+  reportService.sellerReportBuyerOption1(orderDetail.value.id, listImg, text)
+  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
+  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+}
+
+
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
   if (role === Role.admin.value) {
@@ -233,7 +269,7 @@ onBeforeUnmount(() => {
               </div>
               <div class="flex flex-col space-y-1 mt-4">
                 <!-- For seller only -->
-                <button v-if="curRole === Role.seller.value" @click="isSellerModalDetailShowing = true"
+                <button v-if="curRole === Role.seller.value" @click="openSellerModal()"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Cập nhật thông tin đơn hàng
                 </button>
@@ -253,6 +289,7 @@ onBeforeUnmount(() => {
                   Đã nhận hàng
                 </button>
                 <button
+                  @click="openReportModal"
                   class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
                   Tố cáo
                 </button>
@@ -350,5 +387,6 @@ onBeforeUnmount(() => {
       @update-status="onChangeStatus"
       @update-detail="onUpdateDetail"
     />
+    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm"/>
   </div>
 </template>

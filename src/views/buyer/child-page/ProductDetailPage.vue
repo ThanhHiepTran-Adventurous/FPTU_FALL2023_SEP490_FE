@@ -124,12 +124,8 @@ onBeforeUnmount(() => {
       <Breadcrumb :items="breadcrumbItems" />
       <div class="grid gap-8 lg:grid-cols-2">
         <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <div class="">
-            <div class="">
-              <!-- <ListProductImage :images="auction?.product?.imageUrls" /> -->
-              <!-- <Carousel :pictures="convertedImages"></Carousel> -->
-            </div>
-            <div class="">
+          <div>
+            <div>
               <ProductInfo
                 :auction-info="auction"
                 @place-bid-success="fetchPageData()"
@@ -139,49 +135,11 @@ onBeforeUnmount(() => {
           </div>
         </article>
         <article class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-          <div class="">
+          <div>
             <AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
           </div>
         </article>
       </div>
     </div>
   </section>
-  <!-- <div class="p-4">
-    <div class="">
-      <Breadcrumb :items="breadcrumbItems" />
-      <div class="pt-3 w-full xl:flex gap-3">
-        <div class="flex items-start w-full xl:w-[80%] rounded-md pt-2 !bg-white">
-          <div class="hidden-xs w-[100%] px-2 pt-16">
-            <ListProductImage :images="auction?.product?.imageUrls" />
-            <Carousel :pictures="convertedImages"></Carousel>
-          </div>
-          <div class="pl-5 border-l-[1px]">
-            <ProductInfo
-              :auction-info="auction"
-              @place-bid-success="fetchPageData()"
-              @buy-now-success="onBuyNowSuccess()" />
-          </div>
-        </div>
-        <div class="flex items-start rounded-md !bg-white xl:mt-0 mt-2 w-full xl:w-[50%]">
-          <AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
-        </div>
-      </div>
-
-      <div class="text-xl mt-8">SẢN PHẨM KHÁC</div>
-      <div class="mt-3 bg-white py-2 rounded-lg">
-        <div class="flex gap-9 justify-around container mx-auto">
-          <ItemBox
-            product-name="Super long long long long name long long long long"
-            item-id="1"
-            :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-          <ItemBox product-name="Super long long long" item-id="1" :time-remain="999999" />
-        </div>
-      </div>
-    </div>
-  </div> -->
 </template>

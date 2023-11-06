@@ -106,8 +106,8 @@ export default {
       updateAdressSellerOpt1: 'orders/{orderId}/edited-Order-Option-One',
     },
     chat: {
-      getAllMessages: 'chatMessage/listMessage/{groupId}',
-      getChatGroupInfo: 'messageWebSocket/chat-group-info/{chatGroupId}',
+      getAllMessages: 'messageWebSocket/listMessageV2/{groupId}',
+      getChatGroupInfo: 'messageWebSocket/chat-group-infoV2/{chatGroupId}',
     },
     system: {
       getAllConfigData: 'systemConfig/getListSystemConfig',
@@ -125,6 +125,11 @@ export default {
       adminConfirmSellerwithdrawOpt2:
         'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-withdraw-request-option-two',
       sellerWithdrwaOpt2: 'withdrawAndRefunds/seller/{orderId}/create-withdraw-request-option-two',
+    },
+    report: {
+      buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
+      sellerReportBuyerOpt1: 'report/seller/report-buyer-option1/{orderId}',
+      getAllReportData: 'report'
     },
   },
 }

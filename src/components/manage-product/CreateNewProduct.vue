@@ -39,7 +39,7 @@ const onSubmit = async () => {
     validate.value = false
     return
   }
-  if ((validate.value = true)) {
+  if ((validate.value === true)) {
     const form = new FormData()
 
     const addProductRequest = {

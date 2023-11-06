@@ -44,7 +44,7 @@ const props = defineProps({
   },
   hasShipRequest: {
     type: Boolean,
-    required: true,
+    default: false,
   },
 })
 const shipStatus = ref('')
@@ -74,7 +74,9 @@ const getShipRequestByOrderId = async orderId => {
 }
 
 onMounted(() => {
+  if(props.hasShipRequest === true){
     getShipRequestByOrderId(props.orderId)
+  }
 })
 
 </script>
@@ -87,7 +89,7 @@ onMounted(() => {
       <a class="block w-[220px] h-[210px] overflow-hidden relative">
         <span class="tt-img absolute top-0 left-0">
           <img :src="props.mainImage" :data-src="props.mainImage" alt="" />
-          <p
+          <div
             v-if="props.hasShipRequest && props.auctionType === 'INTERMEDIATE'"
             :class="{'text-gray-700 font-semibold absolute top-0 left-0 m-2':shipStatus==='WAITING_FOR_CONFIRMATION',
             'text-yellow-700 font-semibold absolute top-0 left-0 m-2':shipStatus==='WAITING_FOR_DELIVERY',
@@ -125,7 +127,7 @@ onMounted(() => {
                       ? 'Đã giao hàng'
                       : shipStatus }}
             </div>          
-          </p>
+          </div>
         </span>
         <span class="tt-img-roll-over absolute top-0 left-0">
           <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="" />

@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ItemBox from '@/components/common-components/item-box/ItemBox.vue'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import Slider from '@vueform/slider'
 import currencyFormat from '@/utils/currency-output-formatter.js'
@@ -85,6 +85,10 @@ onMounted(async () => {
   fetchAuctions()
 })
 
+watch(orderSelected, () => {
+  onFilter()
+})
+
 const onFilter = async () => {
   const queryFilters = []
   queryFilters.push('status:IN_PROCESS')
@@ -119,7 +123,6 @@ const onFilter = async () => {
     d6: 'startPrice:desc',
   }
   const sort = sortOptions[orderSelected.value.data] || ''
-  console.log(sort)
   // Call the API with the selected filters
   const auctionsData = await auctionService.getAllActiveAuctions(query, sort)
   // console.log(auctionsData.data)
