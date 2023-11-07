@@ -114,7 +114,7 @@ export default {
     },
     ship: {
       sellerCreateShipRequest: 'shipRequest/seller/create-ship-request/{orderId}',
-      getAllShipRequest: 'shipRequest',
+      getAllShipRequest: 'shipRequest/get-ship-request-not-login',
       cancelShipRequest: '',
       staffConfirmShipRequest: 'shipRequest/staff/confirm-to-waiting-for-delivery/{shipRequestId}',
       StaffChangeShipRequestToOnDelivery: 'shipRequest/staff/change-to-on-delivery/{shipRequestId}',
@@ -129,7 +129,7 @@ export default {
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
       sellerReportBuyerOpt1: 'report/seller/report-buyer-option1/{orderId}',
-      getAllReportData: 'report'
+      getAllReportData: 'report',
     },
   },
 }

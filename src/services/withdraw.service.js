@@ -7,7 +7,7 @@ const adminConfirmSellerwithdrawOpt2 = async withdrawAndRefundRequestsId => {
     withdrawAndRefundRequestsId,
   )
   try {
-    const response = await utils.axiosLocalHost.post(serviceUrl)
+    const response = await utils.axiosLocalHost.put(serviceUrl)
     return response ? response.data : response
   } catch (error) {
     console.error('Error processing adminConfirmSellerwithdrawOpt2:', error)
