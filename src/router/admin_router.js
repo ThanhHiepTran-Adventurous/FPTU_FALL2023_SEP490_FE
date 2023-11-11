@@ -5,6 +5,8 @@ import AdminManageBrands from '@/views/admin/AdminManageBrands.vue'
 import AdminManageCategories from '@/views/admin/AdminManageCategories.vue'
 import AdminReviewAuctions from '@/views/admin/AdminReviewAuctions.vue'
 import AdminManageWitdraw from '@/views/admin/AdminManageWithdraw.vue'
+import AdminManageTransaction from '@/views/admin/AdminManageTransaction.vue'
+
 // Import other admin views as needed
 
 const admin_router = [
@@ -57,6 +59,15 @@ const admin_router = [
     name: 'admin-manage-withdraw',
     path: '/admin/manage-withdraw',
     component: AdminManageWitdraw,
+    // meta: {
+    //   requiresAuth: true,
+    //   roles: [ENUM.ADMIN.ROLE_ID],
+    // },
+  },
+  {
+    name: 'admin-manage-transaction',
+    path: '/admin/manage-transaction',
+    component: AdminManageTransaction,
     // meta: {
     //   requiresAuth: true,
     //   roles: [ENUM.ADMIN.ROLE_ID],

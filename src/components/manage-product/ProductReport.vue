@@ -1,15 +1,13 @@
 <script setup>
-import StaffHeader from '@/views/staff/common/StaffHeader.vue'
-import reportService from '@/services/report.service'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-
+import reportService from '@/services/report.service'
 const reportList = ref([])
 const itemsPerPage = 4
 const currentPage = ref(1)
-const getAllReportStaff = async () => {
+const getAllReport = async () => {
   try {
-    const response = await reportService.getAllReportDataStaff()
+    const response = await reportService.getAllReportDataBuyerOrSeller()
     reportList.value = response.data
     console.log(reportList.value)
   } catch (e) {
@@ -17,11 +15,11 @@ const getAllReportStaff = async () => {
   }
 }
 onMounted(() => {
-  getAllReportStaff()
+  getAllReport()
 })
 
 const totalPages = computed(() => {
-  return Math.ceil(reportList.value.length / itemsPerPage)
+  return Math.ceil(reportList.value?.length / itemsPerPage)
 })
 // Function to go to a specific page
 const goToPage = page => {
@@ -45,13 +43,12 @@ const paginatedReportList = computed(() => {
   // Move startIndex and endIndex calculation here
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return reportList.value.slice(startIndex, endIndex)
+  return reportList.value?.slice(startIndex, endIndex)
 })
 </script>
 
 <template>
-  <StaffHeader />
-  <section class="bg-white ml-20 mt-5 p-3 sm:p-5">
+  <section class="bg-white mt-2 p-3 sm:p-5">
     <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
       <!-- Start coding here -->
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">

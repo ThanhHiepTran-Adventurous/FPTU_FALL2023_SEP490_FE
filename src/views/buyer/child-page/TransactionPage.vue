@@ -4,25 +4,27 @@ import BoughtNav from '../BoughtNav.vue'
 import { buyerTabs } from '@/common/constant'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-import reportService from '@/services/report.service'
-const reportList = ref([])
+import PaymentService from '@/services/payment.service'
+import formatCurrency from '@/utils/currency-output-formatter'
+
+const transactionList = ref([])
 const itemsPerPage = 4
 const currentPage = ref(1)
-const getAllReport = async () => {
+const getAllTransaction = async () => {
   try {
-    const response = await reportService.getAllReportDataBuyerOrSeller()
-    reportList.value = response.data
-    console.log(reportList.value)
+    const response = await PaymentService.getTransactionBuyerSeller()
+    transactionList.value = response.data
+    console.log(transactionList.value)
   } catch (e) {
     console.error(e)
   }
 }
 onMounted(() => {
-  getAllReport()
+  getAllTransaction()
 })
 
 const totalPages = computed(() => {
-  return Math.ceil(reportList.value?.length / itemsPerPage)
+  return Math.ceil(transactionList.value?.length / itemsPerPage)
 })
 // Function to go to a specific page
 const goToPage = page => {
@@ -42,11 +44,11 @@ const goToNextPage = () => {
     currentPage.value += 1
   }
 }
-const paginatedReportList = computed(() => {
+const paginatedTransactionList = computed(() => {
   // Move startIndex and endIndex calculation here
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return reportList.value?.slice(startIndex, endIndex)
+  return transactionList.value?.slice(startIndex, endIndex)
 })
 const breadcrumbItems = [
   {
@@ -56,7 +58,7 @@ const breadcrumbItems = [
   },
   {
     text: 'Đã mua',
-    to: '/reports',
+    to: '/TransactionPage',
     disabled: true,
   },
 ]
@@ -66,7 +68,7 @@ const breadcrumbItems = [
     <div class="mt-3 mb-3 container mx-auto">
       <Breadcrumb :items="breadcrumbItems" />
     </div>
-    <BoughtNav :cur-tab="buyerTabs.reported.value" />
+    <BoughtNav :cur-tab="buyerTabs.transaction.value" />
     <section class="bg-white mt-2 p-3 sm:p-5">
       <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
         <!-- Start coding here -->
@@ -80,34 +82,36 @@ const breadcrumbItems = [
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Người tố cáo</th>
-                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Người bị tố cáo</th>
-                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do tố cáo</th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Họ và tên</th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Số tiền</th>
+                  <th scope="col" class="px-6 py-3 whitespace-nowrap">Thể loại</th>
                   <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                   <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
-
                   <th scope="col" class="px-6 py-3">
                     <span class="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(report, index) in paginatedReportList" :key="index" class="border-b dark:border-gray-700">
+                <tr
+                  v-for="(trans, index) in paginatedTransactionList"
+                  :key="index"
+                  class="border-b dark:border-gray-700">
                   <th scope="row" class="px-6 py-4 font-normal text-gray-500 dark:text-white">
-                    {{ report?.fromUserReport?.fullname }}
+                    {{ trans?.userPayment?.fullname }}
                   </th>
                   <td class="px-4 py-3">
-                    <div class="font-normal text-gray-500">{{ report?.toUserReport?.fullname }}</div>
+                    <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
                   </td>
                   <td class="px-4 py-3">
-                    <div class="font-normal text-gray-500">{{ report?.content }}</div>
+                    <div class="font-normal text-gray-500">{{ trans?.type }}</div>
                   </td>
                   <td class="px-4 py-3">
-                    <div class="font-normal text-gray-500">{{ report?.status }}</div>
+                    <div class="font-normal text-gray-500">{{ trans?.status }}</div>
                   </td>
 
                   <td class="px-4 py-3">
-                    {{ report?.createAt ? moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
+                    {{ trans?.transactionDate ? moment.utc(trans?.transactionDate).format('DD/MM/YYYY HH:mm:ss') : '' }}
                   </td>
                   <td class="px-4 py-3 flex items-center justify-end">
                     <button

@@ -278,6 +278,26 @@ const userStore = useUserStore()
               <span class="flex-1 ml-3 text-left whitespace-nowrap">Yêu cầu rút tiền</span>
             </RouterLink>
           </li>
+          <li>
+            <RouterLink
+              to="/admin/manage-transaction"
+              class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 20">
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h6m-6 4h6m-6 4h6M1 1v18l2-2 2 2 2-2 2 2 2-2 2 2V1l-2 2-2-2-2 2-2-2-2 2-2-2Z" />
+              </svg>
+              <span class="flex-1 ml-3 text-left whitespace-nowrap">Lịch sử giao dịch</span>
+            </RouterLink>
+          </li>
         </ul>
       </div>
     </aside>

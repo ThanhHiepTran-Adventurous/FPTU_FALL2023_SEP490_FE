@@ -10,6 +10,7 @@ import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
 import ReportUserPage from '@/views/buyer/child-page/ReportUserPage.vue'
 import OrdersPage from '@/views/buyer/child-page/OrdersPage.vue'
 import ReportPage from '@/views/buyer/child-page/ReportPage.vue'
+import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
 const buyer_router = [
   {
@@ -34,7 +35,7 @@ const buyer_router = [
           roles: [ENUM.BUYER.ROLE_ID],
         },
       },
-        {
+      {
         name: 'report-page',
         path: '/report/:id',
         component: ReportUserPage,
@@ -54,22 +55,27 @@ const buyer_router = [
       {
         name: 'bought',
         path: '/bought',
-        component: BoughtPage
+        component: BoughtPage,
       },
       {
         name: 'orders',
         path: '/orders',
-        component: OrdersPage
+        component: OrdersPage,
       },
       {
         name: 'reports',
         path: '/reports',
-        component: ReportPage
+        component: ReportPage,
       },
       {
         name: 'refunds',
         path: '/refunds',
-        component: RefundPage
+        component: RefundPage,
+      },
+      {
+        name: 'transaction',
+        path: '/transaction',
+        component: TransactionPage,
       },
       {
         name: 'wishlist',
@@ -106,7 +112,7 @@ const buyer_router = [
     meta: {
       requiresAuth: false,
     },
-  }
+  },
 ]
 
 export default buyer_router

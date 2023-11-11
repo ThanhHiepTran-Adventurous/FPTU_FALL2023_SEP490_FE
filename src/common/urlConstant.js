@@ -91,6 +91,8 @@ export default {
     transaction: {
       option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
       paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay',
+      getTransactionAdmin: 'transaction/admin/transactionsOfUser',
+      getTransactionBuyerSeller: 'transaction/transactionsOfUser',
     },
     notification: {
       getAllNoti: 'notification/list-top-10-notification-user',
@@ -129,7 +131,9 @@ export default {
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
       sellerReportBuyerOpt1: 'report/seller/report-buyer-option1/{orderId}',
-      getAllReportData: 'report',
+      getAllReportDataAdmin: 'report',
+      getAllReportDataBuyerOrSeller: 'report/sellerOrBuyer/getAllReport',
+      getAllReportDataStaff: 'report/staff/getAllReport',
     },
   },
 }

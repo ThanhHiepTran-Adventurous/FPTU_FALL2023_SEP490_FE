@@ -28,6 +28,10 @@ export const buyerTabs = {
     value: 'Đề nghị trả hàng',
     navLink: '/refunds',
   },
+  transaction: {
+    value: 'Lịch sử giao dịch',
+    navLink: '/transaction',
+  },
 }
 
 export const defaultRoute = {
