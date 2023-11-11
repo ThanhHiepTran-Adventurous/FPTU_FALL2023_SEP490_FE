@@ -20,6 +20,7 @@ const showPaymentModel = ref(false)
 import { buyerTabs } from '@/common/constant'
 import SideBarLayout from '../../SideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
+import AuctionCard from '@/components/AuctionCard.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -71,8 +72,8 @@ const breadcrumbItems = [
     disabled: false,
   },
   {
-    text: 'Đã mua',
-    to: '/bought',
+    text: 'Thắng đấu giá',
+    to: '/bought/intermediate',
     disabled: true,
   },
 ]
@@ -89,7 +90,7 @@ const options = ref([
     value: AuctionModelType.intermediate,
   },
 ])
-const OpenPaymentModel = autionId => {
+const openPaymentModel = autionId => {
   showPaymentModel.value = true
   autionIdd = autionId
 }
@@ -190,18 +191,26 @@ watch(selectedDistrict, async () => {
 
 <template>
   <div class="w-full">
-    <div class="mt-3 mb-3 container mx-auto">
+    <div class="pt-2 pb-2 container mx-auto">
       <Breadcrumb :items="breadcrumbItems" />
     </div>
     <SideBarLayout :cur-tab="buyerTabs.bought.value">
-      <div class="bg-white container mx-auto rounded min-h-[80vh]">
-        <div class="mb-2 mx-3 pt-3">
-          <div class="flex items-center gap-5">
+      <div class="bg-white container mx-auto rounded min-h-[80vh] w-full">
+        <!-- Header -->
+        <div class="pt-3 px-3 pb-1 flex items-center justify-between">
+          <div class="font-bold text-2xl text-black text-blue-800">
+            Sản phẩm thắng đấu giá</div>
+          <div>
             <TwoOptionsTab
               immediate-option-nav="/bought/immediate"
               intermediate-option-nav="/bought/intermediate"
               :cur-tab="AuctionModelType.intermediate"
             />
+          </div>
+        </div>
+        <!-- Filter -->
+        <div class="mb-2 mx-3 pt-3">
+          <div class="flex items-center gap-5">
             <div class="w-full">
               <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
             </div>
@@ -209,41 +218,15 @@ watch(selectedDistrict, async () => {
         </div>
 
         <div class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
-          <div v-for="auction in auctionWinFiltered" :key="auction.id"
-            class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-            <div class="pl-2">
-              <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                :src="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)" alt="" />
-            </div>
-            <div class="flex flex-col justify-between p-4 leading-normal">
-              <div class="text-xl font-semibold mb-1 tracking-tight text-gray-900 dark:text-white">
-                {{ auction.informationAuction.product.name }}
-              </div>
-              <AuctionType :type="auction.informationAuction.modelType" />
-              <div class="font-normal text-gray-700 dark:text-gray-400 mt-6 flex items-center">
-                <span>Giá đạt được: </span>
-                <span class="text-blue-600 text-2xl font-semibold ml-3">{{ formatCurrency(auction.finalPrice) }}</span>
-              </div>
-              <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                Đạt được lúc:
-                <span class="text-blue-600">{{ moment.utc(auction.winAt).format('DD/MM/YYYY HH:mm:ss') }}</span>
-              </div>
-              <div v-if="auction.informationAuction.modelType === AuctionModelType.immediate"
-                class="bg-blue-600 text-white rounded-lg px-6 py-2 flex items-center !w-[180px]">
-                <div>
-                  <Icon icon="ic:outline-chat" class="text-[24px] mr-3" />
-                </div>
-                <div class="text-lg">Liên hệ</div>
-              </div>
-              <div v-else>
-                <button type="button" @click="OpenPaymentModel(auction.informationAuction.id)"
-                  class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover-bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                  <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[24px] mr-3" />
-                  <span class="text-lg w-max">Thanh toán</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <AuctionCard
+            v-for="auction in auctionWinFiltered" :key="auction.id"
+            :image-url="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)"
+            :product-name="auction.informationAuction.product.name"
+            :auction-type="auction.informationAuction.modelType"
+            :price="auction.finalPrice"
+            :catched-at="auction.winAt"
+            @action-triggered="openPaymentModel(auction.informationAuction.id)"
+          />
         </div>
       </div>
     </SideBarLayout>

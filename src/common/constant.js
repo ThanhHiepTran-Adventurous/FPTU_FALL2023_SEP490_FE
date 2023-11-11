@@ -20,7 +20,7 @@ export const buyerTabs = {
   order: {
     value: 'Lịch sử Đơn hàng',
     icon: 'fluent-mdl2:product-release',
-    navLink: '/orders',
+    navLink: '/orders/immediate',
   },
   reported: {
     value: 'Lịch sử báo cáo',
@@ -34,6 +34,7 @@ export const buyerTabs = {
   },
   transaction: {
     value: 'Lịch sử giao dịch',
+    icon: 'icon-park-outline:transaction',
     navLink: '/transaction',
   },
   favorites: {
