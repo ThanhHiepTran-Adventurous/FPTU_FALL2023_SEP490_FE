@@ -2,6 +2,7 @@
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import BoughtNav from '../BoughtNav.vue';
 import { buyerTabs } from '@/common/constant';
+import SideBarLayout from '../SideBarLayout.vue';
 
 const breadcrumbItems = [
   {

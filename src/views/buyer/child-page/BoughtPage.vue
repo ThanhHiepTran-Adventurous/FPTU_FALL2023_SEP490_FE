@@ -20,6 +20,7 @@ import urlConstant from '@/common/urlConstant'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 const showPaymentModel = ref(false)
 import { buyerTabs } from '@/common/constant'
+import SideBarLayout from '../SideBarLayout.vue'
 
 const route = useRoute()
 const router = useRouter()

@@ -13,24 +13,33 @@ export default {
 
 export const buyerTabs = {
   bought: {
-    value: 'Sản phẩm thắng đấu giá',
+    value: 'Thắng đấu giá',
+    icon: 'streamline:computer-desktop-check-success-approve-device-display-desktop-computer',
     navLink: '/bought',
   },
   order: {
     value: 'Lịch sử Đơn hàng',
+    icon: 'fluent-mdl2:product-release',
     navLink: '/orders',
   },
   reported: {
     value: 'Lịch sử báo cáo',
+    icon: 'fluent-mdl2:report-warning',
     navLink: '/reports',
   },
   refundRequest: {
     value: 'Đề nghị trả hàng',
+    icon: 'akar-icons:arrow-back',
     navLink: '/refunds',
   },
   transaction: {
     value: 'Lịch sử giao dịch',
     navLink: '/transaction',
+  },
+  favorites: {
+    value: 'Yêu thích',
+    icon: 'streamline:interface-favorite-heart-reward-social-rating-media-heart-it-like-favorite-love',
+    navLink: '/favorites',
   },
 }
 

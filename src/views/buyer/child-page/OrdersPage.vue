@@ -15,6 +15,7 @@ import ItemOrder from '@/components/common-components/item-box/ItemOrder.vue'
 import OrderTimeline from '@/components/OrderTimeline.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import BoughtNav from '../BoughtNav.vue'
+import SideBarLayout from '../SideBarLayout.vue'
 
 const orders = ref([])
 const ordersFiltered = ref([])
