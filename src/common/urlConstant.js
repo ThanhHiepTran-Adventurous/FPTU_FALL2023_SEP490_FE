@@ -73,6 +73,8 @@ export default {
       auctions: 'guest/auctions-guest',
       auctionDetail: 'guest/{id}/auction-detail-guest',
       auctionHistory: 'guest/auction-guest/{auctionId}',
+      categories: 'guest/categories-guest',
+      brands: 'guest/brands-guest'
     },
     chart: {
       countSeller: 'charts/countSellerInSystem',

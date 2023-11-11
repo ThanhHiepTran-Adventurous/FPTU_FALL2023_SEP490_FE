@@ -7,18 +7,8 @@ const getAllReportData = async () => {
   return response ? response.data : response
 }
 
-const sellerReportBuyerOption1 = async (orderId, imgList, reportText) => {
-  const serviceUrl = url.endpoint.report.sellerReportBuyerOpt1.replace('{orderId}', orderId)
-  const formData = new FormData()
-  const jsonData = {
-    content: reportText,
-  }
-  const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' })
-
-  for (const imgData of imgList) {
-    formData.append('reportImages', imgData)
-  }
-  formData.append('createReportRequest', jsonBlob)
+const sellerReportBuyerOption1 = async (orderId, formData) => {
+  const serviceUrl = url.endpoint.report.sellerReportBuyerOpt1.replace("{orderId}", orderId)
 
   const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
     headers: {
@@ -28,18 +18,8 @@ const sellerReportBuyerOption1 = async (orderId, imgList, reportText) => {
   return response ? response.data : response
 }
 
-const buyerReportSellerOption1 = async (orderId, imgList, reportText) => {
-  const serviceUrl = url.endpoint.report.buyerReportSellerOpt1.replace('{orderId}', orderId)
-  const formData = new FormData()
-  const jsonData = {
-    content: reportText,
-  }
-  const jsonBlob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' })
-
-  for (const imgData of imgList) {
-    formData.append('reportImages', imgData)
-  }
-  formData.append('createReportRequest', jsonBlob)
+const buyerReportSellerOption1 = async (orderId, formData) => {
+  const serviceUrl = url.endpoint.report.buyerReportSellerOpt1.replace("{orderId}", orderId)
 
   const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
     headers: {

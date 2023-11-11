@@ -53,7 +53,7 @@ const itemsPerPage = 10
 const currentPage = ref(1)
 const totalAuctions = ref(1)
 const fetchBrandsData = async () => {
-  const brands = await brandService.getAllBrands()
+  const brands = await brandService.getAllBrandsGuest()
   brandOptions.value = brands.data.map(d => {
     return {
       label: d.name,
@@ -63,7 +63,7 @@ const fetchBrandsData = async () => {
   })
 }
 const fetchCategoriesData = async () => {
-  const categories = await categoryService.getAllCategories()
+  const categories = await categoryService.getAllCategoriesGuest()
 
   categoryOptions.value = await categories.data.map(d => {
     return {

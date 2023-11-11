@@ -70,22 +70,36 @@ const onReportModalConfirm = (listImg, text) => {
     toastOption.toastError("Bạn phải nhập nội dung tố cáo!")
   }
   isReportModalOpen.value = false
+
+  // Prepare data
+  const formData = new FormData()
+  const jsonData = {
+    content: text
+  }
+
+  for(const imgData of listImg){
+    formData.append("reportImages", imgData)
+  }
+  formData.append("createReportRequest", new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
+
+  console.log(formData)
+
   if(curRole.value === Role.buyer.value){
-    reportInBuyerRole(listImg, text)
+    reportInBuyerRole(formData)
     return
   }
   if(curRole.value === Role.seller.value){
-    reportInSellerRole(listImg, text)
+    reportInSellerRole(formData)
   }
 }
 
-const reportInBuyerRole = (listImg, text) => {
-  reportService.buyerReportSellerOption1(orderDetail.value.id, listImg, text)
+const reportInBuyerRole = formData => {
+  reportService.buyerReportSellerOption1(orderDetail.value.id, formData)
   .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
   .catch(_ => toastOption.toastError("Tố cáo thất bại."))
 }
-const reportInSellerRole = (listImg, text) => {
-  reportService.sellerReportBuyerOption1(orderDetail.value.id, listImg, text)
+const reportInSellerRole = formData => {
+  reportService.sellerReportBuyerOption1(orderDetail.value.id, formData)
   .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
   .catch(_ => toastOption.toastError("Tố cáo thất bại."))
 }
