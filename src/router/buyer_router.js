@@ -54,11 +54,6 @@ const buyer_router = [
         },
       },
       {
-<<<<<<< HEAD
-        name: 'bought',
-        path: '/bought',
-        component: BoughtPage,
-=======
         name: 'bought-intermediate',
         path: '/bought/intermediate',
         component: BoughtPageIntermediate
@@ -67,7 +62,6 @@ const buyer_router = [
         name: 'bought-immediate',
         path: '/bought/immediate',
         component: BoughtPageImmediate
->>>>>>> bffcc8f (improve UI)
       },
       {
         name: 'orders',
