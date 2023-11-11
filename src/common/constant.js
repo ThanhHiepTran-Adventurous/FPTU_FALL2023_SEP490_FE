@@ -15,7 +15,7 @@ export const buyerTabs = {
   bought: {
     value: 'Thắng đấu giá',
     icon: 'streamline:computer-desktop-check-success-approve-device-display-desktop-computer',
-    navLink: '/bought',
+    navLink: '/bought/immediate',
   },
   order: {
     value: 'Lịch sử Đơn hàng',

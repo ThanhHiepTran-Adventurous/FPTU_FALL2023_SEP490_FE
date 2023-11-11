@@ -2,13 +2,14 @@ import ENUM from '@/common/enum.js'
 import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
-import BoughtPage from '@/views/buyer/child-page/BoughtPage.vue'
+import BoughtPageIntermediate from '@/views/buyer/child-page/bought_page/BoughtPageIntermediate.vue'
+import BoughtPageImmediate from '@/views/buyer/child-page/bought_page/BoughtPageImmediate.vue'
 import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
 import ReportUserPage from '@/views/buyer/child-page/ReportUserPage.vue'
-import OrdersPage from '@/views/buyer/child-page/OrdersPage.vue'
+import OrdersPage from '@/views/buyer/child-page/order_page/OrdersPage.vue'
 import ReportPage from '@/views/buyer/child-page/ReportPage.vue'
 import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
@@ -53,9 +54,20 @@ const buyer_router = [
         },
       },
       {
+<<<<<<< HEAD
         name: 'bought',
         path: '/bought',
         component: BoughtPage,
+=======
+        name: 'bought-intermediate',
+        path: '/bought/intermediate',
+        component: BoughtPageIntermediate
+      },
+      {
+        name: 'bought-immediate',
+        path: '/bought/immediate',
+        component: BoughtPageImmediate
+>>>>>>> bffcc8f (improve UI)
       },
       {
         name: 'orders',

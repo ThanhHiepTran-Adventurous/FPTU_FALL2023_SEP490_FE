@@ -1,6 +1,6 @@
 <template>
     <nav class="flex" aria-label="Breadcrumb">
-        <ol role="list" class="flex items-center space-x-2">
+        <ol role="list" class="flex items-center space-x-2 !mb-0">
             <li v-for="(item, index) in items" :key="index">
                 <div class="flex items-center">
                     <svg v-if="index != 0" class="h-5 w-auto text-gray-400" fill="currentColor" viewBox="0 0 20 20">

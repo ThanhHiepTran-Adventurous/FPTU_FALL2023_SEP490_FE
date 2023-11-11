@@ -14,8 +14,8 @@ import OrderService from '@/services/order.service'
 import ItemOrder from '@/components/common-components/item-box/ItemOrder.vue'
 import OrderTimeline from '@/components/OrderTimeline.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import BoughtNav from '../BoughtNav.vue'
-import SideBarLayout from '../SideBarLayout.vue'
+import BoughtNav from '../../BoughtNav.vue'
+import SideBarLayout from '../../SideBarLayout.vue'
 
 const orders = ref([])
 const ordersFiltered = ref([])
@@ -206,13 +206,6 @@ onMounted(() => {
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
         <div>
-          <!-- <Button
-            :disabled="isUpdating || detail?.statusOrder !== OrderStatus.CONFIRM_DELIVERY.value"
-            @on-click="updateOrderStatus">
-            <div class="flex items-center">
-              <div>Đã nhận hàng</div>
-            </div>
-          </Button> -->
         </div>
         <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
