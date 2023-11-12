@@ -15,6 +15,7 @@ import * as yup from 'yup'
 import { ErrorMessage, Field, Form } from 'vee-validate'
 import { defaultAvatar } from '@/common/urlConstant'
 import { useUserStore } from '@/stores/user.store'
+import Navbar from '@/components/page-sections/Navbar.vue'
 
 const userStore = useUserStore()
 
@@ -323,7 +324,8 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="h-full bg-gray-200 p-8">
+  <Navbar />
+  <div class="h-full bg-gray-200 p-8 mt-10">
     <Modal
       v-if="isModalActive"
       title="Xác thực email"

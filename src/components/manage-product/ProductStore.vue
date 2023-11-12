@@ -160,7 +160,6 @@ onMounted(async () => {
     <div class="mb-4 flex items-center mr-5 ml-5 mt-10">
       <Dropdown v-model="selected" :data="options" class="!w-[200px]" />
       <div class="w-full ml-2">
-        <!-- <SearchInput placeholder="       Tìm kiếm sản phẩm" addOnInputClass="w-full" /> -->
         <input
           v-model="searchQuery"
           type="text"

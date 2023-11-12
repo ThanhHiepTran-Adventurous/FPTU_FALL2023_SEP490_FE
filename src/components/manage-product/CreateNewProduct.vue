@@ -7,15 +7,19 @@ import categoryService from '@/services/category.service'
 import productSerivice from '@/services/product.service'
 import toastOption from '@/utils/toast-option'
 import { HTTP_STATUS } from '@/common/httpStatus'
-
-const emit = defineEmits(['createSuccess', 'createError', 'justSubmitted'])
 import * as yup from 'yup'
 import { ErrorMessage, Field, Form } from 'vee-validate'
+import ListImage from '@/components/ListEditableImage.vue'
+
+const emit = defineEmits(['createSuccess', 'createError', 'justSubmitted'])
 const categories = ref([])
 const brands = ref([])
 const validate = ref(false)
+
+// The order of imgSrc and imgData is the same, therefore we can use index to reference two respective item
 const imgSrc = ref([])
 const imgData = ref([])
+
 const productSchema = yup.object().shape({
   name: yup.string().required('Tên sản phẩm không được để trống'),
   description: yup.string().required('Mô tả sản phẩm không được để trống'),
@@ -86,6 +90,11 @@ const handleFileUpload = async e => {
   imgSrc.value.push(await base64Image(e.target.files[0]))
 }
 
+const handleImageDeleted = (indx) => {
+  imgSrc.value.splice(indx, 1)
+  imgData.value.splice(indx, 1)
+}
+
 onMounted(async () => {
   const brandsData = await brandService.getAllBrands()
   const categoriesData = await categoryService.getAllCategories()
@@ -109,8 +118,6 @@ const resetFormData = () => {
   <form class="bg-white rounded px-8 pb-8 mb-4" @submit.prevent="onSubmit()">
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm </label>
-      <!-- <Field name="name" type="text" v-model="formData.name" class="form-control" placeholder="Nhập tên sản phẩm" />
-      <ErrorMessage name="name" as="p" class="text-start text-danger pt-2 fs-6" /> -->
       <input
         v-model="formData.name"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -161,11 +168,7 @@ const resetFormData = () => {
         <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
       </select>
     </div>
-    <div class="mb-4 w-full overflow-x-auto" v-if="imgSrc.length > 0">
-      <div v-for="src in imgSrc" :key="src" class="inline-block mr-2">
-        <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
-      </div>
-    </div>
+    <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
     <div class="mb-4">
       <button
         @click="() => $refs.file.click()"

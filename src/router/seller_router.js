@@ -1,14 +1,12 @@
 import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
-import ProfilePage from '@/views/common/ProfilePage.vue'
 import ProductStore from '@/components/manage-product/ProductStore.vue'
 import ProductAuction from '@/components/manage-product/ProductAuction.vue'
 import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
 import ProductReport from '@/components/manage-product/ProductReport.vue'
 import Transaction from '@/components/manage-product/ProductTransactionHistory.vue'
-
-import Messenger from '@/views/common/Messenger.vue'
+import MessengerSeller from '@/views/seller/MessengerSeller.vue'
 import ProductInOrderImmediate from '@/components/manage-product/ProductInOrderImmediate.vue'
 import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrderIntermediate.vue'
 import TestComponent from '@/views/TestComponent.vue'
@@ -67,14 +65,6 @@ const seller_router = [
         },
       },
     ],
-  },
-  {
-    name: 'messenger',
-    path: '/messenger/:groupId',
-    component: Messenger,
-    meta: {
-      requiresAuth: false,
-    },
   },
   {
     name: 'not-found',

@@ -39,7 +39,6 @@ const props = defineProps({
             </a>
         </div>
         <div class="tt-description flex flex-col items-center">
-        
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>

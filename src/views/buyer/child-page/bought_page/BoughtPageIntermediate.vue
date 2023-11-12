@@ -18,7 +18,7 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 import urlConstant from '@/common/urlConstant'
 const showPaymentModel = ref(false)
 import { buyerTabs } from '@/common/constant'
-import SideBarLayout from '../../SideBarLayout.vue'
+import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
 

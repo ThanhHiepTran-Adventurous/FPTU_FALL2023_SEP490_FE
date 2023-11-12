@@ -9134,13 +9134,7 @@ img.tp-slider-alternative-image {
 /*---------------------------------------*/
 /*--------     2. Fonts icons    --------*/
 /*---------------------------------------*/
-@font-face {
-  font-family: "wokiee";
-  src: url("../font/fonts/wokiee.eot?g7nf10");
-  src: url("../font/fonts/wokiee.eot?g7nf10#iefix") format("embedded-opentype"), url("../font/fonts/wokiee.ttf?g7nf10") format("truetype"), url("../font/fonts/wokiee.woff?g7nf10") format("woff"), url("../font/fonts/wokiee.svg?g7nf10#wokiee") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
+
 [class^=icon-], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "wokiee" !important;

@@ -20,8 +20,8 @@ const props = defineProps({
         default: AuctionModelType.intermediate
     },
     price: {
-        type: String,
-        default: "100000"
+        type: Number,
+        default: 100000
     },
     catchedAt: {
         type: String,

@@ -13,7 +13,7 @@ import OrderService from '@/services/order.service'
 import ItemOrder from '@/components/common-components/item-box/ItemOrder.vue'
 import OrderTimeline from '@/components/OrderTimeline.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import SideBarLayout from '../../SideBarLayout.vue'
+import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 
 const orders = ref([])

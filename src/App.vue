@@ -9,7 +9,16 @@ const firebaseStore = useFirebaseStore()
 const notiStore = useNotificationStore()
 const systemStore = useSystemStore()
 
+const initViewPort = () => {
+  const viewportMeta = document.createElement('meta');
+  viewportMeta.name = 'viewport';
+  viewportMeta.content = 'width=device-width, initial-scale=1';
+  document.head.appendChild(viewportMeta);
+}
+
 onMounted( async () => {
+  initViewPort()
+
   const handleFunction = (payloadReceive) => {
     console.log(payloadReceive)
     toastOption.toastInformation(payloadReceive.notification.title)

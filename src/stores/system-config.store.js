@@ -9,7 +9,6 @@ export const useSystemStore = defineStore("system", {
     actions: {
         async syncData(){
             const response = await systemService.getAllConfigsData()
-            console.log(response.data)
         }
     }
 })

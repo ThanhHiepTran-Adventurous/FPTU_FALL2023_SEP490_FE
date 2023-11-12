@@ -14,6 +14,8 @@ import OrdersPageImmediate from '@/views/buyer/child-page/order_page/OrdersPageI
 import ReportPage from '@/views/buyer/child-page/ReportPage.vue'
 import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
+import ProfilePage from '@/views/common/ProfilePage.vue'
+
 const buyer_router = [
   {
     name: 'all-page-buyer',

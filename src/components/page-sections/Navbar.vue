@@ -219,7 +219,7 @@ const notiList = computed(() => {
         <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
           <div class="w-full rounded-full bg-gray-300 p-1 flex items-center gap-6">
             <RouterLink
-              to="/bought"
+              to="/bought/immediate"
               class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700"
               v-if="curRole === Role.buyer.value">
               <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
