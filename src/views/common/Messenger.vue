@@ -113,7 +113,7 @@ const backLink = computed(() => {
   if (role === Role.seller.value) {
     return '/manage/orders/immediate'
   }
-  return '/orders'
+  return '/orders/immediate'
 })
 const scrollMessageBoxToBottom = async () => {
   await nextTick()

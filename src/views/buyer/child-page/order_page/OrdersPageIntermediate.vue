@@ -30,7 +30,7 @@ const breadcrumbItems = [
   },
   {
     text: 'Đã mua',
-    to: '/orders',
+    to: '/orders/intermediate',
     disabled: true,
   },
 ]

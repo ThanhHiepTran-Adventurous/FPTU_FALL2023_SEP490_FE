@@ -44,6 +44,10 @@ export const buyerTabs = {
   },
 }
 
+export const sellerTabs = {
+  
+}
+
 export const defaultRoute = {
   buyer: '/',
   seller: '/manage/product-inventory',
