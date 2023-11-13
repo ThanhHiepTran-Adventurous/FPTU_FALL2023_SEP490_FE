@@ -19,6 +19,8 @@ import ReportModal from "@/components/ReportModal.vue";
 import ListEditableImage from "@/components/ListEditableImage.vue";
 import { useFirebaseStore } from "@/stores/firebase.store";
 import { base64Image } from "@/utils/imageFile";
+import moment from "moment";
+import Loading from "@/components/common-components/Loading.vue";
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -42,6 +44,7 @@ const isSideBarShowing = ref(false)
 const isBuyerModalDetailShowing = ref(false)
 const isBuyerUpdating = ref(false)
 const isReportModalOpen = ref(false)
+const isImgUploading = ref(false)
 
 const imgData = ref([])
 const imgSrc = ref([])
@@ -154,24 +157,34 @@ const onConfirmShipped = async () => {
 
 // chat functions
 const sendMessage = async () => {
-  let imageUrlIfExist
-  if(imgData.value.length > 0){
-    imageUrlIfExist = await firebaseStore.uploadImage(imgData.value[0])
-  }
-  const messageData = textMessage.value
-  textMessage.value = ''
-  if (messageData) {
-    const payload = {
-      fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
-      contentMessage: messageData,
-      userRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
-      imageUrl: imageUrlIfExist
+  try {
+    let imageUrlIfExist
+    if(imgData.value.length > 0){
+      const imgFile = imgData.value[0]
+      isImgUploading.value = true
+      imageUrlIfExist = await firebaseStore.uploadImage(imgFile)
+      isImgUploading.value = false
+      imgData.value = []
+      imgSrc.value = [] // reset the state
     }
-    console.log(payload)
-    stompClient.publish({
-      destination: `/app/chatV2/${groupId}`,
-      body: JSON.stringify(payload),
-    })
+  
+    const messageData = textMessage.value
+    textMessage.value = '' // reset the state
+  
+    if (messageData || imageUrlIfExist) {
+      const payload = {
+        fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
+        contentMessage: messageData,
+        userRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
+        imageUrl: imageUrlIfExist
+      }
+      stompClient.publish({
+        destination: `/app/chatV2/${groupId}`,
+        body: JSON.stringify(payload),
+      })
+    }
+  } catch (_) {
+    toastOption.toastError("Có lỗi khi gửi tin nhắn, vui lòng tải lại trang và thử lại.")
   }
 }
 
@@ -224,7 +237,7 @@ const initStompClient = () => {
         senderRole: response.userRole,
         message: response.contentMessage,
         img: response.imageUrl,
-        createAt: new Date().toLocaleDateString(),
+        createAt: moment().format("MM-DD-YYYY HH:mm:ss"),
       }
       messageDtos.value.push(messageDtoAppend)
       scrollMessageBoxToBottom()
@@ -258,18 +271,21 @@ onBeforeUnmount(() => {
     <div class="flex flex-row justify-between h-full w-full overflow-x-auto">
       <!-- Side bar -->
       <div
-        class="transition-all flex flex-col justify-between py-8 w-12 overflow-hidden bg-white flex-shrink-0 rounded-r-2xl my-6"
+        class="transition-all flex flex-col justify-between py-4 w-12 overflow-hidden bg-white flex-shrink-0 rounded-r-2xl my-6"
         :class="isSideBarShowing ? 'px-6 !w-96' : 'h-20 py-4 items-center'">
         <div class="h-full flex flex-col justify-between" v-if="isSideBarShowing">
           <div class="h-full">
-            <div class="flex flex-col mt-8">
+            <!-- User card -->
+            <div class="flex flex-col">
               <UserMessageCard />
             </div>
-            <div class="flex flex-col mt-8">
+
+            <!-- Actions -->
+            <div class="flex flex-col mt-4">
               <div class="flex flex-row items-center justify-between">
                 <span class="font-bold">Hành động</span>
               </div>
-              <div class="flex flex-col space-y-1 mt-4">
+              <div class="flex flex-col space-y-1 mt-2">
                 <!-- For buyer only -->
                 <button
                   v-if="curRole === Role.buyer.value"
@@ -290,16 +306,31 @@ onBeforeUnmount(() => {
                 </button>
               </div>
             </div>
+            <!-- Helper -->
+            <div class="border-[1px] rounded-lg py-2 mt-8 italic pl-2">
+              <div class="mb-1">
+                <span class="font-bold">Người bán: </span> khung avatar màu <span class="text-blue-800 font-bold">xanh dương</span>
+              </div>
+              <div class="mb-1">
+                <span class="font-bold">Người mua: </span> khung avatar màu <span class="text-green-800 font-bold">xanh lá</span>
+              </div>
+              <div>
+                <span class="font-bold">Người giải quyết (nếu có): </span> khung avatar màu <span class="text-red-800 font-bold">đỏ</span>
+              </div>
+            </div>
           </div>
+
+
+          <!-- Back and hidden -->
           <div class="w-full">
             <button
               @click="isSideBarShowing = false"
-              class="w-[328px] flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="w-full flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
               <div>Ẩn</div>
             </button>
             <router-link
               :to="backLink"
-              class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
               <div>
                 <Icon icon="simple-line-icons:logout" class="text-[20px] mr-3" />
               </div>
@@ -331,10 +362,13 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
-          <div class="rounded-xl w-full px-4">
+          <div v-if="isImgUploading" class="bg-white rounded-lg w-full h-[222px]">
+            <Loading />
+          </div>
+          <div v-else class="rounded-xl w-full px-4">
             <div class="flex items-center w-full">
               <!-- Attach icon -->
-              <div>
+              <div class="hover:cursor-pointer">
                 <Icon
                   icon="teenyicons:attach-solid"
                   class="text-[24px] mr-3"
