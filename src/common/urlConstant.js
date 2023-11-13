@@ -74,7 +74,7 @@ export default {
       auctionDetail: 'guest/{id}/auction-detail-guest',
       auctionHistory: 'guest/auction-guest/{auctionId}',
       categories: 'guest/categories-guest',
-      brands: 'guest/brands-guest'
+      brands: 'guest/brands-guest',
     },
     chart: {
       countSeller: 'charts/countSellerInSystem',
@@ -136,6 +136,7 @@ export default {
       getAllReportDataAdmin: 'report',
       getAllReportDataBuyerOrSeller: 'report/sellerOrBuyer/getAllReport',
       getAllReportDataStaff: 'report/staff/getAllReport',
+      buyerReportSellerOpt2: 'report/buyer/report-seller-option2/{orderId}',
     },
   },
 }

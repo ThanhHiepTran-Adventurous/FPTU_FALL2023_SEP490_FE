@@ -31,8 +31,10 @@ const auctionWins = ref([])
 const auctionWinFiltered = ref([])
 
 const filterData = () => {
-  auctionWinFiltered.value = auctionWins?.value?.filter(
-      v => v.informationAuction.modelType === AuctionModelType.immediate && v.informationAuction.product.status !== 'PAID',
+  auctionWinFiltered.value = auctionWins?.value
+    ?.filter(
+      v =>
+        v.informationAuction.modelType === AuctionModelType.immediate && v.informationAuction.product.status !== 'PAID',
     )
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()
@@ -59,14 +61,12 @@ onMounted(async () => {
       <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">
-            Sản phẩm thắng đấu giá</div>
+          <div class="font-bold text-2xl text-black text-blue-800">Sản phẩm thắng đấu giá</div>
           <div>
             <TwoOptionsTab
               immediate-option-nav="/bought/immediate"
               intermediate-option-nav="/bought/intermediate"
-              :cur-tab="AuctionModelType.immediate"
-            />
+              :cur-tab="AuctionModelType.immediate" />
           </div>
         </div>
 
@@ -81,14 +81,14 @@ onMounted(async () => {
 
         <div class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
           <AuctionCard
-            v-for="auction in auctionWinFiltered" :key="auction.id"
+            v-for="auction in auctionWinFiltered"
+            :key="auction.id"
             :image-url="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)"
             :product-name="auction.informationAuction.product.name"
             :auction-type="auction.informationAuction.modelType"
             :price="auction.finalPrice"
             :catched-at="auction.winAt"
-            @action-triggered="openPaymentModel(auction.informationAuction.id)"
-          />
+            @action-triggered="openPaymentModel(auction.informationAuction.id)" />
         </div>
       </div>
     </SideBarLayout>

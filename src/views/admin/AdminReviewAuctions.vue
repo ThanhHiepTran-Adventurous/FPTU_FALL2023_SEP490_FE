@@ -35,6 +35,7 @@ const getAllAuctions = async () => {
     const response = await adminService.getAllAuctions(1, 100)
     autionsList.value = response.data
     autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW')
+    console.log(autionsList.value)
   } catch (e) {
     console.error(e)
   }
@@ -144,7 +145,13 @@ const paginatedAuctions = computed(() => {
                 <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
                   {{ auction?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống' }}
                 </td>
-                <td class="px-4 py-3">{{ auction?.product?.createAt ? moment.utc(auction?.product?.createAt).format("DD/MM/YYYY HH:mm:ss") : ''}}</td>
+                <td class="px-4 py-3">
+                  {{
+                    auction?.product?.createAt
+                      ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss')
+                      : ''
+                  }}
+                </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
                     class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"

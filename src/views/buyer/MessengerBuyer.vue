@@ -1,22 +1,22 @@
 <script setup>
-import { Icon } from "@iconify/vue"
-import { defaultRoute } from "@/common/constant";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { OrderStatus, Role } from "@/common/contract";
-import { useUserStore } from "@/stores/user.store";
-import { useRoute } from "vue-router";
-import { Client } from '@stomp/stompjs';
-import urlConstant from "@/common/urlConstant";
-import MessageBubble from "@/components/messenger/MessageBubble.vue";
-import ChatService from "@/services/chat.service"
-import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
-import { Tooltip } from 'ant-design-vue';
-import BuyerOrderDetailModal from "@/components/messenger/BuyerOrderDetailModal.vue";
-import orderService from "@/services/order.service";
-import reportService from "@/services/report.service";
-import toastOption from "@/utils/toast-option";
-import ReportModal from "@/components/ReportModal.vue";
-import ListEditableImage from "@/components/ListEditableImage.vue";
+import { Icon } from '@iconify/vue'
+import { defaultRoute } from '@/common/constant'
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from 'vue'
+import { OrderStatus, Role } from '@/common/contract'
+import { useUserStore } from '@/stores/user.store'
+import { useRoute } from 'vue-router'
+import { Client } from '@stomp/stompjs'
+import urlConstant from '@/common/urlConstant'
+import MessageBubble from '@/components/messenger/MessageBubble.vue'
+import ChatService from '@/services/chat.service'
+import UserMessageCard from '@/components/messenger/UserMessageCard.vue'
+import { Tooltip } from 'ant-design-vue'
+import BuyerOrderDetailModal from '@/components/messenger/BuyerOrderDetailModal.vue'
+import orderService from '@/services/order.service'
+import reportService from '@/services/report.service'
+import toastOption from '@/utils/toast-option'
+import ReportModal from '@/components/ReportModal.vue'
+import ListEditableImage from '@/components/ListEditableImage.vue'
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -58,42 +58,43 @@ const closeReportModal = () => {
 }
 
 const onReportModalConfirm = (listImg, text) => {
-  if(!text || !text.trim()){
-    toastOption.toastError("Bạn phải nhập nội dung tố cáo!")
+  if (!text || !text.trim()) {
+    toastOption.toastError('Bạn phải nhập nội dung tố cáo!')
   }
   closeReportModal()
 
   // Prepare data
   const formData = new FormData()
   const jsonData = {
-    content: text
+    content: text,
   }
 
-  for(const imgData of listImg){
-    formData.append("reportImages", imgData)
+  for (const imgData of listImg) {
+    formData.append('reportImages', imgData)
   }
-  formData.append("createReportRequest", new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
+  formData.append('createReportRequest', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
 
-  if(curRole.value === Role.buyer.value){
+  if (curRole.value === Role.buyer.value) {
     reportInBuyerRole(formData)
     return
   }
-  if(curRole.value === Role.seller.value){
+  if (curRole.value === Role.seller.value) {
     reportInSellerRole(formData)
   }
 }
 
 const reportInBuyerRole = formData => {
-  reportService.buyerReportSellerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+  reportService
+    .buyerReportSellerOption1(orderDetail.value.id, formData)
+    .then(_ => toastOption.toastSuccess('Tố cáo thành công'))
+    .catch(_ => toastOption.toastError('Tố cáo thất bại.'))
 }
 const reportInSellerRole = formData => {
-  reportService.sellerReportBuyerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+  reportService
+    .sellerReportBuyerOption1(orderDetail.value.id, formData)
+    .then(_ => toastOption.toastSuccess('Tố cáo thành công'))
+    .catch(_ => toastOption.toastError('Tố cáo thất bại.'))
 }
-
 
 const backLink = computed(() => {
   const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
@@ -111,10 +112,9 @@ const scrollMessageBoxToBottom = async () => {
   message.scrollTop = message.scrollHeight
 }
 
-
 // business functions
 const onShippedClick = () => {
-  if (confirm("Bạn có chắc chắn xác nhận đơn hàng đã giao tới bạn không?")){
+  if (confirm('Bạn có chắc chắn xác nhận đơn hàng đã giao tới bạn không?')) {
     onConfirmShipped()
   }
 }
@@ -305,11 +305,15 @@ onBeforeUnmount(() => {
                   @keypress.enter="sendMessage"
                   type="text"
                   class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
-                
-                <div class="mt-3">
-                  <ListEditableImage :img-src="['https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg', 'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg', 'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg']" />
-                </div>
 
+                <div class="mt-3">
+                  <ListEditableImage
+                    :img-src="[
+                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
+                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
+                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
+                    ]" />
+                </div>
               </div>
             </div>
             <div class="ml-4">
@@ -344,8 +348,7 @@ onBeforeUnmount(() => {
       :isUpdating="isBuyerUpdating"
       :status="sttChange"
       @modal-declined="closeBuyerModal"
-      @confirm-shipped="onConfirmShipped"
-    />
-    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm"/>
+      @confirm-shipped="onConfirmShipped" />
+    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" />
   </div>
 </template>

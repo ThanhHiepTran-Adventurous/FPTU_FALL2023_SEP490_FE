@@ -19,6 +19,8 @@ import { useRouter } from 'vue-router'
 import ShipRequestService from '@/services/shiprequest.service'
 import toastOption from '@/utils/toast-option'
 import withdraw from '../../services/withdraw.service'
+import ReportService from '@/services/report.service'
+import ReportModal from '@/components/ReportModal.vue'
 
 const router = useRouter()
 
@@ -29,6 +31,13 @@ const detail = ref(null)
 const isModalVisible = ref(false)
 const isUpdating = ref(false)
 const hasShip = ref(false)
+const isReportModalOpen = ref(false)
+const openReportModal = () => {
+  isReportModalOpen.value = true
+}
+const closeReportModal = () => {
+  isReportModalOpen.value = false
+}
 const hasShipRequest = async orderId => {
   try {
     const query = 'shipRequest_orderId:' + orderId
@@ -83,6 +92,9 @@ const handleCreateShipRequest = async orderId => {
     const response = await ShipRequestService.sellerCreateShipRequest(orderId)
     toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
     console.log(response)
+    setTimeout(() => {
+      window.location.reload()
+    }, 2000)
   } catch (error) {
     toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
     console.error('Error creating ship request:', error)
@@ -223,7 +235,7 @@ onMounted(() => {
             :disabled="
               isUpdating ||
               detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value ||
-              detail?.statusOrder === OrderStatus.DONE.value
+              detail?.statusOrder !== OrderStatus.DONE.value
             "
             @on-click="handleDepositRequest(detail?.id)">
             <div class="flex items-center">

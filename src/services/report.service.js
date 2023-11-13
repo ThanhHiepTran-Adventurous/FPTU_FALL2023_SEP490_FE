@@ -8,7 +8,7 @@ const getAllReportData = async () => {
 }
 
 const sellerReportBuyerOption1 = async (orderId, formData) => {
-  const serviceUrl = url.endpoint.report.sellerReportBuyerOpt1.replace("{orderId}", orderId)
+  const serviceUrl = url.endpoint.report.sellerReportBuyerOpt1.replace('{orderId}', orderId)
 
   const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
     headers: {
@@ -19,7 +19,7 @@ const sellerReportBuyerOption1 = async (orderId, formData) => {
 }
 
 const buyerReportSellerOption1 = async (orderId, formData) => {
-  const serviceUrl = url.endpoint.report.buyerReportSellerOpt1.replace("{orderId}", orderId)
+  const serviceUrl = url.endpoint.report.buyerReportSellerOpt1.replace('{orderId}', orderId)
 
   const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
     headers: {
@@ -39,10 +39,22 @@ const getAllReportDataStaff = async () => {
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
+const buyerReportSellerOpt2 = async (orderId, formData) => {
+  const serviceUrl = url.endpoint.report.buyerReportSellerOpt2.replace('{orderId}', orderId)
+
+  const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
+
+  return response ? response.data : response
+}
 export default {
   sellerReportBuyerOption1,
   buyerReportSellerOption1,
   getAllReportData,
   getAllReportDataBuyerOrSeller,
   getAllReportDataStaff,
+  buyerReportSellerOpt2,
 }

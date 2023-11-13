@@ -5,7 +5,7 @@ import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType } from '@/common/contract'
+import { AuctionModelType, OrderStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { buyerTabs } from '@/common/constant'
@@ -15,6 +15,9 @@ import OrderTimeline from '@/components/OrderTimeline.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
+import ReportModal from '@/components/ReportModal.vue'
+import toastOption from '@/utils/toast-option'
+import ReportService from '@/services/report.service'
 
 const orders = ref([])
 const ordersFiltered = ref([])
@@ -34,7 +37,13 @@ const breadcrumbItems = [
     disabled: true,
   },
 ]
-
+const isReportModalOpen = ref(false)
+const openReportModal = () => {
+  isReportModalOpen.value = true
+}
+const closeReportModal = () => {
+  isReportModalOpen.value = false
+}
 const filterData = () => {
   ordersFiltered.value = orders.value
     .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
@@ -69,7 +78,41 @@ const fetchOrders = async () => {
   orders.value = response.data ? response.data : []
   filterData()
 }
+const onReportModalDecline = decline => {
+  closeReportModal()
+}
+const onReportModalConfirm = async (listImg, text) => {
+  if (!text || !text.trim()) {
+    toastOption.toastError('Bạn phải nhập nội dung tố cáo!')
+  }
+  // closeReportModal()
+  if (!Array.isArray(listImg)) {
+    toastOption.toastError('Invalid image list')
+    return
+  }
+  // Prepare data
+  const formData = new FormData()
+  const jsonData = {
+    content: text,
+  }
 
+  for (const imgData of listImg) {
+    formData.append('reportImages', imgData)
+  }
+  formData.append('createReportRequest', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
+
+  try {
+    const response = await ReportService.buyerReportSellerOpt2(detail.value.id, formData)
+    toastOption.toastSuccess('Tố cáo thành công')
+    console.log(response)
+    setTimeout(() => {
+      window.location.reload()
+    }, 2000)
+  } catch (error) {
+    toastOption.toastError('Tố cáo thất bại')
+    console.error('Error creating ship request:', error)
+  }
+}
 onMounted(() => {
   fetchOrders()
 })
@@ -84,14 +127,12 @@ onMounted(() => {
       <div class="bg-white container mx-auto rounded min-h-[80vh] w-full">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">
-            Lịch sử đơn hàng</div>
+          <div class="font-bold text-2xl text-black text-blue-800">Lịch sử đơn hàng</div>
           <div>
             <TwoOptionsTab
               immediate-option-nav="/orders/immediate"
               intermediate-option-nav="/orders/intermediate"
-              :cur-tab="AuctionModelType.intermediate"
-            />
+              :cur-tab="AuctionModelType.intermediate" />
           </div>
         </div>
 
@@ -200,7 +241,15 @@ onMounted(() => {
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
         <div>
+          <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="openReportModal">
+            <div class="flex items-center">
+              <div>Tố cáo</div>
+            </div>
+          </Button>
         </div>
+        <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="onReportModalDecline" />
+
+        <div></div>
         <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
             <Button>
