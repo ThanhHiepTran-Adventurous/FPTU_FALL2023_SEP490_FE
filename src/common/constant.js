@@ -48,6 +48,24 @@ export const sellerTabs = {
   
 }
 
+export const staffTabs = {
+  shipRequests: {
+    value: 'Yêu cầu giao hàng',
+    icon: 'gridicons:shipping',
+    navLink: '/staff/manage-ship-request',
+  },
+  allReports: {
+    value: 'Danh sách khiếu nại',
+    icon: 'ep:document',
+    navLink: '/staff/report/unassigned'
+  },
+  reports: {
+    value: 'Giải quyết khiếu nại',
+    icon: 'fluent-mdl2:report-warning',
+    navLink: '/staff/report/immediate'
+  },
+}
+
 export const defaultRoute = {
   buyer: '/',
   seller: '/manage/product-inventory',

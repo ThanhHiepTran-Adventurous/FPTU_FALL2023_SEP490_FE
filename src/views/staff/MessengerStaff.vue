@@ -1,7 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
 import { defaultRoute } from "@/common/constant";
-import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
 import { OrderStatus, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
@@ -11,17 +11,13 @@ import MessageBubble from "@/components/messenger/MessageBubble.vue";
 import ChatService from "@/services/chat.service"
 import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
 import { Tooltip } from 'ant-design-vue';
-import SellerOrderDetailModal from "@/components/messenger/SellerOrderDetailModal.vue";
-import orderService from "@/services/order.service";
-import reportService from "@/services/report.service";
 import toastOption from "@/utils/toast-option";
-import ReportModal from "@/components/ReportModal.vue";
 import ListEditableImage from "@/components/ListEditableImage.vue";
-import ImageExtendModal from "@/components/ImageExtendModal.vue";
-import { base64Image } from "@/utils/imageFile";
 import { useFirebaseStore } from "@/stores/firebase.store";
+import { base64Image } from "@/utils/imageFile";
 import moment from "moment";
 import Loading from "@/components/common-components/Loading.vue";
+import Modal from "@/components/common-components/Modal.vue";
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -34,18 +30,26 @@ let subscription
 const messagesData = ref([])
 const messageDtos = ref([])
 const groupInfo = ref(undefined)
-const orderDetail = ref(undefined)
 
-const sttChange = ref('')
-const curAddress = ref('')
-const curPhone = ref('')
 const textMessage = ref('')
 
+const isBuyerWinConfirm = ref(false)
+const isSellerWinConfirm = ref(false)
+const isCloseChatConfirm = ref(false)
+const onBuyerWinConfirm = () => {
+  isBuyerWinConfirm.value = false
+  //
+}
+const onSellerWinConfirm = () => {
+  isSellerWinConfirm.value = false
+  //
+}
+const onChatCloseConfirm = () => {
+  isCloseChatConfirm.value = false
+  //
+}
+
 const isSideBarShowing = ref(false)
-const isSellerModalDetailShowing = ref(false)
-const isBuyerUpdating = ref(false)
-const isSellerUpdating = ref(false)
-const isReportModalOpen = ref(false)
 const isImgUploading = ref(false)
 
 const imgData = ref([])
@@ -70,104 +74,13 @@ const handleImageDeleted = (indx) => {
 const curRole = computed(() => {
   return userStore.getRoleAndGetFromLocalStorageIfNotExist()
 })
-const closeSellerModal = () => {
-  isSellerModalDetailShowing.value = false
-}
-const openSellerModal = () => {
-  isSellerModalDetailShowing.value = true
-}
-const openReportModal = () => {
-  isReportModalOpen.value = true
-}
-const closeReportModal = () => {
-  isReportModalOpen.value = false
-}
 
-const onReportModalConfirm = (listImg, text) => {
-  if(!text || !text.trim()){
-    toastOption.toastError("Bạn phải nhập nội dung tố cáo!")
-  }
-  closeReportModal()
+const backLink = '/staff/report/immediate'
 
-  // Prepare data
-  const formData = new FormData()
-  const jsonData = {
-    content: text
-  }
-
-  for(const imgData of listImg){
-    formData.append("reportImages", imgData)
-  }
-  formData.append("createReportRequest", new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
-
-  if(curRole.value === Role.buyer.value){
-    reportInBuyerRole(formData)
-    return
-  }
-  if(curRole.value === Role.seller.value){
-    reportInSellerRole(formData)
-  }
-}
-
-const reportInBuyerRole = formData => {
-  reportService.buyerReportSellerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
-}
-const reportInSellerRole = formData => {
-  reportService.sellerReportBuyerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
-}
-
-
-const backLink = '/manage/orders/immediate'
 const scrollMessageBoxToBottom = async () => {
   await nextTick()
   const message = document.getElementById('messageBox')
   message.scrollTop = message.scrollHeight
-}
-
-
-// business functions
-const onChangeStatusClick = () => {
-  if (confirm("Bạn có chắc chắn chuyển đơn hàng sang trạng thái tiếp theo không?")){
-    onChangeStatus()
-  }
-}
-const onChangeStatus = async () => {
-  try {
-    isBuyerUpdating.value = true
-    await orderService.updateStatus(groupInfo.value.order.statusOrder, groupInfo.value.order.id)
-    toastOption.toastSuccess('Cập nhật trạng thái đơn hàng thành công!')
-    closeSellerModal()
-    fetchChatInfo()
-  } catch (_) {
-    toastOption.toastError('Có lỗi hệ thống...')
-  } finally {
-    isBuyerUpdating.value = false
-  }
-}
-const onUpdateDetail = async (messageData) => {
-  if(confirm("Bạn có chắc chắn muốn cập nhật thông tin đơn hàng không?")){
-    try {
-      const payload = {
-        buyerPhoneNumber: messageData.newPhone,
-        buyerAddress: messageData.newAddress,
-        sellerPhoneNumber: orderDetail.value.sellerPhoneNumber,
-        sellerAddress: orderDetail.value.sellerAddress || ""
-      }
-      isSellerUpdating.value = true
-      await orderService.updateAddressAndPhoneSellerOpt1(orderDetail.value.id, payload)
-      toastOption.toastSuccess("Cập nhật thông tin đơn hàng thành công!")
-      closeSellerModal()
-      fetchChatInfo()
-    } catch (_) {
-    toastOption.toastError('Có lỗi hệ thống...')
-    } finally {
-      isSellerUpdating.value = false
-    }
-  }
 }
 
 // chat functions
@@ -185,6 +98,7 @@ const sendMessage = async () => {
   
     const messageData = textMessage.value
     textMessage.value = '' // reset the state
+  
     if (messageData || imageUrlIfExist) {
       const payload = {
         fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
@@ -197,7 +111,8 @@ const sendMessage = async () => {
         body: JSON.stringify(payload),
       })
     }
-  } catch (_) {
+  } catch (e) {
+    console.log(e)
     toastOption.toastError("Có lỗi khi gửi tin nhắn, vui lòng tải lại trang và thử lại.")
   }
 }
@@ -212,10 +127,6 @@ const fetchChatInfo = async () => {
   groupId = route.params['groupId']
   const response = await ChatService.getGroupInfo(groupId)
   groupInfo.value = response.data
-  orderDetail.value = groupInfo.value.order
-  sttChange.value = groupInfo.value.order.statusOrder
-  curAddress.value = groupInfo.value.order.buyerAddress
-  curPhone.value = groupInfo.value.order.buyerPhoneNumber
 }
 const initMessageDtos = async () => {
   await fetchAllMessages()
@@ -243,6 +154,7 @@ const initStompClient = () => {
     console.log('connected')
     subscription = stompClient.subscribe(`/topic/messages/group/${groupId}`, payload => {
       const response = JSON.parse(payload.body)
+      console.log(response)
       const messageDtoAppend = {
         isFromSelf: response.fromUserId === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
         receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
@@ -298,19 +210,23 @@ onBeforeUnmount(() => {
                 <span class="font-bold">Hành động</span>
               </div>
               <div class="flex flex-col space-y-1 mt-2">
-                <!-- For seller only -->
-                <button v-if="curRole === Role.seller.value" @click="openSellerModal()"
+                <!-- For buyer only -->
+                <button
+                  v-if="curRole === Role.staff.value && sellerReportId"
+                  @click="isSellerWinConfirm = true"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
-                  Cập nhật thông tin đơn hàng
-                </button>
-                <button v-if="curRole === Role.seller.value" @click="onChangeStatusClick"
-                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
-                  Cập nhật trạng thái đơn hàng
+                  Xác nhận người bán đúng
                 </button>
                 <button
-                  @click="openReportModal"
+                  v-if="curRole === Role.staff.value && buyerReportId"
+                  @click="isBuyerWinConfirm = true"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
+                  Xác nhận người mua đúng
+                </button>
+                <button
+                  @click="isCloseChatConfirm = true"
                   class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
-                  Tố cáo
+                  Khóa đoạn chat
                 </button>
               </div>
             </div>
@@ -328,16 +244,17 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
+
           <!-- Back and hidden -->
           <div class="w-full">
             <button
               @click="isSideBarShowing = false"
-              class="w-[328px] flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="w-full flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
               <div>Ẩn</div>
             </button>
             <router-link
               :to="backLink"
-              class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
               <div>
                 <Icon icon="simple-line-icons:logout" class="text-[20px] mr-3" />
               </div>
@@ -422,17 +339,40 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Modals -->
-    <SellerOrderDetailModal
-      :hidden="!(curRole === Role.seller.value && isSellerModalDetailShowing === true)"
-      :detail="orderDetail"
-      :isUpdating="isSellerUpdating"
-      :status="sttChange"
-      :address="curAddress"
-      :phone="curPhone"
-      @modal-declined="closeSellerModal"
-      @update-status="onChangeStatus"
-      @update-detail="onUpdateDetail"
-    />
-    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm"/>
+    <Modal
+      v-if="isBuyerWinConfirm"
+      widthClass="w-[900px]"
+      :hasOverFlowVertical="true"
+      :hasButton="true"
+      button-label="Xác nhận"
+      @decline-modal="isBuyerWinConfirm = false"
+      @confirm-modal="onBuyerWinConfirm"
+      title="Xác nhận mua ngay">
+      <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn xác nhận là người mua đúng không?</div>
+    </Modal>
+    <!-- Modals -->
+    <Modal
+      v-if="isSellerWinConfirm"
+      widthClass="w-[900px]"
+      :hasOverFlowVertical="true"
+      :hasButton="true"
+      button-label="Xác nhận"
+      @decline-modal="isSellerWinConfirm = false"
+      @confirm-modal="onSellerWinConfirm"
+      title="Xác nhận mua ngay">
+      <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn xác nhận là người bán đúng không?</div>
+    </Modal>
+    <!-- Modals -->
+    <Modal
+      v-if="isCloseChatConfirm"
+      widthClass="w-[900px]"
+      :hasOverFlowVertical="true"
+      :hasButton="true"
+      button-label="Xác nhận"
+      @decline-modal="isCloseChatConfirm = false"
+      @confirm-modal="onChatCloseConfirm"
+      title="Xác nhận mua ngay">
+      <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn đóng đoạn chat không?</div>
+    </Modal>
   </div>
 </template>

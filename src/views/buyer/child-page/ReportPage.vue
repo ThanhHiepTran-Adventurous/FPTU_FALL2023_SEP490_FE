@@ -75,7 +75,7 @@ const breadcrumbItems = [
             Lịch sử báo cáo</div>
         </div>
         <section class="bg-white sm:p-5">
-          <div class="mx-auto px-4 lg:px-12">
+          <div class="mx-auto px-4">
             <div class="bg-white relative sm:rounded-lg overflow-hidden">
               <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

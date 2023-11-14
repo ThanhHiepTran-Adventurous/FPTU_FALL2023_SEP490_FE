@@ -122,6 +122,8 @@ export default {
     chat: {
       getAllMessages: 'messageWebSocket/listMessageV2/{groupId}',
       getChatGroupInfo: 'messageWebSocket/chat-group-infoV2/{chatGroupId}',
+      joinChatGroup: 'messageWebSocket/staff/join-chat-groupV2/{groupId}',
+      createChatGroup: 'messageWebSocket/staff/create-chat-groupV2/{orderId}'
     },
     system: {
       getAllConfigData: 'systemConfig/getListSystemConfig',
@@ -147,6 +149,10 @@ export default {
       getAllReportDataBuyerOrSeller: 'report/sellerOrBuyer/getAllReport',
       getAllReportDataStaff: 'report/staff/getAllReport',
       buyerReportSellerOpt2: 'report/buyer/report-seller-option2/{orderId}',
+      confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
+      declineReportOpt1: 'report/staff/reject-report/{reportId}',
+      confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
+      assignReport: 'report/staff/assign-report/{reportId}'
     },
   },
 }

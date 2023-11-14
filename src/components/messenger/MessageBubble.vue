@@ -31,7 +31,7 @@ const props = defineProps({
         class="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
         :class="{
           'border-solid border-4 border-blue-800': senderRole === Role.buyer.value,
-          'border-solid border-4 border-green-800': senderRole === Role.seller.value,
+          'border-solid border-4 border-green-500': senderRole === Role.seller.value,
           'border-solid border-4 border-red-800': senderRole === Role.staff.value
         }"
       >

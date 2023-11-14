@@ -2,7 +2,7 @@ import utils from '@/utils/customAxios'
 import url from '../common/urlConstant'
 
 const getAllReportData = async () => {
-  const serviceUrl = url.endpoint.report.getAllReportData + '?page=1&size=1000'
+  const serviceUrl = url.endpoint.report.getAllReportDataAdmin + '?page=1&size=1000'
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
@@ -50,6 +50,24 @@ const buyerReportSellerOpt2 = async (orderId, formData) => {
 
   return response ? response.data : response
 }
+
+const staffAssignReport = async (reportId) => {
+  const serviceUrl = url.endpoint.report.assignReport.replace("{reportId}", reportId)
+  const response = await utils.axiosLocalHost.put(serviceUrl)
+  return response ? response.data : response
+}
+
+const staffConfirmReportOpt1 = async (reportId) => {
+  const serviceUrl = url.endpoint.report.confirmReportOpt1.replace("{reportId}", reportId)
+  const response = await utils.axiosLocalHost.put(serviceUrl)
+  return response ? response.data : response
+}
+const staffDeclineReportOpt1 = async (reportId) => {
+  const serviceUrl = url.endpoint.report.declineReportOpt1.replace("{reportId}", reportId)
+  const response = await utils.axiosLocalHost.put(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
   sellerReportBuyerOption1,
   buyerReportSellerOption1,
@@ -57,4 +75,7 @@ export default {
   getAllReportDataBuyerOrSeller,
   getAllReportDataStaff,
   buyerReportSellerOpt2,
+  staffAssignReport,
+  staffConfirmReportOpt1,
+  staffDeclineReportOpt1
 }

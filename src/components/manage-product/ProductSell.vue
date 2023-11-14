@@ -122,7 +122,7 @@ function handleConfirm() {
 }
 
 const handlePayment = async () => {
-  const returnUrl = `${urlConstant.domain}/manage/orders`
+  const returnUrl = `${urlConstant.domain}/manage/product-sold`
 
   isPaymentLoading.value = true
   const response = await paymentService.paymentForChat(detail.value.id, returnUrl)

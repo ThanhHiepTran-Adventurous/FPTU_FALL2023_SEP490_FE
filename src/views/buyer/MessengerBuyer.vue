@@ -121,16 +121,8 @@ const reportInSellerRole = formData => {
     .catch(_ => toastOption.toastError('Tố cáo thất bại.'))
 }
 
-const backLink = computed(() => {
-  const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
-  if (role === Role.admin.value) {
-    return '/admin/dashboard'
-  }
-  if (role === Role.seller.value) {
-    return '/manage/orders/immediate'
-  }
-  return '/orders/immediate'
-})
+
+const backLink = '/orders/immediate'
 const scrollMessageBoxToBottom = async () => {
   await nextTick()
   const message = document.getElementById('messageBox')
@@ -215,7 +207,6 @@ const initMessageDtos = async () => {
       createAt: messData.createAt,
     }
   })
-  console.log(messageDtos.value)
   scrollMessageBoxToBottom()
 }
 const initStompClient = () => {
@@ -312,10 +303,10 @@ onBeforeUnmount(() => {
                 <span class="font-bold">Người bán: </span> khung avatar màu <span class="text-blue-800 font-bold">xanh dương</span>
               </div>
               <div class="mb-1">
-                <span class="font-bold">Người mua: </span> khung avatar màu <span class="text-green-800 font-bold">xanh lá</span>
+                <span class="font-bold">Người mua: </span> khung avatar màu <span class="text-green-500 font-bold">xanh lá</span>
               </div>
               <div>
-                <span class="font-bold">Người giải quyết (nếu có): </span> khung avatar màu <span class="text-red-800 font-bold">đỏ</span>
+                <span class="font-bold">Người giải quyết (nếu có): </span> khung avatar màu <span class="text-red-500 font-bold">đỏ</span>
               </div>
             </div>
           </div>
