@@ -31,8 +31,8 @@ let autionIdd = ref('')
 const isInEditMode = ref(false)
 const getQueryParameters = () => {
   const queryParams = route.query
-  responeCode = queryParams.vnp_ResponseCode
-  transactionStatus = queryParams.vnp_TransactionStatus
+  responeCode.value = queryParams.vnp_ResponseCode
+  transactionStatus.value = queryParams.vnp_TransactionStatus
 }
 const updateAddressOrderAfterPayment = async () => {
   const storedData = localStorage.getItem('paymentAddressData')
@@ -80,23 +80,13 @@ const breadcrumbItems = [
 const auctionWins = ref([])
 const auctionWinFiltered = ref([])
 
-const options = ref([
-  {
-    label: 'Tự trao đổi',
-    value: AuctionModelType.immediate,
-  },
-  {
-    label: 'Trung gian qua hệ thống',
-    value: AuctionModelType.intermediate,
-  },
-])
 const openPaymentModel = autionId => {
   showPaymentModel.value = true
   autionIdd = autionId
 }
 
 const closeModal = () => {
-  router.push('/bought').then(() => {
+  router.push('/bought/intermediate').then(() => {
     location.reload()
   })
 }

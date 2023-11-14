@@ -18,9 +18,12 @@ import toastOption from "@/utils/toast-option";
 import ReportModal from "@/components/ReportModal.vue";
 import ListEditableImage from "@/components/ListEditableImage.vue";
 import ImageExtendModal from "@/components/ImageExtendModal.vue";
+import { base64Image } from "@/utils/imageFile";
+import { useFirebaseStore } from "@/stores/firebase.store";
 
 const userStore = useUserStore()
 const route = useRoute()
+const firebaseStore = useFirebaseStore()
 
 let stompClient
 let groupId
@@ -46,8 +49,15 @@ const imgData = ref([])
 const imgSrc = ref([])
 
 const handleFileUpload = async e => {
-  imgData.value.push(e.target.files[0])
-  imgSrc.value.push(await base64Image(e.target.files[0]))
+  const imgSrcData = await base64Image(e.target.files[0])
+  // only allow chat 1 image per time
+  if(imgData.length === 0){
+    imgData.value.push(e.target.files[0])
+    imgSrc.value.push(imgSrcData)
+  } else {
+    imgData.value[0] = e.target.files[0]
+    imgSrc.value[0] = imgSrcData
+  }
 }
 const handleImageDeleted = (indx) => {
   imgData.value.splice(indx, 1)
@@ -167,14 +177,21 @@ const onUpdateDetail = async (messageData) => {
 }
 
 // chat functions
-const sendMessage = () => {
+const sendMessage = async () => {
+  let imageUrlIfExist
+  if(imgData.value.length > 0){
+    imageUrlIfExist = await firebaseStore.uploadImage(imgData.value[0])
+  }
   const messageData = textMessage.value
   textMessage.value = ''
   if (messageData) {
     const payload = {
       fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
       contentMessage: messageData,
+      userRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
+      imageUrl: imageUrlIfExist
     }
+    console.log(payload)
     stompClient.publish({
       destination: `/app/chatV2/${groupId}`,
       body: JSON.stringify(payload),
@@ -205,6 +222,7 @@ const initMessageDtos = async () => {
       receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
       senderRole: messData.fromUser.role,
       message: messData.messageContent,
+      img: messData.imageUrl,
       createAt: messData.createAt,
     }
   })
@@ -225,9 +243,10 @@ const initStompClient = () => {
       const messageDtoAppend = {
         isFromSelf: response.fromUserId === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
         receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
-        //senderRole: messData.fromUser.role,
+        senderRole: response.userRole,
         message: response.contentMessage,
-        createAt: new Date().toString(),
+        img: response.imageUrl,
+        createAt: new Date().toLocaleDateString(),
       }
       messageDtos.value.push(messageDtoAppend)
       scrollMessageBoxToBottom()
@@ -324,7 +343,9 @@ onBeforeUnmount(() => {
                   :message="mess.message"
                   :receiverRole="mess.receiverRole"
                   :senderRole="mess.senderRole"
-                  :createAt="mess.createAt" />
+                  :createAt="mess.createAt"
+                  :img-src="mess.img"
+                  />
               </div>
             </div>
           </div>
@@ -332,7 +353,11 @@ onBeforeUnmount(() => {
             <div class="flex items-center w-full">
               <!-- Attach icon -->
               <div>
-                <Icon icon="teenyicons:attach-solid" class="text-[24px] mr-3"/>
+                <Icon
+                  icon="teenyicons:attach-solid"
+                  class="text-[24px] mr-3"
+                  @click="() => $refs.file.click()"
+                  @click.prevent/>
                 <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
               </div>
               <!-- Input -->
@@ -346,7 +371,7 @@ onBeforeUnmount(() => {
               <!-- Send icon -->
               <div class="ml-4">
                 <button
-                  @click="() => sendMessage()"
+                  @click="sendMessage"
                   class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
                   <span class="ml-1">
                     <svg

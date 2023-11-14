@@ -1,25 +1,28 @@
 <script setup>
-import { Icon } from '@iconify/vue'
-import { defaultRoute } from '@/common/constant'
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from 'vue'
-import { OrderStatus, Role } from '@/common/contract'
-import { useUserStore } from '@/stores/user.store'
-import { useRoute } from 'vue-router'
-import { Client } from '@stomp/stompjs'
-import urlConstant from '@/common/urlConstant'
-import MessageBubble from '@/components/messenger/MessageBubble.vue'
-import ChatService from '@/services/chat.service'
-import UserMessageCard from '@/components/messenger/UserMessageCard.vue'
-import { Tooltip } from 'ant-design-vue'
-import BuyerOrderDetailModal from '@/components/messenger/BuyerOrderDetailModal.vue'
-import orderService from '@/services/order.service'
-import reportService from '@/services/report.service'
-import toastOption from '@/utils/toast-option'
-import ReportModal from '@/components/ReportModal.vue'
-import ListEditableImage from '@/components/ListEditableImage.vue'
+import { Icon } from "@iconify/vue"
+import { defaultRoute } from "@/common/constant";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
+import { OrderStatus, Role } from "@/common/contract";
+import { useUserStore } from "@/stores/user.store";
+import { useRoute } from "vue-router";
+import { Client } from '@stomp/stompjs';
+import urlConstant from "@/common/urlConstant";
+import MessageBubble from "@/components/messenger/MessageBubble.vue";
+import ChatService from "@/services/chat.service"
+import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
+import { Tooltip } from 'ant-design-vue';
+import BuyerOrderDetailModal from "@/components/messenger/BuyerOrderDetailModal.vue";
+import orderService from "@/services/order.service";
+import reportService from "@/services/report.service";
+import toastOption from "@/utils/toast-option";
+import ReportModal from "@/components/ReportModal.vue";
+import ListEditableImage from "@/components/ListEditableImage.vue";
+import { useFirebaseStore } from "@/stores/firebase.store";
+import { base64Image } from "@/utils/imageFile";
 
 const userStore = useUserStore()
 const route = useRoute()
+const firebaseStore = useFirebaseStore()
 
 let stompClient
 let groupId
@@ -39,6 +42,25 @@ const isSideBarShowing = ref(false)
 const isBuyerModalDetailShowing = ref(false)
 const isBuyerUpdating = ref(false)
 const isReportModalOpen = ref(false)
+
+const imgData = ref([])
+const imgSrc = ref([])
+
+const handleFileUpload = async e => {
+  const imgSrcData = await base64Image(e.target.files[0])
+  // only allow chat 1 image per time
+  if(imgData.length === 0){
+    imgData.value.push(e.target.files[0])
+    imgSrc.value.push(imgSrcData)
+  } else {
+    imgData.value[0] = e.target.files[0]
+    imgSrc.value[0] = imgSrcData
+  }
+}
+const handleImageDeleted = (indx) => {
+  imgData.value.splice(indx, 1)
+  imgSrc.value.splice(indx, 1)
+}
 
 const curRole = computed(() => {
   return userStore.getRoleAndGetFromLocalStorageIfNotExist()
@@ -131,16 +153,23 @@ const onConfirmShipped = async () => {
 }
 
 // chat functions
-const sendMessage = () => {
+const sendMessage = async () => {
+  let imageUrlIfExist
+  if(imgData.value.length > 0){
+    imageUrlIfExist = await firebaseStore.uploadImage(imgData.value[0])
+  }
   const messageData = textMessage.value
   textMessage.value = ''
   if (messageData) {
     const payload = {
       fromUserId: userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
       contentMessage: messageData,
+      userRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
+      imageUrl: imageUrlIfExist
     }
+    console.log(payload)
     stompClient.publish({
-      destination: `/app/chat/${groupId}`,
+      destination: `/app/chatV2/${groupId}`,
       body: JSON.stringify(payload),
     })
   }
@@ -169,9 +198,11 @@ const initMessageDtos = async () => {
       receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
       senderRole: messData.fromUser.role,
       message: messData.messageContent,
+      img: messData.imageUrl,
       createAt: messData.createAt,
     }
   })
+  console.log(messageDtos.value)
   scrollMessageBoxToBottom()
 }
 const initStompClient = () => {
@@ -190,9 +221,10 @@ const initStompClient = () => {
       const messageDtoAppend = {
         isFromSelf: response.fromUserId === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
         receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),
-        //senderRole: messData.fromUser.role,
+        senderRole: response.userRole,
         message: response.contentMessage,
-        createAt: new Date().toString(),
+        img: response.imageUrl,
+        createAt: new Date().toLocaleDateString(),
       }
       messageDtos.value.push(messageDtoAppend)
       scrollMessageBoxToBottom()
@@ -293,48 +325,55 @@ onBeforeUnmount(() => {
                   :message="mess.message"
                   :receiverRole="mess.receiverRole"
                   :senderRole="mess.senderRole"
-                  :createAt="mess.createAt" />
+                  :createAt="mess.createAt"
+                  :img-src="mess.img"
+                  />
               </div>
             </div>
           </div>
-          <div class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-            <div class="flex-grow">
-              <div class="relative w-full">
+          <div class="rounded-xl w-full px-4">
+            <div class="flex items-center w-full">
+              <!-- Attach icon -->
+              <div>
+                <Icon
+                  icon="teenyicons:attach-solid"
+                  class="text-[24px] mr-3"
+                  @click="() => $refs.file.click()"
+                  @click.prevent/>
+                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+              </div>
+              <!-- Input -->
+              <div class="flex-grow">
                 <input
                   v-model="textMessage"
                   @keypress.enter="sendMessage"
                   type="text"
-                  class="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10" />
-
-                <div class="mt-3">
-                  <ListEditableImage
-                    :img-src="[
-                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
-                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
-                      'https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg',
-                    ]" />
-                </div>
+                  class="flex w-full rounded-xl pl-4 h-10" />
+              </div>
+              <!-- Send icon -->
+              <div class="ml-4">
+                <button
+                  @click="sendMessage"
+                  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
+                  <span class="ml-1">
+                    <svg
+                      class="w-4 h-4 transform rotate-45 -mt-px"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                  </span>
+                </button>
               </div>
             </div>
-            <div class="ml-4">
-              <button
-                @click="() => sendMessage()"
-                class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
-                <span class="ml-1">
-                  <svg
-                    class="w-4 h-4 transform rotate-45 -mt-px"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                  </svg>
-                </span>
-              </button>
+            <div v-if="imgSrc.length > 0" class="mt-3">
+              <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
             </div>
           </div>
         </div>

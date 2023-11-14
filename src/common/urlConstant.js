@@ -3,6 +3,16 @@ const DOMAIN_URL = import.meta.env.VITE_DOMAIN_URL
 const WS_URL = import.meta.env.VITE_WEB_SOCKET_SERVER_URL
 const WS_AUTH = import.meta.env.VITE_WEB_SOCKET_AUTH
 
+export const firebaseConfig = {
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+}
+
 export default {
   domain: DOMAIN_URL,
   base: SERVICE_URL,

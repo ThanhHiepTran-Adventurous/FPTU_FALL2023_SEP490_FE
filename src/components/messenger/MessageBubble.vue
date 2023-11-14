@@ -5,6 +5,7 @@ import moment from 'moment';
 import { computed } from 'vue';
 import { Tooltip } from 'ant-design-vue';
 import { Role } from '@/common/contract';
+import ExpandableImageBox from '../ExpandableImageBox.vue';
 
 const userStore = useUserStore()
 
@@ -18,11 +19,12 @@ const props = defineProps({
   createAt: String,
   receiverRole: String,
   senderRole: String,
+  imgSrc: String,
 });
 </script>
 
 <template>
-  <div :class="{ 'col-start-1 col-end-8 p-3 rounded-lg': isSender, 'col-start-6 col-end-13 p-3 rounded-lg': !isSender }">
+  <div :class="{ 'col-start-1 col-end-8 px-3 py-1 rounded-lg': isSender, 'col-start-6 col-end-13 px-3 py-1 rounded-lg': !isSender }">
     <div class="flex flex-row items-center" :class="!isSender ? 'justify-end' : ''">
       <div
         v-if="isSender"
@@ -37,7 +39,10 @@ const props = defineProps({
       </div>
       <Tooltip class="relative ml-3 text-sm py-2 px-4 shadow rounded-xl" :class="isSender ? ' bg-white' : 'bg-blue-500 text-white'" placement="right">
         <template #title>{{ moment.utc(createAt).format("DD/MM/YYYY HH:mm:ss") }}</template>
-        {{ message || '<Empty>' }}
+        <div v-if="message">{{ message }}</div>
+        <div v-if="imgSrc">
+          <ExpandableImageBox :src="imgSrc" alt="Message image" img-class="w-[10rem] h-[10rem]" />
+        </div>
       </Tooltip>
       <div
         v-if="!isSender"
