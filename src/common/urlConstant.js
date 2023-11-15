@@ -135,6 +135,7 @@ export default {
       staffConfirmShipRequest: 'shipRequest/staff/confirm-to-waiting-for-delivery/{shipRequestId}',
       StaffChangeShipRequestToOnDelivery: 'shipRequest/staff/change-to-on-delivery/{shipRequestId}',
       StaffChangeShipRequestToDelivered: 'shipRequest/staff/change-to-delivered/{shipRequestId}',
+      buyerConfirmDelivered: 'shipRequest/buyer/confirm-ship-request-delivered/{shipRequestId}',
     },
     withdrawAndRefunds: {
       getAllWithdraws: 'withdrawAndRefunds',

@@ -1,11 +1,9 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue'
 import SearchInput from '../common-components/SearchInput.vue'
-import auctionService from '@/services/auction.service'
 import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
-import ItemSold from '../common-components/item-box/ItemSold.vue'
 import imageHelper from '@/utils/image-helper'
 import { AuctionModelType, OrderStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
@@ -37,15 +35,6 @@ const openReportModal = () => {
 }
 const closeReportModal = () => {
   isReportModalOpen.value = false
-}
-const hasShipRequest = async orderId => {
-  try {
-    const query = 'shipRequest_orderId:' + orderId
-    const response = await ShipRequestService.getAllShipRequest(query)
-    hasShip.value = response && response.data && response.data.length > 0
-  } catch (error) {
-    console.error('Error checking ship request:', error)
-  }
 }
 // Filter
 const options = ref([
@@ -79,9 +68,8 @@ const filterData = async () => {
 // Business functions
 const handleDepositRequest = async orderId => {
   try {
-    const response = await withdraw.sellerWithdrwaOpt2(orderId)
+    await withdraw.sellerWithdrwaOpt2(orderId)
     toastOption.toastSuccess('Tạo yêu cầu rút tiền thành công')
-    console.log(response)
   } catch (error) {
     toastOption.toastError('Tạo yêu cầu rút tiền thất bại')
     console.error('Error creating ship request:', error)
@@ -89,12 +77,10 @@ const handleDepositRequest = async orderId => {
 }
 const handleCreateShipRequest = async orderId => {
   try {
-    const response = await ShipRequestService.sellerCreateShipRequest(orderId)
+    closeModal()
+    await ShipRequestService.sellerCreateShipRequest(orderId)
     toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    fetchOrders()
   } catch (error) {
     toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
     console.error('Error creating ship request:', error)
@@ -104,8 +90,6 @@ const handleCreateShipRequest = async orderId => {
 // Page operations
 const activateInfoAuction = order => {
   detail.value = order
-  hasShipRequest(detail.value.id)
-  console.log(detail.value)
   isModalVisible.value = true
 }
 function closeModal() {
@@ -147,10 +131,10 @@ onMounted(() => {
         :secondaryImage="imageHelper.getSecondaryImageFromList(item.productResponse.imageUrls)"
         :auction-type="item.modelTypeAuctionOfOrder"
         :orderId="item.id"
-        :hasShipRequest="item.hasShipRequest"
         :chatGroupId="item.chatGroupDTOs.id ? item.chatGroupDTOs.id : ''"
         :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
     </div>
+    <!-- CHANGE HERE -->
     <Modal
       :hidden="!isModalVisible"
       :widthClass="'w-[900px]'"
@@ -245,7 +229,7 @@ onMounted(() => {
         </div>
         <div>
           <Button
-            v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate && !hasShip"
+            v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate && !detail?.hasShipRequest"
             :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value"
             @on-click="handleCreateShipRequest(detail?.id)">
             <div class="flex items-center">

@@ -67,12 +67,10 @@ onMounted(() => {
 })
 const confirmToWaitingForDelivery = async shipRequestId => {
   try {
-    const response = await ShipRequestService.staffConfirmShipRequest(shipRequestId)
+    showUpdateModal.value = false
+    await ShipRequestService.staffConfirmShipRequest(shipRequestId)
     toastOption.toastSuccess('Xác nhận đơn hàng thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    getAllShipRequest()
   } catch (e) {
     toastOption.toastError('Xác nhận đơn hàng thất bại')
     console.error(e)
@@ -80,26 +78,21 @@ const confirmToWaitingForDelivery = async shipRequestId => {
 }
 const staffChangeShipRequestToOnDelivery = async shipRequestId => {
   try {
-    const response = await ShipRequestService.staffChangeShipRequestToOnDelivery(shipRequestId)
+    showUpdateModal.value = false
+    await ShipRequestService.staffChangeShipRequestToOnDelivery(shipRequestId)
     toastOption.toastSuccess('Xác nhận đơn hàng đang vận chuyển thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    getAllShipRequest()
   } catch (e) {
     toastOption.toastError('Xác nhận đơn hàng đang vận chuyển thất bại')
-
     console.error(e)
   }
 }
 const staffChangeShipRequestToDelivered = async shipRequestId => {
   try {
-    const response = await ShipRequestService.staffChangeShipRequestToDelivered(shipRequestId)
+    showUpdateModal.value = false
+    await ShipRequestService.staffChangeShipRequestToDelivered(shipRequestId)
     toastOption.toastSuccess('Xác nhận đơn hàng đã giao thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    getAllShipRequest()
   } catch (e) {
     toastOption.toastError('Xác nhận đơn hàng đã giao thất bại')
     console.error(e)

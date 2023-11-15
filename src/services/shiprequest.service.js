@@ -47,10 +47,16 @@ const staffChangeShipRequestToDelivered = async shipRequestId => {
     throw error
   }
 }
+const buyerConfirmShipRequestDone = async shipRequestId => {
+  const serviceUrl = url.endpoint.ship.buyerConfirmDelivered.replace('{shipRequestId}', shipRequestId)
+  const response = await utils.axiosLocalHost.put(serviceUrl)
+  return response ? response.data : response
+}
 export default {
   sellerCreateShipRequest,
   getAllShipRequest,
   staffConfirmShipRequest,
   staffChangeShipRequestToOnDelivery,
   staffChangeShipRequestToDelivered,
+  buyerConfirmShipRequestDone
 }

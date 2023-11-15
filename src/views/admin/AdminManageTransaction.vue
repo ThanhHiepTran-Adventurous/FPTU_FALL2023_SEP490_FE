@@ -63,12 +63,8 @@ const openWithdrawModal = withdraw => {
 }
 const handleConfirmWithdraw = async withdrawId => {
   try {
-    const response = await withdraw.adminConfirmSellerwithdrawOpt2(withdrawId)
+    await withdraw.adminConfirmSellerwithdrawOpt2(withdrawId)
     toastOption.toastSuccess('Xác nhận đã thanh toán thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
   } catch (error) {
     toastOption.toastError('Xác nhận đã thanh toán thất bại')
     console.error('withdrawId:', error)

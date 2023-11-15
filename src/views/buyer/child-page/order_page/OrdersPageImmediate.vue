@@ -115,7 +115,6 @@ onMounted(() => {
             :auction-type="item.modelTypeAuctionOfOrder"
             :orderId="item.id"
             :chatGroupId="item.chatGroupDTOs.id"
-            :hasShipRequest="item.hasShipRequest"
             :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
         </div>
       </div>

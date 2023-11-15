@@ -1,11 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, OrderStatus } from '@/common/contract'
+import { AuctionModelType, OrderStatus, StatusShipRequest } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { buyerTabs } from '@/common/constant'
@@ -18,13 +18,15 @@ import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
 import ReportService from '@/services/report.service'
+import Dropdown from '@/components/common-components/Dropdown.vue'
+import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
 
 const orders = ref([])
 const ordersFiltered = ref([])
+
 const detail = ref(null)
 
 const isModalVisible = ref(false)
-const isUpdating = ref(false)
 const breadcrumbItems = [
   {
     text: 'Trang chủ',
@@ -37,6 +39,27 @@ const breadcrumbItems = [
     disabled: true,
   },
 ]
+
+// Filter
+const options = ref([
+  {
+    label: 'Đã có yêu cầu giao hàng',
+    value: true,
+  },
+  {
+    label: 'Chưa có yêu cầu giao hàng',
+    value: false,
+  },
+])
+
+const selected = ref({
+  label: 'Đã có yêu cầu giao hàng',
+  value: true,
+})
+watch(selected, newVal => {
+  filterData()
+})
+
 const isReportModalOpen = ref(false)
 const openReportModal = () => {
   isReportModalOpen.value = true
@@ -46,19 +69,12 @@ const closeReportModal = () => {
 }
 const filterData = () => {
   ordersFiltered.value = orders.value
-    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
+    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate && v.hasShipRequest === selected.value.value)
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
-}
 
-// Update status
-const updateOrderStatus = async () => {
-  isUpdating.value = true
-  await OrderService.updateStatus(detail.value.statusOrder, detail.value.id)
-  closeModal()
-  fetchOrders()
-  isUpdating.value = false
+  console.log(ordersFiltered.value)
 }
 
 const activateInfoAuction = order => {
@@ -102,17 +118,19 @@ const onReportModalConfirm = async (listImg, text) => {
   formData.append('createReportRequest', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
 
   try {
-    const response = await ReportService.buyerReportSellerOpt2(detail.value.id, formData)
+    closeModal()
+    await ReportService.buyerReportSellerOpt2(detail.value.id, formData)
     toastOption.toastSuccess('Tố cáo thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    fetchOrders()
   } catch (error) {
     toastOption.toastError('Tố cáo thất bại')
     console.error('Error creating ship request:', error)
   }
 }
+const onConfirmOrder = () => {
+  
+}
+
 onMounted(() => {
   fetchOrders()
 })
@@ -139,6 +157,7 @@ onMounted(() => {
         <!-- Filter -->
         <div class="mb-2 mx-3 pt-3">
           <div class="flex items-center gap-3">
+            <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
             <div class="w-full">
               <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
             </div>
@@ -156,9 +175,10 @@ onMounted(() => {
             :auction-type="item.modelTypeAuctionOfOrder"
             :orderId="item.id"
             :chatGroupId="item.chatGroupDTOs.id"
-            :hasShipRequest="item.hasShipRequest"
+            :statusShipRequest="StatusShipRequest.waitingForDelivery.value"
             :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
         </div>
+        <!-- CHANGE HERE -->
       </div>
     </SideBarLayout>
     <Modal
@@ -225,14 +245,17 @@ onMounted(() => {
                     }}
                   </td>
                 </tr>
+                <tr>
+                  <td
+                    class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                    Trạng thái giao hàng:
+                  </td>
+                  <td class="py-2 px-4 border-b border-grey-light">
+                    <ShippingStatusIntermediate :status="StatusShipRequest.onDelivery.value"/>
+                  </td>
+                </tr>
               </tbody>
             </table>
-          </div>
-          <div class="mx-auto container align-middle mt-8">
-            <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
-            <div class="ml-8">
-              <OrderTimeline :curStatus="detail?.statusOrder" />
-            </div>
           </div>
         </div>
       </div>
@@ -243,7 +266,14 @@ onMounted(() => {
         <div>
           <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="openReportModal">
             <div class="flex items-center">
-              <div>Tố cáo</div>
+              <div>Yêu cầu trả hàng</div>
+            </div>
+          </Button>
+        </div>
+        <div>
+          <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="onConfirmOrder">
+            <div class="flex items-center">
+              <div>Chấp nhận đơn hàng</div>
             </div>
           </Button>
         </div>
