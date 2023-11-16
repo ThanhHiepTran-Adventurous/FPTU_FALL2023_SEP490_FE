@@ -1,22 +1,75 @@
 <script setup>
 import StaffHeader from '@/views/staff/common/StaffHeader.vue'
 import reportService from '@/services/report.service'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import StaffSideBarLayout from '@/layouts/StaffSideBarLayout.vue'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
-import { AuctionModelType, Role } from '@/common/contract'
+import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
 import chatService from '@/services/chat.service'
 import { useRouter } from 'vue-router'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import { staffTabs } from '@/common/constant'
+import Dropdown from '@/components/common-components/Dropdown.vue'
+import toastOption from '@/utils/toast-option'
+
+//filter
+const filterData = ref({
+  fromRole: [
+    {
+      label: 'Tất cả',
+      value: '',
+    },
+    {
+      label: 'Người mua',
+      value: Role.buyer.value,
+    },
+    {
+      label: 'Người bán',
+      value: Role.seller.value,
+    },
+  ],
+  status: [
+    {
+      label: 'Tất cả',
+      value: '',
+    },
+    {
+      label: ReportStatus.PROCESSING.label,
+      value: ReportStatus.PROCESSING.value,
+    },
+    {
+      label: ReportStatus.PROCESSED.label,
+      value: ReportStatus.PROCESSED.value,
+    },
+    {
+      label: ReportStatus.REJECTED.label,
+      value: ReportStatus.REJECTED.value,
+    },
+  ]
+})
+const selected = ref({
+  fromRole: {
+    label: 'Tất cả',
+    value: '',
+  },
+  status: {
+    label: 'Tất cả',
+    value: '',
+  }
+})
+
+watch(selected, () => {
+  filterReports()
+}, {deep: true})
 
 const router = useRouter()
 
 const reportList = ref([])
+const filteredReports = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
 
@@ -34,9 +87,17 @@ const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataStaff()
     reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
+    filterReports()
   } catch (e) {
     console.error(e)
   }
+}
+
+const filterReports = () => {
+  filteredReports.value = reportList.value
+  .filter(f => 
+  (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) 
+  && (!selected.value.status.value || f.status === selected.value.status.value))
 }
 
 const onJoinChat = async (groupId) => {
@@ -48,20 +109,36 @@ const onCreateChatGroup = async (orderId) => {
 }
 
 const onRejectReport = async (reportId) => {
-  if(!confirm("Bạn có chắc chắn muốn từ chối tố cáo này không?")){
-    return
+  if(confirm("Bạn có chắc chắn muốn từ chối tố cáo này không?")){
+    try {
+      closeReportModal()
+      await reportService.staffDeclineReportOpt1(reportId)
+      toastOption.toastSuccess("Xác nhận từ chối thành công.")
+      getAllReportStaff()
+    } catch (e) {
+      console.log(e)
+      toastOption.toastError("Vui lòng tải lại trang và thử lại.")
+    }
   }
 }
 const onConfirmReport = async (reportId) => {
-  if(!confirm("Bạn có chắc chắn muốn xác nhận tố cáo này là chính xác không?")){
-    return
+  if(confirm("Bạn có chắc chắn muốn xác nhận tố cáo này là chính xác không?")){
+    try {
+      closeReportModal()
+      await reportService.staffConfirmReturnRequest(reportId)
+      toastOption.toastSuccess("Xác nhận cho phép trả hàng thành công.")
+      getAllReportStaff()
+    } catch (e) {
+      console.log(e)
+      toastOption.toastError("Có lỗi xảy ra, vui lòng tải lại trang và thử lại.")
+    }
   }
 }
 
 
 // Pagination
 const totalPages = computed(() => {
-  return Math.ceil(reportList.value.length / itemsPerPage)
+  return Math.ceil(filteredReports.value.length / itemsPerPage)
 })
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
@@ -82,7 +159,7 @@ const paginatedReportList = computed(() => {
   // Move startIndex and endIndex calculation here
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return reportList.value.slice(startIndex, endIndex)
+  return filteredReports.value.slice(startIndex, endIndex)
 })
 
 onMounted(() => {
@@ -104,6 +181,27 @@ onMounted(() => {
           :cur-tab="AuctionModelType.intermediate"
         />
       </div>
+
+      <!-- Filter section -->
+      <div class="mt-4 px-12 flex items-center">
+        <div class="flex items-center gap-3 mr-[10%]">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Tố cáo từ: 
+          </label>
+          <div class="flex gap-3 items-center">
+            <Dropdown :data="filterData.fromRole" v-model="selected.fromRole" class="!w-[200px]" />
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Trạng thái:
+          </label>
+          <div class="flex items-center gap-3">
+            <Dropdown :data="filterData.status" v-model="selected.status" class="!w-[200px]" />
+          </div>
+        </div>
+      </div>
+
       <section class="bg-white sm:p-5">
         <div class="mx-auto px-4">
           <div class="bg-white relative sm:rounded-lg overflow-hidden">
@@ -228,7 +326,7 @@ onMounted(() => {
           </div>
           <div class="flex items-center gap-3 text-lg mb-1">
             <div class="min-w-[100px]">Tạo lúc: </div>
-            <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+            <div>{{ moment.utc(report?.aboutOrder.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
           </div>
         </div>
         <div class="py-1.5">
@@ -261,6 +359,12 @@ onMounted(() => {
             <div class="font-semibold text-red-600">{{ report?.toUserReport.role === Role.seller.value ? 'Người bán' : 'Người mua' }}</div>
           </div>
         </div>
+        <div class="flex px-8 my-2">
+          <div class="flex items-center gap-3 text-lg mb-1">
+            <div class="min-w-[100px]">Tạo lúc: </div>
+            <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+          </div>
+        </div>
         <div class="flex px-8">
           <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
             <div class="min-w-[100px]">Nội dung: </div>
@@ -284,18 +388,18 @@ onMounted(() => {
       </div>
       <div>
         <button
-          v-if="report?.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate"
-          @click="onCreateChatGroup(report?.aboutOrder.id)"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
-          type="button">
-            Tạo nhóm chat
-        </button>
-        <button
-          v-else
+          v-if="report?.aboutOrder.chatGroupDTOs?.id"
           @click="onJoinChat(report?.aboutOrder.chatGroupDTOs.id)"
           class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Vào nhóm chat
+        </button>
+        <button
+          v-else
+          @click="onCreateChatGroup(report?.aboutOrder.id)"
+          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          type="button">
+            Tạo nhóm chat
         </button>
       </div>
       <div>
@@ -305,9 +409,11 @@ onMounted(() => {
           type="button">
             Xác nhận tố cáo chính xác
         </button>
+      </div>
+      <div>
         <button
           @click="onRejectReport(report?.id)"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Từ chối
         </button>

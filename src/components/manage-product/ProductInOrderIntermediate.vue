@@ -5,7 +5,7 @@ import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, OrderStatus } from '@/common/contract'
+import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Dropdown from '../common-components/Dropdown.vue'
 import Button from '@/components/common-components/Button.vue'
@@ -28,7 +28,6 @@ const detail = ref(null)
 
 const isModalVisible = ref(false)
 const isUpdating = ref(false)
-const hasShip = ref(false)
 const isReportModalOpen = ref(false)
 const openReportModal = () => {
   isReportModalOpen.value = true
@@ -101,7 +100,20 @@ function handleConfirm() {
 
 const fetchOrders = async () => {
   const response = await OrderService.getAllOrders('', 1, 1000, '')
-  orders.value = response.data ? response.data : []
+  orders.value = response.data ? response.data.map(f => {
+    if(!f.shipRequestList){
+      return f
+    }
+    if(f.shipRequestList.length === 1){
+      f.sellerShipRequest = f.shipRequestList[0]
+      return f
+    }
+    if(f.shipRequestList.length === 2){
+      f.sellerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.SELLER_SHIP)[0]
+      f.buyerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.BUYER_RETURN)[0]
+    }
+    return f
+  }) : []
   filterData()
 }
 
@@ -131,10 +143,12 @@ onMounted(() => {
         :secondaryImage="imageHelper.getSecondaryImageFromList(item.productResponse.imageUrls)"
         :auction-type="item.modelTypeAuctionOfOrder"
         :orderId="item.id"
+        :statusShipRequest="item.sellerShipRequest?.status"
+        :statusReturnRequest="item.buyerShipRequest?.status"
+        :is-completed="item.statusOrder === OrderStatus.DONE.value"
         :chatGroupId="item.chatGroupDTOs.id ? item.chatGroupDTOs.id : ''"
         :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
     </div>
-    <!-- CHANGE HERE -->
     <Modal
       :hidden="!isModalVisible"
       :widthClass="'w-[900px]'"

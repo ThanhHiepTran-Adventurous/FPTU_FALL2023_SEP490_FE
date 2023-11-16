@@ -44,6 +44,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  statusReturnRequest: {
+    type: String,
+    default: ''
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false
+  }
 })
 </script>
 <template>
@@ -60,6 +68,12 @@ const props = defineProps({
           <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="" />
         </span>
       </a>
+      <div v-if="statusReturnRequest" class="absolute top-0 right-0 mt-1">
+        <ShippingStatusIntermediate :status="statusReturnRequest" />
+      </div>
+      <div v-if="!!isCompleted" class="absolute top-0 left-2 mt-2">
+        <Icon icon="clarity:success-standard-solid" class="text-green-500 text-[26px]" />
+      </div>
     </div>
     <div class="tt-description flex flex-col items-center">
       <div class="w-full flex justify-start ml-3">

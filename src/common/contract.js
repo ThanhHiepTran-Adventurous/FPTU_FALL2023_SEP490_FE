@@ -160,3 +160,23 @@ export const StatusShipRequest = {
     value: 'RETURNS'
   }
 }
+
+export const ShipRequestType = {
+  SELLER_SHIP: "SELLER_SHIP",
+  BUYER_RETURN: "BUYER_RETURN"
+}
+
+export const ReportStatus = {
+  PROCESSING: {
+    label: "Đang xử lý",
+    value: "PROCESSING"
+  },
+  PROCESSED: {
+    label: "Đã xử lý",
+    value: "CONFIRMED"
+  },
+  REJECTED: {
+    label: "Từ chối xử lý",
+    value: "REJECTED"
+  },
+}
