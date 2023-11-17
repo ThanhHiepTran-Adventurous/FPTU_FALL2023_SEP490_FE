@@ -19,6 +19,7 @@ import toastOption from '@/utils/toast-option'
 import withdraw from '../../services/withdraw.service'
 import ReportService from '@/services/report.service'
 import ReportModal from '@/components/ReportModal.vue'
+import ShippingStatusIntermediate from '../ShippingStatusIntermediate.vue'
 
 const router = useRouter()
 
@@ -205,12 +206,30 @@ onMounted(() => {
                 <tr>
                   <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Cập nhật lúc :
+                    Cập nhật lúc:
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
                     {{
                       detail?.lastUpdatedAt ? moment.utc(detail?.lastUpdatedAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'
                     }}
+                  </td>
+                </tr>
+                <tr v-if="detail?.sellerShipRequest">
+                  <td
+                    class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                    Trạng thái giao hàng:
+                  </td>
+                  <td class="py-2 px-4 border-b border-grey-light">
+                    <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status"/>
+                  </td>
+                </tr>
+                <tr v-if="detail?.buyerShipRequest">
+                  <td
+                    class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                    Trạng thái trả hàng:
+                  </td>
+                  <td class="py-2 px-4 border-b border-grey-light">
+                    <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status"/>
                   </td>
                 </tr>
               </tbody>

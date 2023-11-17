@@ -6,9 +6,9 @@ import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
 import ProductReport from '@/components/manage-product/ProductReport.vue'
 import Transaction from '@/components/manage-product/ProductTransactionHistory.vue'
-import MessengerSeller from '@/views/seller/MessengerSeller.vue'
 import ProductInOrderImmediate from '@/components/manage-product/ProductInOrderImmediate.vue'
 import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrderIntermediate.vue'
+import SellerReturnTrackPage from '@/views/seller/SellerReturnTrackPage.vue'
 import TestComponent from '@/views/TestComponent.vue'
 const seller_router = [
   {
@@ -55,6 +55,11 @@ const seller_router = [
         name: 'product-in-order-intermediate',
         path: '/manage/orders/intermediate',
         component: ProductInOrderIntermediate,
+      },
+      {
+        name: 'order-return',
+        path: '/manage/return-request',
+        component: SellerReturnTrackPage,
       },
       {
         name: 'product-report',

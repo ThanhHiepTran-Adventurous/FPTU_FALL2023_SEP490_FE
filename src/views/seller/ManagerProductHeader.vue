@@ -10,6 +10,7 @@ const tabs = {
   order: 'product-in-order-immediate',
   report: 'product-report',
   transaction: 'product-transaction',
+  returned: 'order-return'
 }
 
 const route = useRoute()
@@ -84,6 +85,15 @@ const curTab = computed(() => {
                   class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
                   :class="curTab === tabs.transaction ? 'bg-blue-200' : ''">
                   Lịch sử giao dịch
+                </button>
+              </router-link>
+            </div>
+            <div class="flex-2">
+              <router-link to="/manage/return-request">
+                <button
+                  class="flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-gray-500 hover:shadow"
+                  :class="curTab === tabs.returned ? 'bg-blue-200' : ''">
+                  Đơn hàng trả về
                 </button>
               </router-link>
             </div>
