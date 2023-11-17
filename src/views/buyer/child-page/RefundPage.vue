@@ -1,20 +1,19 @@
 <script setup>
 import reportService from '@/services/report.service'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
-import { AuctionModelType, ReportStatus, Role, ShipRequestType } from '@/common/contract'
+import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
 import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
-import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import shiprequestService from '@/services/shiprequest.service'
-import Loading from '@/components/common-components/Loading.vue'
 import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
+import Dropdown from '@/components/common-components/Dropdown.vue'
+import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 
 const breadcrumbItems = [
   {
@@ -29,23 +28,41 @@ const breadcrumbItems = [
   },
 ]
 
+//filter
+const filterData = ref([
+    {
+        label: 'Tất cả',
+        value: '',
+    },
+    {
+        label: ReportStatus.PROCESSING.label,
+        value: ReportStatus.PROCESSING.value,
+    },
+    {
+        label: ReportStatus.PROCESSED.label,
+        value: ReportStatus.PROCESSED.value,
+    },
+    {
+        label: ReportStatus.REJECTED.label,
+        value: ReportStatus.REJECTED.value,
+    }
+])
+const selected = ref({
+    label: 'Tất cả',
+    value: '',
+})
+
+watch(selected, () => {
+  filterReports()
+}, {deep: true})
 
 const reportList = ref([])
+const filteredReport = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
-const isDetailLoading = ref(false)
 
 const openReportModal = async (detail) => {
   report.value = detail
-  isDetailLoading.value = true
-  const response = await shiprequestService.getShipRequestByOrder(detail.aboutOrder.id)
-  isDetailLoading.value = false
-  if(response.data.length > 0){
-    const shipData = response.data.filter(f => f.type === ShipRequestType.BUYER_RETURN)
-    if(shipData && shipData.length === 1){
-      report.value.shipReturnRequest = shipData[0]
-    }
-  }
   isModalVisible.value = true
 }
 const closeReportModal = () => {
@@ -58,14 +75,18 @@ const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataBuyerOrSeller()
     reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate && f.reportType === 'BUYER_REPORT_OPTION_2')
+    filterReports()
   } catch (e) {
     console.error(e)
   }
 }
+const filterReports = () => {
+    filteredReport.value = reportList.value.filter(f => !selected.value.value || f.status === selected.value.value)
+}
 
 // Pagination
 const totalPages = computed(() => {
-  return Math.ceil(reportList.value.length / itemsPerPage)
+  return Math.ceil(filteredReport.value.length / itemsPerPage)
 })
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
@@ -86,7 +107,7 @@ const paginatedReportList = computed(() => {
   // Move startIndex and endIndex calculation here
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return reportList.value.slice(startIndex, endIndex)
+  return filteredReport.value.slice(startIndex, endIndex)
 })
 
 onMounted(() => {
@@ -106,6 +127,18 @@ onMounted(() => {
           Lịch sử trả hàng</div>
       </div>
 
+      <!-- Filter section -->
+      <div class="mt-4 px-12 flex items-center">
+        <div class="flex items-center gap-3 mr-[10%]">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Trạng thái: 
+          </label>
+          <div class="flex gap-3 items-center">
+            <Dropdown :data="filterData" v-model="selected" class="!w-[200px]" />
+          </div>
+        </div>
+      </div>
+
       <section class="sm:p-5">
         <div class="mx-auto px-4">
           <div class="bg-white relative sm:rounded-lg overflow-hidden">
@@ -118,7 +151,7 @@ onMounted(() => {
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do trả hàng</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái</th>
-
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái trả hàng</th>
                     <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
                     </th>
@@ -141,12 +174,24 @@ onMounted(() => {
                     <td class="px-4 py-3">
                       <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
                     </td>
-                    <td class="px-4 py-3 flex items-center justify-end">
-                      <button
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                        type="button" @click="openReportModal(report)">
-                        <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
-                      </button>
+                    <td class="px-4 py-3">
+                      <div v-if="report?.returnShipRequestResponse?.status" class="font-normal text-black flex justify-center"><ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" /></div>
+                    </td>
+                    <td class="px-4 py-3 flex items-center gap-3 justify-end">
+                      <div>
+                        <button
+                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                          type="button" @click="openReportModal(report)">
+                          <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
+                        </button>
+                      </div>
+                      <router-link v-if="report?.aboutOrder?.chatGroupDTOs.id" :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
+                        <button
+                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                          type="button">
+                          <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500"/>
+                        </button>
+                      </router-link>
                     </td>
                   </tr>
                 </tbody>
@@ -201,10 +246,7 @@ onMounted(() => {
   </BuyerSideBarLayout>
   <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical="true" :hasButton="true"
     title="Chi tiết" @decline-modal="closeReportModal" @confirm-modal="closeReportModal" >
-    <div v-if="isDetailLoading" class="bg-white rounded-lg w-full h-full">
-      <Loading />
-    </div>
-    <div v-else class="relative px-2">
+    <div class="relative px-2">
       <!-- Order detail -->
       <div class="mx-auto container align-middle border-[2px] border-blue-800 rounded-lg pl-3 py-1.5">
         <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">
@@ -265,14 +307,14 @@ onMounted(() => {
             <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
           </div>
         </div>
-        <div v-if="report?.shipReturnRequest" class="flex px-8 my-2">
+        <div v-if="report?.returnShipRequestResponse?.status" class="flex px-8 my-2">
           <div class="flex items-center gap-3 text-lg mb-1">
             <div
               class="min-w-[200px]">
               Trạng thái trả hàng:
             </div>
             <div>
-              <ShippingStatusIntermediate :status="report?.shipReturnRequest.status"/>
+              <ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status"/>
             </div>
           </div>
         </div>

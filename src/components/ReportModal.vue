@@ -1,9 +1,10 @@
 <script setup>
 import { base64Image } from '@/utils/imageFile'
-import Modal from './common-components/Modal.vue'
+import OuterModal from './common-components/OuterModal.vue'
 import Button from './common-components/Button.vue'
 import { Icon } from '@iconify/vue'
 import { ref } from 'vue'
+import ListEditableImage from '@/components/ListEditableImage.vue'
 
 const imgData = ref([])
 const imgSrc = ref([])
@@ -22,10 +23,15 @@ const handleFileUpload = async e => {
   imgData.value.push(e.target.files[0])
   imgSrc.value.push(await base64Image(e.target.files[0]))
 }
+const handleImageDeleted = (indx) => {
+  imgData.value.splice(indx, 1)
+  imgSrc.value.splice(indx, 1)
+}
+
 </script>
 
 <template>
-  <Modal
+  <OuterModal
     :widthClass="'w-[900px]'"
     :hasOverFlowVertical="true"
     :hasButton="true"
@@ -43,10 +49,9 @@ const handleFileUpload = async e => {
         </button>
         <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
       </div>
-      <div class="mt-4 w-full overflow-x-auto" v-if="imgSrc.length > 0">
-        <div v-for="src in imgSrc" :key="src" class="inline-block mr-2">
-          <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
-        </div>
+
+      <div v-if="imgSrc.length > 0" class="mt-3">
+        <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
       </div>
 
       <div class="text-sm flex flex-col">
@@ -75,5 +80,5 @@ const handleFileUpload = async e => {
         </button>
       </div>
     </template>
-  </Modal>
+  </OuterModal>
 </template>

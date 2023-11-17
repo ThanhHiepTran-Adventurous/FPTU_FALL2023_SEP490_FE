@@ -150,6 +150,7 @@ export default {
       getAllReportDataBuyerOrSeller: 'report/sellerOrBuyer/getAllReport',
       getAllReportDataStaff: 'report/staff/getAllReport',
       buyerReportSellerOpt2: 'report/buyer/report-seller-option2/{orderId}',
+      sellerReportBuyerOpt2: 'report/seller/report-buyer-option2/{orderId}',
       confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
       declineReportOpt1: 'report/staff/reject-report/{reportId}',
       confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',

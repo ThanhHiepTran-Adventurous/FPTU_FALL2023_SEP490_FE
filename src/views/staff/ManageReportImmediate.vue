@@ -17,6 +17,7 @@ import toastOption from '@/utils/toast-option'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import RejectModal from '@/components/RejectModal.vue'
+import { Icon } from "@iconify/vue"
 
 const router = useRouter()
 
@@ -223,9 +224,8 @@ onMounted(() => {
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Người tố cáo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Người bị tố cáo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do tố cáo</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
-
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái</th>
                     <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
                     </th>
@@ -248,7 +248,7 @@ onMounted(() => {
                     <td class="px-4 py-3">
                       <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
                     </td>
-                    <td class="px-4 py-3 flex items-center justify-end">
+                    <td class="px-4 py-3 flex items-center gap-3 justify-end">
                       <button
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button" @click="openReportModal(report)">
@@ -259,6 +259,13 @@ onMounted(() => {
                           <path
                             d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
                         </svg>
+                      </button>
+                      <button
+                        v-if="report?.aboutOrder?.chatGroupDTOs.id"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button"
+                        @click="onJoinChat(report?.aboutOrder?.chatGroupDTOs.id)">
+                        <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500"/>
                       </button>
                     </td>
                   </tr>

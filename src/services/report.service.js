@@ -50,6 +50,17 @@ const buyerReportSellerOpt2 = async (orderId, formData) => {
 
   return response ? response.data : response
 }
+const sellerReportBuyerOpt2 = async (orderId, formData) => {
+  const serviceUrl = url.endpoint.report.sellerReportBuyerOpt2.replace('{orderId}', orderId)
+
+  const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
+
+  return response ? response.data : response
+}
 
 const staffAssignReport = async (reportId) => {
   const serviceUrl = url.endpoint.report.assignReport.replace("{reportId}", reportId)
@@ -88,5 +99,6 @@ export default {
   staffAssignReport,
   staffConfirmReportOpt1,
   staffDeclineReportOpt1,
-  staffConfirmReturnRequest
+  staffConfirmReturnRequest,
+  sellerReportBuyerOpt2
 }
