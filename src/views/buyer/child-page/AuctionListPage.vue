@@ -160,56 +160,35 @@ const goToNextPage = () => {
 </script>
 <template>
   <section class="bg-white dark:bg-gray-900">
-    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-      <div class="container mx-auto bg-white mt-3 rounded-md px-5 pt-1 overflow-auto">
-        <div class="flex items-center justify-between">
-          <p class="text-3xl font-bold text-black">Sản phẩm</p>
-          <div class="flex items-center justify-center gap-3">
-            <p class="mt-3">Sắp xếp theo:</p>
-            <div>
-              <Dropdown v-model="orderSelected" :data="orderOptions" class="!w-[300px]" />
-            </div>
-          </div>
-        </div>
-        <div class="flex items-start justify-between mt-7">
-          <!-- Filter section -->
+    <div class="py-8 px-4 mx-auto max-w-screen-xxl lg:py-16 lg:px-6">
+      <div class="flex gap-2">
+        <article
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow dark:bg-gray-800 dark:border-gray-700 lg:w-1/5">
           <div>
-            <div>Bộ lọc</div>
+            <div class="font-bold text-lg text-black uppercase">Bộ lọc</div>
             <div class="mb-1.5 mt-2">
-              <div
-                class="flex items-center justify-between hover:cursor-pointer"
-                @click="() => (isBrandTabOpen = !isBrandTabOpen)">
-                <div class="font-bold text-black">Thương hiệu</div>
-                <Icon icon="ep:arrow-down" class="text-[18px]" />
+              <div class="flex items-center justify-between hover:cursor-pointer">
+                <div class="font-bold text-gray">Thương hiệu</div>
               </div>
-              <div
-                :class="`transition-all duration-500 ${
-                  isBrandTabOpen ? 'h-[10rem] opacity-1 p-2' : 'h-0 opacity-0 overflow-hidden'
-                }`">
+              <div class="transition-all duration-500 h-[10rem] opacity-1 p-2'">
                 <div v-for="brand in brandOptions" :key="brand.id" class="flex items-center mb-1">
                   <input
                     :id="brand.id"
                     type="checkbox"
                     :value="brand.value"
                     v-model="brand.isSelected"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray dark:text-gray-300">{{
                     brand.label
                   }}</label>
                 </div>
               </div>
             </div>
             <div class="mb-1.5">
-              <div
-                class="flex items-center justify-between hover:cursor-pointer"
-                @click="() => (isPriceTabOpen = !isPriceTabOpen)">
-                <div class="font-bold text-black">Giá</div>
-                <Icon icon="ep:arrow-down" class="text-[18px]" />
+              <div class="flex items-center justify-between hover:cursor-pointer">
+                <div class="font-bold text-gray">Giá</div>
               </div>
-              <div
-                :class="`transition-all duration-500 ${
-                  isPriceTabOpen ? 'h-[10rem] opacity-1 p-2' : 'h-0 opacity-0 overflow-hidden'
-                }`">
+              <div class="transition-all duration-500 opacity-1">
                 <div class="mt-5">
                   <Slider v-model="priceSelected" :max="10000000" :step="10000" />
                   <p>Giá từ {{ currencyFormat(priceSelected[0]) }} đên {{ currencyFormat(priceSelected[1]) }}</p>
@@ -217,24 +196,18 @@ const goToNextPage = () => {
               </div>
             </div>
             <div class="mb-1.5">
-              <div
-                class="flex items-center justify-between hover:cursor-pointer"
-                @click="() => (isCategoryTabOpen = !isCategoryTabOpen)">
-                <div class="font-bold text-black">Chủng loại</div>
-                <Icon icon="ep:arrow-down" class="text-[18px]" />
+              <div class="flex items-center justify-between hover:cursor-pointer">
+                <div class="font-bold text-gray">Chủng loại</div>
               </div>
-              <div
-                :class="`transition-all duration-500 ${
-                  isCategoryTabOpen ? 'h-[10rem] opacity-1 p-2' : 'h-0 opacity-0 overflow-hidden'
-                }`">
+              <div class="transition-all duration-500 opacity-1 p-2'">
                 <div v-for="cate in categoryOptions" :key="cate.id" class="flex items-center mb-1">
                   <input
                     :id="cate.id"
                     type="checkbox"
                     :value="cate.value"
                     v-model="cate.isSelected"
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                    class="w-4 h-4 text-gray border-gray-300 rounded focus:ring-blue-500" />
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray dark:text-gray-300">{{
                     cate.label
                   }}</label>
                 </div>
@@ -246,9 +219,20 @@ const goToNextPage = () => {
               Lọc
             </button>
           </div>
-          <!-- Auction section -->
-          <div class="w-[75%]">
-            <div class="flex flex-wrap gap-8">
+        </article>
+        <article
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow dark:bg-gray-800 dark:border-gray-700 lg:w-full">
+          <div>
+            <div class="flex items-center justify-between">
+              <p class="ml-4 text-3xl font-bold text-black uppercase">Sản phẩm</p>
+              <div class="flex items-center justify-center gap-3">
+                <p class="mt-3">Sắp xếp theo:</p>
+                <div>
+                  <Dropdown v-model="orderSelected" :data="orderOptions" class="!w-[300px]" />
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-1">
               <ItemBox
                 v-for="auction in auctions"
                 :key="auction.id"
@@ -258,7 +242,8 @@ const goToNextPage = () => {
                 :floor-price="auction.highestPrice ? auction.highestPrice : auction.startPrice"
                 :time-remain="auction.timeLeft"
                 :item-id="auction.id"
-                :auction-type="auction.modelType" />
+                :auction-type="auction.modelType"
+                class="border border-gray-300 rounded-lg shadow p-4 mx-2" />
             </div>
             <nav
               v-if="totalPages != 0"
@@ -326,7 +311,7 @@ const goToNextPage = () => {
               </ul>
             </nav>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   </section>

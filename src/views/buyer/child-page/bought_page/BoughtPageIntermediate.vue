@@ -21,7 +21,8 @@ import { buyerTabs } from '@/common/constant'
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
-
+import * as yup from 'yup'
+import { ErrorMessage, Field, Form } from 'vee-validate'
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')
@@ -166,7 +167,25 @@ const payment = async auctionId => {
     console.error('Error during payment:', error)
   }
 }
+const onSubmit = async autionIdd => {
+  try {
+    await schema.validate(
+      {
+        phone: profileModelData.value.phone,
+        address: profileModelData.value.address,
+        selectedProvince: selectedProvince.value.label,
+        selectedDistrict: selectedDistrict.value.label,
+        selectedWard: selectedWard.value.label,
+      },
+      { abortEarly: false },
+    )
 
+    payment(autionIdd)
+  } catch (error) {
+    console.error('Validation error:', error.errors)
+    // Handle displaying validation errors to the user if needed
+  }
+}
 const provinces = ref([])
 const wards = ref([])
 const districts = ref([])
@@ -188,6 +207,14 @@ watch(selectedDistrict, async () => {
       data: p.code,
     }
   })
+})
+
+const schema = yup.object().shape({
+  phone: yup.string().required('Số điện thoại là trường bắt buộc'),
+  address: yup.string().required('Số nhà là trường bắt buộc'),
+  selectedProvince: yup.string().required('Tỉnh / Thành phố là trường bắt buộc'),
+  selectedDistrict: yup.string().required('Quận / Huyện là trường bắt buộc'),
+  selectedWard: yup.string().required('Phường / Xã là trường bắt buộc'),
 })
 </script>
 
@@ -239,83 +266,113 @@ watch(selectedDistrict, async () => {
     aria-hidden="true"
     class="fixed inset-0 flex m items-center justify-center z-50 bg-black bg-opacity-50">
     <div class="relative w-full max-w-md max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-        <button
-          @click="showPaymentModel = false"
-          type="button"
-          class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-          data-modal-hide="authentication-modal">
-          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-        <div class="px-6 py-6 lg:px-8">
-          <form class="space-y-6" @submit.prevent="payment(autionIdd)">
-            <div class="flex-1 bg-white rounded-lg p-8">
-              <div class="flex items-center">
-                <div class="text-xl text-gray-900 font-bold mr-3">Thông tin giao hàng</div>
-                <Icon
-                  icon="iconamoon:edit-duotone"
-                  class="text-[26px] text-blue-500 hover:cursor-pointer hover:text-blue-600"
-                  @click="isInEditMode = true" />
-              </div>
-              <ul class="mt-2 text-gray-700">
-                <li class="flex border-b py-2">
-                  <label for="phone" class="font-bold mr-1">Điện thoại:</label>
-                  <input
-                    v-model="profileModelData.phone"
-                    type="text"
-                    name="phone"
-                    id="phone"
-                    required
-                    class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[63%]" />
-                </li>
-
-                <li class="flex border-b py-2">
-                  <label for="address" class="font-bold whitespace-nowrap">Địa chỉ:</label>
-
-                  <div v-if="isInEditMode" class="w-full ml-4">
-                    <input
-                      v-model="profileModelData.address"
-                      type="text"
-                      name="address"
-                      id="address"
-                      required
-                      class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 w-[63%]" />
-                    <div class="flex flex-col w-[full] gap-3 mt-3">
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Tỉnh / Thành phố:</div>
-                        <Dropdown required v-model="selectedProvince" :data="provinces" class="!w-[300px]" />
-                      </div>
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Quận / Huyện:</div>
-                        <Dropdown required v-model="selectedDistrict" :data="districts" class="!w-[300px]" />
-                      </div>
-                      <div class="flex flex-col items-left gap-1">
-                        <div>Phường / Xã:</div>
-                        <Dropdown required v-model="selectedWard" :data="wards" class="!w-[300px]" />
-                      </div>
-                    </div>
-                  </div>
-                  <span v-else class="text-gray-700">{{ profileModelData.address || 'N/A' }}</span>
-                </li>
-              </ul>
-              <div class="flex items-center" v-if="isInEditMode"></div>
+      <div
+        id="updateProductModal"
+        aria-hidden="true"
+        class="fixed inset-0 flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+        <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+          <!-- Modal content -->
+          <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center rounded-t border-b sm:mb-5 dark:border-gray-600">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thông tin giao hàng</h3>
+              <button
+                @click="showPaymentModel = false"
+                type="button"
+                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                data-modal-toggle="updateProductModal">
+                <svg
+                  aria-hidden="true"
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
             </div>
+            <!-- Modal body -->
+            <form @submit.prevent="onSubmit(autionIdd)" :validation-schema="schema">
+              <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                <div>
+                  <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Số điện thoại</label
+                  >
+                  <Field
+                    name="phone"
+                    type="text"
+                    v-model="profileModelData.phone"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
 
-            <button
-              type="submit"
-              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-              Thanh toán
-            </button>
-          </form>
+                  <!-- <Field name="phone" rules="required">
+                    <input
+                      v-model="profileModelData.phone"
+                      type="text"
+                      name="phone"
+                      id="phone"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  
+                  </Field> -->
+                  <ErrorMessage as="div" name="phone" class="text-start text-danger pt-2 fs-6" />
+                </div>
+                <div>
+                  <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Số nhà</label
+                  >
+                  <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    v-model="profileModelData.address"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage as="div" name="address" class="text-start text-danger pt-2 fs-6" />
+                </div>
+                <div>
+                  <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Tỉnh / Thành phố</label
+                  >
+                  <Dropdown
+                    required
+                    v-model="selectedProvince"
+                    :data="provinces"
+                    class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage as="div" name="provinces" class="text-start text-danger pt-2 fs-6" />
+                </div>
+                <div>
+                  <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Quận / Huyện</label
+                  >
+                  <Dropdown
+                    required
+                    v-model="selectedDistrict"
+                    :data="districts"
+                    class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                </div>
+                <div>
+                  <label for="wards" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Phường / Xã</label
+                  >
+                  <Dropdown
+                    required
+                    v-model="selectedWard"
+                    :data="wards"
+                    class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage as="div" name="wards" class="text-start text-danger pt-2 fs-6" />
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <button
+                  type="submit"
+                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  Thanh toán
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

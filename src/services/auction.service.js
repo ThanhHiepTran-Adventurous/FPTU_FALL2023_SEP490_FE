@@ -9,7 +9,6 @@ const sendAuctionRequest = async (productId, data) => {
 
 const getAllActiveAuctions = async (query, sort) => {
   const serviceUrl = `${url.endpoint.guest.auctions}?query=${query}&sort=${sort}&page=1&size=100`
-  console.log(serviceUrl)
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
