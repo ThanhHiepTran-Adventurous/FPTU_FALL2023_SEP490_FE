@@ -112,7 +112,6 @@ const onFilter = async () => {
 
   // Combine all query filters
   const query = queryFilters.join(';')
-  // console.log(query)
   // Sorting criteria
   const sortOptions = {
     d1: 'numberOfBids:asc',
@@ -125,7 +124,6 @@ const onFilter = async () => {
   const sort = sortOptions[orderSelected.value.data] || ''
   // Call the API with the selected filters
   const auctionsData = await auctionService.getAllActiveAuctions(query, sort)
-  // console.log(auctionsData.data)
   // Update the 'auctions' value with the filtered results
   auctions.value = auctionsData.data
 

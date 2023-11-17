@@ -14,7 +14,6 @@ const getAllTransaction = async () => {
   try {
     const response = await PaymentService.getTransactionBuyerSeller()
     transactionList.value = response.data
-    console.log(transactionList.value)
   } catch (e) {
     console.error(e)
   }

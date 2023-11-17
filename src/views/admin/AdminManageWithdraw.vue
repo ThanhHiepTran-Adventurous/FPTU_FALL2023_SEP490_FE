@@ -19,7 +19,6 @@ const getAllWithdraws = async () => {
   try {
     const response = await withdraw.getAllWithdraws(1, 100)
     withdrawsList.value = response.data
-    console.log(response.data)
   } catch (e) {
     console.error(e)
   }

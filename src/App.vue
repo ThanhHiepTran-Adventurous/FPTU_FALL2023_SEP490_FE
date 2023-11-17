@@ -20,7 +20,6 @@ onMounted( async () => {
   initViewPort()
 
   const handleFunction = (payloadReceive) => {
-    console.log(payloadReceive)
     toastOption.toastInformation(payloadReceive.notification.title)
     notiStore.newMessageArrive()
   }

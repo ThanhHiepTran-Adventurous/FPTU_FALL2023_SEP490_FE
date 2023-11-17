@@ -20,7 +20,6 @@ const getAllShipRequest = async () => {
     const query = ''
     const response = await ShipRequestService.getAllShipRequest(query)
     shipRequestList.value = response.data
-    console.log(shipRequestList.value)
   } catch (e) {
     console.error(e)
   }

@@ -218,10 +218,9 @@ const initStompClient = () => {
     reconnectDelay: 100,
   })
   stompClient.onConnect = () => {
-    console.log('connected')
+    //console.log('connected')
     subscription = stompClient.subscribe(`/topic/messages/group/${groupId}`, payload => {
       const response = JSON.parse(payload.body)
-      console.log(response)
       const messageDtoAppend = {
         isFromSelf: response.fromUserId === userStore.getUserIdAndGetFromLocalStorageIfNotExist(),
         receiverRole: userStore.getRoleAndGetFromLocalStorageIfNotExist(),

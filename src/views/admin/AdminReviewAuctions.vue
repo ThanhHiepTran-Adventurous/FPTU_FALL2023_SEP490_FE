@@ -36,7 +36,6 @@ const getAllAuctions = async () => {
     const response = await adminService.getAllAuctions(1, 100)
     autionsList.value = response.data
     autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW')
-    console.log(autionsList.value)
   } catch (e) {
     console.error(e)
   }
@@ -69,7 +68,6 @@ const handleApproveAuction = async auctionId => {
     const response = await adminService.approveAuction(auctionId)
     // Handle the response as needed
     toastOption.toastSuccess('Duyệt thành công')
-    console.log('Auction approved:', response)
   } catch (error) {
     console.error('Error approving auction:', error)
     toastOption.toastError('Duyệt thất bại')
@@ -87,7 +85,6 @@ const handleRejectAuction = async auctionId => {
 
     const response = await adminService.rejectAuction(auctionId, rejectReason)
     // Handle the response as needed
-    console.log('Auction rejected:', response)
   } catch (error) {
     console.error('Error rejecting auction:', error)
     // Handle the error

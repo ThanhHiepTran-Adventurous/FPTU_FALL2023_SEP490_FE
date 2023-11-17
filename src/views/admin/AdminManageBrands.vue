@@ -33,7 +33,6 @@ const handleFileChange = () => {
     fileImageUrl.value = null
     fileSelected.value = false
   }
-  // console.log(fileImageUrl)
 }
 onMounted(() => {
   getAllBrands()
@@ -42,7 +41,6 @@ onMounted(() => {
 
 const openbrandModal = brand => {
   selectedbrand.value = brand // Set the selected brand data
-  // console.log(selectedbrand.value)
   showUpdateModal.value = true // Show the modal
 }
 const openCreatebrandModal = () => {
@@ -80,19 +78,10 @@ const getAllBrands = async () => {
 const deleteBrandById = async brandId => {
   try {
     const response = await adminService.deleteBrandById(brandId)
-    console.log(response)
   } catch (e) {
     console.error(e)
   }
 }
-// const updateBrandById = async (brandId, formData, updateBrandRequest) => {
-//   try {
-//     const response = await adminService.updateBrandById(brandId, formData, updateBrandRequest)
-//     console.log(response)
-//   } catch (e) {
-//     console.error(e)
-//   }
-// }
 
 // Watch for changes in searchQuery and reset currentPage when searching
 watch(searchQuery, () => {
@@ -149,7 +138,6 @@ const handleSubmitUpdateBrand = async selectedbrand => {
     const fileInput = document.getElementById('fileInput')
     const selectedFile = fileInput.files[0]
 
-    // console.log(selectedFile)
     formData.append('image', selectedFile)
 
     // Prepare updateBrandRequest if needed
@@ -175,7 +163,6 @@ const handleSubmitCreateBrand = async newBrand => {
     const fileInput = document.getElementById('fileInput')
     const selectedFile = fileInput.files[0]
 
-    // console.log(selectedFile)
     formData.append('image', selectedFile)
 
     // Prepare updateBrandRequest if needed
