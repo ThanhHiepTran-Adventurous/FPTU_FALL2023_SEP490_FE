@@ -10,6 +10,7 @@ import auctionService from '@/services/auction.service'
 import moment from 'moment'
 import toastOption from '@/utils/toast-option'
 import { Carousel } from 'flowbite-vue'
+import { AuctionModelType } from '@/common/contract'
 
 const route = useRoute()
 const router = useRouter()
@@ -50,7 +51,6 @@ const fetchDetail = async () => {
       src: url,
       alt: 'Image Alt Text', // You can set the alt text as per your requirements
     })) || []
-  console.log(convertedImages.value)
 }
 const fetchBidHistory = async () => {
   const response = await auctionService.getHistoryBid(route.params['id'])
@@ -101,7 +101,11 @@ const fetchPageData = async () => {
 }
 const onBuyNowSuccess = () => {
   toastOption.toastSuccess('Mua ngay thành công')
-  router.push('/bought')
+  if(auction.value.modelType === AuctionModelType.immediate){
+    router.push('/bought/immediate')
+  } else {
+    router.push('/bought/intermediate')
+  }
 }
 
 onMounted(async () => {

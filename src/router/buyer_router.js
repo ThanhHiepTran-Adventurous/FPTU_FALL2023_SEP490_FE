@@ -8,13 +8,12 @@ import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
-import ReportUserPage from '@/views/buyer/child-page/ReportUserPage.vue'
 import OrdersPageIntermediate from '@/views/buyer/child-page/order_page/OrdersPageIntermediate.vue'
 import OrdersPageImmediate from '@/views/buyer/child-page/order_page/OrdersPageImmediate.vue'
-import ReportPage from '@/views/buyer/child-page/ReportPage.vue'
+import ReportPageImmediate from '@/views/buyer/child-page/report_page/ReportPageImmediate.vue'
+import ReportPageIntermediate from '@/views/buyer/child-page/report_page/ReportPageIntermediate.vue'
 import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
-import ProfilePage from '@/views/common/ProfilePage.vue'
 
 const buyer_router = [
   {
@@ -37,14 +36,6 @@ const buyer_router = [
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
-        },
-      },
-      {
-        name: 'report-page',
-        path: '/report/:id',
-        component: ReportUserPage,
-        meta: {
-          requiresAuth: false,
         },
       },
       {
@@ -77,9 +68,14 @@ const buyer_router = [
         component: OrdersPageImmediate,
       },
       {
-        name: 'reports',
-        path: '/reports',
-        component: ReportPage,
+        name: 'reports-intermediate',
+        path: '/reports/intermediate',
+        component: ReportPageIntermediate,
+      },
+      {
+        name: 'reports-immediate',
+        path: '/reports/immediate',
+        component: ReportPageImmediate,
       },
       {
         name: 'refunds',

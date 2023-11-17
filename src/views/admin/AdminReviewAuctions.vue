@@ -7,9 +7,10 @@ import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
 import toastOption from '@/utils/toast-option'
 import moment from 'moment'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 
 const autionsList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
 const showRejectReasonModal = ref(false)
@@ -35,7 +36,6 @@ const getAllAuctions = async () => {
     const response = await adminService.getAllAuctions(1, 100)
     autionsList.value = response.data
     autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW')
-    console.log(autionsList.value)
   } catch (e) {
     console.error(e)
   }
@@ -68,7 +68,6 @@ const handleApproveAuction = async auctionId => {
     const response = await adminService.approveAuction(auctionId)
     // Handle the response as needed
     toastOption.toastSuccess('Duyệt thành công')
-    console.log('Auction approved:', response)
   } catch (error) {
     console.error('Error approving auction:', error)
     toastOption.toastError('Duyệt thất bại')
@@ -86,7 +85,6 @@ const handleRejectAuction = async auctionId => {
 
     const response = await adminService.rejectAuction(auctionId, rejectReason)
     // Handle the response as needed
-    console.log('Auction rejected:', response)
   } catch (error) {
     console.error('Error rejecting auction:', error)
     // Handle the error

@@ -4,11 +4,12 @@ import ProductStore from '@/components/manage-product/ProductStore.vue'
 import ProductAuction from '@/components/manage-product/ProductAuction.vue'
 import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
-import ProductReport from '@/components/manage-product/ProductReport.vue'
+import ProductReportImmediate from '@/views/seller/report_page/ReportPageImmediate.vue'
+import ProductReportIntermediate from '@/views/seller/report_page/ReportPageIntermediate.vue'
 import Transaction from '@/components/manage-product/ProductTransactionHistory.vue'
-import MessengerSeller from '@/views/seller/MessengerSeller.vue'
 import ProductInOrderImmediate from '@/components/manage-product/ProductInOrderImmediate.vue'
 import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrderIntermediate.vue'
+import SellerReturnTrackPage from '@/views/seller/SellerReturnTrackPage.vue'
 import TestComponent from '@/views/TestComponent.vue'
 const seller_router = [
   {
@@ -33,7 +34,7 @@ const seller_router = [
       },
       {
         name: 'product-sold',
-        path: '/manage/product-sold',
+        path: '/manage/auctioned',
         component: ProductSell,
       },
       {
@@ -57,12 +58,19 @@ const seller_router = [
         component: ProductInOrderIntermediate,
       },
       {
-        name: 'product-report',
-        path: '/manage/report',
-        component: ProductReport,
-        meta: {
-          requiresAuth: false,
-        },
+        name: 'order-return',
+        path: '/manage/return-request',
+        component: SellerReturnTrackPage,
+      },
+      {
+        name: 'product-report-immediate',
+        path: '/manage/report/immediate',
+        component: ProductReportImmediate,
+      },
+      {
+        name: 'product-report-intermediate',
+        path: '/manage/report/intermediate',
+        component: ProductReportIntermediate,
       },
     ],
   },

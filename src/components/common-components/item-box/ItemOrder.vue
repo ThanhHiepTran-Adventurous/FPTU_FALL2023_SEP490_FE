@@ -1,11 +1,9 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-import { parseMillisecondsIntoReadableTime } from '@/utils/millis-to-duration'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '../badge/AuctionType.vue'
-import { AuctionModelType } from '@/common/contract'
+import { AuctionModelType, StatusShipRequest } from '@/common/contract'
 import { Icon } from '@iconify/vue'
-import ShipRequestService from '@/services/shiprequest.service'
+import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue';
 
 const props = defineProps({
   mainImage: {
@@ -36,109 +34,51 @@ const props = defineProps({
   },
   chatGroupId: {
     type: String,
-    required: true,
+    default: '',
   },
   createdAt: {
     type: String,
     required: true,
   },
-  hasShipRequest: {
-    type: Boolean,
-    default: false,
+  statusShipRequest: {
+    type: String,
+    default: '',
   },
-})
-const shipStatus = ref('')
-
-const getShipRequestByOrderId = async orderId => {
-  try {
-    const query = 'shipRequest_orderId:' + orderId
-    const response = await ShipRequestService.getAllShipRequest(query)
-
-    if (response?.data && response.data.length > 0) {
-      const allCancelled = response.data.every(request => request.status === 'CANCELLED')
-      if (!allCancelled) {
-        const nonCancelledRequest = response.data.find(request => request.status !== 'CANCELLED')
-        if (nonCancelledRequest) {
-          shipStatus.value = nonCancelledRequest.status
-        }
-      } else {
-        shipStatus.value = null
-      }
-    } else {
-      shipStatus.value = null
-    }
-  } catch (error) {
-    console.error('Error checking ship request:', error)
-    shipStatus.value = null
-  }
-}
-
-onMounted(() => {
-  if (props.hasShipRequest === true) {
-    getShipRequestByOrderId(props.orderId)
+  statusReturnRequest: {
+    type: String,
+    default: ''
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
 <template>
   <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200 !mb-3">
     <div class="tt-image-box">
-      <router-link :to="`/messenger/${chatGroupId}`">
+      <router-link :to="`/messenger/${chatGroupId}`" v-if="!statusShipRequest">
         <Icon icon="et:chat" class="tt-btn-quickview !text-[14px] p-2" />
       </router-link>
       <a class="block w-[220px] h-[210px] overflow-hidden relative">
         <span class="tt-img absolute top-0 left-0">
           <img :src="props.mainImage" :data-src="props.mainImage" alt="" />
-          <div
-            v-if="props.hasShipRequest && props.auctionType === 'INTERMEDIATE'"
-            :class="{
-              'text-gray-700 font-semibold absolute top-0 left-0 m-2': shipStatus === 'WAITING_FOR_CONFIRMATION',
-              'text-yellow-700 font-semibold absolute top-0 left-0 m-2': shipStatus === 'WAITING_FOR_DELIVERY',
-              'text-blue-700 font-semibold absolute top-0 left-0 m-2': shipStatus === 'ON_DELIVERY',
-              'text-green-700 font-semibold absolute top-0 left-0 m-2': shipStatus === 'DELIVERED',
-            }">
-            <div class="flex bg-white mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border">
-              <svg
-                :class="{
-                  'w-6 h-6 text-gray-700 dark:text-white mr-1 whitespace-nowrap':
-                    shipStatus === 'WAITING_FOR_CONFIRMATION',
-                  'w-6 h-6 text-yellow-700 dark:text-white mr-1 whitespace-nowrap':
-                    shipStatus === 'WAITING_FOR_DELIVERY',
-                  'w-6 h-6 text-blue-700 dark:text-white mr-1 whitespace-nowrap': shipStatus === 'ON_DELIVERY',
-                  'w-6 h-6 text-green-700 dark:text-white mr-1 whitespace-nowrap': shipStatus === 'DELIVERED',
-                }"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 16">
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15.5 10.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Zm0 0a2.225 2.225 0 0 0-1.666.75H12m3.5-.75a2.225 2.225 0 0 1 1.666.75H19V7m-7 4V3h5l2 4m-7 4H6.166a2.225 2.225 0 0 0-1.666-.75M12 11V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v9h1.834a2.225 2.225 0 0 1 1.666-.75M19 7h-6m-8.5 3.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-              </svg>
-              {{
-                shipStatus === 'WAITING_FOR_CONFIRMATION'
-                  ? 'Đang chờ xác nhận'
-                  : shipStatus === 'WAITING_FOR_DELIVERY'
-                  ? 'Đang chờ vận chuyển'
-                  : shipStatus === 'ON_DELIVERY'
-                  ? 'Vận chuyển'
-                  : shipStatus === 'DELIVERED'
-                  ? 'Đã giao hàng'
-                  : shipStatus
-              }}
-            </div>
-          </div>
         </span>
         <span class="tt-img-roll-over absolute top-0 left-0">
           <img :src="props.secondaryImage" :data-src="props.secondaryImage" alt="" />
         </span>
       </a>
+      <div v-if="statusReturnRequest" class="absolute top-0 right-0 mt-1">
+        <ShippingStatusIntermediate :status="statusReturnRequest" />
+      </div>
+      <div v-if="!!isCompleted" class="absolute top-0 left-2 mt-2">
+        <Icon icon="clarity:success-standard-solid" class="text-green-500 text-[26px]" />
+      </div>
     </div>
     <div class="tt-description flex flex-col items-center">
       <div class="w-full flex justify-start ml-3">
-        <AuctionType :type="props.auctionType" />
+        <AuctionType :type="props.auctionType" v-if="!statusShipRequest" />
+        <ShippingStatusIntermediate v-else :status="statusShipRequest" />
       </div>
       <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
         {{ props.productName }}

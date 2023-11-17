@@ -1,16 +1,16 @@
 <script setup>
 import AdminHeader from '@/views/admin/common/AdminHeader.vue'
 import { onMounted, ref, computed, watch } from 'vue'
-import { Carousel } from 'flowbite-vue'
 import { initFlowbite } from 'flowbite'
-import withdraw from '../../services/withdraw.service'
+import withdrawService from '../../services/withdraw.service'
 import '@vuepic/vue-datepicker/dist/main.css'
 import toastOption from '@/utils/toast-option'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 
 const withdrawsList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const selectedWithdraw = ref(null)
 const showWithdrawModal = ref(false)
@@ -19,7 +19,6 @@ const getAllWithdraws = async () => {
   try {
     const response = await withdraw.getAllWithdraws(1, 100)
     withdrawsList.value = response.data
-    console.log(response.data)
   } catch (e) {
     console.error(e)
   }
@@ -56,21 +55,17 @@ const paginatedWithdraws = computed(() => {
   const endIndex = startIndex + itemsPerPage
   return withdrawsList.value.slice(startIndex, endIndex)
 })
-const openWithdrawModal = withdraw => {
-  selectedWithdraw.value = withdraw
+const openWithdrawModal = withdrawDetail => {
+  selectedWithdraw.value = withdrawDetail
   showWithdrawModal.value = true
 }
 const handleConfirmWithdraw = async withdrawId => {
   try {
-    const response = await withdraw.adminConfirmSellerwithdrawOpt2(withdrawId)
+    await withdrawService.adminConfirmSellerwithdrawOpt2(withdrawId)
     toastOption.toastSuccess('Xác nhận đã thanh toán thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
+    
   } catch (error) {
     toastOption.toastError('Xác nhận đã thanh toán thất bại')
-    console.error('withdrawId:', error)
   }
 }
 </script>

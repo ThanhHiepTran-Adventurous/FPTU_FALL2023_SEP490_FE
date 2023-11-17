@@ -6,14 +6,15 @@ import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
-import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
-import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { AuctionModelType, ReportStatus, Role, StatusShipRequest } from '@/common/contract'
+import { sellerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
+import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
-import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
+import ReportModal from '@/components/ReportModal.vue'
 
 const breadcrumbItems = [
   {
@@ -60,6 +61,7 @@ const reportList = ref([])
 const filteredReport = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
+const isReportModalOpen = ref(false)
 
 const openReportModal = async (detail) => {
   report.value = detail
@@ -67,6 +69,35 @@ const openReportModal = async (detail) => {
 }
 const closeReportModal = () => {
   isModalVisible.value = false
+}
+
+const onReportClick = (detail) => {
+    report.value = detail
+    isReportModalOpen.value = true
+}
+const onReportModalConfirm = (listImg, text) => {
+    if (!text || !text.trim()) {
+        toastOption.toastError('Bạn phải nhập nội dung tố cáo!')
+    }
+    isReportModalOpen.value = false
+
+    // Prepare data
+    const formData = new FormData()
+    const jsonData = {
+        content: text,
+    }
+
+    for (const imgData of listImg) {
+        formData.append('reportImages', imgData)
+    }
+    formData.append('createReportRequest', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
+
+    console.log(report.value)
+
+    reportService
+    .sellerReportBuyerOpt2(report.value.aboutOrder.id, formData)
+    .then(_ => toastOption.toastSuccess('Tố cáo thành công.'))
+    .catch(_ => toastOption.toastError('Tố cáo thất bại.'))
 }
 
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
@@ -119,7 +150,7 @@ onMounted(() => {
   <div class="pt-2 pb-2 container mx-auto">
     <Breadcrumb :items="breadcrumbItems" />
   </div>
-  <BuyerSideBarLayout :cur-tab="buyerTabs.refundRequest.value">
+  <SellerSideBarLayout :cur-tab="sellerTabs.backOrders.value">
     <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
       <!-- Header -->
       <div class="pt-3 px-3 pb-1 flex items-center justify-between">
@@ -177,14 +208,18 @@ onMounted(() => {
                     <td class="px-4 py-3">
                       <div v-if="report?.returnShipRequestResponse?.status" class="font-normal text-black flex justify-center"><ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" /></div>
                     </td>
-                    <td class="px-4 py-3 flex items-center gap-3 justify-end">
-                      <div>
-                        <button
-                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                          type="button" @click="openReportModal(report)">
-                          <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
-                        </button>
-                      </div>
+                    <td class="px-4 py-3 flex items-center gap-3 justify-start">
+                      <button
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button" @click="openReportModal(report)">
+                        <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
+                      </button>
+                      <button
+                        v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button" @click="onReportClick(report)">
+                        <Icon icon="mdi:report-problem" class="font-bold text-[24px] text-red-700"/>
+                      </button>
                       <router-link v-if="report?.aboutOrder?.chatGroupDTOs.id" :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
                         <button
                           class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
@@ -243,7 +278,7 @@ onMounted(() => {
         </div>
       </section>
     </div>
-  </BuyerSideBarLayout>
+  </SellerSideBarLayout>
   <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical="true" :hasButton="true"
     title="Chi tiết" @decline-modal="closeReportModal" @confirm-modal="closeReportModal" >
     <div class="relative px-2">
@@ -334,11 +369,20 @@ onMounted(() => {
       <div>
         <button
           @click="closeReportModal()"
-          class="bg-white hover:!bg-blue-200 text-black font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          class="bg-blue-500 hover:!bg-blue-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Đóng
         </button>
       </div>
+      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value">
+        <button
+          @click="onReportClick()"
+          class="bg-red-600 hover:!bg-red-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          type="button">
+            Tố cáo
+        </button>
+      </div>
     </template>
   </Modal>
+  <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="isReportModalOpen=false"/>
 </template>

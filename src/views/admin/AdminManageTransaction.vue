@@ -9,9 +9,10 @@ import toastOption from '@/utils/toast-option'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
 import PaymentService from '@/services/payment.service'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 
 const transactionList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const selectedWithdraw = ref(null)
 const showWithdrawModal = ref(false)
@@ -20,7 +21,6 @@ const getAllTransaction = async () => {
   try {
     const response = await PaymentService.getTransactionAdmin()
     transactionList.value = response.data
-    console.log(response.data)
   } catch (e) {
     console.error(e)
   }
@@ -63,12 +63,8 @@ const openWithdrawModal = withdraw => {
 }
 const handleConfirmWithdraw = async withdrawId => {
   try {
-    const response = await withdraw.adminConfirmSellerwithdrawOpt2(withdrawId)
+    await withdraw.adminConfirmSellerwithdrawOpt2(withdrawId)
     toastOption.toastSuccess('Xác nhận đã thanh toán thành công')
-    console.log(response)
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
   } catch (error) {
     toastOption.toastError('Xác nhận đã thanh toán thất bại')
     console.error('withdrawId:', error)

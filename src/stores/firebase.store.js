@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage, deleteToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getStorage, ref, uploadBytesResumable, uploadBytes, getDownloadURL } from "firebase/storage";
+import { firebaseConfig } from "@/common/urlConstant";
 
 export const useFirebaseStore = defineStore("firebase", {
   state: () => ({
-    fcmToken: ""
+    fcmToken: "",
   }),
   actions: {
     async getFcmToken(){
@@ -14,16 +16,6 @@ export const useFirebaseStore = defineStore("firebase", {
         return this.fcmToken;
     },
     async initializeFirebase(){
-        const firebaseConfig = {
-            apiKey: "AIzaSyAMQNPg7xZ9WFD5PTG6gXdTq4Y-VJ-jMN8",
-            authDomain: "bidbay-project.firebaseapp.com",
-            projectId: "bidbay-project",
-            storageBucket: "bidbay-project.appspot.com",
-            messagingSenderId: "271624192364",
-            appId: "1:271624192364:web:cf5200c57ea00786d7b349",
-            measurementId: "G-4WMZ0T1YNE"
-        };
-        
         initializeApp(firebaseConfig);
         
         const messaging = getMessaging();
@@ -49,6 +41,17 @@ export const useFirebaseStore = defineStore("firebase", {
         console.log('Message received. ', payload);
         handler(payload)
         });
+    },
+    async uploadImage(imageFile) {
+        const uniqueName = `${new Date().getTime()}-${imageFile.name}`
+        const storage = getStorage();
+        const metadata = {
+            contentType: undefined
+        };
+
+        const storageRef = ref(storage, uniqueName);
+        const uploadTask = await uploadBytes(storageRef, imageFile, metadata);
+        return `https://firebasestorage.googleapis.com/v0/b/${uploadTask.metadata.bucket}/o/${uploadTask.metadata.fullPath}?alt=media`
     }
   },
 });

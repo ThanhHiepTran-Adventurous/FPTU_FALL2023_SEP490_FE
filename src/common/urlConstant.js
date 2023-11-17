@@ -3,6 +3,16 @@ const DOMAIN_URL = import.meta.env.VITE_DOMAIN_URL
 const WS_URL = import.meta.env.VITE_WEB_SOCKET_SERVER_URL
 const WS_AUTH = import.meta.env.VITE_WEB_SOCKET_AUTH
 
+export const firebaseConfig = {
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+}
+
 export default {
   domain: DOMAIN_URL,
   base: SERVICE_URL,
@@ -112,6 +122,8 @@ export default {
     chat: {
       getAllMessages: 'messageWebSocket/listMessageV2/{groupId}',
       getChatGroupInfo: 'messageWebSocket/chat-group-infoV2/{chatGroupId}',
+      joinChatGroup: 'messageWebSocket/staff/join-chat-groupV2/{groupId}',
+      createChatGroup: 'messageWebSocket/staff/create-chat-groupV2/{orderId}'
     },
     system: {
       getAllConfigData: 'systemConfig/getListSystemConfig',
@@ -123,6 +135,7 @@ export default {
       staffConfirmShipRequest: 'shipRequest/staff/confirm-to-waiting-for-delivery/{shipRequestId}',
       StaffChangeShipRequestToOnDelivery: 'shipRequest/staff/change-to-on-delivery/{shipRequestId}',
       StaffChangeShipRequestToDelivered: 'shipRequest/staff/change-to-delivered/{shipRequestId}',
+      buyerConfirmDelivered: 'shipRequest/buyer/confirm-ship-request-delivered/{shipRequestId}',
     },
     withdrawAndRefunds: {
       getAllWithdraws: 'withdrawAndRefunds',
@@ -137,6 +150,11 @@ export default {
       getAllReportDataBuyerOrSeller: 'report/sellerOrBuyer/getAllReport',
       getAllReportDataStaff: 'report/staff/getAllReport',
       buyerReportSellerOpt2: 'report/buyer/report-seller-option2/{orderId}',
+      sellerReportBuyerOpt2: 'report/seller/report-buyer-option2/{orderId}',
+      confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
+      declineReportOpt1: 'report/staff/reject-report/{reportId}',
+      confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
+      assignReport: 'report/staff/assign-report/{reportId}'
     },
   },
 }

@@ -1,4 +1,5 @@
 const base64Image = (file) => {
+    if(!file) return
     return new Promise(
         (resolve) => {
             const reader = new FileReader();

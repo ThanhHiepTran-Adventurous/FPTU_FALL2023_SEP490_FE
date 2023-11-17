@@ -5,10 +5,11 @@ import { onMounted, ref, computed, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 const categoriesList = ref([])
 const searchQuery = ref('')
 const openDropdowns = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
 const date = ref(new Date())
@@ -18,7 +19,6 @@ onMounted(() => {
 const selectedUser = ref(null)
 const openUserModal = user => {
   selectedUser.value = user // Set the selected user data
-  // console.log(selectedUser.value)
   showUpdateModal.value = true // Show the modal
 }
 const getAllCategories = async () => {
@@ -32,7 +32,6 @@ const getAllCategories = async () => {
 
 const toggleDropdown = index => {
   const isOpen = openDropdowns.value.includes(index)
-  console.log(index)
   if (isOpen) {
     // If the dropdown is already open, close it
     openDropdowns.value = openDropdowns.value.filter(i => i !== index)

@@ -1,12 +1,12 @@
 <script setup>
 import { Icon } from "@iconify/vue"
 import { onMounted, ref } from "vue"
-import { buyerTabs } from "@/common/constant"
+import { sellerTabs } from "@/common/constant"
 
 const props = defineProps({
     curTab: {
         type: String,
-        default: buyerTabs.bought.value
+        default: sellerTabs.productRepository.value
     }
 })
 
@@ -14,8 +14,8 @@ const navs = ref([])
 
 const computeNavs = () => {
     const data = []
-    for (const prop in buyerTabs) {
-        data.push(buyerTabs[prop])
+    for (const prop in sellerTabs) {
+        data.push(sellerTabs[prop])
     }
     navs.value = data
 }
@@ -30,7 +30,7 @@ onMounted(() => {
 <template>
     <div class="container mx-auto">
         <div class="flex">
-            <div class="flex flex-col items-center w-16 md:w-72 pb-2 h-full overflow-hidden text-gray-700 bg-white rounded">
+            <div class="flex flex-col items-center w-16 md:w-80 h-full pb-2 overflow-hidden text-gray-700 bg-white rounded">
                 <div class="w-full px-2">
                     <div class="flex flex-col items-center w-full border-gray-300">
                         <router-link v-for="item in navs" :key="item.value"

@@ -1,12 +1,12 @@
 <script setup>
 import { Icon } from "@iconify/vue"
 import { onMounted, ref } from "vue"
-import { buyerTabs } from "@/common/constant"
+import { staffTabs } from "@/common/constant"
 
 const props = defineProps({
     curTab: {
         type: String,
-        default: buyerTabs.bought.value
+        default: staffTabs.reports.value
     }
 })
 
@@ -14,8 +14,8 @@ const navs = ref([])
 
 const computeNavs = () => {
     const data = []
-    for (const prop in buyerTabs) {
-        data.push(buyerTabs[prop])
+    for (const prop in staffTabs) {
+        data.push(staffTabs[prop])
     }
     navs.value = data
 }
@@ -28,9 +28,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container mx-auto">
-        <div class="flex">
-            <div class="flex flex-col items-center w-16 md:w-72 pb-2 h-full overflow-hidden text-gray-700 bg-white rounded">
+    <!-- Component Start -->
+    <div class="container mx-auto pt-16">
+        <div class="flex min-h-[90vh] px-2">
+            <div class="flex flex-col items-center pb-2 w-16 md:w-72 h-full overflow-hidden text-gray-700 bg-white rounded">
                 <div class="w-full px-2">
                     <div class="flex flex-col items-center w-full border-gray-300">
                         <router-link v-for="item in navs" :key="item.value"
@@ -43,7 +44,8 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <div class="pl-3 w-full min-h-[90vh]"><slot>Default content</slot></div>
+            <div class="pl-3 w-full"><slot>Default content</slot></div>
         </div>
     </div>
+    <!-- Component End  -->
 </template>

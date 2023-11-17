@@ -7,13 +7,13 @@ import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
 import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
+import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
-import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
-import Dropdown from '@/components/common-components/Dropdown.vue'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
+import Breadcrumb from '@/layouts/Breadcrumb.vue'
 
 const breadcrumbItems = [
   {
@@ -22,34 +22,56 @@ const breadcrumbItems = [
     disabled: false,
   },
   {
-    text: 'Trả hàng',
-    to: '/refunds',
+    text: 'Tố cáo',
+    to: '/reports/intermediate',
     disabled: true,
   },
 ]
 
 //filter
-const filterData = ref([
+const filterData = ref({
+  fromRole: [
     {
-        label: 'Tất cả',
-        value: '',
+      label: 'Tất cả',
+      value: '',
     },
     {
-        label: ReportStatus.PROCESSING.label,
-        value: ReportStatus.PROCESSING.value,
+      label: 'Người mua',
+      value: Role.buyer.value,
     },
     {
-        label: ReportStatus.PROCESSED.label,
-        value: ReportStatus.PROCESSED.value,
+      label: 'Người bán',
+      value: Role.seller.value,
+    },
+  ],
+  status: [
+    {
+      label: 'Tất cả',
+      value: '',
     },
     {
-        label: ReportStatus.REJECTED.label,
-        value: ReportStatus.REJECTED.value,
-    }
-])
+      label: ReportStatus.PROCESSING.label,
+      value: ReportStatus.PROCESSING.value,
+    },
+    {
+      label: ReportStatus.PROCESSED.label,
+      value: ReportStatus.PROCESSED.value,
+    },
+    {
+      label: ReportStatus.REJECTED.label,
+      value: ReportStatus.REJECTED.value,
+    },
+  ]
+})
 const selected = ref({
+  fromRole: {
     label: 'Tất cả',
     value: '',
+  },
+  status: {
+    label: 'Tất cả',
+    value: '',
+  }
 })
 
 watch(selected, () => {
@@ -57,11 +79,11 @@ watch(selected, () => {
 }, {deep: true})
 
 const reportList = ref([])
-const filteredReport = ref([])
+const filteredReports = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
 
-const openReportModal = async (detail) => {
+const openReportModal = (detail) => {
   report.value = detail
   isModalVisible.value = true
 }
@@ -74,19 +96,23 @@ const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataBuyerOrSeller()
-    reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate && f.reportType === 'BUYER_REPORT_OPTION_2')
+    reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.immediate)
     filterReports()
   } catch (e) {
     console.error(e)
   }
 }
+
 const filterReports = () => {
-    filteredReport.value = reportList.value.filter(f => !selected.value.value || f.status === selected.value.value)
+  filteredReports.value = reportList.value
+  .filter(f => 
+  (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) 
+  && (!selected.value.status.value || f.status === selected.value.status.value))
 }
 
 // Pagination
 const totalPages = computed(() => {
-  return Math.ceil(filteredReport.value.length / itemsPerPage)
+  return Math.ceil(filteredReports.value.length / itemsPerPage)
 })
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
@@ -107,7 +133,7 @@ const paginatedReportList = computed(() => {
   // Move startIndex and endIndex calculation here
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return filteredReport.value.slice(startIndex, endIndex)
+  return filteredReports.value.slice(startIndex, endIndex)
 })
 
 onMounted(() => {
@@ -116,25 +142,38 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="pt-2 pb-2 container mx-auto">
-    <Breadcrumb :items="breadcrumbItems" />
-  </div>
-  <BuyerSideBarLayout :cur-tab="buyerTabs.refundRequest.value">
+    <div class="pt-2 pb-2 container mx-auto">
+      <Breadcrumb :items="breadcrumbItems" />
+    </div>
+  <BuyerSideBarLayout :cur-tab="buyerTabs.reported.value">
     <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
       <!-- Header -->
       <div class="pt-3 px-3 pb-1 flex items-center justify-between">
         <div class="font-bold text-2xl text-black text-blue-800">
-          Lịch sử trả hàng</div>
+          Lịch sử báo cáo</div>
+        <TwoOptionsTab
+          immediate-option-nav="/reports/immediate"
+          intermediate-option-nav="/reports/intermediate"
+          :cur-tab="AuctionModelType.immediate"
+        />
       </div>
 
       <!-- Filter section -->
       <div class="mt-4 px-12 flex items-center">
         <div class="flex items-center gap-3 mr-[10%]">
           <label class="block text-gray-700 text-sm font-bold" for="jump">
-            Trạng thái: 
+            Tố cáo từ: 
           </label>
           <div class="flex gap-3 items-center">
-            <Dropdown :data="filterData" v-model="selected" class="!w-[200px]" />
+            <Dropdown :data="filterData.fromRole" v-model="selected.fromRole" class="!w-[200px]" />
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Trạng thái:
+          </label>
+          <div class="flex items-center gap-3">
+            <Dropdown :data="filterData.status" v-model="selected.status" class="!w-[200px]" />
           </div>
         </div>
       </div>
@@ -146,12 +185,12 @@ onMounted(() => {
               <table class="w-full text-sm text-left text-black dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Người gửi</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Người nhận</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do trả hàng</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Người tố cáo</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Người bị tố cáo</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do tố cáo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái trả hàng</th>
+
                     <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
                     </th>
@@ -174,24 +213,12 @@ onMounted(() => {
                     <td class="px-4 py-3">
                       <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
                     </td>
-                    <td class="px-4 py-3">
-                      <div v-if="report?.returnShipRequestResponse?.status" class="font-normal text-black flex justify-center"><ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" /></div>
-                    </td>
-                    <td class="px-4 py-3 flex items-center gap-3 justify-end">
-                      <div>
-                        <button
-                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                          type="button" @click="openReportModal(report)">
-                          <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
-                        </button>
-                      </div>
-                      <router-link v-if="report?.aboutOrder?.chatGroupDTOs.id" :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
-                        <button
-                          class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                          type="button">
-                          <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500"/>
-                        </button>
-                      </router-link>
+                    <td class="px-4 py-3 flex items-center justify-end">
+                      <button
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button" @click="openReportModal(report)">
+                        <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -280,10 +307,10 @@ onMounted(() => {
       <!-- Report detail -->
       <div class="mx-auto container align-middle border-[2px] border-blue-800 rounded-lg pl-3 py-1.5 mt-3">
         <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">
-            Thông tin trả hàng</div>
+            Thông tin tố cáo</div>
         <div class="flex px-8 my-2">
           <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-            <div class="min-w-[200px]">Người trả: </div>
+            <div class="min-w-[100px]">Người tố cáo: </div>
             <div class="text-black font-semibold">{{ report?.fromUserReport.fullname }}</div>
           </div>
           <div class="flex items-center gap-3 text-lg mb-1">
@@ -293,7 +320,7 @@ onMounted(() => {
         </div>
         <div class="flex px-8 my-2">
           <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-            <div class="min-w-[200px]">Người bán: </div>
+            <div class="min-w-[100px]">Người bị tố cáo: </div>
             <div class="text-black font-semibold">{{ report?.toUserReport.fullname }}</div>
           </div>
           <div class="flex items-center gap-3 text-lg mb-1">
@@ -302,25 +329,18 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex px-8 my-2">
-          <div class="flex items-center gap-3 text-lg mb-1">
-            <div class="min-w-[200px]">Tạo lúc: </div>
+          <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
+            <div class="min-w-[100px]">Tạo lúc: </div>
             <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
           </div>
-        </div>
-        <div v-if="report?.returnShipRequestResponse?.status" class="flex px-8 my-2">
           <div class="flex items-center gap-3 text-lg mb-1">
-            <div
-              class="min-w-[200px]">
-              Trạng thái trả hàng:
-            </div>
-            <div>
-              <ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status"/>
-            </div>
+            <div class="min-w-[100px]">Trạng thái: </div>
+            <div><ReportStatusBadge :status="report?.status" /></div>
           </div>
         </div>
         <div class="flex px-8">
           <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-            <div class="min-w-[200px]">Lý do: </div>
+            <div class="min-w-[100px]">Nội dung: </div>
             <div>{{ report?.content }}</div>
           </div>
         </div>

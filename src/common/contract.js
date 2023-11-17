@@ -127,3 +127,56 @@ export const Configuration = {
     value: 0,
   },
 }
+
+export const StatusShipRequest = {
+  waitingForConfirmation: {
+    icon: 'mdi:package-variant-closed-delivered',
+    label: 'Đang chờ xác nhận',
+    value: 'WAITING_FOR_CONFIRMATION'
+  },
+  waitingForDelivery: {
+    icon: 'iconamoon:delivery',
+    label: 'Đang chờ vận chuyển',
+    value: 'WAITING_FOR_DELIVERY'
+  },
+  onDelivery: {
+    icon: 'carbon:delivery',
+    label: 'Đang vận chuyển',
+    value: 'ON_DELIVERY'
+  },
+  delivered: {
+    icon: 'mdi:archive-success-outline',
+    label: 'Đã vận chuyển',
+    value: 'DELIVERED'
+  },
+  cancelled: {
+    icon: 'mdi:package-variant-closed-remove',
+    label: 'Đã bị hủy',
+    value: 'CANCELLED'
+  },
+  returns: {
+    icon: 'ri:refund-line',
+    label: 'Trả hàng',
+    value: 'RETURNS'
+  }
+}
+
+export const ShipRequestType = {
+  SELLER_SHIP: "SELLER_SHIP",
+  BUYER_RETURN: "BUYER_RETURN"
+}
+
+export const ReportStatus = {
+  PROCESSING: {
+    label: "Đang xử lý",
+    value: "PROCESSING"
+  },
+  PROCESSED: {
+    label: "Đã xử lý",
+    value: "CONFIRMED"
+  },
+  REJECTED: {
+    label: "Từ chối xử lý",
+    value: "REJECTED"
+  },
+}
