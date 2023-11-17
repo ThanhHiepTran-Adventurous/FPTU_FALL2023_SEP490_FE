@@ -44,7 +44,7 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <div class="pl-3 w-full"><slot>Default content</slot></div>
+            <div class="pl-3 w-full min-h-[90vh]"><slot>Default content</slot></div>
         </div>
     </div>
     <!-- Component End  -->

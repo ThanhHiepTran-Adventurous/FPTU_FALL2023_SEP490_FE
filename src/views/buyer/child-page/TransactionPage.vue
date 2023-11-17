@@ -1,14 +1,14 @@
 <script setup>
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import BoughtNav from '../BoughtNav.vue'
-import { buyerTabs } from '@/common/constant'
+import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import PaymentService from '@/services/payment.service'
 import formatCurrency from '@/utils/currency-output-formatter'
 
 const transactionList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllTransaction = async () => {
   try {
@@ -69,7 +69,7 @@ const breadcrumbItems = [
       <Breadcrumb :items="breadcrumbItems" />
     </div>
     <BoughtNav :cur-tab="buyerTabs.transaction.value" />
-    <section class="bg-white mt-2 p-3 sm:p-5">
+    <section class="mt-2 p-3 sm:p-5">
       <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
         <!-- Start coding here -->
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">

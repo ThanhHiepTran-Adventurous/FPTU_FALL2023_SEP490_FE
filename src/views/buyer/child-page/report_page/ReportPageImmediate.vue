@@ -1,24 +1,32 @@
 <script setup>
-import StaffHeader from '@/views/staff/common/StaffHeader.vue'
 import reportService from '@/services/report.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-import StaffSideBarLayout from '@/layouts/StaffSideBarLayout.vue'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
 import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
-import chatService from '@/services/chat.service'
-import { useRouter } from 'vue-router'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
-import toastOption from '@/utils/toast-option'
-import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
+import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import Dropdown from '@/components/common-components/Dropdown.vue'
-import RejectModal from '@/components/RejectModal.vue'
+import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
+import { Icon } from '@iconify/vue'
+import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
+import Breadcrumb from '@/layouts/Breadcrumb.vue'
 
-const router = useRouter()
+const breadcrumbItems = [
+  {
+    text: 'Trang chủ',
+    to: '/',
+    disabled: false,
+  },
+  {
+    text: 'Tố cáo',
+    to: '/reports/intermediate',
+    disabled: true,
+  },
+]
 
 //filter
 const filterData = ref({
@@ -70,20 +78,10 @@ watch(selected, () => {
   filterReports()
 }, {deep: true})
 
-
-
 const reportList = ref([])
 const filteredReports = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
-const isRejectModalVisible = ref(false)
-
-const openRejectModal = () => {
-  isRejectModalVisible.value = true
-}
-const closeRejectModal = () => {
-  isRejectModalVisible.value = false
-}
 
 const openReportModal = (detail) => {
   report.value = detail
@@ -97,7 +95,7 @@ const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
-    const response = await reportService.getAllReportDataStaff()
+    const response = await reportService.getAllReportDataBuyerOrSeller()
     reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.immediate)
     filterReports()
   } catch (e) {
@@ -111,41 +109,6 @@ const filterReports = () => {
   (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) 
   && (!selected.value.status.value || f.status === selected.value.status.value))
 }
-
-const onJoinChat = async (groupId) => {
-  await chatService.staffJoinChat(groupId)
-  router.push(`/messenger/${groupId}`)
-}
-
-const onConfirmReject = async (reason) => {
-  if(!confirm("Bạn có chắc chắn muốn từ chối tố cáo này không?")){
-    return
-  }
-  try {
-    await reportService.staffDeclineReportOpt1(report.value.id, reason)
-    toastOption.toastSuccess("Từ chối tố cáo thành công")
-    getAllReportStaff()
-    isModalVisible.value = false
-  } catch (_) {
-    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại.")
-  } finally {
-    isRejectModalVisible.value = false
-  }
-}
-const onConfirmReport = async (reportId) => {
-  if(!confirm("Bạn có chắc chắn muốn xác nhận tố cáo này là chính xác không?")){
-    return
-  }
-  try {
-    await reportService.staffConfirmReportOpt1(reportId)
-    toastOption.toastSuccess("Xác nhận tố cáo thành công")
-    getAllReportStaff()
-    isModalVisible.value = false
-  } catch (_) {
-    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại.")
-  }
-}
-
 
 // Pagination
 const totalPages = computed(() => {
@@ -179,16 +142,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <StaffHeader />
-  <StaffSideBarLayout :cur-tab="staffTabs.reports.value">
+    <div class="pt-2 pb-2 container mx-auto">
+      <Breadcrumb :items="breadcrumbItems" />
+    </div>
+  <BuyerSideBarLayout :cur-tab="buyerTabs.reported.value">
     <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
       <!-- Header -->
       <div class="pt-3 px-3 pb-1 flex items-center justify-between">
         <div class="font-bold text-2xl text-black text-blue-800">
           Lịch sử báo cáo</div>
         <TwoOptionsTab
-          immediate-option-nav="/staff/report/immediate"
-          intermediate-option-nav="/staff/report/intermediate"
+          immediate-option-nav="/reports/immediate"
+          intermediate-option-nav="/reports/intermediate"
           :cur-tab="AuctionModelType.immediate"
         />
       </div>
@@ -213,18 +178,18 @@ onMounted(() => {
         </div>
       </div>
 
-      <section class="bg-white sm:p-5">
+      <section class="sm:p-5">
         <div class="mx-auto px-4">
           <div class="bg-white relative sm:rounded-lg overflow-hidden">
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto min-h-[632px]">
               <table class="w-full text-sm text-left text-black dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Người tố cáo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Người bị tố cáo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do tố cáo</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái</th>
 
                     <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
@@ -250,15 +215,9 @@ onMounted(() => {
                     </td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <button
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
                         type="button" @click="openReportModal(report)">
-                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                          <path
-                            d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
-                          <path
-                            d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
-                        </svg>
+                        <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
                       </button>
                     </td>
                   </tr>
@@ -311,8 +270,7 @@ onMounted(() => {
         </div>
       </section>
     </div>
-  </StaffSideBarLayout>
-  <RejectModal v-if="isRejectModalVisible" @confirm="onConfirmReject" @decline="closeRejectModal"/>
+  </BuyerSideBarLayout>
   <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical="true" :hasButton="true"
     title="Chi tiết" @decline-modal="closeReportModal" @confirm-modal="closeReportModal" >
     <div class="relative px-2">
@@ -337,7 +295,7 @@ onMounted(() => {
           </div>
           <div class="flex items-center gap-3 text-lg mb-1">
             <div class="min-w-[100px]">Tạo lúc: </div>
-            <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+            <div>{{ moment.utc(report?.aboutOrder.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
           </div>
         </div>
         <div class="py-1.5">
@@ -399,30 +357,6 @@ onMounted(() => {
           class="bg-white hover:!bg-blue-200 text-black font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Đóng
-        </button>
-      </div>
-      <div>
-        <button
-          @click="onJoinChat(report?.aboutOrder.chatGroupDTOs.id)"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
-          type="button">
-            Vào nhóm chat
-        </button>
-      </div>
-      <div v-if="report?.status === ReportStatus.PROCESSING.value">
-        <button
-          @click="onConfirmReport(report?.id)"
-          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
-          type="button">
-            Xác nhận tố cáo chính xác
-        </button>
-      </div>
-      <div v-if="report?.status === ReportStatus.PROCESSING.value">
-        <button
-          @click="openRejectModal"
-          class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
-          type="button">
-            Bãi bỏ tố cáo
         </button>
       </div>
     </template>

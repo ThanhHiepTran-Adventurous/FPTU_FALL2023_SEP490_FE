@@ -11,7 +11,7 @@ const isModalVisible = ref(false)
 const typeofModal = ref('info')
 const currentTab = ref('table')
 const products = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const isTableTabActive = ref(true)
 const imgSrc = ref([])
@@ -25,6 +25,7 @@ import { initFlowbite } from 'flowbite'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import AuctionService from '@/services/auction.service'
 import adminService from '../../services/admin.service'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 const categories = ref([])
 const brands = ref([])
 
@@ -250,7 +251,7 @@ const tabButtonClasses = tabName => ({
 </script>
 <template>
   <div class="mx-auto container bg-white mt-2 align-middle pt-8 px-2 min-h-[50vh]">
-    <section class="bg-white p-3 sm:p-5">
+    <section class="p-3 sm:p-5">
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

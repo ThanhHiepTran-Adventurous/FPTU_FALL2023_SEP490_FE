@@ -12,7 +12,7 @@ import { AuctionModelType, Role } from '@/common/contract'
 import chatService from '@/services/chat.service'
 import { useRouter } from 'vue-router'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { staffTabs } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
 import toastOption from '@/utils/toast-option'
 import { Icon } from '@iconify/vue'
 
@@ -30,7 +30,7 @@ const closeReportModal = () => {
   isModalVisible.value = false
 }
 
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllReport = async () => {
   try {
@@ -93,7 +93,7 @@ onMounted(() => {
         <div class="font-bold text-2xl text-black text-blue-800">
           Danh sách khiếu nại cần giải quyết</div>
       </div>
-      <section class="bg-white sm:p-5">
+      <section class="sm:p-5">
         <div class="mx-auto px-4">
           <div class="bg-white relative sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
@@ -133,12 +133,12 @@ onMounted(() => {
                       <button
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button" @click="openReportModal(report)">
-                        <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
+                        <Icon icon="bxs:detail" class="font-bold text-[24px]" />
                       </button>
                       <button
                         class="inline-flex ml-3 items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button" @click="onAssignReport(report.id)">
-                        <Icon icon="material-symbols:assignment-add-sharp" class="font-bold text-[24px]"/>
+                        <Icon icon="material-symbols:assignment-add-sharp" class="font-bold text-[24px]" />
                       </button>
                     </td>
                   </tr>

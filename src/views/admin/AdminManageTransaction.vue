@@ -9,9 +9,10 @@ import toastOption from '@/utils/toast-option'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
 import PaymentService from '@/services/payment.service'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 
 const transactionList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const selectedWithdraw = ref(null)
 const showWithdrawModal = ref(false)

@@ -212,13 +212,13 @@ onBeforeUnmount(() => {
               <div class="flex flex-col space-y-1 mt-2">
                 <!-- For buyer only -->
                 <button
-                  v-if="curRole === Role.staff.value && sellerReportId"
+                  v-if="curRole === Role.staff.value"
                   @click="isSellerWinConfirm = true"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Xác nhận người bán đúng
                 </button>
                 <button
-                  v-if="curRole === Role.staff.value && buyerReportId"
+                  v-if="curRole === Role.staff.value"
                   @click="isBuyerWinConfirm = true"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Xác nhận người mua đúng

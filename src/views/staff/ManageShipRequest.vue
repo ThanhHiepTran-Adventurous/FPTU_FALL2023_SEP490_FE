@@ -7,12 +7,12 @@ import { Carousel } from 'flowbite-vue'
 import moment from 'moment'
 import toastOption from '@/utils/toast-option'
 import StaffSideBarLayout from '@/layouts/StaffSideBarLayout.vue'
-import { staffTabs } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
 
 const selectedShip = ref(null)
 const showUpdateModal = ref(false)
 const shipRequestList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const convertedImages = ref([])
 const getAllShipRequest = async () => {

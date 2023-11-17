@@ -12,9 +12,11 @@ import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
 import chatService from '@/services/chat.service'
 import { useRouter } from 'vue-router'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { staffTabs } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import toastOption from '@/utils/toast-option'
+import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
+import RejectModal from '@/components/RejectModal.vue'
 
 //filter
 const filterData = ref({
@@ -72,6 +74,14 @@ const reportList = ref([])
 const filteredReports = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
+const isRejectModalVisible = ref(false)
+
+const openRejectModal = () => {
+  isRejectModalVisible.value = true
+}
+const closeRejectModal = () => {
+  isRejectModalVisible.value = false
+}
 
 const openReportModal = (detail) => {
   report.value = detail
@@ -81,7 +91,7 @@ const closeReportModal = () => {
   isModalVisible.value = false
 }
 
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
@@ -108,17 +118,19 @@ const onCreateChatGroup = async (orderId) => {
   await chatService.staffCreateChat(orderId)
 }
 
-const onRejectReport = async (reportId) => {
-  if(confirm("Bạn có chắc chắn muốn từ chối tố cáo này không?")){
-    try {
-      closeReportModal()
-      await reportService.staffDeclineReportOpt1(reportId)
-      toastOption.toastSuccess("Xác nhận từ chối thành công.")
-      getAllReportStaff()
-    } catch (e) {
-      console.log(e)
-      toastOption.toastError("Vui lòng tải lại trang và thử lại.")
-    }
+const onConfirmReject = async (reason) => {
+  if(!confirm("Bạn có chắc chắn muốn từ chối tố cáo này không?")){
+    return
+  }
+  try {
+    await reportService.staffDeclineReportOpt1(report.value.id, reason)
+    toastOption.toastSuccess("Từ chối tố cáo thành công")
+    getAllReportStaff()
+    isModalVisible.value = false
+  } catch (_) {
+    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại.")
+  } finally {
+    isRejectModalVisible.value = false
   }
 }
 const onConfirmReport = async (reportId) => {
@@ -202,11 +214,11 @@ onMounted(() => {
         </div>
       </div>
 
-      <section class="bg-white sm:p-5">
+      <section class="sm:p-5">
         <div class="mx-auto px-4">
           <div class="bg-white relative sm:rounded-lg overflow-hidden">
             <div class="overflow-x-auto">
-              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <table class="w-full text-sm text-left text-black dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Người tố cáo</th>
@@ -222,25 +234,24 @@ onMounted(() => {
                 </thead>
                 <tbody>
                   <tr v-for="(report, index) in paginatedReportList" :key="index" class="border-b dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-normal text-gray-500 dark:text-white">
+                    <th scope="row" class="px-6 py-4 font-normal text-black dark:text-white">
                       {{ report?.fromUserReport?.fullname }}
                     </th>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ report?.toUserReport?.fullname }}</div>
+                      <div class="font-normal text-black">{{ report?.toUserReport?.fullname }}</div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ report?.content }}</div>
+                      <div class="font-normal text-black">{{ report?.content }}</div>
                     </td>
-                    <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ report?.status }}</div>
-                    </td>
-
                     <td class="px-4 py-3">
                       {{ report?.createAt ? moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
                     </td>
+                    <td class="px-4 py-3">
+                      <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
+                    </td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <button
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button" @click="openReportModal(report)">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -260,7 +271,7 @@ onMounted(() => {
               <ul class="inline-flex items-stretch -space-x-px">
                 <li>
                   <button type="button"
-                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-black bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                     @click="goToPreviousPage" :disabled="currentPage === 1" aria-label="Previous Page">
                     <span class="sr-only">Previous</span>
                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
@@ -274,7 +285,7 @@ onMounted(() => {
                 <!-- Generate pagination links -->
                 <li v-for="pageNumber in totalPages" :key="pageNumber">
                   <button type="button" class="flex items-center justify-center text-sm py-2 px-3 leading-tight" :class="{
-                    'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                    'text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
                       pageNumber !== currentPage,
                     'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
                       pageNumber === currentPage,
@@ -284,7 +295,7 @@ onMounted(() => {
                 </li>
                 <li>
                   <button type="button" @click="goToNextPage"
-                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-black bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                     :disabled="currentPage === totalPages" aria-label="Next Page">
                     <span class="sr-only">Next</span>
                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
@@ -302,6 +313,7 @@ onMounted(() => {
       </section>
     </div>
   </StaffSideBarLayout>
+  <RejectModal v-if="isRejectModalVisible" @confirm="onConfirmReject" @decline="closeRejectModal"/>
   <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical="true" :hasButton="true"
     title="Chi tiết" @decline-modal="closeReportModal" @confirm-modal="closeReportModal" >
     <div class="relative px-2">
@@ -360,9 +372,13 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex px-8 my-2">
-          <div class="flex items-center gap-3 text-lg mb-1">
+          <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
             <div class="min-w-[100px]">Tạo lúc: </div>
             <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+          </div>
+          <div class="flex items-center gap-3 text-lg mb-1">
+            <div class="min-w-[100px]">Trạng thái: </div>
+            <div><ReportStatusBadge :status="report?.status" /></div>
           </div>
         </div>
         <div class="flex px-8">
@@ -402,7 +418,7 @@ onMounted(() => {
             Tạo nhóm chat
         </button>
       </div>
-      <div>
+      <div v-if="report?.status === ReportStatus.PROCESSING.value">
         <button
           @click="onConfirmReport(report?.id)"
           class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
@@ -410,9 +426,9 @@ onMounted(() => {
             Xác nhận tố cáo chính xác
         </button>
       </div>
-      <div>
+      <div v-if="report?.status === ReportStatus.PROCESSING.value">
         <button
-          @click="onRejectReport(report?.id)"
+          @click="openRejectModal"
           class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Từ chối

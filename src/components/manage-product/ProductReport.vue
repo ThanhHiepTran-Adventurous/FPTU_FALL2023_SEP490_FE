@@ -2,8 +2,9 @@
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import reportService from '@/services/report.service'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 const reportList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllReport = async () => {
   try {

@@ -3,9 +3,10 @@ import PaymentService from '@/services/payment.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 
 const transactionList = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllTransaction = async () => {
   try {

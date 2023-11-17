@@ -25,7 +25,7 @@ export const buyerTabs = {
   reported: {
     value: 'Lịch sử báo cáo',
     icon: 'fluent-mdl2:report-warning',
-    navLink: '/reports',
+    navLink: '/reports/immediate',
   },
   refundRequest: {
     value: 'Đề nghị trả hàng',
@@ -72,3 +72,5 @@ export const defaultRoute = {
   admin: '/admin/dashboard',
   staff: '/staff/manage-ship-request',
 }
+
+export const SIMPLE_TABLE_ITEMS_PER_PAGE = 8

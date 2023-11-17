@@ -2,7 +2,6 @@ import utils from '@/utils/customAxios'
 import url from '../common/urlConstant'
 
 const sellerCreateShipRequest = async orderId => {
-  console.log(orderId)
   const serviceUrl = url.endpoint.ship.sellerCreateShipRequest.replace('{orderId}', orderId)
   try {
     const response = await utils.axiosLocalHost.post(serviceUrl)
@@ -52,11 +51,18 @@ const buyerConfirmShipRequestDone = async shipRequestId => {
   const response = await utils.axiosLocalHost.put(serviceUrl)
   return response ? response.data : response
 }
+const getShipRequestByOrder = async orderId => {
+  const query = `shipRequest_orderId:${orderId}`
+  const serviceUrl = `${url.endpoint.ship.getAllShipRequest}?query=${query}&page=1&size=100`
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
 export default {
   sellerCreateShipRequest,
   getAllShipRequest,
   staffConfirmShipRequest,
   staffChangeShipRequestToOnDelivery,
   staffChangeShipRequestToDelivered,
-  buyerConfirmShipRequestDone
+  buyerConfirmShipRequestDone,
+  getShipRequestByOrder
 }

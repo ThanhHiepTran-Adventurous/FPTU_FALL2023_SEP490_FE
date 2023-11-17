@@ -4,10 +4,11 @@ import loginService from '../../services/login.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 const userList = ref([])
 const searchQuery = ref('')
 const openDropdowns = ref([])
-const itemsPerPage = 4
+const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
 const date = ref(new Date())
