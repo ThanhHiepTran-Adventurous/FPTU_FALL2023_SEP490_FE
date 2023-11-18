@@ -1,82 +1,38 @@
-import { createRouter, createWebHistory } from "vue-router";
-import ENUM from "@/models/enum.js";
-import buyer_routes from "./buyer_router";
-// import seller_routes from "./seller_routes";
-import TokenService from "@/services/token/token.service.js";
+import { createRouter, createWebHashHistory } from 'vue-router'
+import buyer_routes from './buyer_router'
+import seller_routes from './seller_router'
+import admin_router from './admin_router'
+import staff_router from './staff_router'
+import common_router from './common_router'
+import { useUserStore } from '@/stores/user.store'
+import guest_router from './guest_router'
 
 const ROUTE_NAMES = {
-  SIGN_IN: "login",
-  SIGN_UP: "create-account",
-  FORGOT_PASSWORD: "forgot-password",
-  LANDING_PAGE: "landing-page",
-  HOME: "home",
-};
+  SIGN_IN: 'all-page-buyer',
+  SIGN_UP: 'create-account',
+  FORGOT_PASSWORD: 'forgot-password',
+  HOME: 'home',
+}
 
-// const routes = [...buyer_routes, ...seller_routes];
-const routes = [...buyer_routes];
-
-const isAuthenticated = () => {
-  const currentUser = TokenService.getCookie("Token")
-    ? JSON.parse(TokenService.getCookie("Token"))
-    : null;
-  return currentUser;
-};
-
-const isAuthorized = (to, currentUser) => {
-  const currentRoleId = currentUser.RoleIds[0];
-  return !to.meta.roles || to.meta.roles.includes(currentRoleId);
-};
-
-const shouldRedirectToHome = (to, currentUser) => {
-  const pageUnreachableWhenAuthenticated = [
-    ROUTE_NAMES.SIGN_IN,
-    ROUTE_NAMES.SIGN_UP,
-    ROUTE_NAMES.FORGOT_PASSWORD,
-    ROUTE_NAMES.LANDING_PAGE,
-  ];
-
-  return (
-    currentUser &&
-    pageUnreachableWhenAuthenticated.includes(to.name)
-  );
-};
-
-const determineNextRoute = (to, currentUser) => {
-  if (to.name === ROUTE_NAMES.HOME) {
-    const currentRoleId = currentUser.RoleIds[0];
-    return currentRoleId === ENUM.BUYER.ROLE_ID ? null : "/seller/dashboard";
-  }
-  return null;
-};
+const routes = [...buyer_routes, ...seller_routes, ...admin_router, ...guest_router, ...staff_router, ...common_router]
 
 const router = createRouter({
-  mode: "history",
-  history: createWebHistory(),
+  mode: 'history',
+  history: createWebHashHistory(),
   routes,
-});
+})
 
 router.beforeEach(async (to, from, next) => {
-  const requireAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const requireAuth = to.matched.some(record => record.meta.requiresAuth)
+  const userStore = useUserStore()
+  const userId = userStore.getUserIdAndGetFromLocalStorageIfNotExist()
+  // const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
 
-  if (requireAuth && !isAuthenticated()) {
-    next({ name: ROUTE_NAMES.SIGN_IN });
+  if (requireAuth && !userId) {
+    next({ name: ROUTE_NAMES.SIGN_IN })
   } else {
-    const currentUser = isAuthenticated();
-
-    if (shouldRedirectToHome(to, currentUser)) {
-      next("/");
-    } else if (requireAuth) {
-      if (currentUser) {
-        if (isAuthorized(to, currentUser)) {
-          next();
-        } else {
-          next("forbidden");
-        }
-      }
-    } else {
-      next();
-    }
+    next()
   }
-});
+})
 
-export default router;
+export default router

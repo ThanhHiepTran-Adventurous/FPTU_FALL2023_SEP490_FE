@@ -1,9 +1,17 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-// import router from './router'
+import { createPinia } from 'pinia'
 import router from './router/router'
+import Countdown from 'vue3-flip-countdown'
+import Toast from "vue-toastification"
 
-import './assets/style.css'
-import './assets/icon.css'
+import './assets/main.css'
+import "vue-toastification/dist/index.css";
+import 'ant-design-vue/dist/reset.css';
 
-createApp(App).use(router).mount('#app')
+const pinia = createPinia()
+
+createApp(App).use(router).use(pinia).use(Toast, {
+    position: 'bottom-right',
+    hideProgressBar: true,
+}).use(Countdown).mount('#app')

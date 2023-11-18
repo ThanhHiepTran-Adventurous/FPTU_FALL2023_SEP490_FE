@@ -165,6 +165,58 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+/* Vue toastify config */
+.loading-toastification {
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid #9facc2 !important;
+  border-radius: 50%;
+  border-top-color: white !important;
+  animation: spin 1s ease-in-out infinite !important;
+  -webkit-animation: spin 1s ease-in-out infinite !important;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.Vue-Toastification__toast--default {
+  --tw-gradient-to: #a8b8d8 !important;
+  --tw-gradient-from: #627594 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+.Vue-Toastification__toast--error.my-toast-error-color {
+  --tw-gradient-to: #ff667c !important;
+  --tw-gradient-from: #ea0606 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+.Vue-Toastification__toast--success.my-toast-success-color {
+  --tw-gradient-to: #98ec2d !important;
+  --tw-gradient-from: #17ad37 !important;
+  --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to) !important;
+  background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+  color: white !important;
+  width: 40vw !important;
+}
+
+
+
 @-ms-viewport {
   width: device-width;
 }
@@ -1223,6 +1275,8 @@ template {
   border-radius: 6px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+
 
 .form-control::-ms-expand {
   background-color: transparent;
@@ -6908,7 +6962,7 @@ img.tp-slider-alternative-image {
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.6) !important;
   font-size: 15px;
   line-height: 45px !important;
-  background: url("../images/gradient/g30.png") repeat-x top;
+  /* background: url("../images/gradient/g30.png") repeat-x top; */
   font-family: arial, sans-serif;
   font-weight: bold;
   letter-spacing: -1px;
@@ -6921,7 +6975,7 @@ img.tp-slider-alternative-image {
   padding: 9px 20px;
   font-size: 19px;
   line-height: 57px !important;
-  background: url("../images/gradient/g40.png") repeat-x top;
+  /* background: url("../images/gradient/g40.png") repeat-x top; */
 }
 
 .tp-simpleresponsive .purchase:hover, .tp-simpleresponsive .button:hover, .tp-simpleresponsive .button.big:hover {
@@ -9080,13 +9134,7 @@ img.tp-slider-alternative-image {
 /*---------------------------------------*/
 /*--------     2. Fonts icons    --------*/
 /*---------------------------------------*/
-@font-face {
-  font-family: "wokiee";
-  src: url("../font/fonts/wokiee.eot?g7nf10");
-  src: url("../font/fonts/wokiee.eot?g7nf10#iefix") format("embedded-opentype"), url("../font/fonts/wokiee.ttf?g7nf10") format("truetype"), url("../font/fonts/wokiee.woff?g7nf10") format("woff"), url("../font/fonts/wokiee.svg?g7nf10#wokiee") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
+
 [class^=icon-], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "wokiee" !important;
@@ -21646,7 +21694,7 @@ html.ie.gecko body.modal-open {
 }
 
 #ModalDiscount .tt-background {
-  background: #ffffff url("../images/custom/bg-discount.png") 0 0 no-repeat;
+  /* background: #ffffff url("../images/custom/bg-discount.png") 0 0 no-repeat; */
   background-size: 50% auto;
 }
 #ModalDiscount .modal-body {
@@ -23642,7 +23690,7 @@ html.ie .tt-btn-col-close {
     color: #ffffff;
   }
   .tt-product:not(.tt-view) .tt-description {
-    padding-top: 17px;
+    padding-top: 10px;
     position: relative;
     z-index: 2;
     background: #ffffff;
@@ -23739,7 +23787,7 @@ html.ie .tt-btn-col-close {
     justify-content: space-between;
     align-content: flex-start;
     align-items: flex-start;
-    position: absolute;
+    /* position: absolute; */
     width: 100%;
   }
 }
@@ -23749,7 +23797,7 @@ html.ie .tt-btn-col-close {
     opacity: 0;
   }
   .tt-product:not(.tt-view) .tt-description .tt-product-inside-hover > * {
-    margin-top: 17px;
+    margin-top: 8px;
   }
 }
 @media (min-width: 1025px) {
@@ -24507,7 +24555,8 @@ html.ie .tt-btn-col-close {
     justify-content: space-between;
     align-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 5px;
+    width: 100%;
   }
 }
 @media (max-width: 1024px) and (min-width: 1025px) {
@@ -24530,7 +24579,7 @@ html.ie .tt-btn-col-close {
   }
   .tt-product:not(.tt-view) .tt-description .tt-product-inside-hover .tt-row-btn:not(:first-child),
 .tt-product-design02:not(.tt-view) .tt-description .tt-product-inside-hover .tt-row-btn:not(:first-child) {
-    margin-top: 10px;
+    margin-top: 5px;
   }
 }
 @media (max-width: 1024px) {
@@ -30961,7 +31010,7 @@ html.ie #tt-boxedbutton .rtlbutton-color:hover .box-description {
   right: 0;
   width: 231px;
   height: 100%;
-  background: url("../images/skin-carsshop/menu-bg-01.jpg") 0 0 no-repeat;
+  /* background: url("../images/skin-carsshop/menu-bg-01.jpg") 0 0 no-repeat; */
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
 }
@@ -32841,7 +32890,7 @@ Content
 /* tt-contact-box */
 @media (min-width: 791px) {
   .tt-contact-box {
-    background-image: url("../images/custom/contact-img-01.jpg");
+    /* background-image: url("../images/custom/contact-img-01.jpg"); */
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -33761,7 +33810,7 @@ input[type=checkbox]:checked ~ label .check {
 }
 @media (min-width: 1025px) {
   .tt-coming-soon {
-    background: url("../images/custom/comingsoon-img-01.jpg") center top no-repeat;
+    /* background: url("../images/custom/comingsoon-img-01.jpg") center top no-repeat; */
     background-size: cover;
   }
 }
@@ -34592,7 +34641,7 @@ body:not(.touch-device) .arrow-location-center-02.tt-arrow-hover:hover .slick-ar
   left: 0;
   width: 1px;
   height: 100%;
-  background: url("../images/custom/tt-gift-box-border2.png") left top repeat-y;
+  /* background: url("../images/custom/tt-gift-box-border2.png") left top repeat-y; */
 }
 .tt-gift-layout .tt-gift-box .tt-description .tt-code span:after {
   content: "";
@@ -34601,7 +34650,7 @@ body:not(.touch-device) .arrow-location-center-02.tt-arrow-hover:hover .slick-ar
   right: 0;
   width: 1px;
   height: 100%;
-  background: url("../images/custom/tt-gift-box-border2.png") right top repeat-y;
+  /* background: url("../images/custom/tt-gift-box-border2.png") right top repeat-y; */
 }
 .tt-gift-layout .tt-gift-box .tt-description .tt-code:before {
   content: "";
@@ -34610,7 +34659,7 @@ body:not(.touch-device) .arrow-location-center-02.tt-arrow-hover:hover .slick-ar
   left: 0;
   width: 100%;
   height: 1px;
-  background: url("../images/custom/tt-gift-box-border1.png") left top repeat-x;
+  /* background: url("../images/custom/tt-gift-box-border1.png") left top repeat-x; */
 }
 .tt-gift-layout .tt-gift-box .tt-description .tt-code:after {
   content: "";
@@ -34619,7 +34668,7 @@ body:not(.touch-device) .arrow-location-center-02.tt-arrow-hover:hover .slick-ar
   left: 0;
   width: 100%;
   height: 1px;
-  background: url("../images/custom/tt-gift-box-border1.png") left top repeat-x;
+  /* background: url("../images/custom/tt-gift-box-border1.png") left top repeat-x; */
 }
 .tt-gift-layout p {
   margin-top: 33px;
@@ -35457,7 +35506,7 @@ html:not(.mac):not(.touch-device) .tt-carousel-brands .slick-track {
 }
 
 .container-bg-01 {
-  background: url("../images/custom/wrapper-section-01.jpg") center center no-repeat;
+  /* background: url("../images/custom/wrapper-section-01.jpg") center center no-repeat; */
   color: #ffffff;
 }
 .container-bg-01 .tt-title {

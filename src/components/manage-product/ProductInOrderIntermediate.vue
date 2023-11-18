@@ -1,0 +1,301 @@
+<script setup>
+import { onMounted, ref, watch } from 'vue'
+import SearchInput from '../common-components/SearchInput.vue'
+import Modal from '../common-components/Modal.vue'
+import formatCurrency from '@/utils/currency-output-formatter'
+import moment from 'moment'
+import imageHelper from '@/utils/image-helper'
+import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
+import { Icon } from '@iconify/vue'
+import Dropdown from '../common-components/Dropdown.vue'
+import Button from '@/components/common-components/Button.vue'
+import constant, { sellerTabs } from '@/common/constant'
+import OrderService from '@/services/order.service'
+import ItemOrder from '../common-components/item-box/ItemOrder.vue'
+import OrderTimeline from '../OrderTimeline.vue'
+import { useRouter } from 'vue-router'
+import ShipRequestService from '@/services/shiprequest.service'
+import toastOption from '@/utils/toast-option'
+import withdraw from '../../services/withdraw.service'
+import ReportService from '@/services/report.service'
+import ReportModal from '@/components/ReportModal.vue'
+import ShippingStatusIntermediate from '../common-components/badge/ShippingStatusIntermediate.vue'
+import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
+import Breadcrumb from '@/layouts/Breadcrumb.vue'
+
+const breadcrumbItems = [
+  {
+    text: 'Trang chủ',
+    to: '/',
+    disabled: false,
+  },
+  {
+    text: 'Đơn hàng',
+    to: '',
+    disabled: true,
+  },
+]
+
+const router = useRouter()
+
+const orders = ref([])
+const ordersFiltered = ref([])
+const detail = ref(null)
+
+const isModalVisible = ref(false)
+const isUpdating = ref(false)
+const isReportModalOpen = ref(false)
+const openReportModal = () => {
+  isReportModalOpen.value = true
+}
+const closeReportModal = () => {
+  isReportModalOpen.value = false
+}
+// Filter
+const options = ref([
+  {
+    label: 'Tự trao đổi',
+    value: AuctionModelType.immediate,
+  },
+  {
+    label: 'Trung gian qua hệ thống',
+    value: AuctionModelType.intermediate,
+  },
+])
+
+const selected = ref({
+  label: 'Trung gian qua hệ thống',
+  value: AuctionModelType.intermediate,
+})
+watch(selected, newVal => {
+  if (newVal.value === AuctionModelType.immediate) {
+    router.push('/manage/orders/immediate')
+  }
+})
+const filterData = async () => {
+  ordersFiltered.value = orders.value
+    .filter(v => v.modelTypeAuctionOfOrder === selected.value.value)
+    .sort((a, b) => {
+      return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+    })
+}
+
+// Business functions
+const handleDepositRequest = async orderId => {
+  try {
+    await withdraw.sellerWithdrwaOpt2(orderId)
+    toastOption.toastSuccess('Tạo yêu cầu rút tiền thành công')
+  } catch (error) {
+    toastOption.toastError('Tạo yêu cầu rút tiền thất bại')
+    console.error('Error creating ship request:', error)
+  }
+}
+const handleCreateShipRequest = async orderId => {
+  try {
+    closeModal()
+    await ShipRequestService.sellerCreateShipRequest(orderId)
+    toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
+    fetchOrders()
+  } catch (error) {
+    toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
+    console.error('Error creating ship request:', error)
+  }
+}
+
+// Page operations
+const activateInfoAuction = order => {
+  detail.value = order
+  isModalVisible.value = true
+}
+function closeModal() {
+  isModalVisible.value = false
+}
+function handleConfirm() {
+  closeModal()
+}
+
+const fetchOrders = async () => {
+  const response = await OrderService.getAllOrders('', 1, 1000, '')
+  orders.value = response.data ? response.data.map(f => {
+    if(!f.shipRequestList){
+      return f
+    }
+    if(f.shipRequestList.length === 1){
+      f.sellerShipRequest = f.shipRequestList[0]
+      return f
+    }
+    if(f.shipRequestList.length === 2){
+      f.sellerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.SELLER_SHIP)[0]
+      f.buyerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.BUYER_RETURN)[0]
+    }
+    return f
+  }) : []
+  filterData()
+}
+
+onMounted(() => {
+  fetchOrders()
+})
+</script>
+
+<template>
+  <div class="w-full">
+    <!-- Breadcrumb -->
+    <div class="pt-2 pb-2 container mx-auto">
+      <Breadcrumb :items="breadcrumbItems" />
+    </div>
+
+    <!-- Main content -->
+    <SellerSideBarLayout :cur-tab="sellerTabs.orders.value">
+      <div class="container py-2 mx-auto bg-white rounded-md min-h-[80vh]">
+        <div class="mb-4 mx-5 mt-4">
+          <div class="mt-3 flex items-center gap-3">
+            <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
+            <div class="w-full">
+              <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center mx-5 gap-3">
+          <ItemOrder
+            v-for="item in ordersFiltered"
+            :key="item.id"
+            @click="activateInfoAuction(item)"
+            :product-name="item.productResponse.name"
+            :price="item.price"
+            :mainImage="imageHelper.getPrimaryImageFromList(item.productResponse.imageUrls)"
+            :secondaryImage="imageHelper.getSecondaryImageFromList(item.productResponse.imageUrls)"
+            :auction-type="item.modelTypeAuctionOfOrder"
+            :orderId="item.id"
+            :statusShipRequest="item.sellerShipRequest?.status"
+            :statusReturnRequest="item.buyerShipRequest?.status"
+            :is-completed="item.statusOrder === OrderStatus.DONE.value"
+            :chatGroupId="item.chatGroupDTOs.id ? item.chatGroupDTOs.id : ''"
+            :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
+        </div>
+        <Modal
+          :hidden="!isModalVisible"
+          :widthClass="'w-[900px]'"
+          :hasOverFlowVertical="true"
+          :hasButton="true"
+          title="Chi tiết"
+          @decline-modal="closeModal"
+          @confirm-modal="handleConfirm">
+          <div class="flex-1 bg-gray rounded-lg mx-1 my-1">
+            <div class="relative mx-2">
+              <div class="mx-auto container align-middle">
+                <div class="text-xl font-bold ml-5 underline mb-2">Thông tin đơn hàng</div>
+                <table class="w-full table-auto text-lg">
+                  <tbody>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Tên Sản Phẩm :
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">{{ detail?.productResponse.name }}</td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Giá tiền :
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.price) }}</td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Địa chỉ :
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">{{ detail?.buyerAddress }}</td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Số điện thoại :
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">
+                        {{ detail?.buyerPhoneNumber }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Tạo lúc :
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">
+                        {{ detail?.createAt ? moment.utc(detail?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Cập nhật lúc:
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">
+                        {{
+                          detail?.lastUpdatedAt ? moment.utc(detail?.lastUpdatedAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'
+                        }}
+                      </td>
+                    </tr>
+                    <tr v-if="detail?.sellerShipRequest">
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Trạng thái giao hàng:
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">
+                        <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status"/>
+                      </td>
+                    </tr>
+                    <tr v-if="detail?.buyerShipRequest">
+                      <td
+                        class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
+                        Trạng thái trả hàng:
+                      </td>
+                      <td class="py-2 px-4 border-b border-grey-light">
+                        <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status"/>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="mx-auto container align-middle mt-8">
+                <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
+                <div class="ml-8">
+                  <OrderTimeline :curStatus="detail?.statusOrder" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <template #button>
+            <div>
+              <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Hủy </Button>
+            </div>
+            <div>
+              <Button
+                :disabled="
+                  isUpdating ||
+                  detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value ||
+                  detail?.statusOrder !== OrderStatus.DONE.value
+                "
+                @on-click="handleDepositRequest(detail?.id)">
+                <div class="flex items-center">
+                  <div>Yêu cầu rút tiền</div>
+                </div>
+              </Button>
+            </div>
+            <div>
+              <Button
+                v-if="detail?.modelTypeAuctionOfOrder !== AuctionModelType.immediate && !detail?.hasShipRequest"
+                :disabled="isUpdating || detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value"
+                @on-click="handleCreateShipRequest(detail?.id)">
+                <div class="flex items-center">
+                  <div>Tạo yêu cầu giao hàng</div>
+                </div>
+              </Button>
+            </div>
+          </template>
+        </Modal>
+      </div>
+    </SellerSideBarLayout>
+  </div>
+</template>

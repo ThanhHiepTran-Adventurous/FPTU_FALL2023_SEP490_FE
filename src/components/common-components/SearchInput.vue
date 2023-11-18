@@ -77,7 +77,7 @@ const show = () => {
   placeholderValue.value = props.placeholder
 }
 </script>
-<style scoped>
+<style>
 .icon-leave-active {
   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }

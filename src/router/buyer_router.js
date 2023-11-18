@@ -1,49 +1,135 @@
-import ENUM from "@/models/enum.js";
-
-const lazyLoad = (componentPath) => () => import(componentPath);
+import ENUM from '@/common/enum.js'
+import ManagerAllPage from '@/views/buyer/ManagerAllPage.vue'
+import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
+import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
+import BoughtPageIntermediate from '@/views/buyer/child-page/bought_page/BoughtPageIntermediate.vue'
+import BoughtPageImmediate from '@/views/buyer/child-page/bought_page/BoughtPageImmediate.vue'
+import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
+import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
+import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
+import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
+import OrdersPageIntermediate from '@/views/buyer/child-page/order_page/OrdersPageIntermediate.vue'
+import OrdersPageImmediate from '@/views/buyer/child-page/order_page/OrdersPageImmediate.vue'
+import ReportPageImmediate from '@/views/buyer/child-page/report_page/ReportPageImmediate.vue'
+import ReportPageIntermediate from '@/views/buyer/child-page/report_page/ReportPageIntermediate.vue'
+import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
+import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
+import WithdrawPage from '@/views/buyer/WithdrawPage.vue'
 
 const buyer_router = [
   {
-    name: "all-page-buyer",
-    path: "/",
-    component: lazyLoad("../views/buyer/ManagerAllPage.vue"),
+    name: 'all-page-buyer',
+    path: '/',
+    component: ManagerAllPage,
     children: [
       {
-        name: "landing-page",
-        path: "/",
-        component: lazyLoad("../views/common/LandingPage.vue"),
+        name: 'auction-list',
+        path: '/auctions',
+        component: AuctionListPage,
+        meta: {
+          requiresAuth: false,
+        },
+      },
+      {
+        name: 'auction-detail',
+        path: '/auctions/:id',
+        component: ProductDetailPage,
         meta: {
           requiresAuth: false,
           roles: [ENUM.BUYER.ROLE_ID],
         },
       },
       {
-        name: "sign-in",
-        path: "sign-in",
-        component: lazyLoad("../views/common/LoginPage.vue"),
+        name: 'landing-page',
+        path: '/',
+        component: LandingPage,
         meta: {
           requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
         },
       },
       {
-        name: "sign-up",
-        path: "sign-up",
-        component: lazyLoad("../views/common/CreateAccountPage.vue"),
+        name: 'bought-intermediate',
+        path: '/bought/intermediate',
+        component: BoughtPageIntermediate
+      },
+      {
+        name: 'bought-immediate',
+        path: '/bought/immediate',
+        component: BoughtPageImmediate
+      },
+      {
+        name: 'orders-intermediate',
+        path: '/orders/intermediate',
+        component: OrdersPageIntermediate,
+      },
+      {
+        name: 'orders-immediate',
+        path: '/orders/immediate',
+        component: OrdersPageImmediate,
+      },
+      {
+        name: 'reports-intermediate',
+        path: '/reports/intermediate',
+        component: ReportPageIntermediate,
+      },
+      {
+        name: 'reports-immediate',
+        path: '/reports/immediate',
+        component: ReportPageImmediate,
+      },
+      {
+        name: 'withdraw-buyer',
+        path: '/withdraw',
+        component: WithdrawPage,
+      },
+      {
+        name: 'refunds',
+        path: '/refunds',
+        component: RefundPage,
+      },
+      {
+        name: 'transaction',
+        path: '/transaction',
+        component: TransactionPage,
+      },
+      {
+        name: 'wishlist',
+        path: '/wishlist',
+        component: WishListPage,
         meta: {
           requiresAuth: false,
-        },
-      }, 
-       {
-        name: "forbidden",
-        path: "forbidden",
-        component: lazyLoad("../views/common/ComingSoonPage.vue"),
-        meta: {
-          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
         },
       },
-   
+      {
+        name: 'compare',
+        path: '/compare',
+        component: ComparePage,
+        meta: {
+          requiresAuth: false,
+          roles: [ENUM.BUYER.ROLE_ID],
+        },
+      },
     ],
   },
-];
+  {
+    name: 'not-found',
+    path: '/:pathMatch(.*)*',
+    component: ComingSoonPage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    name: 'forbidden',
+    path: '/forbidden',
+    component: ComingSoonPage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+]
 
-export default buyer_router;
+export default buyer_router
+export const defaultBuyerRoute = 'all-page-buyer'

@@ -1,31 +1,23 @@
 <template>
-  <div class="page">
-     <h1>
-       HEADER-BUYER
-     </h1>
-      <router-view></router-view>
-      <h1>
-       FOOTER-BUYER
-     </h1>
+  <div>
+    <LayoutHeader>
+      <Navbar />
+    </LayoutHeader>
+    <!-- To prevent margin collapsing -->
+    <div class="mt-[150px] md:mt-[70px] float-left"></div>
+    <div class="clear-both"></div>
+    <div class="mb-[10px]">
+      <LayoutContent>
+        <router-view />
+      </LayoutContent>
+    </div>
+    <LayoutFooter />
   </div>
 </template>
 
-<script>
-
-
-export default {
-  name: 'ManageAllPage',
-  components: {
-  },
-  data() {
-    
-  },
-  methods: {
-    
-  }
-}
+<script setup>
+  import Navbar from '@/components/page-sections/Navbar.vue';
+  import LayoutContent from '@/layouts/LayoutContent.vue';
+  import LayoutHeader from '@/layouts/LayoutHeader.vue';
+  import LayoutFooter from '@/layouts/LayoutFooter.vue';
 </script>
-
-<style>
-  /* @import <--- import cac css buyer page */
-</style>
