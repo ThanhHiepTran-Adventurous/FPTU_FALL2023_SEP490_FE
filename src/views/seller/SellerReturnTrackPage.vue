@@ -15,6 +15,7 @@ import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportModal from '@/components/ReportModal.vue'
+import toastOption from '@/utils/toast-option'
 
 const breadcrumbItems = [
   {
@@ -92,12 +93,12 @@ const onReportModalConfirm = (listImg, text) => {
     }
     formData.append('createReportRequest', new Blob([JSON.stringify(jsonData)], { type: 'application/json' }))
 
-    console.log(report.value)
+    const toastId = toastOption.toastLoadingMessage("Đang gửi tố cáo lên hệ thống...")
 
     reportService
     .sellerReportBuyerOpt2(report.value.aboutOrder.id, formData)
-    .then(_ => toastOption.toastSuccess('Tố cáo thành công.'))
-    .catch(_ => toastOption.toastError('Tố cáo thất bại.'))
+    .then(_ => toastOption.updateLoadingToast(toastId, 'Tố cáo thành công.', false))
+    .catch(_ => toastOption.updateLoadingToast(toastId, 'Tố cáo thất bại.', true))
 }
 
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
@@ -214,12 +215,6 @@ onMounted(() => {
                         type="button" @click="openReportModal(report)">
                         <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
                       </button>
-                      <button
-                        v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value"
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                        type="button" @click="onReportClick(report)">
-                        <Icon icon="mdi:report-problem" class="font-bold text-[24px] text-red-700"/>
-                      </button>
                       <router-link v-if="report?.aboutOrder?.chatGroupDTOs.id" :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
                         <button
                           class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
@@ -227,6 +222,12 @@ onMounted(() => {
                           <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500"/>
                         </button>
                       </router-link>
+                      <button
+                        v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button" @click="onReportClick(report)">
+                        <Icon icon="mdi:report-problem" class="font-bold text-[24px] text-red-700"/>
+                      </button>
                     </td>
                   </tr>
                 </tbody>

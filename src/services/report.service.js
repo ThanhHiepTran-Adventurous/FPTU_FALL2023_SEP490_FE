@@ -88,6 +88,16 @@ const staffConfirmReturnRequest = async (reportId) => {
   const response = await utils.axiosLocalHost.post(serviceUrl)
   return response ? response.data : response
 }
+const staffConfirmBuyerWinOpt2 = async (orderId) => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.staffConfirmReportBuyerWinOpt2.replace("{orderId}", orderId)
+  const response = await utils.axiosLocalHost.post(serviceUrl)
+  return response ? response.data : response
+}
+const staffConfirmSellerWinOpt2 = async (orderId) => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.staffConfirmReportSellerWinOpt2.replace("{orderId}", orderId)
+  const response = await utils.axiosLocalHost.post(serviceUrl)
+  return response ? response.data : response
+}
 
 export default {
   sellerReportBuyerOption1,
@@ -100,5 +110,7 @@ export default {
   staffConfirmReportOpt1,
   staffDeclineReportOpt1,
   staffConfirmReturnRequest,
-  sellerReportBuyerOpt2
+  sellerReportBuyerOpt2,
+  staffConfirmBuyerWinOpt2,
+  staffConfirmSellerWinOpt2
 }
