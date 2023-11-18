@@ -133,7 +133,7 @@ const handleConfirmWithdraw = async withdrawId => {
   try {
     showWithdrawModal.value = false
     if(selectedWithdraw.value.type === WithdrawRequestType.WITHDRAW){
-      await withdrawService.adminConfirmSellerwithdrawOpt2(withdrawId)
+      await withdrawService.adminConfirmSellerWithdrawOpt1(withdrawId)
     } else if(selectedWithdraw.value.type === WithdrawRequestType.REFUND_TYPE_INTERMEDIATE){
       await withdrawService.adminConfirmBuyerWithdraw(withdrawId)
     } else {
