@@ -133,7 +133,8 @@ onBeforeUnmount(() => {
               <ProductInfo
                 :auction-info="auction"
                 @place-bid-success="fetchPageData()"
-                @buy-now-success="onBuyNowSuccess()" />
+                @buy-now-success="onBuyNowSuccess()"
+              />
               <ListProductImage :images="auction?.product?.imageUrls" />
             </div>
           </div>

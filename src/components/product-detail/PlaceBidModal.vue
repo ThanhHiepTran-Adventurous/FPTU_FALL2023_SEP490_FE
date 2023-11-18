@@ -1,16 +1,17 @@
 <script setup>
 import auctionService from "@/services/auction.service";
 import formatCurrency from "@/utils/currency-output-formatter";
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, onMounted, ref } from "vue"
 import CurrencyInput from "../common-components/CurrencyInput.vue";
 import currencyFormatter from "@/utils/currencyFormatter";
-import userService from "@/services/user.service";
 import { useUserStore } from "@/stores/user.store";
+import ErrorMessage from "../common-components/ErrorMessage.vue";
+import Validator from "@/utils/validator"
 import toastOption from "@/utils/toast-option";
 
 const userStore = useUserStore()
 
-const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel'])
+const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel', 'closeModal'])
 
 const props = defineProps([
   'startPrice',
@@ -41,8 +42,23 @@ const placebidPrice = ref('')
 const autoAuctionData = ref({
   maxPrice: '',
   deltaTime: '',
-  deltaPrice: '0',
+  deltaPrice: '',
 })
+const autoAuctionErrorState = ref({
+  maxPrice: '',
+  deltaTime: '',
+  deltaPrice: '',
+})
+const manualAuctionErrorState = ref('')
+
+const resetErrorState = () => {
+  autoAuctionErrorState.value = {
+    maxPrice: '',
+    deltaTime: '',
+    deltaPrice: '',
+  }
+  manualAuctionErrorState.value = ''
+}
 
 const resetAllState = () => {
   autoAuctionData.value.maxPrice = ''
@@ -51,12 +67,58 @@ const resetAllState = () => {
   placebidPrice.value = ''
 }
 
+const validateManual = () => {
+  const placebidValue = currencyFormatter.fromStyledStringToNumber(placebidPrice.value)
+  if(placebidValue <= props.highestPrice){
+    manualAuctionErrorState.value = 'Giá bạn đặt phải lớn hơn giá cao nhất hiện tại'
+    return false
+  }
+  if(placebidValue < props.highestPrice + props.jump){
+    manualAuctionErrorState.value = 'Bước nhảy phải lớn hơn bước nhảy tối thiểu'
+    return false
+  }
+  if(placebidValue >= props.buyNowPrice){
+    manualAuctionErrorState.value = 'Giá bạn đặt phải nhỏ hơn giá mua ngay, nếu bạn muốn mua ngay có thể quay lại và chọn \'Mua ngay\''
+    return false
+  }
+  return true
+}
+const validateAutoContainsError = () => {
+  const maxPriceValue = currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.maxPrice)
+  const deltaPrice = currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaPrice)
+
+  let isError = false
+  if(maxPriceValue <= props.highestPrice){
+    autoAuctionErrorState.value.maxPrice = 'Giá cao nhất có thể đặt không được thấp hơn giá cao nhất hiện tại cộng với bước nhảy tối thiểu'
+    isError = true
+  }
+  if(!Validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(autoAuctionData.value.deltaTime)){
+    autoAuctionErrorState.value.deltaTime = 'Thời gian phải là một số lớn hơn hoặc bằng 0'
+    isError = true
+  }
+  if(deltaPrice < props.jump){
+    autoAuctionErrorState.value.deltaPrice = 'Bước nhảy bạn cấu hình phải lớn hơn hoặc bằng bước nhảy của phiên đấu giá'
+    isError = true
+  }
+
+  return isError
+
+}
+
 const onAuctionSubmit = async () => {
-  auctionService.placeBidMannual(props.auctionId, currencyFormatter.fromStyledStringToNumber(placebidPrice.value))
+  resetErrorState()
+  if(!validateManual()){
+    return
+  }
+  emit('closeModal')
+  const toastId = toastOption.toastLoadingMessage('Đang tiến hành đặt đấu giá...')
+  auctionService.placeBidManual(props.auctionId, currencyFormatter.fromStyledStringToNumber(placebidPrice.value))
   .then(_ => {
+    toastOption.updateLoadingToast(toastId, 'Đặt giá thành công', false)
     emit("placeBidSuccess")
   })
   .catch(_ => {
+    toastOption.updateLoadingToast(toastId, 'Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại', true)
     emit("placeError")
   })
   .finally(() => {
@@ -73,13 +135,23 @@ const getPayloadFromFormState = () => {
 }
 
 const onUpdateAutoAuctionSubmit = async () => {
+  resetErrorState()
+  if(validateAutoContainsError()){
+    return
+  }
+  
+  emit('closeModal')
+
   const payload = getPayloadFromFormState()
 
+  const toastId = toastOption.toastLoadingMessage('Đang tiến hành đặt đấu giá tự động...')
   auctionService.updateAutoBid(preAutoAuctionData.value.id, payload)
     .then(_ => {
+      toastOption.updateLoadingToast(toastId, 'Đặt giá tự động thành công', false)
       emit("placeAutoAuctionSuccess")
     })
     .catch(_ => {
+      toastOption.toastError(toastId, 'Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại', true)
       emit("placeError")
     })
     .finally(() => {
@@ -88,12 +160,23 @@ const onUpdateAutoAuctionSubmit = async () => {
 }
 
 const onAutoAuctionSubmit = async () => {
+  resetErrorState()
+  if(validateAutoContainsError()){
+    return
+  }
+
+  emit('closeModal')
+
   const payload = getPayloadFromFormState()
+
+  const toastId = toastOption.toastLoadingMessage('Đang tiến hành cập nhật đấu giá tự động...')
   auctionService.placeAutoBid(props.auctionId, payload)
   .then(_ => {
+    toastOption.updateLoadingToast(toastId, 'Cập nhật đấu giá giá tự động thành công', false)
     emit("placeAutoAuctionSuccess")
   })
   .catch(_ => {
+    toastOption.updateLoadingToast(toastId, 'Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại', true)
     emit("placeError")
   })
   .finally(() => {
@@ -103,6 +186,7 @@ const onAutoAuctionSubmit = async () => {
 
 const onCancelClick = () => {
   resetAllState()
+  resetErrorState()
   emit('modalCancel')
 }
 
@@ -111,7 +195,7 @@ const fetchAutoAuctionData = async () => {
   if(response.data && response.data.length > 0){
     preAutoAuctionData.value = response.data[0]
     autoAuctionData.value.deltaPrice = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.deltaPrice)
-    autoAuctionData.value.deltaTime = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.deltaTime)
+    autoAuctionData.value.deltaTime = parseInt(preAutoAuctionData.value.deltaTime)/60000
     autoAuctionData.value.maxPrice = currencyFormatter.fromNumberToStyledString(preAutoAuctionData.value.maxPrice)
   }
 }
@@ -165,6 +249,7 @@ onMounted(async () => {
             GIÁ BẠN ĐẶT:
           </label>
           <CurrencyInput v-model="placebidPrice" placeholder="" />
+          <ErrorMessage :text="manualAuctionErrorState" />
         </div>
         <div class="flex items-center gap-3">
           <button
@@ -186,22 +271,32 @@ onMounted(async () => {
     <div :hidden="!isAutoAuctionTabShow">
       <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="highestPrice">
             GIÁ CAO NHẤT CÓ THỂ ĐẶT:
           </label>
-          <CurrencyInput v-model="autoAuctionData.maxPrice" placeholder="Max price" />
+          <CurrencyInput v-model="autoAuctionData.maxPrice" placeholder="Giá cao nhất có thể đặt" />
+          <ErrorMessage :text="autoAuctionErrorState.maxPrice" />
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="delayTime">
             KHOẢNG THỜI GIAN DELAY ĐẶT LẠI GIÁ SAU KHI CÓ GIÁ MỚI (phút):
           </label>
-          <CurrencyInput v-model="autoAuctionData.deltaTime" placeholder="Delay time in minute" />
+          <input 
+            v-model="autoAuctionData.deltaTime"
+            type="number"
+            class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-full h-10 py-1 pl-6"
+            name="delayTime"
+            id="delayTime"
+            placeholder="Thời gian delay đặt lại giá theo phút"
+          />
+          <ErrorMessage :text="autoAuctionErrorState.deltaTime" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
             BƯỚC NHẢY:
           </label>
-          <CurrencyInput v-model="autoAuctionData.deltaPrice" placeholder="Jump" />
+          <CurrencyInput v-model="autoAuctionData.deltaPrice" placeholder="Bước nhảy" />
+          <ErrorMessage :text="autoAuctionErrorState.deltaPrice" />
         </div>
         <div class="flex items-center gap-3">
           <button

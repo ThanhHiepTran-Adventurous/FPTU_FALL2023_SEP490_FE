@@ -19,7 +19,7 @@ const getAuctionDetail = async id => {
   return response ? response.data : response
 }
 
-const placeBidMannual = async (auctionId, price) => {
+const placeBidManual = async (auctionId, price) => {
   const serviceUrl = url.endpoint.placeBid.manual
   const response = await utils.axiosLocalHost.post(serviceUrl, {
     auctionAmount: price,
@@ -72,7 +72,7 @@ export default {
   sendAuctionRequest,
   getAllActiveAuctions,
   getAuctionDetail,
-  placeBidMannual,
+  placeBidManual,
   placeAutoBid,
   buyNowBid,
   getHistoryBid,

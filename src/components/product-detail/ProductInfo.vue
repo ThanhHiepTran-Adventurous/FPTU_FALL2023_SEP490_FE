@@ -38,17 +38,17 @@ const deadlineInMilis = computed(() => {
 
 const onPlaceBidMannualSuccess = () => {
   isModalVisible.value = false
-  toastOption.toastSuccess('Đặt giá thành công')
   emit('placeBidSuccess')
 }
 const onPlaceBidAutoSuccess = () => {
   isModalVisible.value = false
-  toastOption.toastSuccess('Đặt giá tự động thành công')
   emit('placeBidSuccess')
 }
 const onPlaceError = () => {
   isModalVisible.value = false
-  toastOption.toastError('Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại')
+}
+const onCloseModal = () => {
+  isModalVisible.value = false
 }
 
 const onBuyNowClick = async () => {
@@ -120,6 +120,7 @@ const onPlaceBidClick = async () => {
         @place-bid-success="onPlaceBidMannualSuccess()"
         @place-auto-auction-success="onPlaceBidAutoSuccess()"
         @place-error="onPlaceError()"
+        @close-modal="onCloseModal()"
         @modal-cancel="isModalVisible = false" />
     </Modal>
     <Modal
