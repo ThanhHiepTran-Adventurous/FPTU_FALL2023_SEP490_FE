@@ -18,7 +18,7 @@ import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
 import ReportService from '@/services/report.service'
 import Dropdown from '@/components/common-components/Dropdown.vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
+import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import shiprequestService from '@/services/shiprequest.service'
 
 const orders = ref([])

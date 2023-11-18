@@ -14,6 +14,7 @@ import ReportPageImmediate from '@/views/buyer/child-page/report_page/ReportPage
 import ReportPageIntermediate from '@/views/buyer/child-page/report_page/ReportPageIntermediate.vue'
 import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
+import WithdrawPage from '@/views/buyer/WithdrawPage.vue'
 
 const buyer_router = [
   {
@@ -76,6 +77,11 @@ const buyer_router = [
         name: 'reports-immediate',
         path: '/reports/immediate',
         component: ReportPageImmediate,
+      },
+      {
+        name: 'withdraw-buyer',
+        path: '/withdraw',
+        component: WithdrawPage,
       },
       {
         name: 'refunds',

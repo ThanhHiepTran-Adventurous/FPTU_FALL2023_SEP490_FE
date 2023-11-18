@@ -11,7 +11,7 @@ import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
+import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 

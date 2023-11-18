@@ -19,7 +19,7 @@ import toastOption from '@/utils/toast-option'
 import withdraw from '../../services/withdraw.service'
 import ReportService from '@/services/report.service'
 import ReportModal from '@/components/ReportModal.vue'
-import ShippingStatusIntermediate from '../ShippingStatusIntermediate.vue'
+import ShippingStatusIntermediate from '../common-components/badge/ShippingStatusIntermediate.vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 

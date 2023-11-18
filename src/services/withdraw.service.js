@@ -14,6 +14,27 @@ const adminConfirmSellerwithdrawOpt2 = async withdrawAndRefundRequestsId => {
     throw error
   }
 }
+const adminConfirmSellerWithdrawOpt1 = async withdrawAndRefundRequestsId => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.adminConfirmSellerWithdrawOpt1.replace(
+    '{withdrawAndRefundRequestsId}',
+    withdrawAndRefundRequestsId,
+  )
+  try {
+    const response = await utils.axiosLocalHost.put(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error('Error processing adminConfirmSellerwithdrawOpt2:', error)
+    throw error
+  }
+}
+const adminConfirmBuyerWithdraw = async withdrawId => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.adminConfirmBuyerWithdraw.replace(
+    '{withdrawAndRefundRequestsId}',
+    withdrawId
+  )
+  const response = await utils.axiosLocalHost.put(serviceUrl)
+  return response ? response.data : response
+}
 
 const sellerWithdrwaOpt2 = async orderId => {
   const serviceUrl = url.endpoint.withdrawAndRefunds.sellerWithdrwaOpt2.replace('{orderId}', orderId)
@@ -40,8 +61,21 @@ const getAllWithdraws = async (page, size) => {
     throw error
   }
 }
+const getWithDrawsByUserId = async (page, size, userId) => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.getAllWithdraws
+  const response = await utils.axiosLocalHost.get(serviceUrl, {
+    params: {
+      page,
+      size,
+    }
+  })
+  return response ? response.data : response
+}
 export default {
   getAllWithdraws,
   sellerWithdrwaOpt2,
+  getWithDrawsByUserId,
   adminConfirmSellerwithdrawOpt2,
+  adminConfirmSellerWithdrawOpt1,
+  adminConfirmBuyerWithdraw
 }

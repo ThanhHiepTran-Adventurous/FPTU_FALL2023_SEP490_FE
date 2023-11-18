@@ -32,6 +32,11 @@ export const buyerTabs = {
     icon: 'akar-icons:arrow-back',
     navLink: '/refunds',
   },
+  withdrawRequests: {
+    value: 'Đề nghị hoàn tiền',
+    icon: 'gridicons:refund',
+    navLink: '/withdraw'
+  },
   transaction: {
     value: 'Lịch sử giao dịch',
     icon: 'icon-park-outline:transaction',
@@ -74,6 +79,11 @@ export const sellerTabs = {
     value: 'Đơn hàng trả về',
     icon: 'akar-icons:arrow-back',
     navLink: '/manage/return-request',
+  },
+  withdrawRequests: {
+    value: 'Đề nghị hoàn tiền / rút tiền',
+    icon: 'gridicons:refund',
+    navLink: '/seller/withdraw'
   },
   reported: {
     value: 'Lịch sử báo cáo',

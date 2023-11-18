@@ -12,7 +12,7 @@ import ReportStatusBadge from '@/components/common-components/badge/ReportStatus
 import { Icon } from '@iconify/vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
+import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
