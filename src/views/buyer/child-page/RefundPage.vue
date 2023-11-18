@@ -81,7 +81,11 @@ const getAllReportStaff = async () => {
   }
 }
 const filterReports = () => {
-    filteredReport.value = reportList.value.filter(f => !selected.value.value || f.status === selected.value.value)
+    filteredReport.value = reportList.value
+    .filter(f => !selected.value.value || f.status === selected.value.value)
+    .sort((a,b) => {
+      return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+    })
 }
 
 // Pagination

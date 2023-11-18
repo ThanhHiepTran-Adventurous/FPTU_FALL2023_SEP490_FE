@@ -96,7 +96,8 @@ const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataBuyerOrSeller()
-    reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
+    reportList.value = response.data
+    .filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
     filterReports()
   } catch (e) {
     console.error(e)
@@ -108,6 +109,9 @@ const filterReports = () => {
   .filter(f => 
   (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) 
   && (!selected.value.status.value || f.status === selected.value.status.value))
+  .sort((a,b) => {
+    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  })
 }
 
 // Pagination

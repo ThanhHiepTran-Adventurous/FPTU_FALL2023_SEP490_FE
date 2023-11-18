@@ -129,12 +129,13 @@ const onReportModalConfirm = async (listImg, text) => {
 
   try {
     closeModal()
+    const toastId = toastOption.toastLoadingMessage('Đang gửi tố cáo lên hệ thống...')
     await ReportService.buyerReportSellerOpt2(detail.value.id, formData)
-    toastOption.toastSuccess('Tố cáo thành công')
+    toastOption.updateLoadingToast(toastId, 'Tố cáo thành công', false)
     fetchOrders()
   } catch (error) {
     if(error.response.data.message.includes('already reported')){
-      toastOption.toastError('Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.')
+      toastOption.updateLoadingToast(toastId, 'Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.', true)
       return
     }
     toastOption.toastError('Tố cáo thất bại')
