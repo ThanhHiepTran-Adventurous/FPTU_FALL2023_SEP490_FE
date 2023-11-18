@@ -1,8 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
-import { defaultRoute } from "@/common/constant";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { OrderStatus, Role } from "@/common/contract";
+import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
+import { AuctionModelType, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -18,6 +17,7 @@ import { base64Image } from "@/utils/imageFile";
 import moment from "moment";
 import Loading from "@/components/common-components/Loading.vue";
 import Modal from "@/components/common-components/Modal.vue";
+import reportService from "@/services/report.service";
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -36,13 +36,62 @@ const textMessage = ref('')
 const isBuyerWinConfirm = ref(false)
 const isSellerWinConfirm = ref(false)
 const isCloseChatConfirm = ref(false)
+
 const onBuyerWinConfirm = () => {
-  isBuyerWinConfirm.value = false
-  //
+  if(groupInfo.value.order.modelTypeAuctionOfOrder === AuctionModelType.immediate){
+    onBuyerWinConfirmOpt1()
+  } else {
+    onBuyerWinConfirmOpt2()
+  }
 }
 const onSellerWinConfirm = () => {
+  if(groupInfo.value.order.modelTypeAuctionOfOrder === AuctionModelType.immediate){
+    onSellerWinConfirmOpt1()
+  } else {
+    onSellerWinConfirmOpt2()
+  }
+}
+
+const onBuyerWinConfirmOpt1 = async () => {
+  isBuyerWinConfirm.value = false
+  try {
+    await reportService.staffConfirmReportOpt1(reportFromBuyer.value.id)
+    toastOption.toastSuccess("Xác nhận người mua thắng thành công")
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại")
+  }
+}
+const onSellerWinConfirmOpt1 = async () => {
   isSellerWinConfirm.value = false
-  //
+  try {
+    await reportService.staffConfirmReportOpt1(reportFromSeller.value.id)
+    toastOption.toastSuccess("Xác nhận người bán thắng thành công")
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại")
+  }
+}
+
+const onBuyerWinConfirmOpt2 = async () => {
+  isBuyerWinConfirm.value = false
+  try {
+    await reportService.staffConfirmBuyerWinOpt2(groupInfo.value.order.id)
+    toastOption.toastSuccess("Xác nhận người mua thắng thành công")
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại")
+  }
+}
+const onSellerWinConfirmOpt2 = async () => {
+  isSellerWinConfirm.value = false
+  try {
+    await reportService.staffConfirmSellerWinOpt2(groupInfo.value.order.id)
+    toastOption.toastSuccess("Xác nhận người mua thắng thành công")
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi khi xử lý, vui lòng tải lại trang và thử lại")
+  }
 }
 const onChatCloseConfirm = () => {
   isCloseChatConfirm.value = false
@@ -82,6 +131,10 @@ const scrollMessageBoxToBottom = async () => {
   const message = document.getElementById('messageBox')
   message.scrollTop = message.scrollHeight
 }
+
+const reportFromSeller = ref(null)
+const reportFromBuyer = ref(null)
+
 
 // chat functions
 const sendMessage = async () => {
@@ -127,6 +180,13 @@ const fetchChatInfo = async () => {
   groupId = route.params['groupId']
   const response = await ChatService.getGroupInfo(groupId)
   groupInfo.value = response.data
+  const reportResponses = response.data.order.reportResponseList
+  if(reportResponses && reportResponses.length > 0){
+    const fromBuyerFiltered = reportResponses.filter(f => f.fromUserReport.role === Role.buyer.value)
+    const fromSellerFiltered = reportResponses.filter(f => f.fromUserReport.role === Role.seller.value)
+    reportFromBuyer.value = fromBuyerFiltered && fromBuyerFiltered.length > 0 ? fromBuyerFiltered[0] : null
+    reportFromSeller.value = fromSellerFiltered && fromSellerFiltered.length > 0 ? fromSellerFiltered[0] : null
+  }
 }
 const initMessageDtos = async () => {
   await fetchAllMessages()
@@ -208,16 +268,36 @@ onBeforeUnmount(() => {
               <div class="flex flex-row items-center justify-between">
                 <span class="font-bold">Hành động</span>
               </div>
-              <div class="flex flex-col space-y-1 mt-2">
-                <!-- For buyer only -->
+              <div v-if="groupInfo.order.modelTypeAuctionOfOrder === AuctionModelType.intermediate" class="flex flex-col space-y-1 mt-2">
+                <!-- For staff only -->
                 <button
-                  v-if="curRole === Role.staff.value"
+                  v-if="curRole === Role.staff.value && reportFromSeller"
                   @click="isSellerWinConfirm = true"
                   class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
                   Xác nhận người bán đúng
                 </button>
                 <button
-                  v-if="curRole === Role.staff.value"
+                  v-if="curRole === Role.staff.value && reportFromSeller"
+                  @click="isBuyerWinConfirm = true"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
+                  Xác nhận người mua đúng
+                </button>
+                <button
+                  @click="isCloseChatConfirm = true"
+                  class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
+                  Khóa đoạn chat
+                </button>
+              </div>
+              <div v-else class="flex flex-col space-y-1 mt-2">
+                <!-- For staff only -->
+                <button
+                  v-if="curRole === Role.staff.value && reportFromSeller"
+                  @click="isSellerWinConfirm = true"
+                  class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
+                  Xác nhận người bán đúng
+                </button>
+                <button
+                  v-if="curRole === Role.staff.value && reportFromBuyer"
                   @click="isBuyerWinConfirm = true"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Xác nhận người mua đúng
