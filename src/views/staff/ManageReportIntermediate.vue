@@ -119,7 +119,15 @@ const onJoinChat = async (groupId) => {
   router.push(`/messenger/${groupId}`)
 }
 const onCreateChatGroup = async (orderId) => {
-  await chatService.staffCreateChat(orderId)
+  try {
+    isModalVisible.value = false
+    await chatService.staffCreateChat(orderId)
+    toastOption.toastSuccess("Tạo nhóm chat thành công")
+    getAllReportStaff()
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi xảy ra, vui lòng tải lại trang và thử lại.")
+  }
 }
 
 const onConfirmReject = async (reason) => {
