@@ -10,7 +10,7 @@ export const firebaseConfig = {
   storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_MESSAGINGSENDERID,
   appId: import.meta.env.VITE_APP_ID,
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 }
 
 export default {
@@ -123,7 +123,7 @@ export default {
       getAllMessages: 'messageWebSocket/listMessageV2/{groupId}',
       getChatGroupInfo: 'messageWebSocket/chat-group-infoV2/{chatGroupId}',
       joinChatGroup: 'messageWebSocket/staff/join-chat-groupV2/{groupId}',
-      createChatGroup: 'messageWebSocket/staff/create-chat-groupV2/{orderId}'
+      createChatGroup: 'messageWebSocket/staff/create-chat-groupV2/{orderId}',
     },
     system: {
       getAllConfigData: 'systemConfig/getListSystemConfig',
@@ -154,7 +154,10 @@ export default {
       confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
       declineReportOpt1: 'report/staff/reject-report/{reportId}',
       confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
-      assignReport: 'report/staff/assign-report/{reportId}'
+      assignReport: 'report/staff/assign-report/{reportId}',
+    },
+    feedback: {
+      getFeedbackBySellerId: 'feedback',
     },
   },
 }

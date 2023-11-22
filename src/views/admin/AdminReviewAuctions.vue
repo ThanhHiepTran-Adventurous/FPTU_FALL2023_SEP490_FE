@@ -91,10 +91,6 @@ const handleRejectAuction = async auctionId => {
   }
 }
 
-// Compute the start and end index for the current page
-const startIndex = (currentPage.value - 1) * itemsPerPage
-const endIndex = startIndex + itemsPerPage
-
 // Compute paginated auctions
 const paginatedAuctions = computed(() => {
   // Move startIndex and endIndex calculation here
