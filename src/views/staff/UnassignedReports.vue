@@ -15,6 +15,7 @@ import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
 import toastOption from '@/utils/toast-option'
 import { Icon } from '@iconify/vue'
+import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 
 const router = useRouter()
 
@@ -123,7 +124,9 @@ onMounted(() => {
                       <div class="font-normal text-gray-500">{{ report?.content }}</div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ report?.status }}</div>
+                      <div class="font-normal text-gray-500">
+                        <ReportStatusBadge :status="report?.status" />
+                      </div>
                     </td>
 
                     <td class="px-4 py-3">

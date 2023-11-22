@@ -110,14 +110,16 @@ const onReportModalConfirm = (listImg, text) => {
 }
 
 const reportInBuyerRole = formData => {
+  const toastId = toastOption.toastLoadingMessage("Đang gửi tố cáo lên hệ thống...")
   reportService.buyerReportSellerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+  .then(_ => toastOption.updateLoadingToast(toastId, "Tố cáo thành công", false))
+  .catch(_ => toastOption.updateLoadingToast(toastId, "Tố cáo thất bại.", true))
 }
 const reportInSellerRole = formData => {
+  const toastId = toastOption.toastLoadingMessage("Đang gửi tố cáo lên hệ thống...")
   reportService.sellerReportBuyerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess("Tố cáo thành công"))
-  .catch(_ => toastOption.toastError("Tố cáo thất bại."))
+  .then(_ => toastOption.toastSuccess(toastId, "Tố cáo thành công", false))
+  .catch(_ => toastOption.toastError(toastId, "Tố cáo thất bại.", true))
 }
 
 

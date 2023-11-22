@@ -141,7 +141,15 @@ export default {
       getAllWithdraws: 'withdrawAndRefunds',
       adminConfirmSellerwithdrawOpt2:
         'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-withdraw-request-option-two',
+      adminConfirmSellerWithdrawOpt1:
+        'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-withdraw-request-option-one',
+      adminConfirmBuyerWithdraw:
+        'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-refund-request-option-two',
       sellerWithdrwaOpt2: 'withdrawAndRefunds/seller/{orderId}/create-withdraw-request-option-two',
+      staffConfirmReportBuyerWinOpt2:
+        'withdrawAndRefunds/staff/{orderId}/create-refund-request-for-buyer-win-option-two',
+      staffConfirmReportSellerWinOpt2:
+        'withdrawAndRefunds/staff/{orderId}/create-withdraw-request-for-seller-win-option-two',
     },
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
@@ -154,7 +162,7 @@ export default {
       confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
       declineReportOpt1: 'report/staff/reject-report/{reportId}',
       confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
-      assignReport: 'report/staff/assign-report/{reportId}',
+      assignReport: 'report/staff/assign-report/{reportId}',,
     },
     feedback: {
       getFeedbackBySellerId: 'feedback',

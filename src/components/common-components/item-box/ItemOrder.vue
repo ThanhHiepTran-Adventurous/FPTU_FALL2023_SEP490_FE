@@ -3,7 +3,7 @@ import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '../badge/AuctionType.vue'
 import { AuctionModelType, StatusShipRequest } from '@/common/contract'
 import { Icon } from '@iconify/vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue';
+import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue';
 
 const props = defineProps({
   mainImage: {

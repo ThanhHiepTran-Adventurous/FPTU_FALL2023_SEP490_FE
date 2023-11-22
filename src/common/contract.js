@@ -180,3 +180,29 @@ export const ReportStatus = {
     value: "REJECTED"
   },
 }
+
+export const WithdrawRequestStatus = {
+  PENDING: {
+    label: "Đang chờ xử lý",
+    value: "PENDING"
+  },
+  SUCCESS: {
+    label: "Đã xử lý",
+    value: "SUCCESS"
+  }
+}
+
+export const WithdrawRequestType = {
+  WITHDRAW: {
+    label: "Yêu cầu rút tiền của người bán",
+    value: "WITHDRAW_TYPE"
+  },
+  REFUND_TYPE_IMMEDIATE: {
+    label: "Yêu cầu hoàn tiền của người bán",
+    value: "REFUND_TYPE_OPTION_1"
+  },
+  REFUND_TYPE_INTERMEDIATE: {
+    label: "Yêu cầu hoàn tiền của người mua",
+    value: "REFUND_TYPE_OPTION_2"
+  }
+}

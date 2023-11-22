@@ -27,11 +27,11 @@ const filterData = ref({
       value: '',
     },
     {
-      label: 'Người mua',
+      label: 'Người mua (Đề nghị trả hàng)',
       value: Role.buyer.value,
     },
     {
-      label: 'Người bán',
+      label: 'Người bán (Hàng trả không hợp lệ)',
       value: Role.seller.value,
     },
   ],
@@ -109,6 +109,9 @@ const filterReports = () => {
   .filter(f => 
   (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) 
   && (!selected.value.status.value || f.status === selected.value.status.value))
+  .sort((a,b) => {
+    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  })
 }
 
 const onJoinChat = async (groupId) => {
@@ -116,7 +119,15 @@ const onJoinChat = async (groupId) => {
   router.push(`/messenger/${groupId}`)
 }
 const onCreateChatGroup = async (orderId) => {
-  await chatService.staffCreateChat(orderId)
+  try {
+    isModalVisible.value = false
+    await chatService.staffCreateChat(orderId)
+    toastOption.toastSuccess("Tạo nhóm chat thành công")
+    getAllReportStaff()
+  } catch (e) {
+    console.log(e)
+    toastOption.toastError("Có lỗi xảy ra, vui lòng tải lại trang và thử lại.")
+  }
 }
 
 const onConfirmReject = async (reason) => {
@@ -134,12 +145,38 @@ const onConfirmReject = async (reason) => {
     isRejectModalVisible.value = false
   }
 }
-const onConfirmReport = async (reportId) => {
-  if(confirm("Bạn có chắc chắn muốn xác nhận tố cáo này là chính xác không?")){
+const onConfirmReportFromBuyer = async (reportId) => {
+  if(confirm("Bạn có chắc chắn cho phép trả hàng?")){
     try {
       closeReportModal()
       await reportService.staffConfirmReturnRequest(reportId)
       toastOption.toastSuccess("Xác nhận cho phép trả hàng thành công.")
+      getAllReportStaff()
+    } catch (e) {
+      console.log(e)
+      toastOption.toastError("Có lỗi xảy ra, vui lòng tải lại trang và thử lại.")
+    }
+  }
+}
+const onStaffConfirmSellerWinOpt2 = async (orderId) => {
+  if(confirm("Bạn có chắc chắn xác nhận tố cáo từ người bán là chính xác?")){
+    try {
+      closeReportModal()
+      await reportService.staffConfirmSellerWinOpt2(orderId)
+      toastOption.toastSuccess("Xác nhận tố cáo thành công.")
+      getAllReportStaff()
+    } catch (e) {
+      console.log(e)
+      toastOption.toastError("Có lỗi xảy ra, vui lòng tải lại trang và thử lại.")
+    }
+  }
+}
+const onStaffConfirmBuyerWinOpt2 = async (orderId) => {
+  if(confirm("Bạn có chắc chắn xác nhận người mua đã trả hàng chính xác?")){
+    try {
+      closeReportModal()
+      await reportService.staffConfirmBuyerWinOpt2(orderId)
+      toastOption.toastSuccess("Xác nhận tố cáo thành công.")
       getAllReportStaff()
     } catch (e) {
       console.log(e)
@@ -202,7 +239,7 @@ onMounted(() => {
             Tố cáo từ: 
           </label>
           <div class="flex gap-3 items-center">
-            <Dropdown :data="filterData.fromRole" v-model="selected.fromRole" class="!w-[200px]" />
+            <Dropdown :data="filterData.fromRole" v-model="selected.fromRole" class="!w-[300px]" />
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -249,7 +286,7 @@ onMounted(() => {
                     <td class="px-4 py-3">
                       <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
                     </td>
-                    <td class="px-4 py-3 flex items-center gap-3 justify-end">
+                    <td class="px-4 py-3 flex items-center gap-3 justify-start">
                       <button
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button" @click="openReportModal(report)">
@@ -427,18 +464,34 @@ onMounted(() => {
       </div>
       <div v-if="report?.status === ReportStatus.PROCESSING.value">
         <button
-          @click="onConfirmReport(report?.id)"
+          v-if="report?.fromUserReport?.role === Role.buyer.value"
+          @click="onConfirmReportFromBuyer(report?.id)"
           class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
-            Xác nhận tố cáo chính xác
+            Cho phép trả hàng
+        </button>
+        <button
+          v-if="report?.fromUserReport?.role === Role.seller.value"
+          @click="onStaffConfirmSellerWinOpt2(report?.aboutOrder?.id)"
+          class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          type="button">
+            Người bán tố cáo chính xác
         </button>
       </div>
       <div v-if="report?.status === ReportStatus.PROCESSING.value">
         <button
+          v-if="report?.fromUserReport?.role === Role.buyer.value"
           @click="openRejectModal"
           class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
             Từ chối
+        </button>
+        <button
+          v-if="report?.fromUserReport?.role === Role.seller.value"
+          @click="onStaffConfirmBuyerWinOpt2(report?.aboutOrder?.id)"
+          class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          type="button">
+            Người mua trả hàng chính xác
         </button>
       </div>
     </template>

@@ -10,7 +10,9 @@ import Transaction from '@/components/manage-product/ProductTransactionHistory.v
 import ProductInOrderImmediate from '@/components/manage-product/ProductInOrderImmediate.vue'
 import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrderIntermediate.vue'
 import SellerReturnTrackPage from '@/views/seller/SellerReturnTrackPage.vue'
+import WithdrawPage from '@/views/seller/WithdrawPage.vue'
 import TestComponent from '@/views/TestComponent.vue'
+
 const seller_router = [
   {
     name: 'all-page-seller',
@@ -41,6 +43,11 @@ const seller_router = [
         name: 'product-rejected',
         path: '/manage/product-rejected',
         component: ProductReject,
+      },
+      {
+        name: 'withdraw-seller',
+        path: '/seller/withdraw',
+        component: WithdrawPage,
       },
       {
         name: 'product-in-order-immediate',

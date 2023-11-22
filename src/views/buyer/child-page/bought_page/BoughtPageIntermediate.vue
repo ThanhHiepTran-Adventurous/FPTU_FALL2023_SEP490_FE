@@ -40,7 +40,7 @@ const updateAddressOrderAfterPayment = async () => {
   const storedPaymentData = JSON.parse(storedData)
   const retrievedAuctionId = storedPaymentData?.auctionId
   const buyerPhoneNumber = storedPaymentData?.phone
-  const buyerAddress = `${storedPaymentData?.address}, ${storedPaymentData?.district}, ${storedPaymentData?.province}, ${storedPaymentData?.ward}`
+  const buyerAddress = `${storedPaymentData?.address}${storedPaymentData?.district ? ', ' + storedPaymentData?.district : ''}${storedPaymentData?.province ? ', ' + storedPaymentData?.province : ''}${storedPaymentData?.ward ? ', ' + storedPaymentData?.ward : ''}`
   localStorage.removeItem('paymentAddressData')
   const updatedAddressData = {
     buyerPhoneNumber,

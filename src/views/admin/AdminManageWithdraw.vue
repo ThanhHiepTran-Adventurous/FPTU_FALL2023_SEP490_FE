@@ -8,8 +8,64 @@ import toastOption from '@/utils/toast-option'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import WithdrawStatusComponent from '@/components/common-components/badge/WithdrawStatusComponent.vue'
+import Dropdown from '@/components/common-components/Dropdown.vue'
+import { WithdrawRequestStatus, WithdrawRequestType } from '@/common/contract'
+import WithdrawTypeComponent from '@/components/common-components/badge/WithdrawTypeComponent.vue'
+
+const filterData = ref({
+  type: [
+    {
+      label: 'Tất cả',
+      value: '',
+    },
+    {
+      label: WithdrawRequestType.WITHDRAW.label,
+      value: WithdrawRequestType.WITHDRAW.value,
+    },
+    {
+      label: WithdrawRequestType.REFUND_TYPE_IMMEDIATE.label,
+      value: WithdrawRequestType.REFUND_TYPE_IMMEDIATE.value,
+    },
+    {
+      label: WithdrawRequestType.REFUND_TYPE_INTERMEDIATE.label,
+      value: WithdrawRequestType.REFUND_TYPE_INTERMEDIATE.value,
+    },
+  ],
+  status: [
+    {
+      label: 'Tất cả',
+      value: '',
+    },
+    {
+      label: WithdrawRequestStatus.PENDING.label,
+      value: WithdrawRequestStatus.PENDING.value,
+    },
+    {
+      label: WithdrawRequestStatus.SUCCESS.label,
+      value: WithdrawRequestStatus.SUCCESS.value,
+    },
+  ]
+})
+
+const selected = ref({
+  type: {
+    label: 'Tất cả',
+    value: '',
+  },
+  status: {
+    label: 'Tất cả',
+    value: '',
+  }
+})
+
+watch(selected, () => {
+  filterRecords()
+}, {deep: true})
+
 
 const withdrawsList = ref([])
+const filteredWithdrawList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const selectedWithdraw = ref(null)
@@ -17,19 +73,33 @@ const showWithdrawModal = ref(false)
 
 const getAllWithdraws = async () => {
   try {
-    const response = await withdraw.getAllWithdraws(1, 100)
+    const response = await withdrawService.getAllWithdraws(1, 100)
     withdrawsList.value = response.data
+    filterRecords()
   } catch (e) {
     console.error(e)
   }
 }
+
+
+const filterRecords = () => {
+  filteredWithdrawList.value = withdrawsList.value
+    .filter(f => 
+    (!selected.value.type.value || f.type === selected.value.type.value) 
+    && (!selected.value.status.value || f.status === selected.value.status.value))
+    .sort((a,b) => {
+        return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+    })
+}
+
+
 onMounted(() => {
   getAllWithdraws()
   initFlowbite()
 })
 // Computed property for total pages
 const totalPages = computed(() => {
-  return Math.ceil(withdrawsList.value.length / itemsPerPage)
+  return Math.ceil(filteredWithdrawList.value.length / itemsPerPage)
 })
 // Function to go to a specific page
 const goToPage = page => {
@@ -53,7 +123,7 @@ const goToNextPage = () => {
 const paginatedWithdraws = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  return withdrawsList.value.slice(startIndex, endIndex)
+  return filteredWithdrawList.value.slice(startIndex, endIndex)
 })
 const openWithdrawModal = withdrawDetail => {
   selectedWithdraw.value = withdrawDetail
@@ -61,7 +131,15 @@ const openWithdrawModal = withdrawDetail => {
 }
 const handleConfirmWithdraw = async withdrawId => {
   try {
-    await withdrawService.adminConfirmSellerwithdrawOpt2(withdrawId)
+    showWithdrawModal.value = false
+    if(selectedWithdraw.value.type === WithdrawRequestType.WITHDRAW){
+      await withdrawService.adminConfirmSellerWithdrawOpt1(withdrawId)
+    } else if(selectedWithdraw.value.type === WithdrawRequestType.REFUND_TYPE_INTERMEDIATE){
+      await withdrawService.adminConfirmBuyerWithdraw(withdrawId)
+    } else {
+      await withdrawService.adminConfirmSellerwithdrawOpt2(withdrawId)
+    }
+    getAllWithdraws()
     toastOption.toastSuccess('Xác nhận đã thanh toán thành công')
     
   } catch (error) {
@@ -72,24 +150,45 @@ const handleConfirmWithdraw = async withdrawId => {
 
 <template>
   <AdminHeader />
-  <section class="bg-white ml-20 mt-5 p-3 sm:p-5">
-    <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
-      <!-- Start coding here -->
-      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-          <div class="w-full md:w-1/2"></div>
-          <div
-            class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"></div>
+  <section class="bg-white mt-5 p-3 sm:p-5">
+    <div class="mx-auto pl-72">
+      <!-- Header -->
+      <div class="pt-3 px-3 pb-1 flex items-center justify-between">
+        <div class="font-bold text-2xl text-black text-blue-800">
+          Yêu cầu rút tiền</div>
+      </div>
+
+      <!-- Filter section -->
+      <div class="my-4 px-12 flex items-center">
+        <div class="flex items-center gap-3 mr-[10%]">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Loại yêu cầu: 
+          </label>
+          <div class="flex gap-3 items-center">
+            <Dropdown :data="filterData.type" v-model="selected.type" class="!w-[300px]" />
+          </div>
         </div>
+        <div class="flex items-center gap-3">
+          <label class="block text-gray-700 text-sm font-bold" for="jump">
+            Trạng thái:
+          </label>
+          <div class="flex items-center gap-3">
+            <Dropdown :data="filterData.status" v-model="selected.status" class="!w-[200px]" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="bg-white dark:bg-gray-800 relative">
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th scope="col" class="px-4 py-3 whitespace-nowrap">Tên tài khoản</th>
                 <th scope="col" class="px-4 py-3">Số tài khoản</th>
                 <th scope="col" class="px-4 py-3">Tên ngân hàng</th>
-                <th scope="col" class="px-4 py-3">Số tiền</th>
-                <th scope="col" class="px-4 py-3">Trạng thái</th>
+                <th scope="col" class="px-4 py-3 text-right">Số tiền</th>
+                <th scope="col" class="px-4 py-3 text-center">Trạng thái</th>
                 <th scope="col" class="px-4 py-3">Ngày tạo</th>
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only">Actions</span>
@@ -98,30 +197,23 @@ const handleConfirmWithdraw = async withdrawId => {
             </thead>
             <tbody>
               <tr v-for="(withdraw, index) in paginatedWithdraws" :key="index" class="border-b dark:border-gray-700">
-                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                <td class="px-4 py-3">
                   {{ withdraw?.bankOwnerName }}
                 </td>
-                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                <td class="px-4 py-3">
                   {{ withdraw?.bankAccountNumber }}
                 </td>
-
-                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                <td class="px-4 py-3">
                   {{ withdraw?.bankInformation }}
                 </td>
-                <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                <td class="px-4 py-3 font-semibold text-blue-700 text-right">
                   {{ formatCurrency(withdraw?.amount) }}
                 </td>
-                <td class="px-4 py-3">
-                  {{
-                    withdraw?.status === 'PENDING'
-                      ? 'Đang chờ'
-                      : withdraw?.status === 'SUCCESS'
-                      ? 'Đã thanh toán'
-                      : withdraw?.status
-                  }}
+                <td class="px-4 py-3 flex justify-center">
+                  <WithdrawStatusComponent :status="withdraw?.status" />
                 </td>
                 <td class="px-4 py-3">
-                  {{ withdraw?.createAt ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
+                  {{ withdraw?.createAt ? moment.utc(withdraw?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
                 </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
@@ -223,25 +315,9 @@ const handleConfirmWithdraw = async withdrawId => {
       <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
         <!-- Modal header -->
         <div class="flex justify-between items-center mb-2 rounded-t border-b sm:mb-5 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-            Thông tin yêu cầu rút tiền
-            <span
-              :class="{
-                'ml-2 border border-yellow-500 bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300':
-                  selectedWithdraw?.status === 'PENDING',
-
-                'ml-2 border border-green-500 bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300':
-                  selectedWithdraw?.status === 'SUCCESS',
-              }"
-              >{{
-                selectedWithdraw?.status === 'PENDING'
-                  ? 'Đang chờ'
-                  : selectedWithdraw?.status === 'SUCCESS'
-                  ? 'Đã thanh toán'
-                  : selectedWithdraw?.status
-              }}</span
-            >
-          </h3>
+          <div class="text-3xl pb-2 font-semibold text-gray-900 dark:text-white flex items-center">
+            <div>Thông tin yêu cầu rút tiền</div>
+          </div>
           <button
             type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -276,7 +352,7 @@ const handleConfirmWithdraw = async withdrawId => {
                   :value="selectedWithdraw?.bankOwnerName"
                   readonly
                   id="bankOwnerName"
-                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
                 <label for="bankAccountNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -288,7 +364,7 @@ const handleConfirmWithdraw = async withdrawId => {
                   id="bankAccountNumber"
                   :value="selectedWithdraw?.bankAccountNumber"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
                 <label for="bankInformation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -300,7 +376,7 @@ const handleConfirmWithdraw = async withdrawId => {
                   id="bankInformation"
                   :value="selectedWithdraw?.bankInformation"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
                 <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số tiền</label>
@@ -310,34 +386,32 @@ const handleConfirmWithdraw = async withdrawId => {
                   id="amount"
                   :value="formatCurrency(selectedWithdraw?.amount)"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
+              </div>
+              <div>
+                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại yêu cầu</label>
+                <div><WithdrawTypeComponent :status="selectedWithdraw?.type" /></div>
+              </div>
+              <div>
+                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng thái</label>
+                <input
+                  type="text"
+                  name="amount"
+                  id="amount"
+                  :value="selectedWithdraw?.status === WithdrawRequestStatus.PENDING.value ? WithdrawRequestStatus.PENDING.label : WithdrawRequestStatus.SUCCESS.label"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
             </div>
 
             <div class="flex items-center mt-2 space-x-4">
               <button
-                v-if="selectedWithdraw?.status === 'PENDING'"
+                v-if="selectedWithdraw?.status === WithdrawRequestStatus.PENDING.value"
                 @click="handleConfirmWithdraw(selectedWithdraw?.id)"
                 type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 Xác nhận đã thanh toán
               </button>
-              <!-- <button
-                @click="showRejectReasonModal = true"
-                type="button"
-                class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                <svg
-                  class="mr-1 -ml-1 w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"></path>
-                </svg>
-                Từ chối
-              </button> -->
             </div>
           </form>
         </div>

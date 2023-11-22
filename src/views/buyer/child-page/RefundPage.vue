@@ -11,7 +11,7 @@ import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import ShippingStatusIntermediate from '@/components/ShippingStatusIntermediate.vue'
+import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 
@@ -81,7 +81,11 @@ const getAllReportStaff = async () => {
   }
 }
 const filterReports = () => {
-    filteredReport.value = reportList.value.filter(f => !selected.value.value || f.status === selected.value.value)
+    filteredReport.value = reportList.value
+    .filter(f => !selected.value.value || f.status === selected.value.value)
+    .sort((a,b) => {
+      return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+    })
 }
 
 // Pagination
