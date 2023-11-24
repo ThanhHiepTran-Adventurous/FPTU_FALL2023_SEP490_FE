@@ -65,8 +65,7 @@ const goToNextPage = () => {
 }
 const handleApproveAuction = async auctionId => {
   try {
-    const response = await adminService.approveAuction(auctionId)
-    // Handle the response as needed
+    await adminService.approveAuction(auctionId)
     toastOption.toastSuccess('Duyệt thành công')
   } catch (error) {
     console.error('Error approving auction:', error)
@@ -83,11 +82,16 @@ const handleRejectAuction = async auctionId => {
       rejectReason: rejectInput.value,
     }
 
-    const response = await adminService.rejectAuction(auctionId, rejectReason)
-    // Handle the response as needed
+    await adminService.rejectAuction(auctionId, rejectReason)
+    toastOption.toastSuccess('Từ chối thành công')
   } catch (error) {
     console.error('Error rejecting auction:', error)
+    toastOption.toastError('Duyệt thất bại')
     // Handle the error
+  } finally {
+    showRejectReasonModal.value = false
+    showUpdateModal.value = false
+    getAllAuctions()
   }
 }
 

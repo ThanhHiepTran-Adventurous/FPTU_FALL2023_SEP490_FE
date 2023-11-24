@@ -117,7 +117,7 @@ const resetFormData = () => {
 <template>
   <form class="bg-white rounded px-8 pb-8 mb-4" @submit.prevent="onSubmit()">
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm </label>
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm <span class="text-red-500">*</span> </label>
       <input
         v-model="formData.name"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -127,7 +127,7 @@ const resetFormData = () => {
         placeholder="Nhập tên sản phẩm" />
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> Mô tả </label>
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> Mô tả <span class="text-red-500">*</span> </label>
       <textarea
         v-model="formData.description"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -137,7 +137,7 @@ const resetFormData = () => {
         placeholder="Nhập mô tả"></textarea>
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) <span class="text-red-500">*</span> </label>
       <input
         v-model="formData.weight"
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -147,7 +147,7 @@ const resetFormData = () => {
         placeholder="Nhập trọng lượng" />
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="brand"> Thương hiệu sản phẩm </label>
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="brand"> Thương hiệu sản phẩm <span class="text-red-500">*</span> </label>
       <select
         v-model="formData.brandId"
         required
@@ -158,7 +158,7 @@ const resetFormData = () => {
       </select>
     </div>
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Loại sản phẩm </label>
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Loại sản phẩm <span class="text-red-500">*</span> </label>
       <select
         required
         v-model="formData.categoryId"
@@ -168,14 +168,15 @@ const resetFormData = () => {
         <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
       </select>
     </div>
-    <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
     <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Hình ảnh <span class="text-red-500">*</span> </label>
+      <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
       <button
         @click="() => $refs.file.click()"
         @click.prevent
         class="flex items-center bg-white hover:!bg-gray-200 gap-3 w-[180px] justify-center text-gray-800 mt-3 px-4 py-2 rounded text-sm border-[1px] border-blue-500">
         <Icon icon="tdesign:upload" />
-        <span>Upload image</span>
+        <span>Tải ảnh lên</span>
       </button>
       <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
     </div>

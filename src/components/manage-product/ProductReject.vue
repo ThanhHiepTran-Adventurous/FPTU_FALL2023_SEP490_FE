@@ -2,7 +2,7 @@
 import Modal from '@/components/common-components/Modal.vue'
 import Button from '@/components/common-components/Button.vue'
 import ProductSerivice from '@/services/product.service'
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { Carousel } from 'flowbite-vue'
 import moment from 'moment'
 import brandService from '@/services/brand.service'
@@ -12,7 +12,6 @@ import { Icon } from '@iconify/vue'
 import { initFlowbite } from 'flowbite'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import AuctionService from '@/services/auction.service'
-import adminService from '../../services/admin.service'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE, sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
@@ -24,7 +23,6 @@ const currentTab = ref('table')
 const products = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
-const isTableTabActive = ref(true)
 const imgSrc = ref([])
 const imgData = ref([])
 
@@ -47,11 +45,8 @@ const breadcrumbItems = [
 const fetchProducts = async () => {
   try {
     const userID = localStorage.getItem('userId')
-    const response = await adminService.getAllAuctions(1, 100)
+    const response = await AuctionService.getAuctionBySeller("status:REJECTED")
     products.value = response.data
-    products.value = products.value.filter(
-      auction => auction?.status === 'REJECTED' && auction?.product?.seller?.id === userID,
-    )
   } catch (e) {
     console.error(e)
   }
@@ -77,6 +72,7 @@ hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
 `
 onMounted(() => {
   initFlowbite()
+  fetchProducts()
 })
 
 const convertedImages = ref([])
@@ -125,11 +121,6 @@ const duration = ref({
 })
 // const durationInput = ref(1)
 const durationInput = computed(() => selectedProduct.value?.value?.duration)
-const props = defineProps({
-  product: {
-    required: true,
-  },
-})
 
 const formData = ref({
   startPrice: '',
@@ -263,9 +254,15 @@ const tabButtonClasses = tabName => ({
 
     <!-- Main content -->
     <SellerSideBarLayout :cur-tab="sellerTabs.rejectedProductToAuction.value">
-      <div class="mx-auto container bg-white rounded align-middle pt-8 px-2 min-h-[50vh]">
-        <section class="p-3 sm:p-5">
-          <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+      <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
+        <!-- Header -->
+        <div class="pt-3 px-3 pb-1 flex items-center justify-between">
+          <div class="font-bold text-2xl text-black text-blue-800">
+            Lịch sử báo cáo
+          </div>
+        </div>
+        <section class="sm:p-5">
+          <div class="bg-white relative">
             <div class="overflow-x-auto">
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
