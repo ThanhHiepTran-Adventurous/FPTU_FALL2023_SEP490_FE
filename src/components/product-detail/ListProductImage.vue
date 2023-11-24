@@ -1,27 +1,30 @@
 <script setup>
-import imageHelper from "@/utils/image-helper";
-import { computed, onMounted, ref, watch } from "vue";
+import imageHelper from '@/utils/image-helper'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Carousel } from 'flowbite-vue'
 import { initFlowbite } from 'flowbite'
 
-    const props = defineProps({
-        images: Array,
-    });
+const props = defineProps({
+  images: Array,
+})
 
-    //const firstImage = computed(() => imageHelper.getPrimaryImageFromList(props.images))
+//const firstImage = computed(() => imageHelper.getPrimaryImageFromList(props.images))
 
-    const imgComputed = ref([])
-    watch(() => props.images, () => {
-      const data = props.images?.map(url => ({
-        src: url,
-        alt: 'Image Alt Text', // You can set the alt text as per your requirements
-      }))
-      imgComputed.value = data
-    })
+const imgComputed = ref([])
+watch(
+  () => props.images,
+  () => {
+    const data = props.images?.map(url => ({
+      src: url,
+      alt: 'Image Alt Text', // You can set the alt text as per your requirements
+    }))
+    imgComputed.value = data
+  },
+)
 
-    onMounted(() => {
-      initFlowbite()
-    })
+onMounted(() => {
+  initFlowbite()
+})
 </script>
 
 <template>
@@ -45,5 +48,4 @@ import { initFlowbite } from 'flowbite'
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
