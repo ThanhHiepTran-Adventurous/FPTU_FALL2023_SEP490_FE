@@ -31,7 +31,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="h-[200px] overflow-auto">
+    <div class="h-[300px] overflow-auto">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -51,7 +51,7 @@ onMounted(() => {
             <td class="px-6 py-4 text-blue-600 font-semibold">{{ formatCurrency(auction.bidAmount) }}</td>
             <td class="px-6 py-4">{{ auction.createAt }}</td>
             <!-- need to fix -->
-            <td class="px-6 py-4"><BidTypeBadge :type-bid="auction.bidType" /></td>
+            <td class="px-6 py-4 whitespace-nowrap"><BidTypeBadge :type-bid="auction.bidType" /></td>
           </tr>
         </tbody>
       </table>

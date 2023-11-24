@@ -162,10 +162,11 @@ export default {
       confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
       declineReportOpt1: 'report/staff/reject-report/{reportId}',
       confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
-      assignReport: 'report/staff/assign-report/{reportId}',,
+      assignReport: 'report/staff/assign-report/{reportId}',
     },
     feedback: {
       getFeedbackBySellerId: 'feedback',
+      buyerCreateFeedBack: 'feedback',
     },
   },
 }

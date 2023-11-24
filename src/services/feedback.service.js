@@ -6,7 +6,16 @@ const getFeedbackBySellerId = async sellerId => {
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
-
+const buyerCreateFeedBack = async formData => {
+  const serviceUrl = url.endpoint.feedback.buyerCreateFeedBack
+  const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
+  return response ? response.data : response
+}
 export default {
   getFeedbackBySellerId,
+  buyerCreateFeedBack,
 }

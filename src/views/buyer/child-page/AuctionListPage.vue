@@ -54,13 +54,16 @@ const currentPage = ref(1)
 const totalAuctions = ref(1)
 const fetchBrandsData = async () => {
   const brands = await brandService.getAllBrandsGuest()
-  brandOptions.value = brands.data.map(d => {
-    return {
-      label: d.name,
-      value: d.id,
-      isSelected: false,
-    }
-  })
+
+  brandOptions.value = await brands.data
+    .filter(d => d.status === 'ACTIVE')
+    .map(d => {
+      return {
+        label: d.name,
+        value: d.id,
+        isSelected: false,
+      }
+    })
 }
 const fetchCategoriesData = async () => {
   const categories = await categoryService.getAllCategoriesGuest()
@@ -168,7 +171,7 @@ const goToNextPage = () => {
               <div class="flex items-center justify-between hover:cursor-pointer">
                 <div class="font-bold text-gray">Thương hiệu</div>
               </div>
-              <div class="transition-all duration-500 h-[10rem] opacity-1 p-2'">
+              <div class="transition-all duration-500 h-[6rem] opacity-1 p-2'">
                 <div v-for="brand in brandOptions" :key="brand.id" class="flex items-center mb-1">
                   <input
                     :id="brand.id"
