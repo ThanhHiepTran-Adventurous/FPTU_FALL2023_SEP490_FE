@@ -91,10 +91,15 @@ const handleRejectAuction = async auctionId => {
   } finally {
     showRejectReasonModal.value = false
     showUpdateModal.value = false
+    rejectInput.value = ''
     getAllAuctions()
   }
 }
 
+const closeRejectModal = () => {
+  showRejectReasonModal.value = false
+  rejectInput.value = ''
+}
 // Compute paginated auctions
 const paginatedAuctions = computed(() => {
   // Move startIndex and endIndex calculation here
@@ -337,17 +342,27 @@ const paginatedAuctions = computed(() => {
                   readonly
                   class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
               </div>
-              <div>
-                <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Thời gian đấu giá</label
-                >
-                <input
-                  type="text"
-                  name="duration"
-                  id="duration"
-                  :value="selectedAution?.duration / (1000 * 60 * 60) + ' tiếng'"
-                  readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+              <div class="flex items-center gap-3">
+                <div>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian đấu giá</label>
+                  <input
+                    type="text"
+                    name="duration"
+                    id="duration"
+                    :value="selectedAution?.duration / (1000 * 60 * 60) + ' tiếng'"
+                    readonly
+                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                </div>
+                <div>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số người đấu giá tối thiểu</label>
+                  <input
+                    type="text"
+                    name="duration"
+                    id="duration"
+                    :value="selectedAution?.minimumAuctioneers"
+                    readonly
+                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                </div>
               </div>
             </div>
             <div>
@@ -404,7 +419,7 @@ const paginatedAuctions = computed(() => {
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
         <button
-          @click="showRejectReasonModal = false"
+          @click="closeRejectModal"
           type="button"
           class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
           data-modal-hide="authentication-modal">

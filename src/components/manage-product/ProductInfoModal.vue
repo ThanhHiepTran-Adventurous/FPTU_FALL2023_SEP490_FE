@@ -9,64 +9,11 @@ import CurrencyInput from '../common-components/CurrencyInput.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
 import { ProductStatus } from '@/common/contract'
+import { immediateMessage, intermediateMessage, selectedDefaultDuration, durationData } from '@/common/commonStaticState'
 
 const emit = defineEmits(['sendSuccess', 'sendError', 'justSubmitted'])
 
-const immediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc, 
-người mua và người bán sẽ liên hệ với nhau qua hệ thống chat và giải quyết việc mua bạn trực tiếp với nhau, 
-để có được thông tin người mua, người bán phải thanh toán cho hệ thống
-`
-
-const intermediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc, 
-người mua phải trả tiền trước cho hệ thống, sau khi hàng tới nơi người mua mà không có khiếu nại, đổi trả, 
-hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
-`
-
-const durationData = [
-  {
-    label: '1 tiếng',
-    value: 1,
-  },
-  {
-    label: '3 tiếng',
-    value: 3,
-  },
-  {
-    label: '5 tiếng',
-    value: 5,
-  },
-  {
-    label: '10 tiếng',
-    value: 10,
-  },
-  {
-    label: '1 ngày',
-    value: 24,
-  },
-  {
-    label: '2 ngày',
-    value: 48,
-  },
-  {
-    label: '3 ngày',
-    value: 72,
-  },
-  {
-    label: '7 ngày',
-    value: 24 * 7,
-  },
-  {
-    label: 'Khác',
-    value: null,
-  },
-]
-
-const duration = ref({
-  label: '3 tiếng',
-  value: 3,
-})
+const duration = ref(selectedDefaultDuration)
 const durationInput = ref(1)
 
 const props = defineProps({
@@ -84,7 +31,6 @@ const formData = ref({
   jump: '',
   buyNowPrice: '',
   modelType: 0,
-  daysOfDuration: 0,
   hoursOfDuration: 0,
   minutesOfDuration: 0,
   minimumAuctioneers: '',
@@ -134,7 +80,6 @@ const resetData = () => {
     jump: '',
     buyNowPrice: '',
     modelType: 0,
-    daysOfDuration: 0,
     hoursOfDuration: 0,
     minutesOfDuration: 0,
     minimumAuctioneers: '',

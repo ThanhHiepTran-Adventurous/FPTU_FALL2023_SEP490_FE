@@ -17,18 +17,24 @@ const getProducts = async query => {
   return response ? response.data : response
 }
 
-const updateProductById = async (productId, updateRequest) => {
+const updateProductById = async (productId, oldImageRemoved, newImages, updateRequest) => {
   const serviceUrl = `${url.endpoint.product.inventory}/${productId}`
 
   try {
-    const jsonBlob = new Blob([JSON.stringify(updateRequest)], { type: 'application/json' })
+    const payloadBlob = new Blob([JSON.stringify(updateRequest)], { type: 'application/json' })
+    const oldImgsBlob = new Blob([JSON.stringify(oldImageRemoved)], { type: 'application/json' })
 
     const formData = new FormData()
-    formData.append('updateProductRequest', jsonBlob)
+    formData.append('updateProductRequest', payloadBlob)
+    formData.append('oldImagesRemoved', oldImgsBlob)
+
+    for (const imageData of newImages) {
+      form.append('newImages', imageData)
+    }
 
     const response = await utils.axiosLocalHost.put(serviceUrl, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': undefined,
       },
     })
 

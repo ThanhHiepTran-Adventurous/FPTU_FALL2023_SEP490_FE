@@ -15,10 +15,13 @@ import { sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import CurrencyInput from '../common-components/CurrencyInput.vue'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE, intermediateMessage, immediateMessage, selectedDefaultDuration, durationData, DUMP_IMG_FILE_DATA } from '@/common/commonStaticState'
+import moment from 'moment'
+import ListEditableImage from '../ListEditableImage.vue'
+import currencyFormatter from '@/utils/currencyFormatter'
+import toastOption from '@/utils/toast-option'
 
 const allowedModalTypes = { info: 'info' }
-const isModalVisible = ref(false)
 const typeofModal = ref('info')
 const currentTab = ref('table')
 const products = ref([])
@@ -56,124 +59,146 @@ onMounted(async () => {
   const categoriesData = await categoryService.getAllCategories()
   brands.value = brandsData.data.filter(d => d.status === 'ACTIVE')
   categories.value = categoriesData.data.filter(d => d.status === 'ACTIVE')
-})
-const emit = defineEmits(['sendSuccess', 'sendError'])
-
-const immediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc,
-người mua và người bán sẽ liên hệ với nhau qua hệ thống chat và giải quyết việc mua bạn trực tiếp với nhau,
-để có được thông tin người mua, người bán phải thanh toán cho hệ thống
-`
-
-const intermediateMessage = `
-Ở hình thức này, sau khi phiên đấu giá kết thúc,
-người mua phải trả tiền trước cho hệ thống, sau khi hàng tới nơi người mua mà không có khiếu nại, đổi trả,
-hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
-`
-onMounted(() => {
   initFlowbite()
   fetchProducts()
 })
 
 const convertedImages = ref([])
-const durationData = [
-  {
-    label: '1 tiếng',
-    value: 1,
-  },
-  {
-    label: '3 tiếng',
-    value: 3,
-  },
-  {
-    label: '5 tiếng',
-    value: 5,
-  },
-  {
-    label: '10 tiếng',
-    value: 10,
-  },
-  {
-    label: '1 ngày',
-    value: 24,
-  },
-  {
-    label: '2 ngày',
-    value: 48,
-  },
-  {
-    label: '3 ngày',
-    value: 72,
-  },
-  {
-    label: '7 ngày',
-    value: 24 * 7,
-  },
-  {
-    label: 'Khác',
-    value: null,
-  },
-]
+const originalImages = ref([])
+const duration = ref(selectedDefaultDuration)
+const durationInput = ref('')
 
-const duration = ref({
-  label: '3 tiếng',
-  value: 3,
+const productFormData = ref({
+  name: '',
+  description: '',
+  weight: '',
+  brand: '',
+  category: ''
 })
-// const durationInput = ref(1)
-const durationInput = computed(() => selectedProduct.value?.value?.duration)
-
-const formData = ref({
+const auctionFormData = ref({
   startPrice: '',
   jump: '',
   buyNowPrice: '',
   modelType: 0,
-  daysOfDuration: 0,
   hoursOfDuration: 0,
   minutesOfDuration: 0,
+  minimumAuctioneers: '',
 })
 
-const onSubmit = () => {
-  const durationValue = duration.value?.value ? duration.value.value : durationInput.value
-  const dataAuction = {
-    startPrice: selectedProduct?.value.startPrice || 0,
-    jump: selectedProduct?.value.jump,
-    buyNowPrice: selectedProduct?.value.buyNowPrice || 0,
-    modelType: selectedProduct?.value.modelType,
-    hoursOfDuration: durationValue,
+const clearDataState = () => {
+  productFormData.value = {
+    name: '',
+    description: '',
+    weight: '',
+    brand: '',
+    category: ''
   }
-  const dataProduct = {
-    updateProductRequest: {
-      name: selectedProduct?.value?.product?.name, // Replace with the desired name
-      description: selectedProduct?.value?.product?.description, // Replace with the desired description
-      weight: selectedProduct?.value?.product?.weight, // Replace with the desired weight
-      brandId: selectedProduct?.value?.product?.brand?.id,
-      statusProduct: 'APPROVING', // Replace with the desired status
-      categoryId: selectedProduct?.value?.product?.category?.id,
+  auctionFormData.value = {
+    startPrice: '',
+    jump: '',
+    buyNowPrice: '',
+    modelType: 0,
+    hoursOfDuration: 0,
+    minutesOfDuration: 0,
+    minimumAuctioneers: '',
+  }
+  originalImages.value = []
+  imgSrc.value = []
+  imgData.value = []
+}
+
+const setDataStateBaseOnDetail = (detail) => {
+  productFormData.value = {
+    name: detail.product.name,
+    description: detail.product.description,
+    weight: detail.product.weight,
+    brand: {
+      id: detail.product.brand.id,
+      name: detail.product.brand.name
     },
-    oldImagesRemoved: [''], // Replace with actual image paths
-    newImages: [...selectedProduct?.value?.product?.imageUrls], // Replace with actual image paths
+    category: {
+      id:  detail.product.category.id,
+      name:  detail.product.category.name
+    }
   }
-  console.log(dataProduct)
-  return
-  ProductSerivice.updateProductById(selectedProduct.value?.product?.id, dataProduct)
+  auctionFormData.value = {
+    startPrice: currencyFormatter.fromNumberToStyledString(detail.startPrice),
+    jump: currencyFormatter.fromNumberToStyledString(detail.jump),
+    buyNowPrice: currencyFormatter.fromNumberToStyledString(detail.buyNowPrice),
+    modelType: detail.modelType,
+    hoursOfDuration: 1,
+    minutesOfDuration: 0,
+    minimumAuctioneers: detail.minimumAuctioneers,
+  }
+
+  const filteredDurationData = durationData.filter(f => f.value === detail.duration/(1000 * 60 * 60))
+  if(filteredDurationData && filteredDurationData.length > 0){
+    duration.value = filteredDurationData[0]
+  } else {
+    durationInput.value = detail.duration/(1000 * 60 * 60)
+  }
+
+  originalImages.value = [...detail.product.imageUrls]
+
+  imgSrc.value = [...detail.product.imageUrls]
+  imgData.value = detail.product.imageUrls.map(url => DUMP_IMG_FILE_DATA)
+}
+
+const getImageUrlIgnored = () => {
+  return originalImages.value.filter(f => {
+    const dataFetched = imgSrc.value.filter(src => src === f)
+    return !(dataFetched && dataFetched.length > 0)
+  })
+}
+const getNewImages = () => {
+  return imgData.value.filter(f => f !== DUMP_IMG_FILE_DATA)
+}
+
+const onSubmit = () => {
+  const durationValue = duration.value.value ? duration.value.value : durationInput.value
+  let imageUrlIgnored = getImageUrlIgnored()
+  imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
+  let newImages = getNewImages()
+  newImages = newImages && newImages.length > 0 ? newImages : []
+
+
+  const updateProductRequest = {
+    name: productFormData.value.name,
+    description: productFormData.value.description,
+    weight: productFormData.value.weight,
+    brandId: productFormData.value.brand.id,
+    categoryId: productFormData.value.category.id,
+  }
+  const auctionRequest = {
+    startPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice),
+    jump: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump),
+    buyNowPrice:  currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
+    minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
+    modelType: auctionFormData.value.modelType,
+    hoursOfDuration: durationValue
+  }
+
+  ProductSerivice.updateProductById(selectedProduct.value.product.id, imageUrlIgnored, newImages, updateProductRequest)
     .then(_ => {
-      emit('sendSuccess')
-      AuctionService.sendAuctionRequest(selectedProduct.value?.product?.id, dataAuction)
+      console.log("update success")
+      AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
         .then(_ => {
-          emit('sendSuccess')
+          toastOption.toastSuccess("Gửi lại thông tin yêu cầu đấu giá thành công")
         })
-        .catch(error => {
-          emit('sendError')
+        .catch(_ => {
+          toastOption.toastError("Có lỗi xảy ra vui lòng thử lại")
         })
     })
-    .catch(error => {
-      emit('sendError')
+    .catch(_ => {
+      toastOption.toastError("Có lỗi xảy ra vui lòng thử lại.")
+    })
+    .finally(() => {
+      closeModal()
+      clearDataState()
+      fetchProducts()
     })
 }
 
-onMounted(() => {
-  initFlowbite()
-})
 // Computed property for total pages
 const totalPages = computed(() => {
   return Math.ceil(products.value.length / itemsPerPage)
@@ -189,6 +214,12 @@ const handleFileUpload = async e => {
   imgData.value.push(e.target.files[0])
   imgSrc.value.push(await base64Image(e.target.files[0]))
 }
+
+const handleImageDeleted = (indx) => {
+  imgSrc.value.splice(indx, 1)
+  imgData.value.splice(indx, 1)
+}
+
 const goToPreviousPage = () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1
@@ -207,9 +238,7 @@ const paginateProduct = computed(() => {
   const endIndex = startIndex + itemsPerPage
   return products.value.slice(startIndex, endIndex)
 })
-onMounted(async () => {
-  await fetchProducts()
-})
+
 const showTableTab = () => {
   currentTab.value = 'table'
 }
@@ -218,13 +247,7 @@ const showFormTab = () => {
   currentTab.value = 'form'
 }
 
-const showModal = typeModal => {
-  typeofModal.value = typeModal
-  isModalVisible.value = true
-}
-
 const closeModal = () => {
-  isModalVisible.value = false
   showProductModal.value = false
 }
 
@@ -234,18 +257,17 @@ const handleConfirm = () => {
 const showProductModal = ref(false)
 const selectedProduct = ref(null)
 const openProductModal = product => {
+  setDataStateBaseOnDetail(product)
+
   selectedProduct.value = product // Set the selected brand data
   showProductModal.value = true // Show the modal
+
   convertedImages.value =
     selectedProduct.value?.product?.imageUrls.map(url => ({
       src: url,
       alt: 'Image Alt Text', // You can set the alt text as per your requirements
     })) || []
 }
-const tabButtonClasses = tabName => ({
-  'bg-blue-500 hover:bg-blue-600 text-white': currentTab.value === tabName,
-  'bg-gray-300 hover:bg-gray-400 text-gray-600': currentTab.value !== tabName,
-})
 </script>
 <template>
   <div class="w-full">
@@ -266,8 +288,8 @@ const tabButtonClasses = tabName => ({
         <section class="sm:p-5">
           <div class="bg-white relative">
             <div class="overflow-x-auto">
-              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
                     <th scope="col" class="px-5 py-3">Tên sản phẩm</th>
     
@@ -285,7 +307,7 @@ const tabButtonClasses = tabName => ({
                     :key="index"
                     class="border-b dark:border-gray-700"
                     @click="openProductModal(auction)">
-                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
                       <div class="pl-3">
                         <div class="text-base font-semibold">{{ auction?.product?.name }}</div>
                       </div>
@@ -296,13 +318,13 @@ const tabButtonClasses = tabName => ({
                     <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
                       {{ auction?.rejectReason }}
                     </td>
-                    <td class="px-4 py-3">{{ new Date(auction?.product?.createAt).toLocaleString() }}</td>
+                    <td class="px-4 py-3">{{ auction?.product?.createAt ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}</td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <button
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                         type="button">
                         <svg
-                          class="w-6 h-6 text-gray-800 dark:text-white"
+                          class="w-6 h-6 text-gray-800"
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="currentColor"
@@ -326,7 +348,7 @@ const tabButtonClasses = tabName => ({
                 <li>
                   <button
                     type="button"
-                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                     @click="goToPreviousPage"
                     :disabled="currentPage === 1"
                     aria-label="Previous Page">
@@ -350,9 +372,9 @@ const tabButtonClasses = tabName => ({
                     type="button"
                     class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
                     :class="{
-                      'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                      'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700':
                         pageNumber !== currentPage,
-                      'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                      'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700':
                         pageNumber === currentPage,
                     }"
                     @click="goToPage(pageNumber)"
@@ -364,7 +386,7 @@ const tabButtonClasses = tabName => ({
                   <button
                     type="button"
                     @click="goToNextPage"
-                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                     :disabled="currentPage === totalPages"
                     aria-label="Next Page">
                     <span class="sr-only">Next</span>
@@ -419,9 +441,9 @@ const tabButtonClasses = tabName => ({
                   <button
                     @click="showFormTab"
                     :class="{
-                      'inline-block px-4 py-2 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                      'inline-block px-4 py-2 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active':
                         currentTab !== 'table',
-                      'inline-block px-4 py-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                      'inline-block px-4 py-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300':
                         currentTab === 'table',
                     }"
                     aria-current="page">
@@ -435,13 +457,13 @@ const tabButtonClasses = tabName => ({
               <div class="flex mb-5 items-center justify-center">
                 <div class="relative w-full max-w-4xl md:h-auto">
                   <!-- Modal content -->
-                  <div class="relative bg-white rounded-lg dark:bg-gray-800 sm:p-5">
+                  <div class="relative bg-white rounded-lg sm:p-5">
                     <!-- Modal body -->
                     <div class="overflow-y-auto">
                       <form action="#">
                         <div class="grid mt-2 gap-4 mb-4 sm:grid-cols-2">
                           <div>
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900"
                               >Tên sản phẩm
                             </label>
                             <input
@@ -450,11 +472,11 @@ const tabButtonClasses = tabName => ({
                               readonly
                               :value="selectedProduct?.product?.name"
                               id="name"
-                              class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
   
                           <div>
-                            <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900"
                               >Giá khởi điểm</label
                             >
                             <input
@@ -467,10 +489,10 @@ const tabButtonClasses = tabName => ({
                                   : ''
                               "
                               readonly
-                              class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                           <div>
-                            <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900"
                               >Giá mua ngay</label
                             >
                             <input
@@ -483,10 +505,10 @@ const tabButtonClasses = tabName => ({
                                   ? selectedProduct.buyNowPrice.toLocaleString('vi-VN') + ' VND'
                                   : ''
                               "
-                              class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                           <div>
-                            <label for="jump" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="jump" class="block mb-2 text-sm font-medium text-gray-900"
                               >Bước nhảy tối thiểu</label
                             >
                             <input
@@ -495,7 +517,7 @@ const tabButtonClasses = tabName => ({
                               id="jump"
                               readonly
                               :value="selectedProduct?.jump ? selectedProduct.jump.toLocaleString('vi-VN') + ' VND' : ''"
-                              class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                           <div>
                             <label for="reject" class="block mb-2 text-sm font-medium text-gray-900"
@@ -519,7 +541,7 @@ const tabButtonClasses = tabName => ({
                               id="censor"
                               readonly
                               value="Admin"
-                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                         </div>
                         <div>
@@ -532,12 +554,12 @@ const tabButtonClasses = tabName => ({
                             readonly
                             id="description"
                             :value="selectedProduct?.product?.description"
-                            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
+                            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"></textarea>
                         </div>
   
                         <div class="flex items-center mt-2 space-x-4"></div>
                         <div>
-                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900"
                             >Hình ảnh</label
                           >
                           <Carousel :pictures="convertedImages"></Carousel>
@@ -555,7 +577,7 @@ const tabButtonClasses = tabName => ({
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm </label>
                   <input
-                    v-model="selectedProduct.product.name"
+                    v-model="productFormData.name"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="title"
                     type="text"
@@ -564,7 +586,7 @@ const tabButtonClasses = tabName => ({
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> Mô tả </label>
                   <textarea
-                    v-model="selectedProduct.product.description"
+                    v-model="productFormData.description"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="description"
                     rows="4"
@@ -573,7 +595,7 @@ const tabButtonClasses = tabName => ({
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
                   <input
-                    v-model="selectedProduct.product.weight"
+                    v-model="productFormData.weight"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="weight"
                     type="text"
@@ -582,35 +604,28 @@ const tabButtonClasses = tabName => ({
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="brand"> Thương hiệu sản phẩm </label>
                   <select
-                    v-model="selectedProduct.product.brand.id"
+                    v-model="productFormData.brand.id"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="brand">
                     <option value="" disabled selected>Chọn thương hiệu</option>
-                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
+                    <option v-for="brand in brands" :key="brand.id" :value="brand.id" :selected="brand.id === productFormData.brand.id">{{ brand.name }}</option>
                   </select>
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Loại sản phẩm </label>
                   <select
-                    v-model="selectedProduct.product.category.id"
+                    v-model="productFormData.category.id"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="category">
                     <option value="" disabled selected>Chọn loại</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                    <option v-for="category in categories" :key="category.id" :value="category.id" :selected="category.id === productFormData.category.id">
                       {{ category.name }}
                     </option>
                   </select>
                 </div>
   
                 <div class="mb-4 w-full overflow-x-auto">
-                  <div v-for="src in selectedProduct.product.imageUrls" :key="src" class="inline-block mr-2">
-                    <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
-                  </div>
-                  <div v-if="imgSrc.length > 0">
-                    <div v-for="src in imgSrc" :key="src" class="inline-block mr-2">
-                      <img :src="src" alt="product image" class="w-40 h-40 border-4 border-blue-500" />
-                    </div>
-                  </div>
+                  <ListEditableImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
                 </div>
                 <div class="mb-4">
                   <button
@@ -626,7 +641,7 @@ const tabButtonClasses = tabName => ({
                 <div class="mb-4 border-t-[1px] pt-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM (nếu có) </label>
                   <div class="w-full items-center">
-                    <CurrencyInput v-model="selectedProduct.startPrice" placeholder="" w="w-full" />
+                    <CurrencyInput v-model="auctionFormData.startPrice" placeholder="" w="w-full" />
                   </div>
                 </div>
                 <div class="mb-4">
@@ -634,7 +649,7 @@ const tabButtonClasses = tabName => ({
                     GIÁ MUA NGAY (nếu có)
                   </label>
                   <div class="w-full items-center">
-                    <CurrencyInput v-model="selectedProduct.buyNowPrice" placeholder="" w="w-full" />
+                    <CurrencyInput v-model="auctionFormData.buyNowPrice" placeholder="" w="w-full" />
                   </div>
                 </div>
                 <div class="mb-4">
@@ -648,7 +663,7 @@ const tabButtonClasses = tabName => ({
                         id="immediate"
                         name="modelType"
                         value="IMMEDIATE"
-                        v-model="selectedProduct.modelType" />
+                        v-model="auctionFormData.modelType" />
                       <label for="immediate" class="font-semibold text-black">TỰ TRAO ĐỔI MUA BÁN</label>
                       <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
                         <Icon icon="mdi:information" class="text-[20px]" />
@@ -656,13 +671,13 @@ const tabButtonClasses = tabName => ({
                       <div
                         id="tooltip-hover"
                         role="tooltip"
-                        class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
                         {{ immediateMessage }}
                         <div class="tooltip-arrow" data-popper-arrow></div>
                       </div>
                     </div>
                     <div class="flex items-center gap-3">
-                      <input type="radio" id="intermediate" value="INTERMEDIATE" v-model="selectedProduct.modelType" />
+                      <input type="radio" id="intermediate" value="INTERMEDIATE" v-model="auctionFormData.modelType" />
                       <label for="intermediate" class="font-semibold text-black">TRUNG GIAN QUA HỆ THỐNG</label>
                       <div>
                         <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
@@ -671,7 +686,7 @@ const tabButtonClasses = tabName => ({
                         <div
                           id="tooltip-hover"
                           role="tooltip"
-                          class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                          class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
                           {{ intermediateMessage }}
                           <div class="tooltip-arrow" data-popper-arrow></div>
                         </div>
@@ -687,9 +702,9 @@ const tabButtonClasses = tabName => ({
                     <Dropdown :data="durationData" v-model="duration" class="!w-[200px]" />
                     <input
                       v-model="durationInput"
-                      v-if="!duration.value"
+                      v-if="!duration?.value"
                       type="number"
-                      class="shadow appearance-none border rounded w-[10%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      class="shadow appearance-none border rounded w-[20%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="duration"
                       placeholder="" />
                     <div class="block text-gray-700 text-sm font-bold">giờ</div>
@@ -699,14 +714,8 @@ const tabButtonClasses = tabName => ({
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
                     BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
                   </label>
-                  <div class="flex gap-3 items-center">
-                    <input
-                      v-model="selectedProduct.jump"
-                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="jump"
-                      type="text"
-                      placeholder="" />
-                    <div class="block text-gray-700 text-sm font-bold">VNĐ</div>
+                  <div class="w-full">
+                    <CurrencyInput v-model="auctionFormData.jump" w="w-full"/>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">

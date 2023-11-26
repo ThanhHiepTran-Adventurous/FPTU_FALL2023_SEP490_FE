@@ -102,14 +102,6 @@ const goToNextPage = () => {
               </div>
             </form>
           </div>
-          <!-- <div
-            class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
-            <button
-              type="button"
-              class="flex items-center justify-center flex-shrink-0 px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-              Add new User
-            </button>
-          </div> -->
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -128,7 +120,6 @@ const goToNextPage = () => {
             <tbody>
               <tr v-for="(user, index) in paginatedUsers" :key="index" class="border-b dark:border-gray-700">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                  <!-- <img class="w-10 h-10 rounded-full" :src="user.profileImage" :alt="user.name + ' image'" /> -->
                   <div class="pl-3">
                     <div class="text-base font-semibold">{{ user.fullname }}</div>
                     <div class="font-normal text-gray-500">{{ user.email }}</div>
@@ -159,30 +150,6 @@ const goToNextPage = () => {
                         d="M4.109 17H1v-2a4 4 0 0 1 4-4h.87M10 4.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm7.95 2.55a2 2 0 0 1 0 2.829l-6.364 6.364-3.536.707.707-3.536 6.364-6.364a2 2 0 0 1 2.829 0Z" />
                     </svg>
                   </button>
-                  <!-- <div
-                    v-if="openDropdowns.includes(index)"
-                    :id="'apple-imac-27-dropdown-' + index"
-                    class="z-10 w-44 bg-white absolute mr-4 rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                    <ul
-                      class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="apple-imac-27-dropdown-button">
-                      <li>
-                        <button
-                          type="button"
-                          class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="showUpdateModal = true">
-                          Show
-                        </button>
-                      </li>
-                    </ul>
-                    <div class="py-1">
-                      <a
-                        href="#"
-                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                        >Delete</a
-                      >
-                    </div>
-                  </div> -->
                 </td>
               </tr>
             </tbody>
@@ -342,42 +309,7 @@ const goToNextPage = () => {
               >
               <VueDatePicker readonly v-model="selectedUser.createAt"></VueDatePicker>
             </div>
-
-            <!-- <div class="sm:col-span-2">
-              <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Description</label
-              >
-              <textarea
-                id="description"
-                rows="5"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Write a description...">
-Standard glass, 3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with 8GB of GDDR6 memory, 256GB SSD storage, Gigabit Ethernet, Magic Mouse 2, Magic Keyboard - US</textarea
-              >
-            </div> -->
           </div>
-          <!-- <div class="flex items-center space-x-4">
-            <button
-              type="submit"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-              Update
-            </button>
-            <button
-              type="button"
-              class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-              <svg
-                class="mr-1 -ml-1 w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  fill-rule="evenodd"
-                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                  clip-rule="evenodd"></path>
-              </svg>
-              Delete
-            </button>
-          </div> -->
         </form>
       </div>
     </div>
