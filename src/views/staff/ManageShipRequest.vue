@@ -7,7 +7,8 @@ import { Carousel } from 'flowbite-vue'
 import moment from 'moment'
 import toastOption from '@/utils/toast-option'
 import StaffSideBarLayout from '@/layouts/StaffSideBarLayout.vue'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
+import { staffTabs } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const selectedShip = ref(null)
 const showUpdateModal = ref(false)

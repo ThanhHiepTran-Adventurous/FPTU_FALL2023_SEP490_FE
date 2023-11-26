@@ -12,10 +12,11 @@ import { AuctionModelType, Role } from '@/common/contract'
 import chatService from '@/services/chat.service'
 import { useRouter } from 'vue-router'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
+import { staffTabs } from '@/common/constant'
 import toastOption from '@/utils/toast-option'
 import { Icon } from '@iconify/vue'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const router = useRouter()
 

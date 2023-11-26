@@ -1,12 +1,13 @@
 <script setup>
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import BoughtNav from '../BoughtNav.vue'
-import { buyerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { buyerTabs } from '@/common/constant'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import PaymentService from '@/services/payment.service'
 import formatCurrency from '@/utils/currency-output-formatter'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const transactionList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE

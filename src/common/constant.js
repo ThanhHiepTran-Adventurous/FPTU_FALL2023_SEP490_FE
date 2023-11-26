@@ -122,4 +122,4 @@ export const defaultRoute = {
   staff: '/staff/manage-ship-request',
 }
 
-export const SIMPLE_TABLE_ITEMS_PER_PAGE = 8
+//export const SIMPLE_TABLE_ITEMS_PER_PAGE = 8

@@ -4,7 +4,6 @@ import Button from '@/components/common-components/Button.vue'
 import ProductSerivice from '@/services/product.service'
 import { onMounted, ref, computed } from 'vue'
 import { Carousel } from 'flowbite-vue'
-import moment from 'moment'
 import brandService from '@/services/brand.service'
 import categoryService from '@/services/category.service'
 import { base64Image } from '@/utils/imageFile'
@@ -12,9 +11,11 @@ import { Icon } from '@iconify/vue'
 import { initFlowbite } from 'flowbite'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import AuctionService from '@/services/auction.service'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, sellerTabs } from '@/common/constant'
+import { sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import CurrencyInput from '../common-components/CurrencyInput.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const allowedModalTypes = { info: 'info' }
 const isModalVisible = ref(false)
@@ -44,7 +45,6 @@ const breadcrumbItems = [
 
 const fetchProducts = async () => {
   try {
-    const userID = localStorage.getItem('userId')
     const response = await AuctionService.getAuctionBySeller("status:REJECTED")
     products.value = response.data
   } catch (e) {
@@ -153,6 +153,8 @@ const onSubmit = () => {
     oldImagesRemoved: [''], // Replace with actual image paths
     newImages: [...selectedProduct?.value?.product?.imageUrls], // Replace with actual image paths
   }
+  console.log(dataProduct)
+  return
   ProductSerivice.updateProductById(selectedProduct.value?.product?.id, dataProduct)
     .then(_ => {
       emit('sendSuccess')
@@ -390,23 +392,24 @@ const tabButtonClasses = tabName => ({
     <div>
       <Modal
         v-if="showProductModal"
-        :widthClass="'w-[700px]'"
+        title="Chi tiết"
+        :widthClass="'w-[50vw]'"
         :hasOverFlowVertical="true"
         :hasButton="false"
         @decline-modal="closeModal"
         @confirm-modal="handleConfirm">
         <div v-if="typeofModal === allowedModalTypes.info">
-          <div class="bg-white rounded-lg shadow-md space-y-4">
+          <div class="bg-white rounded-lg">
             <div
-              class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+              class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
               <ul class="flex flex-wrap -mb-px">
                 <li class="mr-2">
                   <button
                     @click="showTableTab"
                     :class="{
-                      'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                      'inline-block px-4 py-2 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active':
                         currentTab === 'table',
-                      'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                      'inline-block px-4 py-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600':
                         currentTab !== 'table',
                     }">
                     Thông Tin
@@ -416,9 +419,9 @@ const tabButtonClasses = tabName => ({
                   <button
                     @click="showFormTab"
                     :class="{
-                      'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                      'inline-block px-4 py-2 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
                         currentTab !== 'table',
-                      'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                      'inline-block px-4 py-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
                         currentTab === 'table',
                     }"
                     aria-current="page">
@@ -430,9 +433,9 @@ const tabButtonClasses = tabName => ({
   
             <div v-if="currentTab === 'table'">
               <div class="flex mb-5 items-center justify-center">
-                <div class="relative p-4 w-full max-w-4xl md:h-auto">
+                <div class="relative w-full max-w-4xl md:h-auto">
                   <!-- Modal content -->
-                  <div class="relative p-4 bg-white rounded-lg dark:bg-gray-800 sm:p-5">
+                  <div class="relative bg-white rounded-lg dark:bg-gray-800 sm:p-5">
                     <!-- Modal body -->
                     <div class="overflow-y-auto">
                       <form action="#">
@@ -495,7 +498,7 @@ const tabButtonClasses = tabName => ({
                               class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                           </div>
                           <div>
-                            <label for="reject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="reject" class="block mb-2 text-sm font-medium text-gray-900"
                               >Lý do từ chối</label
                             >
                             <input
@@ -504,10 +507,10 @@ const tabButtonClasses = tabName => ({
                               id="reject"
                               readonly
                               :value="selectedProduct?.rejectReason"
-                              class="bg-gray-50 border border-gray-300 text-red-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                              class="bg-gray-50 border border-gray-300 text-red-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                           <div>
-                            <label for="censor" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            <label for="censor" class="block mb-2 text-sm font-medium text-gray-900"
                               >Người kiểm duyệt</label
                             >
                             <input
@@ -520,7 +523,7 @@ const tabButtonClasses = tabName => ({
                           </div>
                         </div>
                         <div>
-                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900"
                             >Mô tả</label
                           >
                           <textarea
@@ -534,6 +537,9 @@ const tabButtonClasses = tabName => ({
   
                         <div class="flex items-center mt-2 space-x-4"></div>
                         <div>
+                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >Hình ảnh</label
+                          >
                           <Carousel :pictures="convertedImages"></Carousel>
                         </div>
                       </form>
@@ -616,25 +622,20 @@ const tabButtonClasses = tabName => ({
                   </button>
                   <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
                 </div>
-  
-                <div class="mb-4">
+                
+                <div class="mb-4 border-t-[1px] pt-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM (nếu có) </label>
-                  <input
-                    v-model="selectedProduct.startPrice"
-                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="title"
-                    type="text"
-                    placeholder="" />
+                  <div class="w-full items-center">
+                    <CurrencyInput v-model="selectedProduct.startPrice" placeholder="" w="w-full" />
+                  </div>
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
                     GIÁ MUA NGAY (nếu có)
                   </label>
-                  <input
-                    v-model="selectedProduct.buyNowPrice"
-                    class="shadow border rounded w-full text-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="description"
-                    placeholder="" />
+                  <div class="w-full items-center">
+                    <CurrencyInput v-model="selectedProduct.buyNowPrice" placeholder="" w="w-full" />
+                  </div>
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -709,7 +710,7 @@ const tabButtonClasses = tabName => ({
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <button
+                  <button @click="closeModal()"
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button">
                     Hủy

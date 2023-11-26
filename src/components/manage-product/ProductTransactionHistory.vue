@@ -3,9 +3,10 @@ import PaymentService from '@/services/payment.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, sellerTabs } from '@/common/constant'
+import { sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 
 const breadcrumbItems = [

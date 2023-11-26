@@ -4,7 +4,8 @@ import loginService from '../../services/login.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+
 const userList = ref([])
 const searchQuery = ref('')
 const openDropdowns = ref([])

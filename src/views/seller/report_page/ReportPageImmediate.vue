@@ -8,12 +8,12 @@ import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
 import { AuctionModelType, ReportStatus, Role } from '@/common/contract'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { buyerTabs, sellerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const breadcrumbItems = [
   {

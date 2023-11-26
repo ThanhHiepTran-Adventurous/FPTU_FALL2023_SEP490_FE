@@ -1,16 +1,13 @@
 <script setup>
-import StaffHeader from '@/views/staff/common/StaffHeader.vue'
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
-import StaffSideBarLayout from '@/layouts/StaffSideBarLayout.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import { WithdrawRequestStatus, WithdrawRequestType } from '@/common/contract'
-import { useRouter } from 'vue-router'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, staffTabs } from '@/common/constant'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import withdrawService from '@/services/withdraw.service'
 import { useUserStore } from '@/stores/user.store'
 import WithdrawStatusComponent from '@/components/common-components/badge/WithdrawStatusComponent.vue'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 //filter
 const filterData = ref({
@@ -67,8 +64,6 @@ const userStore = useUserStore()
 
 const records = ref([])
 const filteredRecords = ref([])
-// const detail = ref(null)
-// const isModalVisible = ref(false)
 
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)

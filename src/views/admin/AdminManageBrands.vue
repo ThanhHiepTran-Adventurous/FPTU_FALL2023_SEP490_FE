@@ -6,7 +6,8 @@ import adminService from '../../services/admin.service'
 import { onMounted, ref, computed, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+
 const brandList = ref([])
 const searchQuery = ref('')
 const selectedbrand = ref(null)

@@ -7,7 +7,7 @@ import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
 import toastOption from '@/utils/toast-option'
 import moment from 'moment'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const autionsList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE

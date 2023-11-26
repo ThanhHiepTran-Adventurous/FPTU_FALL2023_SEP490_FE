@@ -7,7 +7,7 @@ import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
 import { AuctionModelType, ReportStatus, Role, StatusShipRequest } from '@/common/contract'
-import { sellerTabs, SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/constant'
+import { sellerTabs } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
@@ -16,6 +16,7 @@ import ShippingStatusIntermediate from '@/components/common-components/badge/Shi
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
+import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 
 const breadcrumbItems = [
   {
