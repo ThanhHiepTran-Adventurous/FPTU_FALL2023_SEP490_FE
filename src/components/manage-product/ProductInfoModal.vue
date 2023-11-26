@@ -222,7 +222,7 @@ onMounted(() => {
                 v-model="durationInput"
                 v-if="!duration.value"
                 type="number"
-                class="shadow appearance-none border rounded w-[10%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                class="shadow appearance-none border rounded w-[20%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="duration"
                 placeholder="" />
               <div class="block text-gray-700 text-sm font-bold">giờ</div>
@@ -236,7 +236,7 @@ onMounted(() => {
               <input
                   v-model="formData.minimumAuctioneers"
                   type="number"
-                  class="shadow appearance-none border rounded !w-[200px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  class="shadow appearance-none border rounded !w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="duration"
                   placeholder="" />
               <div class="block text-gray-700 text-sm font-bold">người</div>
