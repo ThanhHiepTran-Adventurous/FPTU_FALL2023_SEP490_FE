@@ -29,7 +29,7 @@ const updateProductById = async (productId, oldImageRemoved, newImages, updateRe
     formData.append('oldImagesRemoved', oldImgsBlob)
 
     for (const imageData of newImages) {
-      form.append('newImages', imageData)
+      formData.append('newImages', imageData)
     }
 
     const response = await utils.axiosLocalHost.put(serviceUrl, formData, {

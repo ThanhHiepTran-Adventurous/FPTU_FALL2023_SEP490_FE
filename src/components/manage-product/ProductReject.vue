@@ -20,6 +20,7 @@ import moment from 'moment'
 import ListEditableImage from '../ListEditableImage.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
+import { ProductStatus } from '@/common/contract'
 
 const allowedModalTypes = { info: 'info' }
 const typeofModal = ref('info')
@@ -49,7 +50,7 @@ const breadcrumbItems = [
 const fetchProducts = async () => {
   try {
     const response = await AuctionService.getAuctionBySeller("status:REJECTED")
-    products.value = response.data
+    products.value = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
   } catch (e) {
     console.error(e)
   }
@@ -282,7 +283,7 @@ const openProductModal = product => {
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
           <div class="font-bold text-2xl text-black text-blue-800">
-            Lịch sử báo cáo
+            Yêu cầu đấu giá bị từ chối
           </div>
         </div>
         <section class="sm:p-5">

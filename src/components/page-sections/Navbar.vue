@@ -1,9 +1,8 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
-import constant from '@/common/constant'
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Avatar from '@/components/common-components/Avatar.vue'
 import { useUserStore } from '../../stores/user.store'
@@ -13,15 +12,13 @@ import toast from '../../utils/toast-option'
 import { useRouter } from 'vue-router'
 import { useFirebaseStore } from '../../stores/firebase.store'
 import { useGlobalStore } from '@/stores/global.store'
-import { Dropdown, ListGroup, ListGroupItem } from 'flowbite-vue'
-
+import { Dropdown, MenuItem, Menu } from 'ant-design-vue'
 import * as yup from 'yup'
 import { ErrorMessage, Field, Form } from 'vee-validate'
-import userService from '@/services/user.service'
 import AntDropdown from '../AntDropdown.vue'
 import { useNotificationStore } from '@/stores/notification.store'
 import { Role } from '@/common/contract'
-import { defaultRoute } from '@/common/constant'
+import constant, { defaultRoute } from '@/common/constant'
 import { defaultAvatar } from '@/common/urlConstant'
 
 const schema = yup.object().shape({
@@ -239,7 +236,28 @@ const notiList = computed(() => {
               v-if="curRole === Role.buyer.value">
               <Icon icon="wpf:like" class="text-[28px]" />
             </RouterLink>
-            <Dropdown placement="bottom" text="bottom">
+            <Dropdown placement="bottomRight" trigger="click">
+              <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-[44px] h-[44px]">
+                <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full" />
+              </div>
+              <template #overlay>
+                <Menu class="max-h-[90vh] overflow-auto">
+                  <MenuItem>
+                    <div>
+                      <router-link to="/profile" class="flex items-center gap-3 px-2 text-black hover:bg-gray-200 rounded">
+                        <Icon icon="tabler:edit" class="text-[28px]" />
+                        <div>Edit</div>
+                      </router-link>
+                    </div>
+                    <div @click="onLogout" class="flex items-center gap-3 px-2 mt-3 text-black hover:bg-gray-200 rounded">
+                      <Icon icon="tabler:logout" class="text-[28px]" />
+                      <div>Logout</div>
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </template>
+            </Dropdown>
+            <!-- <Dropdown placement="bottom" text="bottom">
               <template #trigger>
                 <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-[44px] h-[44px]">
                   <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full" />
@@ -259,7 +277,7 @@ const notiList = computed(() => {
                   Logout
                 </ListGroupItem>
               </ListGroup>
-            </Dropdown>
+            </Dropdown> -->
           </div>
         </div>
         <div v-else class="flex gap-3">

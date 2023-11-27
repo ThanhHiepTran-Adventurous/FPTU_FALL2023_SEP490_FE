@@ -1,5 +1,5 @@
 <script setup>
-import { Dropdown, Button, MenuItem, Menu } from 'ant-design-vue'
+import { Dropdown, MenuItem, Menu } from 'ant-design-vue'
 import moment from 'moment'
 import { NotiReadEnum } from '@/common/contract'
 
