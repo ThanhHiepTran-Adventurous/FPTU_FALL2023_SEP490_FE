@@ -3,7 +3,7 @@
     <LayoutHeader>
       <Navbar />
     </LayoutHeader>
-    <div class="mt-[150px] md:mt-[70px] mb-[10px]">
+    <div class="mt-[150px] md:mt-[52px] mb-[10px]">
       <LayoutContent>
         <router-view />
       </LayoutContent>
