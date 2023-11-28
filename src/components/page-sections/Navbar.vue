@@ -159,7 +159,7 @@ const notiList = computed(() => {
 <template>
   <!-- component -->
   <!-- Header -->
-  <div class="fixed w-full top-0 z-10">
+  <div class="fixed w-full top-0 z-[99]">
     <Modal
       v-if="isModalOpen"
       title="Đăng nhập"

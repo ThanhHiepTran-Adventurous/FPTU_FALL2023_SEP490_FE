@@ -8,7 +8,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
 import auctionService from '@/services/auction.service'
 import feedbackService from '@/services/feedback.service'
-
 import moment from 'moment'
 import toastOption from '@/utils/toast-option'
 import { Carousel } from 'flowbite-vue'

@@ -532,7 +532,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col w-full 2xl:w-2/3">
+      <div v-if="profileModel.role === Role.seller" class="flex flex-col w-full 2xl:w-2/3">
         <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
           <div class="flex items-center justify-between">
             <div class="text-xl text-gray-900 font-bold">Căn cước công dân</div>

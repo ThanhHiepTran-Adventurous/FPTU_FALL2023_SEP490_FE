@@ -201,11 +201,7 @@ const onPlaceBidClick = async () => {
                     </div>
                   </div>
                   <div class="mt-1 mb-6">
-                    <div v-if="auctionInfo?.highestPrice">
-                      Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc:
-                      {{ auctionInfo?.latestBidderInfo?.createdAt }}
-                    </div>
-                    <div v-else class="mt-1 text-xs font-light italic">Hiện tại chưa có người đặt giá</div>
+                    {{ auctionInfo?.lastBidDetail }}
                   </div>
                   <div class="flex">
                     <button
