@@ -50,8 +50,8 @@ let transactionStatus = ref('')
 const getQueryParameters = () => {
   const queryParams = route.query
 
-  responeCode = queryParams.vnp_ResponseCode
-  transactionStatus = queryParams.vnp_TransactionStatus
+  responeCode.value = queryParams.vnp_ResponseCode
+  transactionStatus.value = queryParams.vnp_TransactionStatus
 }
 
 // Filter
@@ -404,7 +404,7 @@ onMounted(() => {
 
     <!-- Modals -->
     <div
-      v-if="responeCode === '00' && transactionStatus === '00'"
+      v-if="responeCode == '00' && transactionStatus == '00'"
       id="successModal"
       aria-hidden="true"
       class="bg-black bg-opacity-50 flex m items-center justify-cente overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
