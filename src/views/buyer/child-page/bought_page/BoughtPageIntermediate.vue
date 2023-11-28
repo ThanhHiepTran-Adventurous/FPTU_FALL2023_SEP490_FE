@@ -136,9 +136,8 @@ onMounted(async () => {
 
 const payment = async auctionId => {
   try {
-    const curHost = `${window.location.host}/#`
+    const curHost = `${window.location.protocol}//${window.location.host}/#`
     const returnUrl = `${curHost}${route.fullPath}`
-
     const paymentData = {
       auctionId: auctionId,
       address: profileModelData.value.address,
@@ -298,16 +297,6 @@ const schema = yup.object().shape({
                     type="text"
                     v-model="profileModelData.phone"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-
-                  <!-- <Field name="phone" rules="required">
-                    <input
-                      v-model="profileModelData.phone"
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  
-                  </Field> -->
                   <ErrorMessage as="div" name="phone" class="text-start text-danger pt-2 fs-6" />
                 </div>
                 <div>

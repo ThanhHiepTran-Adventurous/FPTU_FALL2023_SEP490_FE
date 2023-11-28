@@ -137,8 +137,8 @@ function handleConfirm() {
 }
 
 const handlePayment = async () => {
-  const curHost = `https://${window.location.host}/#`
-  const returnUrl = `${curHost}/manage/auctioned`
+  const curHost = `${window.location.protocol}//${window.location.host}/#`
+  const returnUrl = `${curHost}${route.fullPath}`
 
   isPaymentLoading.value = true
   const response = await paymentService.paymentForChat(detail.value.id, returnUrl)
