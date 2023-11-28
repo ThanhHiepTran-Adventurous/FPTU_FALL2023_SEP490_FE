@@ -257,27 +257,6 @@ const notiList = computed(() => {
                 </Menu>
               </template>
             </Dropdown>
-            <!-- <Dropdown placement="bottom" text="bottom">
-              <template #trigger>
-                <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-[44px] h-[44px]">
-                  <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full" />
-                </div>
-              </template>
-              <ListGroup>
-                <ListGroupItem @click="router.push('/profile')">
-                  <template #prefix>
-                    <Icon icon="tabler:edit" class="text-[28px]" />
-                  </template>
-                  Edit
-                </ListGroupItem>
-                <ListGroupItem @click="() => onLogout()">
-                  <template #prefix>
-                    <Icon icon="tabler:logout" class="text-[28px]" />
-                  </template>
-                  Logout
-                </ListGroupItem>
-              </ListGroup>
-            </Dropdown> -->
           </div>
         </div>
         <div v-else class="flex gap-3">

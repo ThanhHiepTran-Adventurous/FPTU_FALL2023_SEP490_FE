@@ -49,7 +49,7 @@ const timeDeadline = computed(() => {
   <router-link :to="`/auctions/${props.itemId}`"
     ><div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
       <div
-        class="w-[220px] text-left text-black mt-1 mb-1.5 pl-1 font-medium text-lg truncate flex justify-center items-center">
+        class="w-[220px] text-left text-black font-semibold mt-1 mb-1.5 pl-1 text-lg truncate flex justify-center items-center">
         {{ props.productName }}
       </div>
       <div class="tt-image-box">

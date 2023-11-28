@@ -7,6 +7,7 @@ import { onMounted, ref, computed, watch } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import toastOption from '@/utils/toast-option'
 
 const brandList = ref([])
 const searchQuery = ref('')
@@ -150,8 +151,9 @@ const handleSubmitUpdateBrand = async selectedbrand => {
 
     // Call updateBrandById function
     await adminService.updateBrandById(selectedbrand.id, formData, updateBrandRequest)
-
-    // await updateBrandById(selectedbrand.id, formData, updateBrandRequest)
+    toastOption.toastSuccess("Cập nhật thương hiệu thành công")
+    showUpdateModal.value = false
+    getAllBrands()
   } catch (error) {
     console.error(error)
     // Handle errors (e.g., show an error message)
@@ -174,6 +176,9 @@ const handleSubmitCreateBrand = async newBrand => {
 
     // Call updateBrandById function
     await adminService.creatNewBrand(formData, addBrandAndCategoryRequest)
+    toastOption.toastSuccess("Tạo mới thương hiệu thành công")
+    showCreateModal.value = false
+    getAllBrands()
   } catch (error) {
     console.error(error)
     // Handle errors (e.g., show an error message)
@@ -318,30 +323,6 @@ const handleSubmitCreateBrand = async newBrand => {
                         d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
                     </svg>
                   </button>
-                  <!-- <div
-                    v-if="openDropdowns.includes(index)"
-                    :id="'apple-imac-27-dropdown-' + index"
-                    class="z-10 w-44 bg-white absolute mr-4 rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                    <ul
-                      class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="apple-imac-27-dropdown-button">
-                      <li>
-                        <button
-                          type="button"
-                          class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                          @click="showUpdateModal = true">
-                          Show
-                        </button>
-                      </li>
-                    </ul>
-                    <div class="py-1">
-                      <a
-                        href="#"
-                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                        >Delete</a
-                      >
-                    </div>
-                  </div> -->
                 </td>
               </tr>
             </tbody>

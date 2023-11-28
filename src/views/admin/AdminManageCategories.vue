@@ -1,8 +1,6 @@
 <script setup>
 import AdminHeader from '@/views/admin/common/AdminHeader.vue'
-import loginService from '../../services/login.service'
 import { onMounted, ref, computed, watch } from 'vue'
-import VueDatePicker from '@vuepic/vue-datepicker'
 import adminService from '../../services/admin.service'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
@@ -13,15 +11,10 @@ const openDropdowns = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const showUpdateModal = ref(false)
-const date = ref(new Date())
+
 onMounted(() => {
   getAllCategories()
 })
-const selectedUser = ref(null)
-const openUserModal = user => {
-  selectedUser.value = user // Set the selected user data
-  showUpdateModal.value = true // Show the modal
-}
 const getAllCategories = async () => {
   try {
     const response = await adminService.getAllCategories()
@@ -30,26 +23,6 @@ const getAllCategories = async () => {
     console.error(e)
   }
 }
-
-const toggleDropdown = index => {
-  const isOpen = openDropdowns.value.includes(index)
-  if (isOpen) {
-    // If the dropdown is already open, close it
-    openDropdowns.value = openDropdowns.value.filter(i => i !== index)
-  } else {
-    // If the dropdown is closed, open it
-    openDropdowns.value.push(index)
-  }
-}
-
-// Computed property for paginated users
-const paginatedUsers = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  return categoriesList.value
-    .filter(user => user.fullname.toLowerCase().includes(searchQuery.value.toLowerCase()))
-    .slice(startIndex, endIndex)
-})
 
 // Watch for changes in searchQuery and reset currentPage when searching
 watch(searchQuery, () => {
@@ -80,7 +53,6 @@ const goToNextPage = () => {
 }
 // Compute the start and end index for the current page
 const startIndex = (currentPage.value - 1) * itemsPerPage
-const endIndex = startIndex + itemsPerPage
 
 // Compute paginated auctions
 const paginateCategories = computed(() => {
@@ -118,7 +90,6 @@ const paginateCategories = computed(() => {
             <tbody>
               <tr v-for="(category, index) in paginateCategories" :key="index" class="border-b dark:border-gray-700">
                 <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                  <!-- <img class="w-10 h-10 rounded-full" :src="category.imageUrl" :alt="category.name + ' image'" /> -->
                   <div class="pl-3">
                     <div class="text-base font-semibold">{{ category.name }}</div>
                   </div>
