@@ -1,5 +1,5 @@
 <template>
-    <footer id="tt-footer">
+    <footer id="tt-footer" class="!mt-0">
         <div class="tt-footer-col tt-color-scheme-01">
             <div class="container mx-auto">
                 <div class="row">

@@ -200,7 +200,7 @@ const notiList = computed(() => {
     </Modal>
     <div class="bg-blue-700">
       <nav
-        class="container px-6 py-2 mx-auto flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center text-white">
+        class="container px-6 py-1 mx-auto flex flex-col gap-3 md:gap-0 md:flex-row md:justify-between md:items-center text-white">
         <div class="flex items-center justify-center md:justify-between">
           <router-link :to="curDefaultRoute" class="text-xl font-bold text-white md:text-2xl hover:text-blue-400">
             <img

@@ -31,12 +31,12 @@ onBeforeMount(() => {
 })
 </script>
 <template>
-  <div>
+  <div class="bg-white">
     <div>
       <NewTopBar />
     </div>
     <PosterSection />
-    <BrandSection />
     <OutstandingItem />
+    <BrandSection />
   </div>
 </template>
