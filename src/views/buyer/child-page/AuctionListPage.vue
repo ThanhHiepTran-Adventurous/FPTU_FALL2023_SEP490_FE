@@ -265,7 +265,7 @@ const goToNextPage = () => {
     <Breadcrumb :items="breadcrumbItems" />
   </div>
   <section>
-    <div class="px-4 mx-auto max-w-screen-xxl">
+    <div class="px-4 mx-auto max-w-screen-xxl mb-3">
       <div class="flex gap-2">
         <!-- Sort sidebar -->
         <article class="p-6 bg-white rounded-lg border border-gray-200 shadow lg:w-1/5 min-h-[751.2px]">
@@ -345,11 +345,15 @@ const goToNextPage = () => {
                     :format="{thousand: '.'}"
                     class="slider-blue"
                   />
-                  <div class="flex items-center gap-1 mt-3">
-                    <div>Từ </div>
-                    <CurrencyInput v-model="minPriceSelected" w="w-[7rem] !pl-1"/>
-                    <div>đến </div>
-                    <CurrencyInput v-model="maxPriceSelected" w="w-[7rem] !pl-1"/>
+                  <div class="mt-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-[4rem]">Từ </div>
+                      <CurrencyInput v-model="minPriceSelected" w="w-[7rem] !pl-1"/>
+                    </div>
+                    <div class="flex items-center gap-3 mt-3">
+                      <div class="w-[4rem]">Đến </div>
+                      <CurrencyInput v-model="maxPriceSelected" w="w-[7rem] !pl-1"/>
+                    </div>
                   </div>
                 </div>
               </div>
