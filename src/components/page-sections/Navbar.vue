@@ -214,15 +214,15 @@ const notiList = computed(() => {
 
         <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
         <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
-          <div class="w-full rounded-full bg-gray-300 p-1 flex items-center gap-6">
+          <div class="w-full rounded-full bg-gray-300 p-0.5 flex items-center gap-6">
             <RouterLink
               to="/bought/immediate"
-              class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700"
+              class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700"
               v-if="curRole === Role.buyer.value">
               <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
             </RouterLink>
             <AntDropdown :menuData="notiList">
-              <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700" @click="onNotiClick">
+              <div class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700" @click="onNotiClick">
                 <Icon icon="ion:notifcations" class="text-[28px]" />
                 <span v-if="isContainNotRead" class="flex absolute -mt-1 ml-4">
                   <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
@@ -232,14 +232,13 @@ const notiList = computed(() => {
             </AntDropdown>
             <RouterLink
               to="/"
-              class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700"
+              class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700"
               v-if="curRole === Role.buyer.value">
               <Icon icon="wpf:like" class="text-[28px]" />
             </RouterLink>
             <Dropdown placement="bottomRight" trigger="click">
-              <div class="flex text-white hover:!text-gray-400 p-2 rounded-[50%] bg-gray-700 w-[44px] h-[44px]">
-                <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[24px] rounded-full" />
-              </div>
+              <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[40px] h-[40px] rounded-full border-[1px] " />
+              
               <template #overlay>
                 <Menu class="max-h-[90vh] overflow-auto">
                   <MenuItem>

@@ -15,10 +15,11 @@ import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue'
 import AuctionType from '../common-components/badge/AuctionType.vue'
 import userService from '@/services/user.service'
 import { useUserStore } from '@/stores/user.store'
-import { Role } from '@/common/contract'
 import ListProductImage from '@/components/product-detail/ListProductImage.vue'
+
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
+
 const isModalVisible = ref(false)
 const isBuyNowModalVisible = ref(false)
 const autoAuctionInfo = ref(null)
@@ -51,20 +52,21 @@ const onCloseModal = () => {
   isModalVisible.value = false
 }
 const onBuyNowClick = async () => {
+  //if not login, force modal login open
+  if (!globalStore.isAlreadyLogin()) {
+    globalStore.showLoginModal = true
+    return
+  }
   if (!(await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist()))) {
     toastOption.toastError(
       'Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.',
     )
     return
   }
+
   const curTimeInMilis = DateHelper.getCurDateUTCMilis()
   if (props.auctionInfo?.endDate && curTimeInMilis > moment.utc(props.auctionInfo?.endDate).valueOf()) {
     toastOption.toastError('Phiên đấu giá đã hoàn thành')
-    return
-  }
-  //if not login, force modal login open
-  if (!globalStore.isAlreadyLogin()) {
-    globalStore.showLoginModal = true
     return
   }
   isBuyNowModalVisible.value = true
@@ -83,6 +85,11 @@ const onBuyNowConfirm = () => {
 }
 
 const onPlaceBidClick = async () => {
+  //if not login, force modal login open
+  if (!globalStore.isAlreadyLogin()) {
+    globalStore.showLoginModal = true
+    return
+  }
   if (!(await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist()))) {
     toastOption.toastError(
       'Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.',
@@ -95,11 +102,6 @@ const onPlaceBidClick = async () => {
     return
   }
 
-  //if not login, force modal login open
-  if (!globalStore.isAlreadyLogin()) {
-    globalStore.showLoginModal = true
-    return
-  }
 
   isModalVisible.value = true
 }
