@@ -8,8 +8,9 @@ const auctions = ref([])
 
 const fetchAuctions = async () => {
   const auctionsData = await auctionService.getAllActiveAuctions('status:IN_PROCESS', '')
-
-  auctions.value = auctionsData.data.slice(0, 4)
+  if(auctionsData.data){
+    auctions.value = auctionsData.data.slice(0, 4)
+  }
 }
 onMounted(async () => {
   fetchAuctions()

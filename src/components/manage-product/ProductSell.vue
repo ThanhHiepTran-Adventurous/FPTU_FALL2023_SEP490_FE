@@ -137,7 +137,7 @@ function handleConfirm() {
 }
 
 const handlePayment = async () => {
-  const curHost = `${window.location.host}/#`
+  const curHost = `https://${window.location.host}/#`
   const returnUrl = `${curHost}/manage/auctioned`
 
   isPaymentLoading.value = true
