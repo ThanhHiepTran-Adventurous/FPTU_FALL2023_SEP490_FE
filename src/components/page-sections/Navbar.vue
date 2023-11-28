@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
@@ -154,6 +154,10 @@ const onNotiClick = () => {
 }
 const notiList = computed(() => {
   return notiStore.notifications
+})
+
+onMounted(() => {
+  notiStore.syncNotifications()
 })
 </script>
 <template>
