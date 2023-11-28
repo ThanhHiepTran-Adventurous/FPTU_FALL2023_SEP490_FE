@@ -4,7 +4,6 @@ import ItemBox from '@/components/common-components/item-box/ItemBox.vue'
 import { onMounted, ref, computed, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import Slider from '@vueform/slider'
-import currencyFormat from '@/utils/currency-output-formatter.js'
 import brandService from '@/services/brand.service'
 import categoryService from '@/services/category.service'
 import auctionService from '@/services/auction.service'
@@ -12,6 +11,13 @@ import imageHelper from '@/utils/image-helper'
 import { useRoute, useRouter } from 'vue-router'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import Loading from '@/components/common-components/Loading.vue'
+import { AuctionModelType } from '@/common/contract'
+import CurrencyInput from '@/components/common-components/CurrencyInput.vue'
+import currencyFormatter from '@/utils/currencyFormatter'
+
+const DEFAULT_MIN_PRICE_FILTER = 0
+const DEFAULT_MAX_PRICE_FILTER = 20000000
+const DEFAULT_MAX_PRICE_FILTER_STRING = '20,000,000'
 
 const route = useRoute()
 const router = useRouter()
@@ -60,16 +66,18 @@ const orderSelected = ref({
   label: 'Số lượng lượt đấu giá tăng dần',
   data: 'numberOfBids:asc',
 })
-const priceSelected = ref([0, 5000000])
+const priceSelected = ref([DEFAULT_MIN_PRICE_FILTER, DEFAULT_MAX_PRICE_FILTER])
 
 const brandOptions = ref([])
 const categoryOptions = ref([])
-const brandSelected = ref(undefined)
-const cateSelected = ref(undefined)
-const modelTypeSelected = ref(undefined)
+const brandSelected = ref('')
+const cateSelected = ref('')
+const modelTypeSelected = ref('')
+const minPriceSelected = ref(DEFAULT_MIN_PRICE_FILTER)
+const maxPriceSelected = ref(DEFAULT_MAX_PRICE_FILTER_STRING)
 
 const auctions = ref([])
-const AUCTIONS_PER_PAGE = 4
+const AUCTIONS_PER_PAGE = 8
 const currentPage = ref(1)
 const totalAuctions = ref(1)
 
@@ -119,6 +127,16 @@ watch(orderSelected, () => {
 watch(currentPage, () => {
   onFilter()
 })
+watch(priceSelected, () => {
+  minPriceSelected.value = currencyFormatter.fromNumberToStyledString(priceSelected.value[0])
+  maxPriceSelected.value = currencyFormatter.fromNumberToStyledString(priceSelected.value[1])
+}, {deep: true})
+watch(minPriceSelected, () => {
+  priceSelected.value[0] = currencyFormatter.fromStyledStringToNumber(minPriceSelected.value)
+})
+watch(maxPriceSelected, () => {
+  priceSelected.value[1] = currencyFormatter.fromStyledStringToNumber(maxPriceSelected.value)
+})
 
 const syncQueryParams = () => {
   const queryParams = route.query
@@ -129,10 +147,13 @@ const syncQueryParams = () => {
     cateSelected.value = queryParams['category']
   }
   if(queryParams['priceStart']){
-    priceSelected.value[0] = queryParams['priceStart']
+    minPriceSelected.value = currencyFormatter.fromNumberToStyledString(queryParams['priceStart'])
+    priceSelected.value[0] = currencyFormatter.fromStyledStringToNumber(queryParams['priceStart'])
   }
   if(queryParams['priceEnd']){
-    priceSelected.value[1] = queryParams['priceEnd']
+    maxPriceSelected.value = currencyFormatter.fromNumberToStyledString(queryParams['priceEnd'])
+    priceSelected.value[1] = currencyFormatter.fromStyledStringToNumber(queryParams['priceEnd'])
+
   }
   if(queryParams['sort']){
     const selected = orderOptions.value.filter(f => f.data === queryParams['sort'])
@@ -143,19 +164,38 @@ const syncQueryParams = () => {
   if(queryParams['page']){
     currentPage.value = queryParams['page']
   }
+  if(queryParams['modelType']){
+    modelTypeSelected.value = queryParams['modelType']
+  }
 }
 const pushQueryParams = () => {
   const queryPayload = {
     brand: brandSelected.value,
     category: cateSelected.value,
-    priceStart: priceSelected.value[0],
-    priceEnd: priceSelected.value[1],
+    priceStart: minPriceSelected.value,
+    priceEnd: maxPriceSelected.value,
     sort: orderSelected.value.data,
-    page: currentPage.value
+    page: currentPage.value,
+    modelType: modelTypeSelected.value
   }
   router.push({
     query: {... queryPayload}
   })
+}
+
+const onClear = async () => {
+  brandSelected.value = ''
+  cateSelected.value = ''
+  modelTypeSelected.value = ''
+  minPriceSelected.value = DEFAULT_MIN_PRICE_FILTER
+  maxPriceSelected.value = DEFAULT_MAX_PRICE_FILTER_STRING
+  priceSelected.value = [DEFAULT_MIN_PRICE_FILTER, DEFAULT_MAX_PRICE_FILTER]
+  orderSelected.value = {
+    label: 'Số lượng lượt đấu giá tăng dần',
+    data: 'numberOfBids:asc',
+  }
+  currentPage.value = 1
+  modelTypeSelected.value = ''
 }
 
 const onFilter = async () => {
@@ -172,9 +212,13 @@ const onFilter = async () => {
     queryFilters.push(`auctionProduct_categoryId:${cateSelected.value}`)
   }
 
+  // Selected model type
+  if (modelTypeSelected.value) {
+    queryFilters.push(`modelType:${modelTypeSelected.value}`)
+  }
+
   // Price range filter
-  const selectedPriceRange = priceSelected.value
-  queryFilters.push(`highestPrice%2B${selectedPriceRange[0]};highestPrice-${selectedPriceRange[1]}`)
+  queryFilters.push(`highestPrice%2B${currencyFormatter.fromStyledStringToNumber(minPriceSelected.value)};highestPrice-${currencyFormatter.fromStyledStringToNumber(maxPriceSelected.value)}`)
 
   // Combine all query filters
   const query = queryFilters.join(';')
@@ -227,17 +271,28 @@ const goToNextPage = () => {
         <article class="p-6 bg-white rounded-lg border border-gray-200 shadow lg:w-1/5 min-h-[751.2px]">
           <div>
             <div class="font-bold text-lg text-black uppercase">Bộ lọc</div>
-            <!-- Brands -->
-            <div class="mb-1.5 mt-3">
-              <div class="flex items-center justify-between hover:cursor-pointer mb-1.5">
+            <!-- Auction model type -->
+            <div class="mb-1.5 mt-4">
+              <div class="flex items-center justify-between hover:cursor-pointer mb-2">
                 <div class="font-bold text-black">Loại</div>
               </div>
               <div class="transition-all duration-500 opacity-1 p-2'">
                 <div class="flex items-center mb-2">
                   <input
+                    id="all"
+                    type="radio"
+                    value=""
+                    v-model="modelTypeSelected"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 hover:cursor-pointer" />
+                  <label for="all" class="ml-2 text-sm font-medium text-gray dark:text-gray-300">
+                    Tất cả
+                  </label>
+                </div>
+                <div class="flex items-center mb-2">
+                  <input
                     id="immediate"
                     type="radio"
-                    value="IMMEDIATE"
+                    :value="AuctionModelType.immediate"
                     v-model="modelTypeSelected"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 hover:cursor-pointer" />
                   <label for="immediate" class="ml-2 text-sm font-medium text-gray dark:text-gray-300">
@@ -248,7 +303,7 @@ const goToNextPage = () => {
                   <input
                     id="intermediate"
                     type="radio"
-                    value="INTERMEDIATE"
+                    :value="AuctionModelType.intermediate"
                     v-model="modelTypeSelected"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 hover:cursor-pointer" />
                   <label for="intermediate" class="ml-2 text-sm font-medium text-gray dark:text-gray-300">
@@ -259,7 +314,7 @@ const goToNextPage = () => {
             </div>
             <!-- Brands -->
             <div class="mb-1.5 mt-4">
-              <div class="flex items-center justify-between hover:cursor-pointer mb-1.5">
+              <div class="flex items-center justify-between hover:cursor-pointer mb-2">
                 <div class="font-bold text-black">Thương hiệu</div>
               </div>
               <div class="transition-all duration-500 opacity-1 p-2'">
@@ -285,12 +340,17 @@ const goToNextPage = () => {
                 <div class="mt-5">
                   <Slider
                     v-model="priceSelected"
-                    :max="10000000"
+                    :max="20000000"
                     :step="10000"
                     :format="{thousand: '.'}"
                     class="slider-blue"
                   />
-                  <p>Giá từ {{ currencyFormat(priceSelected[0]) }} đên {{ currencyFormat(priceSelected[1]) }}</p>
+                  <div class="flex items-center gap-1 mt-3">
+                    <div>Từ </div>
+                    <CurrencyInput v-model="minPriceSelected" w="w-[7rem] !pl-1"/>
+                    <div>đến </div>
+                    <CurrencyInput v-model="maxPriceSelected" w="w-[7rem] !pl-1"/>
+                  </div>
                 </div>
               </div>
             </div>
@@ -314,10 +374,10 @@ const goToNextPage = () => {
               </div>
             </div>
             <!-- Buttons -->
-            <div class="w-full flex justify-center gap-3 mt-4">
+            <div class="w-full flex justify-center gap-3 mt-12">
               <button
                 class="p-2 border-blue-600 border text-md flex items-center justify-center gap-3 text-black hover:bg-gray-200 rounded-lg w-[100px]"
-                @click="onFilter()">
+                @click="onClear()">
                 <div>Clear</div>
               </button>
               <button
@@ -353,7 +413,7 @@ const goToNextPage = () => {
               <div class="w-full" v-if="isDataLoading">
                 <Loading />
               </div>
-              <div v-else class="flex flex-wrap gap-1 mt-3">
+              <div v-else class="grid grid-cols-4 gap-2 mt-3">
                 <ItemBox
                   v-for="auction in auctions"
                   :key="auction.id"
@@ -364,7 +424,7 @@ const goToNextPage = () => {
                   :time-remain="auction.timeLeft"
                   :item-id="auction.id"
                   :auction-type="auction.modelType"
-                  class="border border-gray-300 rounded-lg shadow p-4 mx-1.5 mb-2" />
+                  class="border border-gray-300 rounded-lg shadow px-4 py-3 mx-1.5 mb-2" />
               </div>
             </div>
             <!-- Pagination -->
