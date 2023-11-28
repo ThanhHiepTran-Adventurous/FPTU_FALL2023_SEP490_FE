@@ -109,6 +109,7 @@ const clearDataState = () => {
 }
 
 const setDataStateBaseOnDetail = (detail) => {
+  canReup.value = false
   productFormData.value = {
     name: detail.product.name,
     description: detail.product.description,
@@ -156,6 +157,8 @@ const getNewImages = () => {
 }
 
 const onSubmit = () => {
+  closeModal()
+  const toastId = toastOption.toastLoadingMessage("Đang cập nhật sản phẩm và yêu cầu đấu giá")
   const durationValue = duration.value.value ? duration.value.value : durationInput.value
   let imageUrlIgnored = getImageUrlIgnored()
   imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
@@ -184,17 +187,16 @@ const onSubmit = () => {
       console.log("update success")
       AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
         .then(_ => {
-          toastOption.toastSuccess("Gửi lại thông tin yêu cầu đấu giá thành công")
+          toastOption.updateLoadingToast(toastId, "Gửi lại thông tin yêu cầu đấu giá thành công", false)
         })
         .catch(_ => {
-          toastOption.toastError("Có lỗi xảy ra vui lòng thử lại")
+          toastOption.updateLoadingToast(toastId, "Có lỗi xảy ra vui lòng thử lại", true)
         })
     })
     .catch(_ => {
-      toastOption.toastError("Có lỗi xảy ra vui lòng thử lại.")
+      toastOption.updateLoadingToast(toastId, "Có lỗi xảy ra vui lòng thử lại", true)
     })
     .finally(() => {
-      closeModal()
       clearDataState()
       fetchProducts()
     })
@@ -255,12 +257,27 @@ const closeModal = () => {
 const handleConfirm = () => {
   closeModal()
 }
+
 const showProductModal = ref(false)
 const selectedProduct = ref(null)
+
+const canReup = ref(false)
+
 const openProductModal = product => {
   setDataStateBaseOnDetail(product)
 
   selectedProduct.value = product // Set the selected brand data
+  let latestRequestTime
+  const allSameProduct = products.value.filter(f => f.product.id === product.product.id)
+  for(const data of allSameProduct){
+    const curRequestTime = new Date(data.createAt).getTime()
+    if(!latestRequestTime || latestRequestTime < curRequestTime){
+      latestRequestTime = curRequestTime
+    }
+  }
+  if(new Date(selectedProduct.value.createAt).getTime() === latestRequestTime){
+    canReup.value = true
+  }
   showProductModal.value = true // Show the modal
 
   convertedImages.value =
@@ -743,6 +760,7 @@ const openProductModal = product => {
                     Hủy
                   </button>
                   <button
+                    v-if="canReup"
                     @click="onSubmit()"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button">
