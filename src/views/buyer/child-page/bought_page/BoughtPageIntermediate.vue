@@ -136,7 +136,8 @@ onMounted(async () => {
 
 const payment = async auctionId => {
   try {
-    const returnUrl = `${urlConstant.domain}${route.fullPath}`
+    const curHost = `${window.location.host}/#`
+    const returnUrl = `${curHost}${route.fullPath}`
 
     const paymentData = {
       auctionId: auctionId,

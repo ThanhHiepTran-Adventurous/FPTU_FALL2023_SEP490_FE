@@ -140,7 +140,6 @@ const fetchPageData = async () => {
   fetchDetail()
 }
 const onBuyNowSuccess = () => {
-  toastOption.toastSuccess('Mua ngay thành công')
   if (auction.value.modelType === AuctionModelType.immediate) {
     router.push('/bought/immediate')
   } else {

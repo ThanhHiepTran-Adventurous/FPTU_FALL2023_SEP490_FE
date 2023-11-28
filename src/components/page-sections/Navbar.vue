@@ -237,7 +237,9 @@ const notiList = computed(() => {
               <Icon icon="wpf:like" class="text-[28px]" />
             </RouterLink>
             <Dropdown placement="bottomRight" trigger="click">
-              <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[40px] h-[40px] rounded-full border-[1px] " />
+              <div class="rounded-full border-[1px] border-blue-500">
+                <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[38px] h-[38px] rounded-full" />
+              </div>
               
               <template #overlay>
                 <Menu class="max-h-[90vh] overflow-auto">
