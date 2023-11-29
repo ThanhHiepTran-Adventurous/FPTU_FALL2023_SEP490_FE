@@ -5,7 +5,7 @@ import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
+import { AuctionModelType, OrderStatus, ShipRequestType, StatusShipRequest } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { buyerTabs } from '@/common/constant'
@@ -25,6 +25,8 @@ const orders = ref([])
 const ordersFiltered = ref([])
 
 const detail = ref(null)
+const isRefunable = ref(false)
+const isConfirmable = ref(false)
 
 const isModalVisible = ref(false)
 const breadcrumbItems = [
@@ -77,10 +79,14 @@ const filterData = () => {
 
 const activateInfoAuction = order => {
   detail.value = order
+  isRefunable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value
+  isConfirmable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.buyerShipRequest
   isModalVisible.value = true
 }
 
 function closeModal() {
+  isConfirmable.value = false
+  isRefunable.value = false
   isModalVisible.value = false
 }
 function handleConfirm() {
@@ -129,9 +135,10 @@ const onReportModalConfirm = async (listImg, text) => {
 
   try {
     closeModal()
-    const toastId = toastOption.toastLoadingMessage('Đang gửi tố cáo lên hệ thống...')
+    closeReportModal()
+    const toastId = toastOption.toastLoadingMessage('Đang gửi yêu cầu lên hệ thống...')
     await ReportService.buyerReportSellerOpt2(detail.value.id, formData)
-    toastOption.updateLoadingToast(toastId, 'Tố cáo thành công', false)
+    toastOption.updateLoadingToast(toastId, 'Gửi yêu cầu thành công', false)
     fetchOrders()
   } catch (error) {
     if(error.response.data.message.includes('already reported')){
@@ -305,14 +312,14 @@ onMounted(() => {
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
         <div>
-          <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="openReportModal">
+          <Button :disabled="!isRefunable" @on-click="openReportModal">
             <div class="flex items-center">
               <div>Yêu cầu trả hàng</div>
             </div>
           </Button>
         </div>
         <div>
-          <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
+          <Button :disabled="!isConfirmable" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
             <div class="flex items-center">
               <div>Chấp nhận đơn hàng</div>
             </div>

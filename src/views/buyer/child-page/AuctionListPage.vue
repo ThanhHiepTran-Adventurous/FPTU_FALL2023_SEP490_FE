@@ -403,7 +403,7 @@ const goToNextPage = () => {
               <!-- Header -->
               <div class="px-3 pb-1 flex items-center justify-between">
                 <div class="font-bold text-2xl text-black text-blue-800">
-                  Lịch sử trả hàng</div>
+                  Sản phẩm đấu giá</div>
               </div>
               <div class="flex items-center justify-center gap-3">
                 <p class="mt-3">Sắp xếp theo:</p>
