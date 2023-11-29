@@ -94,7 +94,7 @@ const validateAutoContainsError = () => {
     isError = true
   }
   if(!Validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(autoAuctionData.value.deltaTime)){
-    autoAuctionErrorState.value.deltaTime = 'Thời gian phải là một số lớn hơn hoặc bằng 0'
+    autoAuctionErrorState.value.deltaTime = 'Thời gian phải là một số nguyên lớn hơn hoặc bằng 0'
     isError = true
   }
   if(deltaPrice < props.jump){

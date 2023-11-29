@@ -8,7 +8,11 @@ const format = number => {
 
 // To parse X,XXX.XX to number
 const fromStyledStringToNumber = string => {
-  if (string) return parseFloat(string.toString().replaceAll(',', '')).toFixed(0)
+  if (string){
+    const val = parseFloat(string.toString().replaceAll(',', '')).toFixed(0)
+    const roundedVal = (val/1000).toFixed(0)
+    return roundedVal*1000
+  }
   return 0
 }
 
