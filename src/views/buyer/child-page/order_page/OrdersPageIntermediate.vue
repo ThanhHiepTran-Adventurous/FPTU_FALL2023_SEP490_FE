@@ -312,14 +312,14 @@ onMounted(() => {
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
         <div>
-          <Button :disabled="!isRefunable" @on-click="openReportModal">
+          <Button :disabled="!isRefunable || detail?.statusOrder === OrderStatus.DONE.value" @on-click="openReportModal">
             <div class="flex items-center">
               <div>Yêu cầu trả hàng</div>
             </div>
           </Button>
         </div>
         <div>
-          <Button :disabled="!isConfirmable" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
+          <Button :disabled="!isConfirmable || detail?.statusOrder === OrderStatus.DONE.value" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
             <div class="flex items-center">
               <div>Chấp nhận đơn hàng</div>
             </div>
