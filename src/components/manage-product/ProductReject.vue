@@ -15,7 +15,14 @@ import { sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import CurrencyInput from '../common-components/CurrencyInput.vue'
-import { SIMPLE_TABLE_ITEMS_PER_PAGE, intermediateMessage, immediateMessage, selectedDefaultDuration, durationData, DUMP_IMG_FILE_DATA } from '@/common/commonStaticState'
+import {
+  SIMPLE_TABLE_ITEMS_PER_PAGE,
+  intermediateMessage,
+  immediateMessage,
+  selectedDefaultDuration,
+  durationData,
+  DUMP_IMG_FILE_DATA,
+} from '@/common/commonStaticState'
 import moment from 'moment'
 import ListEditableImage from '../ListEditableImage.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
@@ -49,7 +56,7 @@ const breadcrumbItems = [
 
 const fetchProducts = async () => {
   try {
-    const response = await AuctionService.getAuctionBySeller("status:REJECTED")
+    const response = await AuctionService.getAuctionBySeller('status:REJECTED')
     products.value = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
   } catch (e) {
     console.error(e)
@@ -74,7 +81,7 @@ const productFormData = ref({
   description: '',
   weight: '',
   brand: '',
-  category: ''
+  category: '',
 })
 const auctionFormData = ref({
   startPrice: '',
@@ -92,7 +99,7 @@ const clearDataState = () => {
     description: '',
     weight: '',
     brand: '',
-    category: ''
+    category: '',
   }
   auctionFormData.value = {
     startPrice: '',
@@ -108,7 +115,7 @@ const clearDataState = () => {
   imgData.value = []
 }
 
-const setDataStateBaseOnDetail = (detail) => {
+const setDataStateBaseOnDetail = detail => {
   canReup.value = false
   productFormData.value = {
     name: detail.product.name,
@@ -116,12 +123,12 @@ const setDataStateBaseOnDetail = (detail) => {
     weight: detail.product.weight,
     brand: {
       id: detail.product.brand.id,
-      name: detail.product.brand.name
+      name: detail.product.brand.name,
     },
     category: {
-      id:  detail.product.category.id,
-      name:  detail.product.category.name
-    }
+      id: detail.product.category.id,
+      name: detail.product.category.name,
+    },
   }
   auctionFormData.value = {
     startPrice: currencyFormatter.fromNumberToStyledString(detail.startPrice),
@@ -133,11 +140,11 @@ const setDataStateBaseOnDetail = (detail) => {
     minimumAuctioneers: detail.minimumAuctioneers,
   }
 
-  const filteredDurationData = durationData.filter(f => f.value === detail.duration/(1000 * 60 * 60))
-  if(filteredDurationData && filteredDurationData.length > 0){
+  const filteredDurationData = durationData.filter(f => f.value === detail.duration / (1000 * 60 * 60))
+  if (filteredDurationData && filteredDurationData.length > 0) {
     duration.value = filteredDurationData[0]
   } else {
-    durationInput.value = detail.duration/(1000 * 60 * 60)
+    durationInput.value = detail.duration / (1000 * 60 * 60)
   }
 
   originalImages.value = [...detail.product.imageUrls]
@@ -155,16 +162,58 @@ const getImageUrlIgnored = () => {
 const getNewImages = () => {
   return imgData.value.filter(f => f !== DUMP_IMG_FILE_DATA)
 }
+const manualAuctionErrorState = ref({
+  startPrice: '',
+  buyNowPrice: '',
+  modelType: '',
+  jump: '',
+  minimumAuctioneers: '',
+})
+const resetErrorState = () => {
+  manualAuctionErrorState.value = {
+    startPrice: '',
+    buyPrice: '',
+    modelType: '',
+    jump: '',
+    minimumAuctioneers: '',
+  }
+}
+const validateManual = () => {
+  if (!formData.value.startPrice) {
+    manualAuctionErrorState.value.startPrice = 'Vui lòng nhập giá khởi điểm'
+    return false
+  }
+  if (!formData.value.buyNowPrice) {
+    manualAuctionErrorState.value.buyNowPrice = 'Vui lòng nhập giá mua ngay'
+    return false
+  }
+  if (!formData.value.modelType) {
+    manualAuctionErrorState.value.modelType = 'Vui lòng chọn hình thức mua bán'
+    return false
+  }
+  if (!formData.value.minimumAuctioneers) {
+    manualAuctionErrorState.value.minimumAuctioneers = 'Vui lòng nhập số người tham gia tối thiểu'
+    return false
+  }
+  if (!formData.value.jump) {
+    manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
+    return false
+  }
 
+  return true
+}
 const onSubmit = () => {
+  resetErrorState()
+  if (!validateManual()) {
+    return
+  }
   closeModal()
-  const toastId = toastOption.toastLoadingMessage("Đang cập nhật sản phẩm và yêu cầu đấu giá")
+  const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm và yêu cầu đấu giá')
   const durationValue = duration.value.value ? duration.value.value : durationInput.value
   let imageUrlIgnored = getImageUrlIgnored()
   imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
   let newImages = getNewImages()
   newImages = newImages && newImages.length > 0 ? newImages : []
-
 
   const updateProductRequest = {
     name: productFormData.value.name,
@@ -176,25 +225,25 @@ const onSubmit = () => {
   const auctionRequest = {
     startPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice),
     jump: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump),
-    buyNowPrice:  currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
+    buyNowPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
     minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
     modelType: auctionFormData.value.modelType,
-    hoursOfDuration: durationValue
+    hoursOfDuration: durationValue,
   }
 
   ProductSerivice.updateProductById(selectedProduct.value.product.id, imageUrlIgnored, newImages, updateProductRequest)
     .then(_ => {
-      console.log("update success")
+      console.log('update success')
       AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
         .then(_ => {
-          toastOption.updateLoadingToast(toastId, "Gửi lại thông tin yêu cầu đấu giá thành công", false)
+          toastOption.updateLoadingToast(toastId, 'Gửi lại thông tin yêu cầu đấu giá thành công', false)
         })
         .catch(_ => {
-          toastOption.updateLoadingToast(toastId, "Có lỗi xảy ra vui lòng thử lại", true)
+          toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
         })
     })
     .catch(_ => {
-      toastOption.updateLoadingToast(toastId, "Có lỗi xảy ra vui lòng thử lại", true)
+      toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
     })
     .finally(() => {
       clearDataState()
@@ -218,7 +267,7 @@ const handleFileUpload = async e => {
   imgSrc.value.push(await base64Image(e.target.files[0]))
 }
 
-const handleImageDeleted = (indx) => {
+const handleImageDeleted = indx => {
   imgSrc.value.splice(indx, 1)
   imgData.value.splice(indx, 1)
 }
@@ -269,13 +318,13 @@ const openProductModal = product => {
   selectedProduct.value = product // Set the selected brand data
   let latestRequestTime
   const allSameProduct = products.value.filter(f => f.product.id === product.product.id)
-  for(const data of allSameProduct){
+  for (const data of allSameProduct) {
     const curRequestTime = new Date(data.createAt).getTime()
-    if(!latestRequestTime || latestRequestTime < curRequestTime){
+    if (!latestRequestTime || latestRequestTime < curRequestTime) {
       latestRequestTime = curRequestTime
     }
   }
-  if(new Date(selectedProduct.value.createAt).getTime() === latestRequestTime){
+  if (new Date(selectedProduct.value.createAt).getTime() === latestRequestTime) {
     canReup.value = true
   }
   showProductModal.value = true // Show the modal
@@ -299,9 +348,7 @@ const openProductModal = product => {
       <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">
-            Yêu cầu đấu giá bị từ chối
-          </div>
+          <div class="font-bold text-2xl text-black text-blue-800">Yêu cầu đấu giá bị từ chối</div>
         </div>
         <section class="sm:p-5">
           <div class="bg-white relative">
@@ -310,7 +357,7 @@ const openProductModal = product => {
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
                     <th scope="col" class="px-5 py-3">Tên sản phẩm</th>
-    
+
                     <th scope="col" class="px-4 py-3">Mô tả</th>
                     <th scope="col" class="px-4 py-3">Lý do</th>
                     <th scope="col" class="px-4 py-3">Ngày tạo</th>
@@ -336,7 +383,13 @@ const openProductModal = product => {
                     <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
                       {{ auction?.rejectReason }}
                     </td>
-                    <td class="px-4 py-3">{{ auction?.product?.createAt ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}</td>
+                    <td class="px-4 py-3">
+                      {{
+                        auction?.product?.createAt
+                          ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss')
+                          : ''
+                      }}
+                    </td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <button
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
@@ -358,7 +411,7 @@ const openProductModal = product => {
                 </tbody>
               </table>
             </div>
-    
+
             <nav
               class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
               aria-label="Table navigation">
@@ -426,7 +479,6 @@ const openProductModal = product => {
           </div>
         </section>
       </div>
-      
     </SellerSideBarLayout>
     <!-- Modal -->
     <div>
@@ -440,8 +492,7 @@ const openProductModal = product => {
         @confirm-modal="handleConfirm">
         <div v-if="typeofModal === allowedModalTypes.info">
           <div class="bg-white rounded-lg">
-            <div
-              class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
+            <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
               <ul class="flex flex-wrap -mb-px">
                 <li class="mr-2">
                   <button
@@ -470,7 +521,7 @@ const openProductModal = product => {
                 </li>
               </ul>
             </div>
-  
+
             <div v-if="currentTab === 'table'">
               <div class="flex mb-5 items-center justify-center">
                 <div class="relative w-full max-w-4xl md:h-auto">
@@ -481,9 +532,7 @@ const openProductModal = product => {
                       <form action="#">
                         <div class="grid mt-2 gap-4 mb-4 sm:grid-cols-2">
                           <div>
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900"
-                              >Tên sản phẩm
-                            </label>
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Tên sản phẩm </label>
                             <input
                               type="text"
                               name="name"
@@ -492,7 +541,7 @@ const openProductModal = product => {
                               id="name"
                               class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
-  
+
                           <div>
                             <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900"
                               >Giá khởi điểm</label
@@ -534,7 +583,9 @@ const openProductModal = product => {
                               name="jump"
                               id="jump"
                               readonly
-                              :value="selectedProduct?.jump ? selectedProduct.jump.toLocaleString('vi-VN') + ' VND' : ''"
+                              :value="
+                                selectedProduct?.jump ? selectedProduct.jump.toLocaleString('vi-VN') + ' VND' : ''
+                              "
                               class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                           </div>
                           <div>
@@ -563,9 +614,7 @@ const openProductModal = product => {
                           </div>
                         </div>
                         <div>
-                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900"
-                            >Mô tả</label
-                          >
+                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Mô tả</label>
                           <textarea
                             type="string"
                             name="description"
@@ -574,12 +623,10 @@ const openProductModal = product => {
                             :value="selectedProduct?.product?.description"
                             class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"></textarea>
                         </div>
-  
+
                         <div class="flex items-center mt-2 space-x-4"></div>
                         <div>
-                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900"
-                            >Hình ảnh</label
-                          >
+                          <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Hình ảnh</label>
                           <Carousel :pictures="convertedImages"></Carousel>
                         </div>
                       </form>
@@ -588,7 +635,7 @@ const openProductModal = product => {
                 </div>
               </div>
             </div>
-  
+
             <!-- Form Tab -->
             <div v-if="currentTab === 'form'">
               <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
@@ -626,7 +673,13 @@ const openProductModal = product => {
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="brand">
                     <option value="" disabled selected>Chọn thương hiệu</option>
-                    <option v-for="brand in brands" :key="brand.id" :value="brand.id" :selected="brand.id === productFormData.brand.id">{{ brand.name }}</option>
+                    <option
+                      v-for="brand in brands"
+                      :key="brand.id"
+                      :value="brand.id"
+                      :selected="brand.id === productFormData.brand.id">
+                      {{ brand.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="mb-4">
@@ -636,12 +689,16 @@ const openProductModal = product => {
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="category">
                     <option value="" disabled selected>Chọn loại</option>
-                    <option v-for="category in categories" :key="category.id" :value="category.id" :selected="category.id === productFormData.category.id">
+                    <option
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.id"
+                      :selected="category.id === productFormData.category.id">
                       {{ category.name }}
                     </option>
                   </select>
                 </div>
-  
+
                 <div class="mb-4 w-full overflow-x-auto">
                   <ListEditableImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
                 </div>
@@ -655,7 +712,7 @@ const openProductModal = product => {
                   </button>
                   <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
                 </div>
-                
+
                 <div class="mb-4 border-t-[1px] pt-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM (nếu có) </label>
                   <div class="w-full items-center">
@@ -743,18 +800,18 @@ const openProductModal = product => {
                       <div class="block text-gray-700 text-sm font-bold">người</div>
                     </div>
                   </div>
-                  
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
                     BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
                   </label>
                   <div class="w-full">
-                    <CurrencyInput v-model="auctionFormData.jump" w="w-full"/>
+                    <CurrencyInput v-model="auctionFormData.jump" w="w-full" />
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <button @click="closeModal()"
+                  <button
+                    @click="closeModal()"
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button">
                     Hủy

@@ -9,7 +9,13 @@ import CurrencyInput from '../common-components/CurrencyInput.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
 import { ProductStatus } from '@/common/contract'
-import { immediateMessage, intermediateMessage, selectedDefaultDuration, durationData } from '@/common/commonStaticState'
+import {
+  immediateMessage,
+  intermediateMessage,
+  selectedDefaultDuration,
+  durationData,
+} from '@/common/commonStaticState'
+import ErrorMessage from '../common-components/ErrorMessage.vue'
 
 const emit = defineEmits(['sendSuccess', 'sendError', 'justSubmitted'])
 
@@ -45,8 +51,51 @@ const showTableTab = () => {
 const showFormTab = () => {
   currentTab.value = 'form'
 }
+const manualAuctionErrorState = ref({
+  startPrice: '',
+  buyNowPrice: '',
+  modelType: '',
+  jump: '',
+  minimumAuctioneers: '',
+})
+const resetErrorState = () => {
+  manualAuctionErrorState.value = {
+    startPrice: '',
+    buyPrice: '',
+    modelType: '',
+    jump: '',
+    minimumAuctioneers: '',
+  }
+}
+const validateManual = () => {
+  if (!formData.value.startPrice) {
+    manualAuctionErrorState.value.startPrice = 'Vui lòng nhập giá khởi điểm'
+    return false
+  }
+  if (!formData.value.buyNowPrice) {
+    manualAuctionErrorState.value.buyNowPrice = 'Vui lòng nhập giá mua ngay'
+    return false
+  }
+  if (!formData.value.modelType) {
+    manualAuctionErrorState.value.modelType = 'Vui lòng chọn hình thức mua bán'
+    return false
+  }
+  if (!formData.value.minimumAuctioneers) {
+    manualAuctionErrorState.value.minimumAuctioneers = 'Vui lòng nhập số người tham gia tối thiểu'
+    return false
+  }
+  if (!formData.value.jump) {
+    manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
+    return false
+  }
 
+  return true
+}
 const onSubmit = () => {
+  resetErrorState()
+  if (!validateManual()) {
+    return
+  }
   const data = getPayload()
   emit('justSubmitted')
   const toastId = toastOption.toastLoadingMessage('Đang tiến hành gửi yêu cầu lên đấu giá')
@@ -70,7 +119,7 @@ const getPayload = () => {
     buyNowPrice: currencyFormatter.fromStyledStringToNumber(formData.value.buyNowPrice) || 0,
     modelType: formData.value.modelType,
     hoursOfDuration: durationValue,
-    minimumAuctioneers: currencyFormatter.fromStyledStringToNumber(formData.value.minimumAuctioneers) || 0,
+    minimumAuctioneers: formData.value.minimumAuctioneers,
   }
 }
 
@@ -167,12 +216,14 @@ onMounted(() => {
     <div :hidden="currentTab !== 'form'">
       <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM (nếu có) </label>
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM </label>
           <CurrencyInput v-model="formData.startPrice" placeholder="" />
+          <ErrorMessage :text="manualAuctionErrorState.startPrice" />
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> GIÁ MUA NGAY (nếu có) </label>
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> GIÁ MUA NGAY </label>
           <CurrencyInput v-model="formData.buyNowPrice" placeholder="" />
+          <ErrorMessage :text="manualAuctionErrorState.buyNowPrice" />
         </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -210,6 +261,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          <ErrorMessage :text="manualAuctionErrorState.modelType" />
         </div>
         <div class="mb-4 flex items-center">
           <div class="mr-[20%]">
@@ -234,13 +286,15 @@ onMounted(() => {
             </label>
             <div class="flex items-center gap-3">
               <input
-                  v-model="formData.minimumAuctioneers"
-                  type="number"
-                  class="shadow appearance-none border rounded !w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="duration"
-                  placeholder="" />
+                v-model="formData.minimumAuctioneers"
+                type="number"
+                min="1"
+                class="shadow appearance-none border rounded !w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="duration"
+                placeholder="" />
               <div class="block text-gray-700 text-sm font-bold">người</div>
             </div>
+            <ErrorMessage :text="manualAuctionErrorState.minimumAuctioneers" />
           </div>
         </div>
         <div class="mb-4">
@@ -250,6 +304,7 @@ onMounted(() => {
           <div class="w-full items-center">
             <CurrencyInput v-model="formData.jump" placeholder="" w="w-full" />
           </div>
+          <ErrorMessage :text="manualAuctionErrorState.jump" />
         </div>
         <div class="flex items-center gap-3">
           <button
