@@ -386,7 +386,7 @@ const openProductModal = product => {
                     <td class="px-4 py-3">
                       {{
                         auction?.product?.createAt
-                          ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss')
+                          ? moment.utc(auction?.createAt).format('DD/MM/YYYY HH:mm:ss')
                           : ''
                       }}
                     </td>
