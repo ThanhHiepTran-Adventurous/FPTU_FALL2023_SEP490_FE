@@ -125,6 +125,7 @@ const onPlaceBidClick = async () => {
       :hasButton="false"
       title="Tiến hành đấu giá">
       <PlaceBidModal
+        :minimum-of-auctioneers="auctionInfo?.minimumAuctioneers"
         :start-price="auctionInfo?.startPrice"
         :highest-price="auctionInfo?.highestPrice"
         :jump="auctionInfo?.jump"

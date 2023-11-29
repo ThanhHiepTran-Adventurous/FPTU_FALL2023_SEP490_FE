@@ -20,6 +20,7 @@ const props = defineProps([
   'buyNowPrice',
   'auctionId',
   'autoAuction',
+  'minimumOfAuctioneers'
 ])
 
 const preAutoAuctionData = ref(null)
@@ -211,16 +212,19 @@ onMounted(async () => {
         <div class="font-semibold text-lg mb-2">Thông tin cần biết</div>
         <div class="rounded-lg border-[1px] border-blue-600 p-2">
             <div class="flex items-center py-1">
-                <div class="font-semibold w-[250px]">Giá khởi điểm: </div><div class="text-xl text-blue-600 font-semibold">{{ startPrice ? formatCurrency(startPrice) : "N/A" }}</div>
+              <div class="font-semibold w-[250px]">Giá khởi điểm: </div><div class="text-xl text-blue-600 font-semibold">{{ startPrice ? formatCurrency(startPrice) : "N/A" }}</div>
             </div>
             <div class="flex items-center py-1">
-                <div class="font-semibold w-[250px]">Giá cao nhất hiện tại: </div><div class="text-xl text-blue-600 font-semibold">{{ highestPrice ? formatCurrency(highestPrice) : "N/A" }}</div>
+              <div class="font-semibold w-[250px]">Giá cao nhất hiện tại: </div><div class="text-xl text-blue-600 font-semibold">{{ highestPrice ? formatCurrency(highestPrice) : "N/A" }}</div>
             </div>
             <div class="flex items-center py-1">
-                <div class="font-semibold w-[250px]">Bước nhảy tối thiểu: </div><div class="text-xl text-blue-600 font-semibold">{{ formatCurrency(jump) }}</div>
+              <div class="font-semibold w-[250px]">Bước nhảy tối thiểu: </div><div class="text-xl text-blue-600 font-semibold">{{ formatCurrency(jump) }}</div>
             </div>
             <div class="flex items-center py-1">
-                <div class="font-semibold w-[250px]">Giá mua ngay: </div><div class="text-xl text-blue-600 font-semibold">{{ buyNowPrice ? formatCurrency(buyNowPrice) : "N/A"}}</div>
+              <div class="font-semibold w-[250px]">Giá mua ngay: </div><div class="text-xl text-blue-600 font-semibold">{{ buyNowPrice ? formatCurrency(buyNowPrice) : "N/A"}}</div>
+            </div>
+            <div class="flex items-center py-1">
+              <div class="font-semibold w-[250px]">Số người đấu giá tối thiểu: </div><div class="text-xl text-blue-600 font-semibold">{{ minimumOfAuctioneers ? minimumOfAuctioneers : "N/A"}}</div>
             </div>
         </div>
     </div>
