@@ -79,7 +79,7 @@ const filterData = () => {
 
 const activateInfoAuction = order => {
   detail.value = order
-  isRefunable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value
+  isRefunable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.buyerShipRequest
   isConfirmable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.buyerShipRequest
   isModalVisible.value = true
 }
