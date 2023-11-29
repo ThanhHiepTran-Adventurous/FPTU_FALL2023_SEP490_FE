@@ -28,6 +28,7 @@ import ListEditableImage from '../ListEditableImage.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
 import { ProductStatus } from '@/common/contract'
+import ErrorMessage from '../common-components/ErrorMessage.vue'
 
 const allowedModalTypes = { info: 'info' }
 const typeofModal = ref('info')
@@ -58,6 +59,8 @@ const fetchProducts = async () => {
   try {
     const response = await AuctionService.getAuctionBySeller('status:REJECTED')
     products.value = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
+
+    console.log(products.value)
   } catch (e) {
     console.error(e)
   }
@@ -163,7 +166,7 @@ const getNewImages = () => {
   return imgData.value.filter(f => f !== DUMP_IMG_FILE_DATA)
 }
 const manualAuctionErrorState = ref({
-  startPrice: '',
+  productName: '',
   buyNowPrice: '',
   modelType: '',
   jump: '',
@@ -171,7 +174,7 @@ const manualAuctionErrorState = ref({
 })
 const resetErrorState = () => {
   manualAuctionErrorState.value = {
-    startPrice: '',
+    productName: '',
     buyPrice: '',
     modelType: '',
     jump: '',
@@ -179,76 +182,67 @@ const resetErrorState = () => {
   }
 }
 const validateManual = () => {
-  if (!formData.value.startPrice) {
-    manualAuctionErrorState.value.startPrice = 'Vui lòng nhập giá khởi điểm'
-    return false
-  }
-  if (!formData.value.buyNowPrice) {
-    manualAuctionErrorState.value.buyNowPrice = 'Vui lòng nhập giá mua ngay'
-    return false
-  }
-  if (!formData.value.modelType) {
-    manualAuctionErrorState.value.modelType = 'Vui lòng chọn hình thức mua bán'
-    return false
-  }
-  if (!formData.value.minimumAuctioneers) {
-    manualAuctionErrorState.value.minimumAuctioneers = 'Vui lòng nhập số người tham gia tối thiểu'
-    return false
-  }
-  if (!formData.value.jump) {
-    manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
+  console.log(selectedProduct.value.productName)
+  if (!selectedProduct.value) {
+    manualAuctionErrorState.value.productName = 'Vui lòng nhập tên sản phẩm'
     return false
   }
 
   return true
 }
 const onSubmit = () => {
-  resetErrorState()
+  // resetErrorState()
   if (!validateManual()) {
     return
-  }
-  closeModal()
-  const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm và yêu cầu đấu giá')
-  const durationValue = duration.value.value ? duration.value.value : durationInput.value
-  let imageUrlIgnored = getImageUrlIgnored()
-  imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
-  let newImages = getNewImages()
-  newImages = newImages && newImages.length > 0 ? newImages : []
+  } else {
+    const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm và yêu cầu đấu giá')
+    const durationValue = duration.value.value ? duration.value.value : durationInput.value
+    let imageUrlIgnored = getImageUrlIgnored()
+    imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
+    let newImages = getNewImages()
+    newImages = newImages && newImages.length > 0 ? newImages : []
 
-  const updateProductRequest = {
-    name: productFormData.value.name,
-    description: productFormData.value.description,
-    weight: productFormData.value.weight,
-    brandId: productFormData.value.brand.id,
-    categoryId: productFormData.value.category.id,
-  }
-  const auctionRequest = {
-    startPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice),
-    jump: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump),
-    buyNowPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
-    minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
-    modelType: auctionFormData.value.modelType,
-    hoursOfDuration: durationValue,
-  }
+    const updateProductRequest = {
+      name: productFormData.value.name,
+      description: productFormData.value.description,
+      weight: productFormData.value.weight,
+      brandId: productFormData.value.brand.id,
+      categoryId: productFormData.value.category.id,
+    }
+    const auctionRequest = {
+      startPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice),
+      jump: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump),
+      buyNowPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
+      minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
+      modelType: auctionFormData.value.modelType,
+      hoursOfDuration: durationValue,
+    }
 
-  ProductSerivice.updateProductById(selectedProduct.value.product.id, imageUrlIgnored, newImages, updateProductRequest)
-    .then(_ => {
-      console.log('update success')
-      AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
-        .then(_ => {
-          toastOption.updateLoadingToast(toastId, 'Gửi lại thông tin yêu cầu đấu giá thành công', false)
-        })
-        .catch(_ => {
-          toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
-        })
-    })
-    .catch(_ => {
-      toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
-    })
-    .finally(() => {
-      clearDataState()
-      fetchProducts()
-    })
+    ProductSerivice.updateProductById(
+      selectedProduct.value.product.id,
+      imageUrlIgnored,
+      newImages,
+      updateProductRequest,
+    )
+      .then(_ => {
+        console.log('update success')
+        AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
+          .then(_ => {
+            toastOption.updateLoadingToast(toastId, 'Gửi lại thông tin yêu cầu đấu giá thành công', false)
+          })
+          .catch(_ => {
+            toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
+          })
+      })
+      .catch(_ => {
+        toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
+      })
+      .finally(() => {
+        // clearDataState()
+        fetchProducts()
+        // closeModal()
+      })
+  }
 }
 
 // Computed property for total pages
@@ -647,6 +641,7 @@ const openProductModal = product => {
                     id="title"
                     type="text"
                     placeholder="Nhập tên sản phẩm" />
+                  <ErrorMessage :text="manualAuctionErrorState.productName" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> Mô tả </label>
@@ -794,6 +789,7 @@ const openProductModal = product => {
                       <input
                         v-model="auctionFormData.minimumAuctioneers"
                         type="number"
+                        min="1"
                         class="shadow appearance-none border rounded w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="duration"
                         placeholder="" />
