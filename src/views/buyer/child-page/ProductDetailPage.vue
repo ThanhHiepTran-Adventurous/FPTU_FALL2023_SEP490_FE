@@ -12,6 +12,10 @@ import moment from 'moment'
 import toastOption from '@/utils/toast-option'
 import { Carousel } from 'flowbite-vue'
 import { AuctionModelType } from '@/common/contract'
+import { useGlobalStore } from '@/stores/global.store'
+
+const globalStore = useGlobalStore()
+
 const itemsPerPage = ref(3)
 const currentPage = ref(1)
 const route = useRoute()
@@ -93,7 +97,7 @@ const fetchDetail = async () => {
     })) || []
 }
 const fetchBidHistory = async () => {
-  const response = await auctionService.getHistoryBid(route.params['id'])
+  const response = globalStore.isAlreadyLogin() === true ? await auctionService.getHistoryBidAuthorized(route.params['id']) : await auctionService.getHistoryBid(route.params['id'])
   const data = response.data
   numOfUsers.value = data.bidders || 0
   numOfBids.value = data.bids || 0
@@ -111,6 +115,7 @@ const fetchBidHistory = async () => {
             createAt: moment.utc(d.bidTime).format('DD/MM/YYYY HH:mm:ss'),
             bidType: d.auctionType,
             isNew: isFirstTime ? false : isNew,
+            isOwner: d.auctionOfBidder ? d.auctionOfBidder : false
           }
         })
         .sort((d1, d2) => {
@@ -153,7 +158,7 @@ onMounted(async () => {
   // NEED TO REPLACE SET INTERVAL WITH FIREBASE MESSAGE TRIGGER!!!!!
   interval = setInterval(() => {
     fetchBidHistory()
-  }, 10000)
+  }, 5000)
 })
 const totalPages = computed(() => {
   return Math.ceil(feedbacks.value.length / itemsPerPage.value)

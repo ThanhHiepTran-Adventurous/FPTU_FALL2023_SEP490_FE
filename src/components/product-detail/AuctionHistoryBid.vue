@@ -2,6 +2,7 @@
 import formatCurrency from '@/utils/currency-output-formatter'
 import { onMounted, ref } from 'vue'
 import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue'
+import { Icon } from '@iconify/vue'
 
 const props = defineProps(['auctionHistory', 'numOfUsers', 'numOfBids'])
 const isChangeColor = ref(false)
@@ -31,14 +32,15 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="h-[200px] overflow-auto">
+    <div class="h-[300px] overflow-auto">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th class="px-6 py-3">Tài khoản</th>
+            <th class="px-6 py-3 text-center">Tài khoản</th>
             <th class="px-6 py-3">Giá đặt</th>
             <th class="px-6 py-3">Thời gian</th>
-            <th class="px-6 py-3">Loại đấu giá</th>
+            <th class="px-6 py-3 text-center w-[30%]">Loại <br /> đấu giá</th>
+            <th class="px-6 py-3 text-center w-[2%]"></th>
           </tr>
         </thead>
         <tbody>
@@ -46,12 +48,16 @@ onMounted(() => {
             v-for="auction in auctionHistory"
             :key="auction.id"
             class="border-b transition-all duration-[2000ms]"
-            :class="{ 'bg-green-200': auction.isNew, 'bg-white': !auction.isNew }">
-            <td class="px-6 py-4">{{ auction.idBidder }}</td>
-            <td class="px-6 py-4 text-blue-600 font-semibold">{{ formatCurrency(auction.bidAmount) }}</td>
-            <td class="px-6 py-4">{{ auction.createAt }}</td>
+            :class="{ '!bg-green-200': auction.isNew, 'bg-white': !auction.isNew && auction.isOwner === false, 'bg-blue-200': !auction.isNew && auction.isOwner === true }">
+            <td class="px-4 py-4 text-center">
+              <div>{{ auction.idBidder }}</div>
+              <div v-if="auction.isOwner === true" class="font-semibold">(Tôi)</div>
+            </td>
+            <td class="px-4 py-4 text-blue-600 font-semibold">{{ formatCurrency(auction.bidAmount) }}</td>
+            <td class="px-4 py-4">{{ auction.createAt }}</td>
             <!-- need to fix -->
-            <td class="px-6 py-4"><BidTypeBadge :type-bid="auction.bidType" /></td>
+            <td class="px-4 py-4 w-[30%] text-center"><BidTypeBadge :type-bid="auction.bidType" /></td>
+            <td class="px-2 py-4"><Icon icon="mdi:success-circle" class="text-green-500"/></td>
           </tr>
         </tbody>
       </table>

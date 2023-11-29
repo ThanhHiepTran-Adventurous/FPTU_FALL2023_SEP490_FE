@@ -45,8 +45,13 @@ const buyNowBid = async auctionId => {
   return response ? response.data : response
 }
 
-const getHistoryBid = async (auctionId, productId) => {
+const getHistoryBid = async (auctionId) => {
   const serviceUrl = url.endpoint.guest.auctionHistory.replace('{auctionId}', auctionId)
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
+const getHistoryBidAuthorized = async (auctionId) => {
+  const serviceUrl = url.endpoint.auctions.auctionHistoryAuthorized.replace('{auctionId}', auctionId)
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
@@ -76,6 +81,7 @@ export default {
   placeAutoBid,
   buyNowBid,
   getHistoryBid,
+  getHistoryBidAuthorized,
   getAutoBidDetail,
   updateAutoBid,
   getListAuctionWin,

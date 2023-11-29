@@ -12,6 +12,9 @@ import Loading from '../common-components/Loading.vue';
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import { sellerTabs } from '@/common/constant';
+import { useGlobalStore } from '@/stores/global.store';
+
+const gloablStore = useGlobalStore()
 
 const breadcrumbItems = [
   {
@@ -30,7 +33,7 @@ const activateInfoAuction = async (auctionInfo) => {
   isModalVisible.value = true
   const dataFetched = await auctionService.getAuctionDetail(auctionInfo.id)
   detail.value = dataFetched.data
-  const historyFetched = await auctionService.getHistoryBid(auctionInfo.id, auctionInfo.product.id)
+  const historyFetched = gloablStore.isAlreadyLogin() === true ? await auctionService.getHistoryBidAuthorized(auctionInfo.id) : await auctionService.getHistoryBid(auctionInfo.id)
   history.value = historyFetched.data
 }
 

@@ -73,6 +73,7 @@ export default {
       updateAutoAuction: '/auctions/buyer/edit-auto-auction-info/{autoAuctionId}',
       getListAuctionWin: '/auctions/getListAuctionWin',
       auctionBySeller: 'auctions/seller/getListAuction-authorize',
+      auctionHistoryAuthorized: '/auctions/public/auction-of-buyer/{auctionId}',
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',
