@@ -110,10 +110,12 @@ const submitForm = async () => {
         // isModalActive.value = false
         closeModal()
 
-        const fcmToken = await firebaseStore.getFcmToken()
-        if (fcmToken) {
-          loginService.saveFcmToken(fcmToken)
-        }
+        try {
+          const fcmToken = await firebaseStore.getFcmToken()
+          if (fcmToken) {
+            loginService.saveFcmToken(fcmToken)
+          }
+        } catch(e){}
 
         // Check the user's role and redirect accordingly
         if (informationUser.data.role === Role.admin.value) {
