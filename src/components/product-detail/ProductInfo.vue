@@ -1,8 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
 import CountDown from '@/components/common-components/Countdown.vue'
-import { Icon } from '@iconify/vue'
-import Rating from 'vue-star-rating'
 import PlaceBidModal from './PlaceBidModal.vue'
 import Modal from '../common-components/Modal.vue'
 import toastOption from '@/utils/toast-option'
@@ -11,7 +9,6 @@ import { useGlobalStore } from '@/stores/global.store'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import DateHelper from '@/utils/date-helper'
-import BidTypeBadge from '../common-components/badge/BidTypeBadge.vue'
 import AuctionType from '../common-components/badge/AuctionType.vue'
 import userService from '@/services/user.service'
 import { useUserStore } from '@/stores/user.store'
@@ -161,21 +158,6 @@ const onPlaceBidClick = async () => {
                 <div v-else class="text-red-600 text-lg">&lt; Phiên đấu giá đã kết thúc ></div>
               </div>
             </div>
-
-            <!-- <div class="mt-4 pr-4">
-              {{ auctionInfo?.product?.description }}
-            </div> -->
-            <!-- <div class="flex items-center">
-              <div class="pr-3 border-r-[1px] mr-3">
-                <Rating
-                  :rating="4.5"
-                  :fixed-point="1"
-                  :round-start-rating="false"
-                  :show-rating="false"
-                  :star-size="19" />
-              </div>
-            </div> -->
-
             <div class="tt-wrapper">
               <div class="flex w-full">
                 <div class="flex flex-col w-full">

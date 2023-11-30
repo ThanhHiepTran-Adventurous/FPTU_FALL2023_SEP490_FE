@@ -7,8 +7,6 @@ import categoryService from '@/services/category.service'
 import productSerivice from '@/services/product.service'
 import toastOption from '@/utils/toast-option'
 import { HTTP_STATUS } from '@/common/httpStatus'
-import * as yup from 'yup'
-import { Field, Form } from 'vee-validate'
 import ErrorMessage from '../common-components/ErrorMessage.vue'
 
 import ListImage from '@/components/ListEditableImage.vue'
@@ -16,19 +14,10 @@ import ListImage from '@/components/ListEditableImage.vue'
 const emit = defineEmits(['createSuccess', 'createError', 'justSubmitted'])
 const categories = ref([])
 const brands = ref([])
-const validate = ref(false)
-
 // The order of imgSrc and imgData is the same, therefore we can use index to reference two respective item
 const imgSrc = ref([])
 const imgData = ref([])
 
-const productSchema = yup.object().shape({
-  name: yup.string().required('Tên sản phẩm không được để trống'),
-  description: yup.string().required('Mô tả sản phẩm không được để trống'),
-  weight: yup.number().required('Khối lượng sản phẩm không được để trống'),
-  brandId: yup.string().required('Chọn thương hiệu sản phẩm'),
-  categoryId: yup.string().required('Chọn danh mục sản phẩm'),
-})
 const formData = ref({
   name: '',
   description: '',
@@ -36,7 +25,7 @@ const formData = ref({
   brandId: '',
   categoryId: '',
 })
-const manualAuctionErrorState = ref({
+const formErrorState = ref({
   name: '',
   description: '',
   weight: '',
@@ -44,7 +33,7 @@ const manualAuctionErrorState = ref({
   category: '',
 })
 const resetErrorState = () => {
-  manualAuctionErrorState.value = {
+  formErrorState.value = {
     name: '',
     description: '',
     weight: '',
@@ -54,32 +43,52 @@ const resetErrorState = () => {
   }
 }
 const validateManual = () => {
+  let isValidated = true
   if (formData.value.name.trim() === '') {
-    manualAuctionErrorState.value.name = 'Vui lòng nhập tên sản phẩm'
-    return false
+    formErrorState.value.name = 'Vui lòng nhập tên sản phẩm'
+    isValidated = false
   }
   if (formData.value.description.trim() === '') {
-    manualAuctionErrorState.value.description = 'Vui lòng nhập miêu tả'
-    return false
+    formErrorState.value.description = 'Vui lòng nhập miêu tả'
+    isValidated = false
+  }
+  if (formData.value.description.length > 1000) {
+    formErrorState.value.description = 'Miêu tả không được vượt quá 1000 kí tự'
+    isValidated = false
   }
   if (!formData.value.weight) {
-    manualAuctionErrorState.value.weight = 'Vui lòng nhập trọng lượng'
-    return false
+    formErrorState.value.weight = 'Vui lòng nhập trọng lượng'
+    isValidated = false
+  }
+  if (formData.value.weight > 10000) {
+    formErrorState.value.weight = 'Trọng lượng không được quá 10kg'
+    isValidated = false
   }
   if (!formData.value.brandId) {
-    console.log(formData.value.brandId)
-    manualAuctionErrorState.value.brand = 'Vui lòng chọn thương hiệu sản phẩm'
-    return false
+    formErrorState.value.brand = 'Vui lòng chọn thương hiệu sản phẩm'
+    isValidated = false
   }
   if (!formData.value.categoryId) {
-    manualAuctionErrorState.value.category = 'Vui lòng chọn loại sản phẩm'
-    return false
+    formErrorState.value.category = 'Vui lòng chọn loại sản phẩm'
+    isValidated = false
   }
   if (imgSrc.value.length === 0) {
-    manualAuctionErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
-    return false
+    formErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
+    isValidated = false
   }
-  return true
+  return isValidated
+}
+const clearState = () => {
+  resetErrorState()
+  formData.value = {
+    name: '',
+    description: '',
+    weight: '',
+    brandId: '',
+    categoryId: '',
+  }
+  imgData.value = []
+  imgSrc.value = []
 }
 const onSubmit = async () => {
   resetErrorState()
@@ -156,7 +165,7 @@ const resetFormData = () => {
 }
 </script>
 <template>
-  <form class="bg-white rounded px-8 pb-8 mb-4" @submit.prevent="onSubmit()">
+  <form class="bg-white rounded px-8 pb-8 mb-4" @submit.prevent>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
         Tên Sản Phẩm <span class="text-red-500">*</span>
@@ -167,7 +176,7 @@ const resetFormData = () => {
         id="title"
         type="text"
         placeholder="Nhập tên sản phẩm" />
-      <ErrorMessage :text="manualAuctionErrorState.name" />
+      <ErrorMessage :text="formErrorState.name" />
     </div>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -179,7 +188,7 @@ const resetFormData = () => {
         id="description"
         rows="4"
         placeholder="Nhập mô tả"></textarea>
-      <ErrorMessage :text="manualAuctionErrorState.description" />
+      <ErrorMessage :text="formErrorState.description" />
     </div>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="weight">
@@ -192,7 +201,7 @@ const resetFormData = () => {
         type="number"
         min="0"
         placeholder="Nhập trọng lượng" />
-      <ErrorMessage :text="manualAuctionErrorState.weight" />
+      <ErrorMessage :text="formErrorState.weight" />
     </div>
 
     <div class="mb-4">
@@ -206,7 +215,7 @@ const resetFormData = () => {
         <option value="" disabled selected>Chọn thương hiệu</option>
         <option v-for="brand in brands" :key="brand.id" :value="brand.id">{{ brand.name }}</option>
       </select>
-      <ErrorMessage :text="manualAuctionErrorState.brand" />
+      <ErrorMessage :text="formErrorState.brand" />
     </div>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
@@ -219,7 +228,7 @@ const resetFormData = () => {
         <option value="" disabled selected>Chọn loại</option>
         <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
       </select>
-      <ErrorMessage :text="manualAuctionErrorState.category" />
+      <ErrorMessage :text="formErrorState.category" />
     </div>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="category">
@@ -234,12 +243,17 @@ const resetFormData = () => {
         <span>Tải ảnh lên</span>
       </button>
       <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
-      <ErrorMessage :text="manualAuctionErrorState.image" />
+      <ErrorMessage :text="formErrorState.image" />
     </div>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <button
+        @click="clearState()"
+        class="bg-white border text-black py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Clear
+      </button>
       <button
         class="bg-blue-600 hover:bg-blue-800 w-[180px] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="submit">
+        @click="onSubmit()">
         Tạo sản phẩm
       </button>
     </div>
