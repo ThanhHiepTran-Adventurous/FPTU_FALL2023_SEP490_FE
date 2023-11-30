@@ -84,7 +84,7 @@ const closeReportModal = () => {
 }
 
 const onReportModalConfirm = (listImg, text) => {
-  if(!text || !text.trim()){
+  if(!text?.trim()){
     toastOption.toastError("Bạn phải nhập nội dung tố cáo!")
   }
   closeReportModal()
@@ -118,8 +118,8 @@ const reportInBuyerRole = formData => {
 const reportInSellerRole = formData => {
   const toastId = toastOption.toastLoadingMessage("Đang gửi tố cáo lên hệ thống...")
   reportService.sellerReportBuyerOption1(orderDetail.value.id, formData)
-  .then(_ => toastOption.toastSuccess(toastId, "Tố cáo thành công", false))
-  .catch(_ => toastOption.toastError(toastId, "Tố cáo thất bại.", true))
+  .then(_ => toastOption.updateLoadingToast(toastId, "Tố cáo thành công", false))
+  .catch(_ => toastOption.updateLoadingToast(toastId, "Tố cáo thất bại.", true))
 }
 
 

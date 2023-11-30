@@ -89,8 +89,12 @@ const validateAutoContainsError = () => {
   const deltaPrice = currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaPrice)
 
   let isError = false
-  if(maxPriceValue <= props.highestPrice){
+  if(maxPriceValue < props.highestPrice + props.jump){
     autoAuctionErrorState.value.maxPrice = 'Giá cao nhất có thể đặt không được thấp hơn giá cao nhất hiện tại cộng với bước nhảy tối thiểu'
+    isError = true
+  }
+  if(maxPriceValue > props.buyNowPrice){
+    autoAuctionErrorState.value.maxPrice = 'Giá cao nhất có thể đặt không được lớn hơn giá mua ngay'
     isError = true
   }
   if(!Validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(autoAuctionData.value.deltaTime)){
@@ -99,6 +103,10 @@ const validateAutoContainsError = () => {
   }
   if(deltaPrice < props.jump){
     autoAuctionErrorState.value.deltaPrice = 'Bước nhảy bạn cấu hình phải lớn hơn hoặc bằng bước nhảy của phiên đấu giá'
+    isError = true
+  }
+  if(deltaPrice > props.buyNowPrice){
+    autoAuctionErrorState.value.deltaPrice = 'Bước nhảy bạn cấu hình không được lớn hơn giá mua ngay'
     isError = true
   }
 
@@ -152,7 +160,7 @@ const onUpdateAutoAuctionSubmit = async () => {
       emit("placeAutoAuctionSuccess")
     })
     .catch(_ => {
-      toastOption.toastError(toastId, 'Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại', true)
+      toastOption.updateLoadingToast(toastId, 'Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại', true)
       emit("placeError")
     })
     .finally(() => {
