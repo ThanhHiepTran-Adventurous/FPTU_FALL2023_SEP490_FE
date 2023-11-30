@@ -7,6 +7,7 @@ import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
 import { AuctionModelType, OrderStatus, ShipRequestType, StatusShipRequest } from '@/common/contract'
 import { Icon } from '@iconify/vue'
+import { base64Image } from '@/utils/imageFile'
 import Button from '@/components/common-components/Button.vue'
 import constant, { buyerTabs } from '@/common/constant'
 import OrderService from '@/services/order.service'
@@ -17,10 +18,11 @@ import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
 import ReportService from '@/services/report.service'
+import ListImage from '@/components/ListEditableImage.vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import shiprequestService from '@/services/shiprequest.service'
-
+import feedbackService from '@/services/feedback.service'
 const orders = ref([])
 const ordersFiltered = ref([])
 
@@ -29,6 +31,7 @@ const isRefunable = ref(false)
 const isConfirmable = ref(false)
 
 const isModalVisible = ref(false)
+const isRatingVisible = ref(false)
 const breadcrumbItems = [
   {
     text: 'Trang chủ',
@@ -53,6 +56,12 @@ const options = ref([
     value: false,
   },
 ])
+const selectedStars = ref(0)
+const maxStars = ref(5)
+
+const selectRating = stars => {
+  selectedStars.value = stars
+}
 
 const selected = ref({
   label: 'Đã có yêu cầu giao hàng',
@@ -71,7 +80,9 @@ const closeReportModal = () => {
 }
 const filterData = () => {
   ordersFiltered.value = orders.value
-    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate && v.hasShipRequest === selected.value.value)
+    .filter(
+      v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate && v.hasShipRequest === selected.value.value,
+    )
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
@@ -83,11 +94,17 @@ const activateInfoAuction = order => {
   isConfirmable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.buyerShipRequest
   isModalVisible.value = true
 }
-
+const activateRatingModel = () => {
+  isRatingVisible.value = true
+  isModalVisible.value = false
+}
 function closeModal() {
   isConfirmable.value = false
   isRefunable.value = false
   isModalVisible.value = false
+}
+function closeRatingModal() {
+  isRatingVisible.value = false
 }
 function handleConfirm() {
   closeModal()
@@ -95,19 +112,21 @@ function handleConfirm() {
 
 const fetchOrders = async () => {
   const response = await OrderService.getAllOrders('', 1, 1000, '')
-  orders.value = response.data ? response.data.map(f => {
-    if(!f.shipRequestList){
-      return f
-    }
-    if(f.shipRequestList.length === 1){
-      f.sellerShipRequest = f.shipRequestList[0]
-    }
-    if(f.shipRequestList.length === 2){
-      f.sellerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.SELLER_SHIP)[0]
-      f.buyerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.BUYER_RETURN)[0]
-    }
-    return f
-  }) : []
+  orders.value = response.data
+    ? response.data.map(f => {
+        if (!f.shipRequestList) {
+          return f
+        }
+        if (f.shipRequestList.length === 1) {
+          f.sellerShipRequest = f.shipRequestList[0]
+        }
+        if (f.shipRequestList.length === 2) {
+          f.sellerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.SELLER_SHIP)[0]
+          f.buyerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.BUYER_RETURN)[0]
+        }
+        return f
+      })
+    : []
   filterData()
 }
 const onReportModalDecline = () => {
@@ -141,15 +160,19 @@ const onReportModalConfirm = async (listImg, text) => {
     toastOption.updateLoadingToast(toastId, 'Gửi yêu cầu thành công', false)
     fetchOrders()
   } catch (error) {
-    if(error.response.data.message.includes('already reported')){
-      toastOption.updateLoadingToast(toastId, 'Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.', true)
+    if (error.response.data.message.includes('already reported')) {
+      toastOption.updateLoadingToast(
+        toastId,
+        'Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.',
+        true,
+      )
       return
     }
     toastOption.toastError('Tố cáo thất bại')
     console.error('Error creating ship request:', error)
   }
 }
-const onConfirmOrder = async (shipRequestId) => {
+const onConfirmOrder = async shipRequestId => {
   try {
     closeModal()
     await shiprequestService.buyerConfirmShipRequestDone(shipRequestId)
@@ -164,6 +187,51 @@ const onConfirmOrder = async (shipRequestId) => {
 onMounted(() => {
   fetchOrders()
 })
+const imgSrc = ref([])
+const imgData = ref([])
+const handleFileUpload = async e => {
+  imgData.value.push(e.target.files[0])
+  imgSrc.value.push(await base64Image(e.target.files[0]))
+}
+const handleImageDeleted = indx => {
+  imgSrc.value.splice(indx, 1)
+  imgData.value.splice(indx, 1)
+}
+const formData = ref({
+  content: '',
+  rate: '',
+  productId: '',
+})
+const resetFormData = () => {
+  formData.value = {
+    content: '',
+    rate: '',
+    productId: '',
+  }
+  imgSrc.value = []
+  imgData.value = []
+}
+const submitRating = async () => {
+  try {
+    const form = new FormData()
+    const request = {
+      content: formData.value.content,
+      rate: selectedStars.value,
+      productId: detail.value?.productResponse?.id,
+    }
+    for (const imageData of imgData.value) {
+      form.append('images', imageData)
+    }
+    form.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
+    await feedbackService.buyerCreateFeedBack(form).finally(() => {
+      resetFormData()
+      closeRatingModal()
+    })
+    toastOption.toastSuccess('Gửi đánh giá thành công')
+  } catch (error) {
+    toastOption.toastError('Gửi đánh giá thất bại')
+  }
+}
 </script>
 
 <template>
@@ -213,6 +281,60 @@ onMounted(() => {
       </div>
     </SideBarLayout>
     <Modal
+      :hidden="!isRatingVisible"
+      :widthClass="'w-[500px]'"
+      :hasOverFlowVertical="true"
+      :hasButton="true"
+      :title="`Đánh giá sản phẩm ${detail?.productResponse?.name}`"
+      @decline-modal="closeRatingModal"
+      @confirm-modal="submitRating">
+      <div class="bg-gray rounded-lg mx-1 my-1">
+        <div class="relative mb-2 px-2">
+          <div class="mx-auto container align-middle">
+            <form class="max-w-sm mx-auto">
+              <div class="flex items-center">
+                <template v-for="index in maxStars" :key="index">
+                  <svg
+                    @click="selectRating(index)"
+                    :class="{
+                      'w-4 h-4 text-yellow-300 cursor-pointer': index <= selectedStars,
+                      'w-4 h-4 text-gray-300 cursor-pointer': index > selectedStars,
+                    }"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20">
+                    <path
+                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                </template>
+              </div>
+              <div class="mb-2">
+                <button
+                  @click="() => $refs.file.click()"
+                  @click.prevent
+                  class="flex items-center bg-white hover:!bg-gray-200 gap-3 w-[180px] justify-center text-gray-800 mt-3 px-4 py-2 rounded text-sm border-[1px] border-blue-500">
+                  <Icon icon="tdesign:upload" />
+                  <span>Upload image</span>
+                </button>
+                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+              </div>
+              <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
+
+              <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Đánh giá</label>
+              <textarea
+                v-model="formData.content"
+                id="message"
+                rows="4"
+                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Ghi đánh giá tại đây"></textarea>
+            </form>
+          </div>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal
       :hidden="!isModalVisible"
       :widthClass="'w-[900px]'"
       :hasOverFlowVertical="true"
@@ -227,11 +349,15 @@ onMounted(() => {
               <div class="text-xl font-bold ml-5 underline mr-3">Thông tin đơn hàng</div>
               <div
                 v-if="detail?.statusOrder === OrderStatus.DONE.value"
-                class="bg-green-100 text-green-800 border-[1px] border-green-500 text-[20px] font-medium inline-flex items-center gap-2 px-2.5 py-0.5 rounded ">
+                class="bg-green-100 text-green-800 border-[1px] border-green-500 text-[20px] font-medium inline-flex items-center gap-2 px-2.5 py-0.5 rounded">
                 <Icon icon="clarity:success-standard-solid" />
                 <div>Đã hoàn tất</div>
               </div>
+              <div v-if="detail?.statusOrder === OrderStatus.DONE.value">
+                <Button :type="constant.buttonTypes.OUTLINE" @click="activateRatingModel"> Đánh giá </Button>
+              </div>
             </div>
+
             <table class="w-full table-auto text-lg">
               <tbody>
                 <tr>
@@ -290,7 +416,7 @@ onMounted(() => {
                     Trạng thái giao hàng:
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status"/>
+                    <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status" />
                   </td>
                 </tr>
                 <tr v-if="detail?.buyerShipRequest">
@@ -299,7 +425,7 @@ onMounted(() => {
                     Trạng thái trả hàng:
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status"/>
+                    <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status" />
                   </td>
                 </tr>
               </tbody>
@@ -319,7 +445,9 @@ onMounted(() => {
           </Button>
         </div>
         <div>
-          <Button :disabled="!isConfirmable || detail?.statusOrder === OrderStatus.DONE.value" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
+          <Button
+            :disabled="!isConfirmable || detail?.statusOrder === OrderStatus.DONE.value"
+            @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
             <div class="flex items-center">
               <div>Chấp nhận đơn hàng</div>
             </div>

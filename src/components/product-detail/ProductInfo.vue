@@ -39,17 +39,17 @@ const deadlineInMilis = computed(() => {
 
 const onPlaceBidMannualSuccess = () => {
   isModalVisible.value = false
+  toastOption.toastSuccess('Đặt giá thành công')
   emit('placeBidSuccess')
 }
 const onPlaceBidAutoSuccess = () => {
   isModalVisible.value = false
+  toastOption.toastSuccess('Đặt giá tự động thành công')
   emit('placeBidSuccess')
 }
 const onPlaceError = () => {
   isModalVisible.value = false
-}
-const onCloseModal = () => {
-  isModalVisible.value = false
+  toastOption.toastError('Có lỗi khi đặt giá, bạn hãy thử tải lại trang và thử lại')
 }
 const onBuyNowClick = async () => {
   //if not login, force modal login open
@@ -119,36 +119,36 @@ const onPlaceBidClick = async () => {
         <article class="bg-white">
           <div class="">
             <Modal
-      v-if="isModalVisible"
-      :widthClass="'w-[900px]'"
-      :hasOverFlowVertical="true"
-      :hasButton="false"
-      title="Tiến hành đấu giá">
-      <PlaceBidModal
-        :minimum-of-auctioneers="auctionInfo?.minimumAuctioneers"
-        :start-price="auctionInfo?.startPrice"
-        :highest-price="auctionInfo?.highestPrice"
-        :jump="auctionInfo?.jump"
-        :buy-now-price="auctionInfo?.buyNowPrice"
-        :auction-id="auctionInfo?.id"
-        :auto-aution="autoAuctionInfo"
-        @place-bid-success="onPlaceBidMannualSuccess()"
-        @place-auto-auction-success="onPlaceBidAutoSuccess()"
-        @place-error="onPlaceError()"
-        @close-modal="onCloseModal()"
-        @modal-cancel="isModalVisible = false" />
-    </Modal>
-    <Modal
-      v-if="isBuyNowModalVisible"
-      widthClass="w-[900px]"
-      :hasOverFlowVertical="true"
-      :hasButton="true"
-      button-label="Mua ngay"
-      @decline-modal="isBuyNowModalVisible = false"
-      @confirm-modal="onBuyNowConfirm"
-      title="Xác nhận mua ngay">
-      <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn mua ngay món hàng này hay không?</div>
-    </Modal>
+              v-if="isModalVisible"
+              :widthClass="'w-[900px]'"
+              :hasOverFlowVertical="true"
+              :hasButton="false"
+              title="Tiến hành đấu giá">
+              <PlaceBidModal
+                :minimum-of-auctioneers="auctionInfo?.minimumAuctioneers"
+                :start-price="auctionInfo?.startPrice"
+                :highest-price="auctionInfo?.highestPrice"
+                :jump="auctionInfo?.jump"
+                :buy-now-price="auctionInfo?.buyNowPrice"
+                :auction-id="auctionInfo?.id"
+                :auto-aution="autoAuctionInfo"
+                @place-bid-success="onPlaceBidMannualSuccess()"
+                @place-auto-auction-success="onPlaceBidAutoSuccess()"
+                @place-error="onPlaceError()"
+                @close-modal="onCloseModal()"
+                @modal-cancel="isModalVisible = false" />
+            </Modal>
+            <Modal
+              v-if="isBuyNowModalVisible"
+              widthClass="w-[900px]"
+              :hasOverFlowVertical="true"
+              :hasButton="true"
+              button-label="Mua ngay"
+              @decline-modal="isBuyNowModalVisible = false"
+              @confirm-modal="onBuyNowConfirm"
+              title="Xác nhận mua ngay">
+              <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn mua ngay món hàng này hay không?</div>
+            </Modal>
 
             <div class="text-3xl my-3 text-black whitespace-nowrap">{{ auctionInfo?.product?.name }}</div>
             <AuctionType :type="auctionInfo?.modelType" />
