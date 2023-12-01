@@ -10,6 +10,9 @@ const router = useRouter()
 onMounted(() => {
   initFlowbite()
 })
+const isCurrentRoute = route => {
+  return router.currentRoute.value.path === route
+}
 const onLogout = async () => {
   loginService
     .logout()
@@ -145,23 +148,7 @@ const userStore = useUserStore()
           </div>
         </form>
         <ul class="space-y-2">
-          <!-- <li>
-            <a
-              href="#"
-              class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-              <svg
-                aria-hidden="true"
-                class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-              </svg>
-              <span class="ml-3">Dashboard</span>
-            </a>
-          </li> -->
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/dashboard') }">
             <RouterLink
               to="/admin/dashboard"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -174,10 +161,10 @@ const userStore = useUserStore()
                 <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
                 <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
               </svg>
-              <span class="ml-3">Dashboard</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/dashboard') }" class="ml-3">Dashboard</span>
             </RouterLink>
           </li>
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/manage-users') }">
             <RouterLink
               to="/admin/manage-users"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -194,10 +181,10 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="M7 8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-2 3h4a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Người dùng</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-users') }" class="ml-3">Người dùng</span>
             </RouterLink>
           </li>
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/manage-brands') }">
             <RouterLink
               to="/admin/manage-brands"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -214,11 +201,10 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Thương hiệu</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-brands') }" class="ml-3">Thương hiệu</span>
             </RouterLink>
           </li>
-
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/manage-categories') }">
             <RouterLink
               to="/admin/manage-categories"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -235,10 +221,12 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="M8 3h4M8 17h4m-9-5V8m14 4V8M1 1h4v4H1V1Zm14 0h4v4h-4V1ZM1 15h4v4H1v-4Zm14 0h4v4h-4v-4Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Thể loại</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-categories') }" class="ml-3"
+                >Thể loại</span
+              >
             </RouterLink>
           </li>
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/review-auctions') }">
             <RouterLink
               to="/admin/review-auctions"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -255,10 +243,12 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="m6 9 2 3 5-5M9 19A18.55 18.55 0 0 1 1 4l8-3 8 3a18.549 18.549 0 0 1-8 15Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Duyệt đấu giá</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/review-auctions') }" class="ml-3"
+                >Duyệt đấu giá</span
+              >
             </RouterLink>
           </li>
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/manage-withdraw') }">
             <RouterLink
               to="/admin/manage-withdraw"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -275,10 +265,12 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="M5 2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1M2 5h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Yêu cầu rút tiền</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-withdraw') }" class="ml-3"
+                >Yêu cầu rút tiền</span
+              >
             </RouterLink>
           </li>
-          <li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/manage-transaction') }">
             <RouterLink
               to="/admin/manage-transaction"
               class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
@@ -295,7 +287,9 @@ const userStore = useUserStore()
                   stroke-width="2"
                   d="M4 6h6m-6 4h6m-6 4h6M1 1v18l2-2 2 2 2-2 2 2 2-2 2 2V1l-2 2-2-2-2 2-2-2-2 2-2-2Z" />
               </svg>
-              <span class="flex-1 ml-3 text-left whitespace-nowrap">Lịch sử giao dịch</span>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-transaction') }" class="ml-3"
+                >Lịch sử giao dịch</span
+              >
             </RouterLink>
           </li>
         </ul>

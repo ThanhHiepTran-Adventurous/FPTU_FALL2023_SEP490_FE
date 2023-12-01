@@ -167,31 +167,59 @@ const getNewImages = () => {
 }
 const manualAuctionErrorState = ref({
   productName: '',
-  buyNowPrice: '',
-  modelType: '',
-  jump: '',
-  minimumAuctioneers: '',
+  description: '',
+  weight: '',
+  brandId: '',
+  categoryId: '',
+  image: '',
 })
 const resetErrorState = () => {
   manualAuctionErrorState.value = {
     productName: '',
-    buyPrice: '',
-    modelType: '',
-    jump: '',
-    minimumAuctioneers: '',
+    description: '',
+    weight: '',
+    brandId: '',
+    categoryId: '',
+    image: '',
   }
 }
 const validateManual = () => {
-  console.log(selectedProduct.value.productName)
-  if (!selectedProduct.value) {
+  if (productFormData.value.name.trim() === '') {
     manualAuctionErrorState.value.productName = 'Vui lòng nhập tên sản phẩm'
     return false
   }
-
+  if (productFormData.value.description.trim() === '') {
+    manualAuctionErrorState.value.description = 'Vui lòng nhập miêu tả'
+    return false
+  }
+  if (productFormData.value.description.length > 1000) {
+    manualAuctionErrorState.value.description = 'Miêu tả không được vượt quá 1000 kí tự'
+    return false
+  }
+  if (!productFormData.value.weight) {
+    manualAuctionErrorState.value.weight = 'Vui lòng nhập trọng lượng'
+    return false
+  }
+  if (productFormData.value.weight > 10000) {
+    manualAuctionErrorState.value.weight = 'Trọng lượng không được quá 10kg'
+    return false
+  }
+  if (!productFormData.value.brand.id) {
+    manualAuctionErrorState.value.brand = 'Vui lòng chọn thương hiệu sản phẩm'
+    return false
+  }
+  if (!productFormData.value.category.id) {
+    manualAuctionErrorState.value.category = 'Vui lòng chọn loại sản phẩm'
+    return false
+  }
+  if (imgSrc.value.length === 0) {
+    manualAuctionErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
+    return false
+  }
   return true
 }
 const onSubmit = () => {
-  // resetErrorState()
+  resetErrorState()
   if (!validateManual()) {
     return
   } else {
@@ -201,7 +229,6 @@ const onSubmit = () => {
     imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
     let newImages = getNewImages()
     newImages = newImages && newImages.length > 0 ? newImages : []
-
     const updateProductRequest = {
       name: productFormData.value.name,
       description: productFormData.value.description,
@@ -217,7 +244,6 @@ const onSubmit = () => {
       modelType: auctionFormData.value.modelType,
       hoursOfDuration: durationValue,
     }
-
     ProductSerivice.updateProductById(
       selectedProduct.value.product.id,
       imageUrlIgnored,
@@ -238,9 +264,9 @@ const onSubmit = () => {
         toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
       })
       .finally(() => {
-        // clearDataState()
+        clearDataState()
         fetchProducts()
-        // closeModal()
+        closeModal()
       })
   }
 }
@@ -651,6 +677,7 @@ const openProductModal = product => {
                     id="description"
                     rows="4"
                     placeholder="Nhập mô tả"></textarea>
+                  <ErrorMessage :text="manualAuctionErrorState.description" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
@@ -660,6 +687,7 @@ const openProductModal = product => {
                     id="weight"
                     type="text"
                     placeholder="Nhập trọng lượng" />
+                  <ErrorMessage :text="manualAuctionErrorState.weight" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="brand"> Thương hiệu sản phẩm </label>
@@ -676,6 +704,7 @@ const openProductModal = product => {
                       {{ brand.name }}
                     </option>
                   </select>
+                  <ErrorMessage :text="manualAuctionErrorState.brand" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Loại sản phẩm </label>
@@ -692,6 +721,7 @@ const openProductModal = product => {
                       {{ category.name }}
                     </option>
                   </select>
+                  <ErrorMessage :text="manualAuctionErrorState.category" />
                 </div>
 
                 <div class="mb-4 w-full overflow-x-auto">
@@ -706,6 +736,7 @@ const openProductModal = product => {
                     <span>Upload image</span>
                   </button>
                   <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+                  <ErrorMessage :text="manualAuctionErrorState.image" />
                 </div>
 
                 <div class="mb-4 border-t-[1px] pt-4">
