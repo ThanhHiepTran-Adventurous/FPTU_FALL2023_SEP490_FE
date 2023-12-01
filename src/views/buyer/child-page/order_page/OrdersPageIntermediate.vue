@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import SearchInput from '@/components/common-components/SearchInput.vue'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
@@ -69,10 +69,13 @@ const closeReportModal = () => {
 }
 const filterData = () => {
   ordersFiltered.value = orders.value
-    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate && v.hasShipRequest === selected.value.value)
+    .filter(
+      v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate && v.hasShipRequest === selected.value.value,
+    )
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
+  console.log(ordersFiltered.value)
 }
 
 const activateInfoAuction = order => {
@@ -86,22 +89,58 @@ function closeModal() {
 function handleConfirm() {
   closeModal()
 }
+const currentPage = ref(1)
+const searchQuery = ref('')
+const itemsPerPage = 6
+const goToPage = page => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
 
+const goToPreviousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1
+  }
+}
+
+const goToNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1
+  }
+}
+const totalPages = computed(() => {
+  return Math.ceil(
+    ordersFiltered.value.filter(product =>
+      product?.productResponse?.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    ).length / itemsPerPage,
+  )
+})
+const paginatedProducts = computed(() => {
+  // Move startIndex and endIndex calculation here
+  const startIndex = (currentPage.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return ordersFiltered.value
+    .filter(product => product?.productResponse?.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .slice(startIndex, endIndex)
+})
 const fetchOrders = async () => {
   const response = await OrderService.getAllOrders('', 1, 1000, '')
-  orders.value = response.data ? response.data.map(f => {
-    if(!f.shipRequestList){
-      return f
-    }
-    if(f.shipRequestList.length === 1){
-      f.sellerShipRequest = f.shipRequestList[0]
-    }
-    if(f.shipRequestList.length === 2){
-      f.sellerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.SELLER_SHIP)[0]
-      f.buyerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.BUYER_RETURN)[0]
-    }
-    return f
-  }) : []
+  orders.value = response.data
+    ? response.data.map(f => {
+        if (!f.shipRequestList) {
+          return f
+        }
+        if (f.shipRequestList.length === 1) {
+          f.sellerShipRequest = f.shipRequestList[0]
+        }
+        if (f.shipRequestList.length === 2) {
+          f.sellerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.SELLER_SHIP)[0]
+          f.buyerShipRequest = f.shipRequestList.filter(data => data.type === ShipRequestType.BUYER_RETURN)[0]
+        }
+        return f
+      })
+    : []
   filterData()
 }
 const onReportModalDecline = () => {
@@ -134,15 +173,19 @@ const onReportModalConfirm = async (listImg, text) => {
     toastOption.updateLoadingToast(toastId, 'Tố cáo thành công', false)
     fetchOrders()
   } catch (error) {
-    if(error.response.data.message.includes('already reported')){
-      toastOption.updateLoadingToast(toastId, 'Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.', true)
+    if (error.response.data.message.includes('already reported')) {
+      toastOption.updateLoadingToast(
+        toastId,
+        'Bạn đã gửi yêu cầu cho đơn hàng này rồi, vui lòng không gửi lại yêu cầu.',
+        true,
+      )
       return
     }
     toastOption.toastError('Tố cáo thất bại')
     console.error('Error creating ship request:', error)
   }
 }
-const onConfirmOrder = async (shipRequestId) => {
+const onConfirmOrder = async shipRequestId => {
   try {
     closeModal()
     await shiprequestService.buyerConfirmShipRequestDone(shipRequestId)
@@ -182,13 +225,19 @@ onMounted(() => {
           <div class="flex items-center gap-3">
             <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
             <div class="w-full">
-              <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
+              <input
+                v-model="searchQuery"
+                type="text"
+                id="simple-search"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Tìm kiếm sản phẩm theo tên"
+                required="" />
             </div>
           </div>
         </div>
         <div class="flex flex-wrap items-center mx-5 gap-3 py-6">
           <ItemOrder
-            v-for="item in ordersFiltered"
+            v-for="item in paginatedProducts"
             :key="item.id"
             @click="activateInfoAuction(item)"
             :product-name="item.productResponse.name"
@@ -203,6 +252,70 @@ onMounted(() => {
             :chatGroupId="item.chatGroupDTOs.id"
             :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
         </div>
+        <nav
+          class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+          aria-label="Table navigation">
+          <ul class="inline-flex items-stretch -space-x-px">
+            <li>
+              <button
+                type="button"
+                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                @click="goToPreviousPage"
+                :disabled="currentPage === 1"
+                aria-label="Previous Page">
+                <span class="sr-only">Previous</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+            <!-- Generate pagination links -->
+            <li v-for="pageNumber in totalPages" :key="pageNumber">
+              <button
+                type="button"
+                class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
+                :class="{
+                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                    pageNumber !== currentPage,
+                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                    pageNumber === currentPage,
+                }"
+                @click="goToPage(pageNumber)"
+                aria-label="Page {{ pageNumber }}">
+                {{ pageNumber }}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                @click="goToNextPage"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                :disabled="currentPage === totalPages"
+                aria-label="Next Page">
+                <span class="sr-only">Next</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </SideBarLayout>
     <Modal
@@ -220,7 +333,7 @@ onMounted(() => {
               <div class="text-xl font-bold ml-5 underline mr-3">Thông tin đơn hàng</div>
               <div
                 v-if="detail?.statusOrder === OrderStatus.DONE.value"
-                class="bg-green-100 text-green-800 border-[1px] border-green-500 text-[20px] font-medium inline-flex items-center gap-2 px-2.5 py-0.5 rounded ">
+                class="bg-green-100 text-green-800 border-[1px] border-green-500 text-[20px] font-medium inline-flex items-center gap-2 px-2.5 py-0.5 rounded">
                 <Icon icon="clarity:success-standard-solid" />
                 <div>Đã hoàn tất</div>
               </div>
@@ -283,7 +396,7 @@ onMounted(() => {
                     Trạng thái giao hàng:
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status"/>
+                    <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status" />
                   </td>
                 </tr>
                 <tr v-if="detail?.buyerShipRequest">
@@ -292,7 +405,7 @@ onMounted(() => {
                     Trạng thái trả hàng:
                   </td>
                   <td class="py-2 px-4 border-b border-grey-light">
-                    <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status"/>
+                    <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status" />
                   </td>
                 </tr>
               </tbody>
@@ -312,7 +425,9 @@ onMounted(() => {
           </Button>
         </div>
         <div>
-          <Button :disabled="detail?.statusOrder !== OrderStatus.NEW.value" @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
+          <Button
+            :disabled="detail?.statusOrder !== OrderStatus.NEW.value"
+            @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
             <div class="flex items-center">
               <div>Chấp nhận đơn hàng</div>
             </div>

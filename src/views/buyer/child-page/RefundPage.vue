@@ -31,38 +31,42 @@ const breadcrumbItems = [
 
 //filter
 const filterData = ref([
-    {
-        label: 'Tất cả',
-        value: '',
-    },
-    {
-        label: ReportStatus.PROCESSING.label,
-        value: ReportStatus.PROCESSING.value,
-    },
-    {
-        label: ReportStatus.PROCESSED.label,
-        value: ReportStatus.PROCESSED.value,
-    },
-    {
-        label: ReportStatus.REJECTED.label,
-        value: ReportStatus.REJECTED.value,
-    }
-])
-const selected = ref({
+  {
     label: 'Tất cả',
     value: '',
+  },
+  {
+    label: ReportStatus.PROCESSING.label,
+    value: ReportStatus.PROCESSING.value,
+  },
+  {
+    label: ReportStatus.PROCESSED.label,
+    value: ReportStatus.PROCESSED.value,
+  },
+  {
+    label: ReportStatus.REJECTED.label,
+    value: ReportStatus.REJECTED.value,
+  },
+])
+const selected = ref({
+  label: 'Tất cả',
+  value: '',
 })
 
-watch(selected, () => {
-  filterReports()
-}, {deep: true})
+watch(
+  selected,
+  () => {
+    filterReports()
+  },
+  { deep: true },
+)
 
 const reportList = ref([])
 const filteredReport = ref([])
 const report = ref(null)
 const isModalVisible = ref(false)
 
-const openReportModal = async (detail) => {
+const openReportModal = async detail => {
   report.value = detail
   isModalVisible.value = true
 }
@@ -75,16 +79,20 @@ const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataBuyerOrSeller()
-    reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate && f.reportType === 'BUYER_REPORT_OPTION_2')
+    reportList.value = response.data.filter(
+      f =>
+        f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate &&
+        f.reportType === 'BUYER_REPORT_OPTION_2',
+    )
     filterReports()
   } catch (e) {
     console.error(e)
   }
 }
 const filterReports = () => {
-    filteredReport.value = reportList.value
+  filteredReport.value = reportList.value
     .filter(f => !selected.value.value || f.status === selected.value.value)
-    .sort((a,b) => {
+    .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
 }
@@ -129,22 +137,19 @@ onMounted(() => {
       <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">
-            Lịch sử trả hàng</div>
+          <div class="font-bold text-2xl text-black text-blue-800">Lịch sử trả hàng</div>
         </div>
-  
+
         <!-- Filter section -->
         <div class="mt-4 px-12 flex items-center">
           <div class="flex items-center gap-3 mr-[10%]">
-            <label class="block text-gray-700 text-sm font-bold" for="jump">
-              Trạng thái: 
-            </label>
+            <label class="block text-gray-700 text-sm font-bold" for="jump"> Trạng thái: </label>
             <div class="flex gap-3 items-center">
               <Dropdown :data="filterData" v-model="selected" class="!w-[200px]" />
             </div>
           </div>
         </div>
-  
+
         <section class="sm:p-5">
           <div class="mx-auto px-4">
             <div class="bg-white relative sm:rounded-lg overflow-hidden">
@@ -164,7 +169,10 @@ onMounted(() => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(report, index) in paginatedReportList" :key="index" class="border-b dark:border-gray-700">
+                    <tr
+                      v-for="(report, index) in paginatedReportList"
+                      :key="index"
+                      class="border-b dark:border-gray-700">
                       <th scope="row" class="px-6 py-4 font-normal text-black dark:text-white">
                         {{ report?.fromUserReport?.fullname }}
                       </th>
@@ -178,161 +186,197 @@ onMounted(() => {
                         {{ report?.createAt ? moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
                       </td>
                       <td class="px-4 py-3">
-                        <div class="font-normal text-black flex justify-center"><ReportStatusBadge :status="report?.status" /></div>
+                        <div class="font-normal text-black flex justify-center">
+                          <ReportStatusBadge :status="report?.status" />
+                        </div>
                       </td>
                       <td class="px-4 py-3">
-                        <div v-if="report?.returnShipRequestResponse?.status" class="font-normal text-black flex justify-center"><ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" /></div>
+                        <div
+                          v-if="report?.returnShipRequestResponse?.status"
+                          class="font-normal text-black flex justify-center">
+                          <ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" />
+                        </div>
                       </td>
                       <td class="px-4 py-3 flex items-center gap-3 justify-end">
                         <div>
                           <button
                             class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
-                            type="button" @click="openReportModal(report)">
-                            <Icon icon="bxs:detail" class="font-bold text-[24px]"/>
+                            type="button"
+                            @click="openReportModal(report)">
+                            <Icon icon="bxs:detail" class="font-bold text-[24px]" />
                           </button>
                         </div>
-                        <router-link v-if="report?.aboutOrder?.chatGroupDTOs.id" :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
+                        <router-link
+                          v-if="report?.aboutOrder?.chatGroupDTOs.id"
+                          :to="'/messenger/' + report?.aboutOrder?.chatGroupDTOs.id">
                           <button
                             class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
                             type="button">
-                            <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500"/>
+                            <Icon icon="ri:messenger-fill" class="font-bold text-[24px] text-blue-500" />
                           </button>
                         </router-link>
                       </td>
                     </tr>
                   </tbody>
                 </table>
+                <nav
+                  class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+                  aria-label="Table navigation">
+                  <ul class="inline-flex items-stretch -space-x-px">
+                    <li>
+                      <button
+                        type="button"
+                        class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-black bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        @click="goToPreviousPage"
+                        :disabled="currentPage === 1"
+                        aria-label="Previous Page">
+                        <span class="sr-only">Previous</span>
+                        <svg
+                          class="w-5 h-5"
+                          aria-hidden="true"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </li>
+                    <!-- Generate pagination links -->
+                    <li v-for="pageNumber in totalPages" :key="pageNumber">
+                      <button
+                        type="button"
+                        class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
+                        :class="{
+                          'text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                            pageNumber !== currentPage,
+                          'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                            pageNumber === currentPage,
+                        }"
+                        @click="goToPage(pageNumber)"
+                        aria-label="Page {{ pageNumber }}">
+                        {{ pageNumber }}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        @click="goToNextPage"
+                        class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-black bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        :disabled="currentPage === totalPages"
+                        aria-label="Next Page">
+                        <span class="sr-only">Next</span>
+                        <svg
+                          class="w-5 h-5"
+                          aria-hidden="true"
+                          fill="currentColor"
+                          viewbox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-              <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-                aria-label="Table navigation">
-                <ul class="inline-flex items-stretch -space-x-px">
-                  <li>
-                    <button type="button"
-                      class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-black bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                      @click="goToPreviousPage" :disabled="currentPage === 1" aria-label="Previous Page">
-                      <span class="sr-only">Previous</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </button>
-                  </li>
-                  <!-- Generate pagination links -->
-                  <li v-for="pageNumber in totalPages" :key="pageNumber">
-                    <button type="button" class="flex items-center justify-center text-sm py-2 px-3 leading-tight" :class="{
-                      'text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
-                        pageNumber !== currentPage,
-                      'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
-                        pageNumber === currentPage,
-                    }" @click="goToPage(pageNumber)" aria-label="Page {{ pageNumber }}">
-                      {{ pageNumber }}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" @click="goToNextPage"
-                      class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-black bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                      :disabled="currentPage === totalPages" aria-label="Next Page">
-                      <span class="sr-only">Next</span>
-                      <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    </button>
-                  </li>
-                </ul>
-              </nav>
             </div>
           </div>
         </section>
       </div>
     </BuyerSideBarLayout>
-    <Modal :hidden="!isModalVisible" :widthClass="'w-[900px]'" :hasOverFlowVertical="true" :hasButton="true"
-      title="Chi tiết" @decline-modal="closeReportModal" @confirm-modal="closeReportModal" >
+    <Modal
+      :hidden="!isModalVisible"
+      :widthClass="'w-[900px]'"
+      :hasOverFlowVertical="true"
+      :hasButton="true"
+      title="Chi tiết"
+      @decline-modal="closeReportModal"
+      @confirm-modal="closeReportModal">
       <div class="relative px-2">
         <!-- Order detail -->
         <div class="mx-auto container align-middle border-[2px] border-blue-800 rounded-lg pl-3 py-1.5">
-          <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">
-              Đơn hàng</div>
+          <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">Đơn hàng</div>
           <div class="flex px-8 my-2">
             <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-              <div class="min-w-[100px]">Tên sản phẩm: </div>
+              <div class="min-w-[100px]">Tên sản phẩm:</div>
               <div class="text-black font-semibold">{{ report?.aboutOrder.productResponse.name }}</div>
             </div>
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div class="min-w-[100px]">Giá: </div>
+              <div class="min-w-[100px]">Giá:</div>
               <div class="font-semibold text-red-600">{{ formatCurrency(report?.aboutOrder.price) }}</div>
             </div>
           </div>
           <div class="flex px-8">
             <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-              <div class="min-w-[100px]">Phương thức: </div>
-              <div><AuctionType :type="report?.aboutOrder.modelTypeAuctionOfOrder"/></div>
+              <div class="min-w-[100px]">Phương thức:</div>
+              <div><AuctionType :type="report?.aboutOrder.modelTypeAuctionOfOrder" /></div>
             </div>
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div class="min-w-[100px]">Tạo lúc: </div>
+              <div class="min-w-[100px]">Tạo lúc:</div>
               <div>{{ moment.utc(report?.aboutOrder.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
             </div>
           </div>
           <div class="py-1.5">
-            <div class="min-w-[100px]">Hình ảnh: </div>
-            <ListExpandableImage :img-src="report?.aboutOrder.productResponse.imageUrls"/>
+            <div class="min-w-[100px]">Hình ảnh:</div>
+            <ListExpandableImage :img-src="report?.aboutOrder.productResponse.imageUrls" />
           </div>
         </div>
-  
+
         <!-- Report detail -->
         <div class="mx-auto container align-middle border-[2px] border-blue-800 rounded-lg pl-3 py-1.5 mt-3">
-          <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">
-              Thông tin trả hàng</div>
+          <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">Thông tin trả hàng</div>
           <div class="flex px-8 my-2">
             <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-              <div class="min-w-[200px]">Người trả: </div>
+              <div class="min-w-[200px]">Người trả:</div>
               <div class="text-black font-semibold">{{ report?.fromUserReport.fullname }}</div>
             </div>
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div class="min-w-[100px]">Vai trò: </div>
-              <div class="font-semibold text-red-600">{{ report?.fromUserReport.role === Role.seller.value ? 'Người bán' : 'Người mua' }}</div>
+              <div class="min-w-[100px]">Vai trò:</div>
+              <div class="font-semibold text-red-600">
+                {{ report?.fromUserReport.role === Role.seller.value ? 'Người bán' : 'Người mua' }}
+              </div>
             </div>
           </div>
           <div class="flex px-8 my-2">
             <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-              <div class="min-w-[200px]">Người bán: </div>
+              <div class="min-w-[200px]">Người bán:</div>
               <div class="text-black font-semibold">{{ report?.toUserReport.fullname }}</div>
             </div>
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div class="min-w-[100px]">Vai trò: </div>
-              <div class="font-semibold text-red-600">{{ report?.toUserReport.role === Role.seller.value ? 'Người bán' : 'Người mua' }}</div>
+              <div class="min-w-[100px]">Vai trò:</div>
+              <div class="font-semibold text-red-600">
+                {{ report?.toUserReport.role === Role.seller.value ? 'Người bán' : 'Người mua' }}
+              </div>
             </div>
           </div>
           <div class="flex px-8 my-2">
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div class="min-w-[200px]">Tạo lúc: </div>
+              <div class="min-w-[200px]">Tạo lúc:</div>
               <div>{{ moment.utc(report?.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
             </div>
           </div>
           <div v-if="report?.returnShipRequestResponse?.status" class="flex px-8 my-2">
             <div class="flex items-center gap-3 text-lg mb-1">
-              <div
-                class="min-w-[200px]">
-                Trạng thái trả hàng:
-              </div>
+              <div class="min-w-[200px]">Trạng thái trả hàng:</div>
               <div>
-                <ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status"/>
+                <ShippingStatusIntermediate :status="report?.returnShipRequestResponse?.status" />
               </div>
             </div>
           </div>
           <div class="flex px-8">
             <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
-              <div class="min-w-[200px]">Lý do: </div>
+              <div class="min-w-[200px]">Lý do:</div>
               <div>{{ report?.content }}</div>
             </div>
           </div>
           <div class="py-1.5">
-            <div class="min-w-[100px]">Hình ảnh: </div>
-            <ListExpandableImage :img-src="report?.reportImages"/>
+            <div class="min-w-[100px]">Hình ảnh:</div>
+            <ListExpandableImage :img-src="report?.reportImages" />
           </div>
         </div>
       </div>
@@ -342,7 +386,7 @@ onMounted(() => {
             @click="closeReportModal()"
             class="bg-white hover:!bg-blue-200 text-black font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
             type="button">
-              Đóng
+            Đóng
           </button>
         </div>
       </template>

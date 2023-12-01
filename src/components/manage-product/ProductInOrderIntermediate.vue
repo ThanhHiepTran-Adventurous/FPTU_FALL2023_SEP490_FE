@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import SearchInput from '../common-components/SearchInput.vue'
 import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
@@ -78,8 +78,43 @@ const filterData = async () => {
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
+  console.log(ordersFiltered.value)
+}
+const currentPage = ref(1)
+const searchQuery = ref('')
+const itemsPerPage = 6
+const goToPage = page => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
 }
 
+const goToPreviousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1
+  }
+}
+
+const goToNextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1
+  }
+}
+const totalPages = computed(() => {
+  return Math.ceil(
+    ordersFiltered.value.filter(product =>
+      product.productResponse?.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
+    ).length / itemsPerPage,
+  )
+})
+const paginatedProducts = computed(() => {
+  // Move startIndex and endIndex calculation here
+  const startIndex = (currentPage.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return ordersFiltered.value
+    .filter(product => product.productResponse?.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    .slice(startIndex, endIndex)
+})
 // Business functions
 const handleDepositRequest = async orderId => {
   try {
@@ -116,20 +151,22 @@ function handleConfirm() {
 
 const fetchOrders = async () => {
   const response = await OrderService.getAllOrders('', 1, 1000, '')
-  orders.value = response.data ? response.data.map(f => {
-    if(!f.shipRequestList){
-      return f
-    }
-    if(f.shipRequestList.length === 1){
-      f.sellerShipRequest = f.shipRequestList[0]
-      return f
-    }
-    if(f.shipRequestList.length === 2){
-      f.sellerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.SELLER_SHIP)[0]
-      f.buyerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.BUYER_RETURN)[0]
-    }
-    return f
-  }) : []
+  orders.value = response.data
+    ? response.data.map(f => {
+        if (!f.shipRequestList) {
+          return f
+        }
+        if (f.shipRequestList.length === 1) {
+          f.sellerShipRequest = f.shipRequestList[0]
+          return f
+        }
+        if (f.shipRequestList.length === 2) {
+          f.sellerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.SELLER_SHIP)[0]
+          f.buyerShipRequest = f.shipRequestList.filter(d => d.type === ShipRequestType.BUYER_RETURN)[0]
+        }
+        return f
+      })
+    : []
   filterData()
 }
 
@@ -152,13 +189,19 @@ onMounted(() => {
           <div class="mt-3 flex items-center gap-3">
             <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
             <div class="w-full">
-              <SearchInput placeholder="       Search a product" addOnInputClass="w-full" />
+              <input
+                v-model="searchQuery"
+                type="text"
+                id="simple-search"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Tìm kiếm sản phẩm theo tên"
+                required="" />
             </div>
           </div>
         </div>
         <div class="flex flex-wrap items-center mx-5 gap-3">
           <ItemOrder
-            v-for="item in ordersFiltered"
+            v-for="item in paginatedProducts"
             :key="item.id"
             @click="activateInfoAuction(item)"
             :product-name="item.productResponse.name"
@@ -173,6 +216,70 @@ onMounted(() => {
             :chatGroupId="item.chatGroupDTOs.id ? item.chatGroupDTOs.id : ''"
             :created-at="item?.createAt ? moment.utc(item?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'" />
         </div>
+        <nav
+          class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+          aria-label="Table navigation">
+          <ul class="inline-flex items-stretch -space-x-px">
+            <li>
+              <button
+                type="button"
+                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                @click="goToPreviousPage"
+                :disabled="currentPage === 1"
+                aria-label="Previous Page">
+                <span class="sr-only">Previous</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+            <!-- Generate pagination links -->
+            <li v-for="pageNumber in totalPages" :key="pageNumber">
+              <button
+                type="button"
+                class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
+                :class="{
+                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                    pageNumber !== currentPage,
+                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                    pageNumber === currentPage,
+                }"
+                @click="goToPage(pageNumber)"
+                aria-label="Page {{ pageNumber }}">
+                {{ pageNumber }}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                @click="goToNextPage"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                :disabled="currentPage === totalPages"
+                aria-label="Next Page">
+                <span class="sr-only">Next</span>
+                <svg
+                  class="w-5 h-5"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
         <Modal
           :hidden="!isModalVisible"
           :widthClass="'w-[900px]'"
@@ -233,7 +340,9 @@ onMounted(() => {
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{
-                          detail?.lastUpdatedAt ? moment.utc(detail?.lastUpdatedAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A'
+                          detail?.lastUpdatedAt
+                            ? moment.utc(detail?.lastUpdatedAt).format('DD/MM/YYYY HH:mm:ss')
+                            : 'N/A'
                         }}
                       </td>
                     </tr>
@@ -243,7 +352,7 @@ onMounted(() => {
                         Trạng thái giao hàng:
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
-                        <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status"/>
+                        <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status" />
                       </td>
                     </tr>
                     <tr v-if="detail?.buyerShipRequest">
@@ -252,7 +361,7 @@ onMounted(() => {
                         Trạng thái trả hàng:
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
-                        <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status"/>
+                        <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status" />
                       </td>
                     </tr>
                   </tbody>
