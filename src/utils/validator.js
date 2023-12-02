@@ -1,22 +1,22 @@
 const stringIsIntegerAndBiggerThanZeroValidator = (inp) => {
-    try {
-        const parsedNum = parseInt(inp)
-        if(parsedNum > 0){
-            return true
-        }
-    } catch (_) {
+    if(!Number.isInteger(inp)){
         return false
     }
+    const parsedNum = parseInt(inp)
+    if(parsedNum > 0){
+        return true
+    }
+    return false
 }
 const stringIsIntegerAndBiggerThanOrEqualZeroValidator = (inp) => {
-    try {
-        const parsedNum = parseInt(inp)
-        if(parsedNum >= 0){
-            return true
-        }
-    } catch (_) {
+    if(!Number.isInteger(inp)){
         return false
     }
+    const parsedNum = parseInt(inp)
+    if(parsedNum >= 0){
+        return true
+    }
+    return false
 }
 
 export default {

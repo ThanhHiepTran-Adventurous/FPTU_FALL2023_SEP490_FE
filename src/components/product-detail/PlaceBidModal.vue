@@ -9,8 +9,6 @@ import ErrorMessage from "../common-components/ErrorMessage.vue";
 import Validator from "@/utils/validator"
 import toastOption from "@/utils/toast-option";
 
-const userStore = useUserStore()
-
 const emit = defineEmits(['placeBidSuccess', 'placeAutoAuctionSuccess', 'placeError', 'modalCancel', 'closeModal'])
 
 const props = defineProps([
@@ -138,7 +136,7 @@ const onAuctionSubmit = async () => {
 const getPayloadFromFormState = () => {
   return {
     maxPrice : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.maxPrice),
-    deltaTime : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaTime) * 60000,
+    deltaTime : autoAuctionData.value.deltaTime * 60000,
     deltaPrice : currencyFormatter.fromStyledStringToNumber(autoAuctionData.value.deltaPrice),
   }
 }

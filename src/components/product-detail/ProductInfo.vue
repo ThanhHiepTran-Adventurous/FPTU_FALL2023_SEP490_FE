@@ -69,6 +69,10 @@ const onBuyNowClick = async () => {
   isBuyNowModalVisible.value = true
 }
 
+const onCloseModal = () => {
+  isModalVisible.value = false
+}
+
 const onBuyNowConfirm = () => {
   auctionService
     .buyNowBid(props.auctionInfo?.id)
