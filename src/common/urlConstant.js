@@ -74,6 +74,7 @@ export default {
       getListAuctionWin: '/auctions/getListAuctionWin',
       auctionBySeller: 'auctions/seller/getListAuction-authorize',
       auctionHistoryAuthorized: '/auctions/public/auction-of-buyer/{auctionId}',
+      hotAuction: '/guest/auctions-guest/list-descending-priority-auction'
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',
@@ -133,7 +134,8 @@ export default {
       updateNumberSoldProductToAutoConfirm: 'systemConfig/addNewNumberSoldProduct',
       updatePaymentDeadline: 'systemConfig/addNewPaymentDeadlineConfig',
       updatePercentageProfit: 'systemConfig/addNewPercentageConfig',
-      updateReturnDuring: 'systemConfig/addNewReturnPolicyDayConfig'
+      updateReturnDuring: 'systemConfig/addNewReturnPolicyDayConfig',
+      updateBatch: 'systemConfig/addNewArrayAllConfig'
     },
     ship: {
       sellerCreateShipRequest: 'shipRequest/seller/create-ship-request/{orderId}',

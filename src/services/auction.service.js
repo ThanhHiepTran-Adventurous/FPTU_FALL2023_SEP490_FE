@@ -73,6 +73,13 @@ const getAuctionBySeller = async query => {
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
+
+const getHotAuctionsDesc = async (page=1, size=4) => {
+  const serviceUrl = `${url.endpoint.auctions.hotAuction}?page=${page}&size=${size}`
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
   sendAuctionRequest,
   getAllActiveAuctions,
@@ -86,4 +93,5 @@ export default {
   updateAutoBid,
   getListAuctionWin,
   getAuctionBySeller,
+  getHotAuctionsDesc
 }
