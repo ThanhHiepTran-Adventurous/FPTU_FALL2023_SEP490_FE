@@ -8,6 +8,7 @@ import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
+import OutstandingAuctionList from '@/views/buyer/OutstandingAuctionList.vue'
 import OrdersPageIntermediate from '@/views/buyer/child-page/order_page/OrdersPageIntermediate.vue'
 import OrdersPageImmediate from '@/views/buyer/child-page/order_page/OrdersPageImmediate.vue'
 import ReportPageImmediate from '@/views/buyer/child-page/report_page/ReportPageImmediate.vue'
@@ -26,6 +27,14 @@ const buyer_router = [
         name: 'auction-list',
         path: '/auctions',
         component: AuctionListPage,
+        meta: {
+          requiresAuth: false,
+        },
+      },
+      {
+        name: 'auction-list-outstanding',
+        path: '/auctions/outstanding',
+        component: OutstandingAuctionList,
         meta: {
           requiresAuth: false,
         },

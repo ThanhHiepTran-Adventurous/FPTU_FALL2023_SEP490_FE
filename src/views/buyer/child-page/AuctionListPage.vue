@@ -270,7 +270,10 @@ const goToNextPage = () => {
         <!-- Sort sidebar -->
         <article class="p-6 bg-white rounded-lg border border-gray-200 shadow lg:w-1/5 min-h-[751.2px]">
           <div>
-            <div class="font-bold text-lg text-black uppercase">Bộ lọc</div>
+            <div class="flex items-center justify-between">
+              <div class="font-bold text-lg text-black uppercase">Bộ lọc</div>
+              <router-link to="/auctions/outstanding" class="bg-blue-100 hover:bg-blue-200 text-blue-800 border px-2 py-1 rounded">Nổi bật</router-link>
+            </div>
             <!-- Auction model type -->
             <div class="mb-1.5 mt-4">
               <div class="flex items-center justify-between hover:cursor-pointer mb-2">

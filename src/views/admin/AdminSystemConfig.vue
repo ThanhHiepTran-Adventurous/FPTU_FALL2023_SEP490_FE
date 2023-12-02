@@ -4,6 +4,9 @@ import validator from '@/utils/validator';
 import { ref, onMounted } from 'vue';
 import AdminHeader from './common/AdminHeader.vue';
 import ErrorMessage from '@/components/common-components/ErrorMessage.vue';
+import { GlobalConfigKey } from '@/common/contract';
+import systemService from '@/services/system.service';
+import toastOption from '@/utils/toast-option';
 
 const systemStore = useSystemStore()
 
@@ -106,8 +109,75 @@ const onConfirmUpdate = () => {
         return
     }
     if(confirm("Bạn có chắc muốn cập nhật cấu hình hệ thống không?")){
-        // Do smth
+        const payload = getPayload()
+        if(payload.length > 0){
+            systemService.updateConfigData(payload)
+            .then(_ => {
+                toastOption.toastSuccess("Cập nhật cấu hình thành công")
+            })
+            .catch(_ => {
+                toastOption.toastError("Có lỗi xảy ra, vui lòng thử lại sau")
+            })
+            .finally(async () => {
+                await systemStore.syncData()
+
+                formData.value.PercentageProfit = systemStore.PercentageProfit
+                formData.value.PaymentDeadline = systemStore.PaymentDeadline
+                formData.value.ReturnDuring = systemStore.ReturnDuring
+                formData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
+                formData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
+                formData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+
+                originalData.value.PercentageProfit = systemStore.PercentageProfit
+                originalData.value.PaymentDeadline = systemStore.PaymentDeadline
+                originalData.value.ReturnDuring = systemStore.ReturnDuring
+                originalData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
+                originalData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
+                originalData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+            })
+        }
     }
+}
+
+const getPayload = () => {
+    const payload = []
+    if(formData.value.PercentageProfit !== originalData.value.PercentageProfit){
+        payload.push({
+            type: GlobalConfigKey.PercentageProfit,
+            value: formData.value.PercentageProfit
+        })
+    }
+    if(formData.value.PaymentDeadline !== originalData.value.PaymentDeadline){
+        payload.push({
+            type: GlobalConfigKey.PaymentDeadline,
+            value: formData.value.PaymentDeadline
+        })
+    }
+    if(formData.value.ReturnDuring !== originalData.value.ReturnDuring){
+        payload.push({
+            type: GlobalConfigKey.ReturnDuring,
+            value: formData.value.ReturnDuring
+        })
+    }
+    if(formData.value.MaximumReportEachUser !== originalData.value.MaximumReportEachUser){
+        payload.push({
+            type: GlobalConfigKey.MaximumReportEachUser,
+            value: formData.value.MaximumReportEachUser
+        })
+    }
+    if(formData.value.NumberSoldProductToAutoConfirm !== originalData.value.NumberSoldProductToAutoConfirm){
+        payload.push({
+            type: GlobalConfigKey.NumberSoldProductToAutoConfirm,
+            value: formData.value.NumberSoldProductToAutoConfirm
+        })
+    }
+    if(formData.value.NumberRateProductToAutoConfirm !== originalData.value.NumberRateProductToAutoConfirm){
+        payload.push({
+            type: GlobalConfigKey.NumberRateProductToAutoConfirm,
+            value: formData.value.NumberRateProductToAutoConfirm
+        })
+    }
+    return payload
 }
 
 onMounted(async () => {

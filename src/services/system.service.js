@@ -6,14 +6,13 @@ const getAllConfigsData = async () => {
   const response = await utils.axiosLocalHost.get(serviceUrl)
   return response ? response.data : response
 }
-// PercentageProfit: "PERCENTAGE_CONFIG_VALUE",
-// PaymentDeadline: "PAYMENT_DEADLINE",
-// ReturnDuring: "RETURN_POLICY_DAY",
-// MaximumReportEachUser: "MAXIMUM_REPORTED",
-// NumberSoldProductToAutoConfirm: "NUMBER_SOLD_PRODUCT",
-// NumberRateProductToAutoConfirm: "NUMBER_RATE_FEEDBACK_PRODUCT"
-//const updatePercentageProfit = as
+
+const updateConfigData = async (payload) => {
+  const serviceUrl = url.endpoint.system.updateBatch
+  const response = await utils.axiosLocalHost.post(serviceUrl, payload)
+  return response ? response.data : response
+}
 
 export default {
-    getAllConfigsData,
+  getAllConfigsData, updateConfigData
 }
