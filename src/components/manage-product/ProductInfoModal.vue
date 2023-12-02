@@ -248,11 +248,11 @@ onMounted(() => {
               <input type="radio" id="intermediate" value="INTERMEDIATE" v-model="formData.modelType" />
               <label for="intermediate" class="font-semibold text-black">TRUNG GIAN QUA HỆ THỐNG</label>
               <div>
-                <button data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button">
+                <button data-tooltip-target="tooltip-hover-1" data-tooltip-trigger="hover" type="button">
                   <Icon icon="mdi:information" class="text-[20px]" />
                 </button>
                 <div
-                  id="tooltip-hover"
+                  id="tooltip-hover-1"
                   role="tooltip"
                   class="absolute !z-[1002] w-[20vw] invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                   {{ intermediateMessage }}

@@ -86,7 +86,6 @@ const filterData = () => {
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
-  console.log(ordersFiltered.value)
 }
 
 const activateInfoAuction = order => {
@@ -551,11 +550,7 @@ const submitRating = async () => {
         </div>
         <div>
           <Button
-<<<<<<< HEAD
             :disabled="!isConfirmable || detail?.statusOrder === OrderStatus.DONE.value"
-=======
-            :disabled="detail?.statusOrder !== OrderStatus.NEW.value"
->>>>>>> origin/validate-form
             @on-click="onConfirmOrder(detail?.sellerShipRequest.id)">
             <div class="flex items-center">
               <div>Chấp nhận đơn hàng</div>

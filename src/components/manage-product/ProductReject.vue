@@ -251,7 +251,6 @@ const onSubmit = () => {
       updateProductRequest,
     )
       .then(_ => {
-        console.log('update success')
         AuctionService.sendAuctionRequest(selectedProduct.value.product.id, auctionRequest)
           .then(_ => {
             toastOption.updateLoadingToast(toastId, 'Gửi lại thông tin yêu cầu đấu giá thành công', false)

@@ -6,7 +6,6 @@ const brandImg = ref([])
 
 const fetchBrandsData = async () => {
   const brands = await brandService.getAllBrandsGuest()
-  console.log('brand', brands.data)
 
   const activeBrands = brands.data.filter(d => d.status === 'ACTIVE')
 

@@ -6,23 +6,21 @@ import orderService from '@/services/order.service'
 import { onMounted, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import imageHelper from '@/utils/image-helper'
-import formatCurrency from '@/utils/currency-output-formatter'
 import loginService from '../../../../services/login.service'
-import moment from 'moment'
 import locationService from '../../../../services/location.service'
-import AuctionType from '@/components/common-components/badge/AuctionType.vue'
-import SearchInput from '@/components/common-components/SearchInput.vue'
 import { AuctionModelType } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
-import urlConstant from '@/common/urlConstant'
 const showPaymentModel = ref(false)
 import { buyerTabs } from '@/common/constant'
+import { intermediateScriptBoughtPage } from '@/common/commonStaticState'
+import { Tooltip } from 'ant-design-vue';
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
 import * as yup from 'yup'
 import { ErrorMessage, Field, Form } from 'vee-validate'
+
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')
@@ -258,7 +256,13 @@ const schema = yup.object().shape({
       <div class="bg-white container mx-auto rounded min-h-[80vh] w-full">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">Sản phẩm thắng đấu giá</div>
+          <div class="font-bold text-2xl text-black text-blue-800 flex">
+            <div>Sản phẩm thắng đấu giá</div>
+            <Tooltip class="relative ml-3" placement="rightBottom">
+              <template #title>{{ intermediateScriptBoughtPage }}</template>
+              <Icon icon="ooui:notice" class="text-[15px] text-yellow-300" />
+            </Tooltip>
+          </div>
           <div>
             <TwoOptionsTab
               immediate-option-nav="/bought/immediate"

@@ -127,7 +127,13 @@ export default {
       createChatGroup: 'messageWebSocket/staff/create-chat-groupV2/{orderId}',
     },
     system: {
-      getAllConfigData: 'systemConfig/getListSystemConfig',
+      getAllConfigData: 'guest/getListSystemConfig-guest',
+      updateMaximumReportEachUser: 'systemConfig/addNewBanWarningConfig',
+      updateNumberRateProductToAutoConfirm: 'systemConfig/addNewNumberRateFeedbackProduct',
+      updateNumberSoldProductToAutoConfirm: 'systemConfig/addNewNumberSoldProduct',
+      updatePaymentDeadline: 'systemConfig/addNewPaymentDeadlineConfig',
+      updatePercentageProfit: 'systemConfig/addNewPercentageConfig',
+      updateReturnDuring: 'systemConfig/addNewReturnPolicyDayConfig'
     },
     ship: {
       sellerCreateShipRequest: 'shipRequest/seller/create-ship-request/{orderId}',

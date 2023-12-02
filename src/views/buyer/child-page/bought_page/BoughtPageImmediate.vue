@@ -3,16 +3,14 @@ import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import auctionService from '@/services/auction.service'
 import { onMounted, ref, watch, computed } from 'vue'
 import imageHelper from '@/utils/image-helper'
-import formatCurrency from '@/utils/currency-output-formatter'
-import moment from 'moment'
-import AuctionType from '@/components/common-components/badge/AuctionType.vue'
-import SearchInput from '@/components/common-components/SearchInput.vue'
+import { immediateScriptBoughtPage } from '@/common/commonStaticState'
 import { Icon } from '@iconify/vue'
 import { buyerTabs } from '@/common/constant'
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import { AuctionModelType } from '@/common/contract'
 import AuctionCard from '@/components/AuctionCard.vue'
+import { Tooltip } from 'ant-design-vue';
 
 const breadcrumbItems = [
   {
@@ -39,7 +37,6 @@ const filterData = () => {
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()
     })
-  console.log(auctionWinFiltered.value)
 }
 const fetchAuctionWinData = async () => {
   const response = await auctionService.getListAuctionWin()
@@ -98,7 +95,15 @@ onMounted(async () => {
       <div class="bg-white container mx-auto rounded w-full min-h-[80vh]">
         <!-- Header -->
         <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-          <div class="font-bold text-2xl text-black text-blue-800">Sản phẩm thắng đấu giá</div>
+          <div class="font-bold text-2xl text-black text-blue-800 flex">
+            <div>
+              Sản phẩm thắng đấu giá
+            </div>
+            <Tooltip class="relative ml-3" placement="rightBottom">
+              <template #title>{{ immediateScriptBoughtPage }}</template>
+              <Icon icon="ooui:notice" class="text-[15px] text-yellow-300" />
+            </Tooltip>
+          </div>
           <div>
             <TwoOptionsTab
               immediate-option-nav="/bought/immediate"

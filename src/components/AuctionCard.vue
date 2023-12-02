@@ -5,6 +5,7 @@ import { Icon } from "@iconify/vue";
 import formatCurrency from "@/utils/currency-output-formatter";
 import moment from "moment";
 import AuctionType from "./common-components/badge/AuctionType.vue";
+import {Tooltip} from 'ant-design-vue'
 
 const props = defineProps({
     imageUrl: {
@@ -54,15 +55,24 @@ const emit = defineEmits(["action-triggered"])
                     </div>
                 </div>
             </div>
-            <div class="mt-3 flex justify-center" v-if="auctionType === AuctionModelType.intermediate">
-                <button type="button" @click="emit('action-triggered')"
-                    class="flex items-center text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 focus:outline-none">
-                    <span class="w-max font-semibold">Thanh toán</span>
-                </button>
-            </div>
         </div>
-        <div class="text-xl font-semibold my-2 tracking-tight flex justify-center">
-            {{ productName }}
+        <div class="text-xl font-semibold my-2 tracking-tight flex justify-center items-center gap-3">
+            <Tooltip class="relative ml-3" placement="bottomLeft">
+              <template #title>{{ productName }}</template>
+              <div :class="auctionType === AuctionModelType.intermediate ? 'w-[80%] truncate' : 'truncate'">
+                  {{ productName }}
+              </div>
+            </Tooltip>
+            <div class="flex justify-center" v-if="auctionType === AuctionModelType.intermediate">
+                
+                    <Tooltip class="relative" placement="bottom">
+                        <template #title>Thanh toán</template>
+                        <button type="button" @click="emit('action-triggered')"
+                            class="flex items-center text-black bg-white border-[1px] border-red-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 focus:outline-none">
+                            <Icon icon="arcticons:budgetbakers-wallet" class="text-black text-[20px]"/>
+                        </button>
+                    </Tooltip>
+            </div>
         </div>
     </div>
 </template>

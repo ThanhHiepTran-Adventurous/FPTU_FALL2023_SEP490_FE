@@ -206,3 +206,12 @@ export const WithdrawRequestType = {
     value: "REFUND_TYPE_OPTION_2"
   }
 }
+
+export const GlobalConfigKey = {
+  PercentageProfit: "PERCENTAGE_CONFIG_VALUE",
+  PaymentDeadline: "PAYMENT_DEADLINE",
+  ReturnDuring: "RETURN_POLICY_DAY",
+  MaximumReportEachUser: "MAXIMUM_REPORTED",
+  NumberSoldProductToAutoConfirm: "NUMBER_SOLD_PRODUCT",
+  NumberRateProductToAutoConfirm: "NUMBER_RATE_FEEDBACK_PRODUCT"
+}

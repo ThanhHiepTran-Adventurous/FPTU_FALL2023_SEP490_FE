@@ -78,7 +78,6 @@ const filterData = async () => {
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
-  console.log(ordersFiltered.value)
 }
 const currentPage = ref(1)
 const searchQuery = ref('')

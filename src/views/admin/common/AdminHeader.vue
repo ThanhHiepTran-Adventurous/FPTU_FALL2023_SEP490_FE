@@ -1,10 +1,9 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 import loginService from '../../../services/login.service'
 import { useUserStore } from '../../../stores/user.store'
-import { useRouter } from 'vue-router'
 import { defaultRoute } from '@/common/constant'
 const router = useRouter()
 onMounted(() => {
@@ -85,22 +84,6 @@ const userStore = useUserStore()
               <span class="block text-sm font-semibold text-gray-900 dark:text-white">Admin</span>
               <span class="block text-sm text-gray-900 truncate dark:text-white">admin@bidbay.com</span>
             </div>
-            <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
-              <!-- <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                  >My profile</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                  >Account settings</a
-                >
-              </li> -->
-            </ul>
 
             <ul class="py-1 text-gray-700 dark:text-gray-300" aria-labelledby="dropdown">
               <li>
@@ -289,6 +272,16 @@ const userStore = useUserStore()
               </svg>
               <span :class="{ 'text-blue-700': isCurrentRoute('/admin/manage-transaction') }" class="ml-3"
                 >Lịch sử giao dịch</span
+              >
+            </RouterLink>
+          </li>
+          <li :class="{ 'bg-gray-100 dark:bg-gray-700': isCurrentRoute('/admin/system-config') }">
+            <RouterLink
+              to="/admin/system-config"
+              class="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M16 15c4.009-.065 7-3.033 7-7c0-3.012-.997-2.015-2-1c-.991.98-3 3-3 3l-4-4s2.02-2.009 3-3c1.015-1.003 1.015-2-1-2c-3.967 0-6.947 2.991-7 7c.042.976 0 3 0 3c-1.885 1.897-4.34 4.353-6 6c-2.932 2.944 1.056 6.932 4 4c1.65-1.662 4.113-4.125 6-6c0 0 2.024-.042 3 0Z"/></svg>
+              <span :class="{ 'text-blue-700': isCurrentRoute('/admin/system-config') }" class="ml-3"
+                >Cấu hình hệ thống</span
               >
             </RouterLink>
           </li>

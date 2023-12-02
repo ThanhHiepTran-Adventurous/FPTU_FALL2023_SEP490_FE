@@ -61,7 +61,6 @@ const averageRating = ref(0)
 const fechFeedback = async sellerId => {
   const feedbackData = await feedbackService.getFeedbackBySellerId(sellerId)
   feedbacks.value = feedbackData.data
-  console.log(feedbacks.value)
   calculateAverageRating()
 }
 const calculateAverageRating = () => {
@@ -88,7 +87,6 @@ const fetchDetail = async () => {
   }
   productName.value = auctionDetailData.data?.product?.name
   description.value = auctionDetailData.data?.product?.description
-  console.log(auctionDetailData.data?.product)
   auction.value = { ...autionData, ...auctionDetailData.data, numOfUsers: numOfUsers.value }
   convertedImages.value =
     auction.value?.product?.imageUrls.map(url => ({

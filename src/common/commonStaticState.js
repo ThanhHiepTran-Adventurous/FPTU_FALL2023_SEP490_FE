@@ -12,6 +12,18 @@ người mua phải trả tiền trước cho hệ thống, sau khi hàng tới 
 hệ thống sẽ chuyển số tiền người mua đã trả cho người bán
 `
 
+export const immediateScriptBoughtPage = `
+Danh sách các sản phẩm bạn đã thắng đấu giá, ở hình thức tự trao đổi, bạn phải đợi người bán thanh toán khoản phí
+cho hệ thống, sau khi người bán thanh toán cho hệ thống, sản phẩm bạn đã mua sẽ được nằm trong mục 'Lịch sử đơn hàng',
+bạn có thể tiến hành nhắn tin trao đổi với người bán, xem trạng thái hiện tại của đơn hàng.
+`
+
+export const intermediateScriptBoughtPage = `
+Danh sách các sản phẩm bạn đã thắng đấu giá, ở hình thức trung gian qua hệ thống, bạn sẽ phải thanh toán giá trị của món hàng
+cho hệ thống, sau khi bạn thanh toán thành công, sản phẩm bạn đã mua sẽ nằm trong mục 'Lịch sử đơn hàng'. Nếu sau số ngày quy định
+bạn không thanh toán thì bạn sẽ bị cộng 1 lượt ban.
+`
+
 export const durationData = [
     {
       label: '1 tiếng',
