@@ -59,7 +59,7 @@ const emit = defineEmits(["action-triggered"])
         <div class="text-xl font-semibold my-2 tracking-tight flex justify-center items-center gap-3">
             <Tooltip class="relative ml-3" placement="bottomLeft">
               <template #title>{{ productName }}</template>
-              <div :class="auctionType === AuctionModelType.intermediate ? 'w-[80%] truncate' : 'truncate'">
+              <div :class="auctionType === AuctionModelType.intermediate ? 'w-[80%] text-center truncate' : 'truncate'">
                   {{ productName }}
               </div>
             </Tooltip>
