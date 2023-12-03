@@ -99,6 +99,18 @@ export default {
       countProductOnSell: 'charts/countProductOnSell',
       countProductRejected: 'charts/countProductRejected',
       countProductSold: 'charts/countProductSold',
+      calculateProfitByCurrentMonth: 'charts/calculate-profit-by-current-month',
+      calculateProfitByCurrentWeek: 'charts/calculate-profit-by-current-week',
+      calculateProfitByCurrentYear: 'charts/calculate-profit-by-current-year',
+      calculateProfitByLastMonth: 'charts/calculate-profit-by-last-month',
+      calculateProfitByLastWeek: 'charts/calculate-profit-by-last-week',
+      calculateProfitByLastYear: 'charts/calculate-profit-by-last-year',
+      countAllUsers: 'charts/countAllUserInSystem',
+      countAllProducts: 'charts/countAllProduct',
+      countAllAuctions: 'charts/countAllAuction',
+      countStaff: 'charts/countStaffInSystem',
+      getProfitByYear: 'charts/get-profit-by-year',
+      getAllProductSoldForEachBrand: 'charts/get-all-product-sold-for-each-brand',
     },
     transaction: {
       option2VnPay: 'transaction/paymentAuctionOfOrder/vnPay',
@@ -146,8 +158,10 @@ export default {
       adminConfirmBuyerWithdraw:
         'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-refund-request-option-two',
       sellerWithdrwaOpt2: 'withdrawAndRefunds/seller/{orderId}/create-withdraw-request-option-two',
-      staffConfirmReportBuyerWinOpt2: 'withdrawAndRefunds/staff/{orderId}/create-refund-request-for-buyer-win-option-two',
-      staffConfirmReportSellerWinOpt2: 'withdrawAndRefunds/staff/{orderId}/create-withdraw-request-for-seller-win-option-two',
+      staffConfirmReportBuyerWinOpt2:
+        'withdrawAndRefunds/staff/{orderId}/create-refund-request-for-buyer-win-option-two',
+      staffConfirmReportSellerWinOpt2:
+        'withdrawAndRefunds/staff/{orderId}/create-withdraw-request-for-seller-win-option-two',
     },
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
