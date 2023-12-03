@@ -6,7 +6,6 @@ import imageHelper from '@/utils/image-helper';
 import Loading from '@/components/common-components/Loading.vue';
 import Breadcrumb from '@/layouts/Breadcrumb.vue';
 import { buyerTabs } from '@/common/constant';
-import { useGlobalStore } from '@/stores/global.store';
 import { useRouter } from 'vue-router';
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue';
 
