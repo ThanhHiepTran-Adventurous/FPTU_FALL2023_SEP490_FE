@@ -121,6 +121,16 @@ const countBuyers = async () => {
     throw error
   }
 }
+const countStaffs = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.countStaff
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 const countAuctionCompleted = async () => {
   try {
     const serviceUrl = url.endpoint.chart.countAuctionCompleted
@@ -225,6 +235,123 @@ const countProductSold = async () => {
     throw error
   }
 }
+const calculateProfitByCurrentMonth = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByCurrentMonth
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const calculateProfitByCurrentWeek = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByCurrentWeek
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const calculateProfitByCurrentYear = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByCurrentYear
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const calculateProfitByLastMonth = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByLastMonth
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const calculateProfitByLastWeek = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByLastWeek
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const calculateProfitByLastYear = async () => {
+  try {
+    const serviceUrl = url.endpoint.chart.calculateProfitByLastYear
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const countAllUsers = async () => {
+  try {
+    const serviceUrl = 'charts/countAllUserInSystem'
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countAllProducts = async () => {
+  try {
+    const serviceUrl = 'charts/countAllProduct'
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const countAllAuctions = async () => {
+  try {
+    const serviceUrl = 'charts/countAllAuction'
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const getProfitByYear = async year => {
+  try {
+    const serviceUrl = `charts/get-profit-by-year?year=${year}`
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+const getAllProductSoldForEachBrand = async () => {
+  try {
+    const serviceUrl = 'charts/get-all-product-sold-for-each-brand'
+    const response = await utils.axiosLocalHost.get(serviceUrl)
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
 export default {
   fetchAllBrands,
   deleteBrandById,
@@ -236,6 +363,7 @@ export default {
   getAllCategories,
   countSellers,
   countBuyers,
+  countStaffs,
   countAuctionCompleted,
   countAuctionInProcess,
   countAuctionNew,
@@ -246,4 +374,15 @@ export default {
   countProductOnSell,
   countProductRejected,
   countProductSold,
+  calculateProfitByCurrentMonth,
+  calculateProfitByCurrentWeek,
+  calculateProfitByCurrentYear,
+  calculateProfitByLastMonth,
+  calculateProfitByLastWeek,
+  calculateProfitByLastYear,
+  countAllUsers,
+  countAllProducts,
+  countAllAuctions,
+  getProfitByYear,
+  getAllProductSoldForEachBrand,
 }
