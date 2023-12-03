@@ -80,6 +80,12 @@ const getHotAuctionsDesc = async (page=1, size=4) => {
   return response ? response.data : response
 }
 
+const getParticipatedAuction = async (page=1, size=1000) => {
+  const serviceUrl = `${url.endpoint.auctions.participatedAuction}`
+  const response = await utils.axiosLocalHost.get(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
   sendAuctionRequest,
   getAllActiveAuctions,
@@ -93,5 +99,6 @@ export default {
   updateAutoBid,
   getListAuctionWin,
   getAuctionBySeller,
-  getHotAuctionsDesc
+  getHotAuctionsDesc,
+  getParticipatedAuction
 }

@@ -13,6 +13,7 @@ import AuctionType from '../common-components/badge/AuctionType.vue'
 import userService from '@/services/user.service'
 import { useUserStore } from '@/stores/user.store'
 import ListProductImage from '@/components/product-detail/ListProductImage.vue'
+import { Tooltip } from 'ant-design-vue'
 
 const globalStore = useGlobalStore()
 const userStore = useUserStore()
@@ -151,8 +152,10 @@ const onPlaceBidClick = async () => {
               title="Xác nhận mua ngay">
               <div class="text-xl font-semibold text-blue-500">Bạn có chắc chắn mua ngay món hàng này hay không?</div>
             </Modal>
-
-            <div class="text-3xl my-3 text-black whitespace-nowrap">{{ auctionInfo?.product?.name }}</div>
+            <Tooltip class="relative" placement="bottomLeft">
+              <template #title>{{ auctionInfo?.product?.name }}</template>
+              <div class="text-3xl my-3 text-black truncate">{{ auctionInfo?.product?.name }}</div>
+            </Tooltip>
             <AuctionType :type="auctionInfo?.modelType" />
 
             <div class="tt-wrapper whitespace-nowrap">

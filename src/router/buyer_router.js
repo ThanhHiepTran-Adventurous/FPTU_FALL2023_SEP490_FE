@@ -4,7 +4,6 @@ import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductDetailPage from '@/views/buyer/child-page/ProductDetailPage.vue'
 import BoughtPageIntermediate from '@/views/buyer/child-page/bought_page/BoughtPageIntermediate.vue'
 import BoughtPageImmediate from '@/views/buyer/child-page/bought_page/BoughtPageImmediate.vue'
-import WishListPage from '@/views/buyer/child-page/WishlistPage.vue'
 import ComparePage from '@/views/buyer/child-page/ComparePage.vue'
 import LandingPage from '@/views/buyer/child-page/LandingPage.vue'
 import AuctionListPage from '@/views/buyer/child-page/AuctionListPage.vue'
@@ -14,6 +13,7 @@ import OrdersPageImmediate from '@/views/buyer/child-page/order_page/OrdersPageI
 import ReportPageImmediate from '@/views/buyer/child-page/report_page/ReportPageImmediate.vue'
 import ReportPageIntermediate from '@/views/buyer/child-page/report_page/ReportPageIntermediate.vue'
 import TransactionPage from '@/views/buyer/child-page/TransactionPage.vue'
+import ParticipatedPage from '@/views/buyer/ParticipatedPage.vue'
 import RefundPage from '@/views/buyer/child-page/RefundPage.vue'
 import WithdrawPage from '@/views/buyer/WithdrawPage.vue'
 
@@ -103,13 +103,9 @@ const buyer_router = [
         component: TransactionPage,
       },
       {
-        name: 'wishlist',
-        path: '/wishlist',
-        component: WishListPage,
-        meta: {
-          requiresAuth: false,
-          roles: [ENUM.BUYER.ROLE_ID],
-        },
+        name: 'bid-participated',
+        path: '/participated',
+        component: ParticipatedPage,
       },
       {
         name: 'compare',

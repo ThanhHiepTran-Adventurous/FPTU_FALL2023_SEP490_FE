@@ -42,10 +42,10 @@ export const buyerTabs = {
     icon: 'icon-park-outline:transaction',
     navLink: '/transaction',
   },
-  favorites: {
-    value: 'Yêu thích',
-    icon: 'streamline:interface-favorite-heart-reward-social-rating-media-heart-it-like-favorite-love',
-    navLink: '/favorites',
+  participated: {
+    value: 'Đấu giá đã tham gia',
+    icon: 'fluent-mdl2:product-list',
+    navLink: '/participated',
   },
 }
 

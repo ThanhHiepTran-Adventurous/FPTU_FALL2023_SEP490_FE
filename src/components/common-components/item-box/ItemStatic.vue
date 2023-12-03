@@ -55,9 +55,14 @@ const props = defineProps({
                         {{ formatCurrency(props.price) }}
                     </span>
                 </div>
-                <div class="pb-2">
+                <div v-if="props.timeRemain" class="pb-2">
                     <span class="bg-blue-100 text-blue-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
                         {{ parseMillisecondsIntoReadableTime(props.timeRemain) }}
+                    </span>
+                </div>
+                <div v-else>
+                    <span class="bg-red-100 text-red-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
+                        {{ `Kết thúc` }}
                     </span>
                 </div>
             </div>

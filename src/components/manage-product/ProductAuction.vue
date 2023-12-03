@@ -28,7 +28,7 @@ const breadcrumbItems = [
   },
 ]
 const currentPage = ref(1)
-const itemsPerPage = 12
+const itemsPerPage = 8
 const searchQuery = ref('')
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
@@ -112,7 +112,7 @@ onMounted(async () => {
 
     <!-- Main content -->
     <SellerSideBarLayout :cur-tab="sellerTabs.onAuctioning.value">
-      <div class="container py-2 mx-auto bg-white rounded-md h-[80vh]">
+      <div class="container py-2 mx-auto bg-white rounded-md min-h-[80vh] mb-3">
         <div class="mb-4 flex items-center mx-5 mt-4">
           <div class="w-full ml-2">
             <input
@@ -127,7 +127,7 @@ onMounted(async () => {
         <!-- Loading -->
         <Loading v-if="isLoading" />
         <!-- Data -->
-        <div v-else class="flex flex-wrap items-center mt-10 mx-5 gap-3 min-h-[50vh]">
+        <div v-else class="grid grid-cols-4 mt-10 mx-5 gap-8 min-h-[50vh]">
           <div class="w-full flex justify-center" v-if="!paginatedProducts || paginatedProducts.length <= 0">Không có sản phẩm nào đang đấu giá</div>
           <ItemStatic
             v-for="item in paginatedProducts"

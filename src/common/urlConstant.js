@@ -74,7 +74,8 @@ export default {
       getListAuctionWin: '/auctions/getListAuctionWin',
       auctionBySeller: 'auctions/seller/getListAuction-authorize',
       auctionHistoryAuthorized: '/auctions/public/auction-of-buyer/{auctionId}',
-      hotAuction: '/guest/auctions-guest/list-descending-priority-auction'
+      hotAuction: '/guest/auctions-guest/list-descending-priority-auction',
+      participatedAuction: '/auctions/buyer/history-auction-of-buyer'
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',
