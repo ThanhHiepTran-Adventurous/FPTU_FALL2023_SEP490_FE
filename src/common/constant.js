@@ -98,11 +98,6 @@ export const sellerTabs = {
 }
 
 export const staffTabs = {
-  shipRequests: {
-    value: 'Yêu cầu giao hàng',
-    icon: 'gridicons:shipping',
-    navLink: '/staff/manage-ship-request',
-  },
   allReports: {
     value: 'Danh sách khiếu nại',
     icon: 'ep:document',
@@ -119,7 +114,7 @@ export const defaultRoute = {
   buyer: '/',
   seller: '/manage/product-inventory',
   admin: '/admin/dashboard',
-  staff: '/staff/manage-ship-request',
+  staff: '/staff/report/unassigned',
 }
 
 //export const SIMPLE_TABLE_ITEMS_PER_PAGE = 8
