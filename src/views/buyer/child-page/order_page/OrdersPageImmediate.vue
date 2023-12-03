@@ -18,7 +18,9 @@ import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import toastOption from '@/utils/toast-option'
 import feedbackService from '@/services/feedback.service'
+import Loading from '@/components/common-components/Loading.vue'
 
+const isLoading = ref(false)
 const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
@@ -158,8 +160,10 @@ function handleConfirm() {
 }
 
 const fetchOrders = async () => {
+  isLoading.value = true
   const response = await OrderService.getAllOrders('', 1, 1000, '')
   orders.value = response.data ? response.data : []
+  isLoading.value = false
   filterData()
 }
 
@@ -203,7 +207,8 @@ function closeRatingModal() {
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap items-center mx-5 gap-3 py-10">
+        <Loading v-if="isLoading" />
+        <div v-else class="flex flex-wrap items-center mx-5 gap-3 py-10">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"
@@ -355,9 +360,6 @@ function closeRatingModal() {
                 <Icon icon="clarity:success-standard-solid" />
                 <div>Đã hoàn tất</div>
               </div>
-              <div v-if="detail?.statusOrder === OrderStatus.DONE.value">
-                <Button :type="constant.buttonTypes.OUTLINE" @click="activateRatingModel"> Đánh giá </Button>
-              </div>
             </div>
             <table class="w-full table-auto text-lg">
               <tbody>
@@ -426,7 +428,9 @@ function closeRatingModal() {
         <div>
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
-        <div></div>
+        <div v-if="detail?.statusOrder === OrderStatus.DONE.value">
+          <Button :type="constant.buttonTypes.OUTLINE" @click="activateRatingModel"> Đánh giá </Button>
+        </div>
         <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
             <Button>

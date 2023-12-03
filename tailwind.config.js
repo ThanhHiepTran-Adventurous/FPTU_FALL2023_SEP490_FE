@@ -371,6 +371,7 @@ module.exports = {
   },
   plugins: [
     require('@vueform/slider/tailwind'),
-    require('flowbite/plugin')
+    require('flowbite/plugin'),
+    require('@tailwindcss/line-clamp')
   ],
 }

@@ -68,7 +68,7 @@ export const sellerTabs = {
   onAuctioned: {
     value: 'Đấu giá hoàn thành',
     icon: 'streamline:computer-desktop-check-success-approve-device-display-desktop-computer',
-    navLink: '/manage/auctioned',
+    navLink: '/manage/auctioned/immediate',
   },
   orders: {
     value: 'Đơn hàng',

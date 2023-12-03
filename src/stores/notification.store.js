@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { NotiReadEnum } from "@/common/contract"
+import { NotiReadEnum, Role } from "@/common/contract"
 import userService from "@/services/user.service";
+import { useUserStore } from "./user.store";
 
 export const useNotificationStore = defineStore("notification", {
   state: () => ({
@@ -15,6 +16,11 @@ export const useNotificationStore = defineStore("notification", {
         return this.notifications
     },
     async syncNotifications(){
+        const userStore = useUserStore()
+        const role = userStore.getRoleAndGetFromLocalStorageIfNotExist()
+        if(!userStore.getTokenAndGetFromLocalStorageIfNotExist() || role === Role.admin.value || role === Role.staff.value){
+            return
+        }
         const response = await userService.getAllNotification()
         this.notifications = response.data || []
         const notReadArr = this.notifications.filter(n => n.isRead !== NotiReadEnum.READ)

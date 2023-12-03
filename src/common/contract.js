@@ -113,21 +113,6 @@ export const OrderStatus = {
   },
 }
 
-export const Configuration = {
-  PaymentDeadline: {
-    key: 'PAYMENTDEADLINE',
-    value: 3,
-  },
-  ReturnPolicyDay: {
-    key: 'RETURNPOLICYDAY',
-    value: 0,
-  },
-  PercentageProfit: {
-    key: 'PERCENTAGECONFIGVALUE',
-    value: 0,
-  },
-}
-
 export const StatusShipRequest = {
   waitingForConfirmation: {
     icon: 'mdi:package-variant-closed-delivered',

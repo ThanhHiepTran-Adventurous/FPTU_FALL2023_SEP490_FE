@@ -2,7 +2,6 @@ import ManagerAllPage from '@/views/seller/ManagerAllPage.vue'
 import ComingSoonPage from '@/views/common/ComingSoonPage.vue'
 import ProductStore from '@/components/manage-product/ProductStore.vue'
 import ProductAuction from '@/components/manage-product/ProductAuction.vue'
-import ProductSell from '@/components/manage-product/ProductSell.vue'
 import ProductReject from '@/components/manage-product/ProductReject.vue'
 import ProductReportImmediate from '@/views/seller/report_page/ReportPageImmediate.vue'
 import ProductReportIntermediate from '@/views/seller/report_page/ReportPageIntermediate.vue'
@@ -12,6 +11,8 @@ import ProductInOrderIntermediate from '@/components/manage-product/ProductInOrd
 import SellerReturnTrackPage from '@/views/seller/SellerReturnTrackPage.vue'
 import WithdrawPage from '@/views/seller/WithdrawPage.vue'
 import TestComponent from '@/views/TestComponent.vue'
+import ProductSellImmediate from '@/components/manage-product/ProductSellImmediate.vue'
+import ProductSellIntermediate from '@/components/manage-product/ProductSellIntermediate.vue'
 
 const seller_router = [
   {
@@ -35,9 +36,14 @@ const seller_router = [
         component: ProductAuction,
       },
       {
-        name: 'product-sold',
-        path: '/manage/auctioned',
-        component: ProductSell,
+        name: 'product-sold-immediate',
+        path: '/manage/auctioned/immediate',
+        component: ProductSellImmediate,
+      },
+      {
+        name: 'product-sold-intermediate',
+        path: '/manage/auctioned/intermediate',
+        component: ProductSellIntermediate,
       },
       {
         name: 'product-rejected',

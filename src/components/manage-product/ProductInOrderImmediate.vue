@@ -1,15 +1,11 @@
 <script setup>
 import { onMounted, ref, watch, computed } from 'vue'
-import SearchInput from '../common-components/SearchInput.vue'
-import auctionService from '@/services/auction.service'
 import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
-import ItemSold from '../common-components/item-box/ItemSold.vue'
 import imageHelper from '@/utils/image-helper'
 import { AuctionModelType, OrderStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
-import Dropdown from '../common-components/Dropdown.vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { sellerTabs } from '@/common/constant'
 import OrderService from '@/services/order.service'
@@ -18,6 +14,8 @@ import OrderTimeline from '../OrderTimeline.vue'
 import { useRouter } from 'vue-router'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import TwoOptionsTab from '../TwoOptionsTab.vue'
+import Loading from '../common-components/Loading.vue'
 
 const breadcrumbItems = [
   {
@@ -38,12 +36,13 @@ const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
 
+const isLoading = ref(false)
 const isModalVisible = ref(false)
 const isUpdating = ref(false)
 const currentPage = ref(1)
 
 const searchQuery = ref('')
-const itemsPerPage = 6
+const itemsPerPage = 8
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
@@ -76,30 +75,10 @@ const paginatedProducts = computed(() => {
     .filter(product => product.productResponse?.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
     .slice(startIndex, endIndex)
 })
-// Filter
-const options = ref([
-  {
-    label: 'Tự trao đổi',
-    value: AuctionModelType.immediate,
-  },
-  {
-    label: 'Trung gian qua hệ thống',
-    value: AuctionModelType.intermediate,
-  },
-])
 
-const selected = ref({
-  label: 'Tự trao đổi',
-  value: AuctionModelType.immediate,
-})
-watch(selected, (newVal, oldVal) => {
-  if (newVal.value === AuctionModelType.intermediate) {
-    router.push('/manage/orders/intermediate')
-  }
-})
 const filterData = () => {
   ordersFiltered.value = orders.value
-    .filter(v => v.modelTypeAuctionOfOrder === selected.value.value)
+    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.immediate)
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
@@ -127,7 +106,9 @@ function handleConfirm() {
 }
 
 const fetchOrders = async () => {
+  isLoading.value = true
   const response = await OrderService.getAllOrders('', 1, 1000, '')
+  isLoading.value = false
   orders.value = response.data ? response.data : []
   filterData()
 }
@@ -147,9 +128,22 @@ onMounted(() => {
     <!-- Main content -->
     <SellerSideBarLayout :cur-tab="sellerTabs.orders.value">
       <div class="container py-2 mx-auto bg-white rounded-md min-h-[80vh]">
+        <!-- Header -->
+        <div class="pt-3 px-5 pb-1 flex items-center justify-between">
+          <div class="font-bold text-2xl text-black text-blue-800 flex">
+            <div>
+              Đơn hàng
+            </div>
+          </div>
+          <TwoOptionsTab
+            immediate-option-nav="/manage/orders/immediate"
+            intermediate-option-nav="/manage/orders/intermediate"
+            :cur-tab="AuctionModelType.immediate"
+          />
+        </div>
+        <!-- Filter -->
         <div class="mb-4 mx-5 mt-4">
           <div class="mt-3 flex items-center gap-3">
-            <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
             <div class="w-full">
               <input
                 v-model="searchQuery"
@@ -161,7 +155,8 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap items-center mx-5 gap-3">
+        <Loading v-if="isLoading" />
+        <div v-else class="mx-5 grid grid-cols-4">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"

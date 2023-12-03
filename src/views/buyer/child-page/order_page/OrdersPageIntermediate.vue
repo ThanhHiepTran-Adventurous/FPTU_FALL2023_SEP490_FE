@@ -23,6 +23,10 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 import ShippingStatusIntermediate from '@/components/common-components/badge/ShippingStatusIntermediate.vue'
 import shiprequestService from '@/services/shiprequest.service'
 import feedbackService from '@/services/feedback.service'
+import Loading from '@/components/common-components/Loading.vue'
+
+const isLoading = ref(false)
+
 const orders = ref([])
 const ordersFiltered = ref([])
 
@@ -145,7 +149,9 @@ const paginatedProducts = computed(() => {
     .slice(startIndex, endIndex)
 })
 const fetchOrders = async () => {
+  isLoading.value = true
   const response = await OrderService.getAllOrders('', 1, 1000, '')
+  isLoading.value = false
   orders.value = response.data
     ? response.data.map(f => {
         if (!f.shipRequestList) {
@@ -301,7 +307,8 @@ const submitRating = async () => {
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap items-center mx-5 gap-3 py-6">
+        <Loading v-if="isLoading"/>
+        <div v-else class="flex flex-wrap items-center mx-5 gap-3 py-6">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"
@@ -457,9 +464,6 @@ const submitRating = async () => {
                 <Icon icon="clarity:success-standard-solid" />
                 <div>Đã hoàn tất</div>
               </div>
-              <div v-if="detail?.statusOrder === OrderStatus.DONE.value">
-                <Button :type="constant.buttonTypes.OUTLINE" @click="activateRatingModel"> Đánh giá </Button>
-              </div>
             </div>
 
             <table class="w-full table-auto text-lg">
@@ -541,6 +545,9 @@ const submitRating = async () => {
         <div>
           <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
         </div>
+        <div v-if="detail?.statusOrder === OrderStatus.DONE.value">
+          <Button :type="constant.buttonTypes.OUTLINE" @click="activateRatingModel"> Đánh giá </Button>
+        </div>
         <div>
           <Button :disabled="!isRefunable || detail?.statusOrder === OrderStatus.DONE.value" @on-click="openReportModal">
             <div class="flex items-center">
@@ -557,9 +564,6 @@ const submitRating = async () => {
             </div>
           </Button>
         </div>
-        <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="onReportModalDecline" />
-
-        <div></div>
         <div v-if="detail?.modelTypeAuctionOfOrder === AuctionModelType.immediate">
           <router-link :to="`/messenger/${detail?.chatGroupDTOs.id}`">
             <Button>
@@ -571,6 +575,7 @@ const submitRating = async () => {
           </router-link>
         </div>
       </template>
+      <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="onReportModalDecline" />
     </Modal>
   </div>
 </template>

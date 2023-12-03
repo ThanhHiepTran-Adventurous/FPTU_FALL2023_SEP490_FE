@@ -1,13 +1,10 @@
 <script setup>
 import { onMounted, ref, watch, computed } from 'vue'
-import SearchInput from '../common-components/SearchInput.vue'
 import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
 import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
-import { Icon } from '@iconify/vue'
-import Dropdown from '../common-components/Dropdown.vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { sellerTabs } from '@/common/constant'
 import OrderService from '@/services/order.service'
@@ -17,11 +14,11 @@ import { useRouter } from 'vue-router'
 import ShipRequestService from '@/services/shiprequest.service'
 import toastOption from '@/utils/toast-option'
 import withdraw from '../../services/withdraw.service'
-import ReportService from '@/services/report.service'
-import ReportModal from '@/components/ReportModal.vue'
 import ShippingStatusIntermediate from '../common-components/badge/ShippingStatusIntermediate.vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import TwoOptionsTab from '../TwoOptionsTab.vue'
+import Loading from '../common-components/Loading.vue'
 
 const breadcrumbItems = [
   {
@@ -41,47 +38,21 @@ const router = useRouter()
 const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
+const isLoading = ref(false)
 
 const isModalVisible = ref(false)
 const isUpdating = ref(false)
-const isReportModalOpen = ref(false)
-const openReportModal = () => {
-  isReportModalOpen.value = true
-}
-const closeReportModal = () => {
-  isReportModalOpen.value = false
-}
-// Filter
-const options = ref([
-  {
-    label: 'Tự trao đổi',
-    value: AuctionModelType.immediate,
-  },
-  {
-    label: 'Trung gian qua hệ thống',
-    value: AuctionModelType.intermediate,
-  },
-])
 
-const selected = ref({
-  label: 'Trung gian qua hệ thống',
-  value: AuctionModelType.intermediate,
-})
-watch(selected, newVal => {
-  if (newVal.value === AuctionModelType.immediate) {
-    router.push('/manage/orders/immediate')
-  }
-})
 const filterData = async () => {
   ordersFiltered.value = orders.value
-    .filter(v => v.modelTypeAuctionOfOrder === selected.value.value)
+    .filter(v => v.modelTypeAuctionOfOrder === AuctionModelType.intermediate)
     .sort((a, b) => {
       return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
 }
 const currentPage = ref(1)
 const searchQuery = ref('')
-const itemsPerPage = 6
+const itemsPerPage = 8
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
@@ -149,7 +120,9 @@ function handleConfirm() {
 }
 
 const fetchOrders = async () => {
+  isLoading.value = true
   const response = await OrderService.getAllOrders('', 1, 1000, '')
+  isLoading.value = false
   orders.value = response.data
     ? response.data.map(f => {
         if (!f.shipRequestList) {
@@ -184,9 +157,22 @@ onMounted(() => {
     <!-- Main content -->
     <SellerSideBarLayout :cur-tab="sellerTabs.orders.value">
       <div class="container py-2 mx-auto bg-white rounded-md min-h-[80vh]">
+        <!-- Header -->
+        <div class="pt-3 px-5 pb-1 flex items-center justify-between">
+          <div class="font-bold text-2xl text-black text-blue-800 flex">
+            <div>
+              Đơn hàng
+            </div>
+          </div>
+          <TwoOptionsTab
+            immediate-option-nav="/manage/orders/immediate"
+            intermediate-option-nav="/manage/orders/intermediate"
+            :cur-tab="AuctionModelType.intermediate"
+          />
+        </div>
+        <!-- Filter -->
         <div class="mb-4 mx-5 mt-4">
           <div class="mt-3 flex items-center gap-3">
-            <Dropdown v-model="selected" :data="options" class="!w-[300px]" />
             <div class="w-full">
               <input
                 v-model="searchQuery"
@@ -198,7 +184,8 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap items-center mx-5 gap-3">
+        <Loading v-if="isLoading" />
+        <div v-else class="grid grid-cols-4 mx-5">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"

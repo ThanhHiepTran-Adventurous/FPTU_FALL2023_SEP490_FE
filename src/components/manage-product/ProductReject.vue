@@ -29,6 +29,8 @@ import currencyFormatter from '@/utils/currencyFormatter'
 import toastOption from '@/utils/toast-option'
 import { ProductStatus } from '@/common/contract'
 import ErrorMessage from '../common-components/ErrorMessage.vue'
+import { getUuidSplitted } from '@/utils/uuid-cutter'
+import { Tooltip } from 'ant-design-vue'
 
 const allowedModalTypes = { info: 'info' }
 const typeofModal = ref('info')
@@ -375,12 +377,12 @@ const openProductModal = product => {
               <table class="w-full text-sm text-left text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
-                    <th scope="col" class="px-5 py-3">Tên sản phẩm</th>
-
-                    <th scope="col" class="px-4 py-3">Mô tả</th>
-                    <th scope="col" class="px-4 py-3">Lý do</th>
-                    <th scope="col" class="px-4 py-3">Ngày tạo</th>
-                    <th scope="col" class="px-4 py-3">
+                    <th scope="col" class="px-5 py-3 w-[10%]">ID</th>
+                    <th scope="col" class="px-5 py-3 w-[20%]">Tên sản phẩm</th>
+                    <th scope="col" class="px-4 py-3 w-[25%]">Mô tả</th>
+                    <th scope="col" class="px-4 py-3 w-[25%]">Lý do</th>
+                    <th scope="col" class="px-4 py-3 w-[10%]">Ngày tạo</th>
+                    <th scope="col" class="px-4 py-3 w-[10%]">
                       <span class="sr-only">Actions</span>
                     </th>
                   </tr>
@@ -391,15 +393,24 @@ const openProductModal = product => {
                     :key="index"
                     class="border-b dark:border-gray-700"
                     @click="openProductModal(auction)">
-                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
-                      <div class="pl-3">
-                        <div class="text-base font-semibold">{{ auction?.product?.name }}</div>
-                      </div>
-                    </th>
-                    <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
-                      {{ auction?.product?.description }}
+                    <td class="px-4 py-3">
+                      {{ getUuidSplitted(auction?.product?.id) }}
                     </td>
-                    <td class="px-4 py-3" style="white-space: pre-line; word-wrap: break-word">
+                    <td class="px-6 py-0">
+                      <Tooltip class="relative" placement="bottomLeft">
+                        <template #title>{{ auction?.product?.name }}</template>
+                        <div class="text-base font-semibold text-black line-clamp-1">{{ auction?.product?.name }}</div>
+                      </Tooltip>
+                    </td>
+                    <td class="px-4 py-0">
+                      <Tooltip class="relative" placement="bottomLeft">
+                        <template #title>{{ auction?.product?.description }}</template>
+                        <div class="line-clamp-1">
+                          {{ auction?.product?.description }}
+                        </div>
+                      </Tooltip>
+                    </td>
+                    <td class="px-4 py-3">
                       {{ auction?.rejectReason }}
                     </td>
                     <td class="px-4 py-3">
@@ -637,6 +648,7 @@ const openProductModal = product => {
                           <textarea
                             type="string"
                             name="description"
+                            rows="6"
                             readonly
                             id="description"
                             :value="selectedProduct?.product?.description"
@@ -662,10 +674,10 @@ const openProductModal = product => {
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm </label>
                   <input
                     v-model="productFormData.name"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    class="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
                     id="title"
                     type="text"
-                    placeholder="Nhập tên sản phẩm" />
+                  />
                   <ErrorMessage :text="manualAuctionErrorState.productName" />
                 </div>
                 <div class="mb-4">
@@ -674,18 +686,17 @@ const openProductModal = product => {
                     v-model="productFormData.description"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="description"
-                    rows="4"
-                    placeholder="Nhập mô tả"></textarea>
+                  ></textarea>
                   <ErrorMessage :text="manualAuctionErrorState.description" />
                 </div>
                 <div class="mb-4">
-                  <label class="block text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
+                  <label class="block text-sm text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
                   <input
                     v-model="productFormData.weight"
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="weight"
                     type="text"
-                    placeholder="Nhập trọng lượng" />
+                  />
                   <ErrorMessage :text="manualAuctionErrorState.weight" />
                 </div>
                 <div class="mb-4">

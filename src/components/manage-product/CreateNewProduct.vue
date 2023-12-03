@@ -172,7 +172,7 @@ const resetFormData = () => {
       </label>
       <input
         v-model="formData.name"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="title"
         type="text"
         placeholder="Nhập tên sản phẩm" />
@@ -196,7 +196,7 @@ const resetFormData = () => {
       </label>
       <input
         v-model="formData.weight"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="shadow  text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         id="weight"
         type="number"
         min="0"

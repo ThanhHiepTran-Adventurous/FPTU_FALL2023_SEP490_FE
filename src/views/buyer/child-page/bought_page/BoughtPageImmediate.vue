@@ -11,6 +11,7 @@ import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import { AuctionModelType } from '@/common/contract'
 import AuctionCard from '@/components/AuctionCard.vue'
 import { Tooltip } from 'ant-design-vue';
+import Loading from '@/components/common-components/Loading.vue'
 
 const breadcrumbItems = [
   {
@@ -25,6 +26,7 @@ const breadcrumbItems = [
   },
 ]
 
+const isLoading = ref(false)
 const auctionWins = ref([])
 const auctionWinFiltered = ref([])
 
@@ -39,7 +41,9 @@ const filterData = () => {
     })
 }
 const fetchAuctionWinData = async () => {
+  isLoading.value = true
   const response = await auctionService.getListAuctionWin()
+  isLoading.value = false
   auctionWins.value = response.data
   auctionWinFiltered.value = JSON.parse(JSON.stringify(auctionWins.value))
   filterData()
@@ -126,8 +130,8 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-
-        <div class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
+        <Loading v-if="isLoading" />
+        <div v-else class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
           <AuctionCard
             v-for="auction in paginatedProducts"
             :key="auction.id"

@@ -25,6 +25,7 @@ const emit = defineEmits(['placeBidSuccess', 'buyNowSuccess'])
 
 const props = defineProps({
   auctionInfo: Object,
+  isClosed: Boolean
 })
 
 const deadlineInMilis = computed(() => {
@@ -117,7 +118,7 @@ const onPlaceBidClick = async () => {
             <ListProductImage :images="auctionInfo?.product?.imageUrls" />
           </div>
         </article>
-        <article class="bg-white">
+        <article class="bg-white ml-3">
           <div class="">
             <Modal
               v-if="isModalVisible"
@@ -156,7 +157,7 @@ const onPlaceBidClick = async () => {
 
             <div class="tt-wrapper whitespace-nowrap">
               <div class="tt-countdown_box_02 mt-3 mb-2">
-                <div v-if="auctionInfo?.timeLeft > 0" class="tt-countdown_inner">
+                <div v-if="isClosed === false" class="tt-countdown_inner">
                   <CountDown :coefficientSize="0.6" :deadlineInMilis="deadlineInMilis" />
                 </div>
                 <div v-else class="text-red-600 text-lg">&lt; Phiên đấu giá đã kết thúc ></div>
@@ -189,9 +190,6 @@ const onPlaceBidClick = async () => {
                       </div>
                     </div>
                   </div>
-                  <!-- <div class="mt-1 mb-6">
-                    {{ auctionInfo?.lastBidDetail }}
-                  </div> -->
                   <div>
                     <div v-if="auctionInfo?.highestPrice" class="mt-1">
                       Đặt lần cuối bởi: {{ auctionInfo?.latestBidderInfo?.identifier }} - Lúc:
@@ -199,7 +197,7 @@ const onPlaceBidClick = async () => {
                     </div>
                     <div v-else class="ml-[13rem] mt-1">Hiện tại chưa có người đặt giá</div>
                   </div>
-                  <div class="flex">
+                  <div v-if="isClosed === false" class="flex mt-3">
                     <button
                       @click="onBuyNowClick()"
                       type="button"

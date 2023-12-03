@@ -14,6 +14,7 @@ import { Icon } from '@iconify/vue'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import { sellerTabs } from '@/common/constant'
 
 const breadcrumbItems = [
   {

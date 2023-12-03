@@ -18,8 +18,7 @@ import { Tooltip } from 'ant-design-vue';
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
-import * as yup from 'yup'
-import { ErrorMessage, Field, Form } from 'vee-validate'
+import Loading from '@/components/common-components/Loading.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -27,7 +26,6 @@ let responeCode = ref('')
 let transactionStatus = ref('')
 let autionIdd = ref('')
 
-const isInEditMode = ref(false)
 const getQueryParameters = () => {
   const queryParams = route.query
   responeCode.value = queryParams.vnp_ResponseCode
@@ -48,7 +46,7 @@ const updateAddressOrderAfterPayment = async () => {
     buyerPhoneNumber,
     buyerAddress,
   }
-  if (responeCode === '00' && transactionStatus === '00') {
+  if (responeCode.value === '00' && transactionStatus.value === '00') {
     const response = await orderService.getOrdersByAuctionId(retrievedAuctionId)
     const orderId = response.data.id
     if (orderId) {
@@ -80,12 +78,14 @@ const breadcrumbItems = [
     disabled: true,
   },
 ]
+
+const isLoading = ref(false)
 const auctionWins = ref([])
 const auctionWinFiltered = ref([])
 
 const openPaymentModel = autionId => {
   showPaymentModel.value = true
-  autionIdd = autionId
+  autionIdd.value = autionId
 }
 
 const closeModal = () => {
@@ -142,7 +142,9 @@ const filterData = () => {
     })
 }
 const fetchAuctionWinData = async () => {
+  isLoading.value = true
   const response = await auctionService.getListAuctionWin()
+  isLoading.value = false
   auctionWins.value = response.data
   auctionWinFiltered.value = JSON.parse(JSON.stringify(auctionWins.value))
   filterData()
@@ -196,28 +198,11 @@ const payment = async auctionId => {
     console.error('Error during payment:', error)
   }
 }
-const onSubmit = async autionIdd => {
-  try {
-    await schema.validate(
-      {
-        phone: profileModelData.value.phone,
-        address: profileModelData.value.address,
-        selectedProvince: selectedProvince.value.label,
-        selectedDistrict: selectedDistrict.value.label,
-        selectedWard: selectedWard.value.label,
-      },
-      { abortEarly: false },
-    )
 
-    payment(autionIdd)
-  } catch (error) {
-    console.error('Validation error:', error.errors)
-    // Handle displaying validation errors to the user if needed
-  }
-}
 const provinces = ref([])
 const wards = ref([])
 const districts = ref([])
+
 watch(selectedProvince, async () => {
   const districtsFetch = await locationService.fetchAllDistrictOfProvinces(selectedProvince.value.data)
   districts.value = districtsFetch.data.map(p => {
@@ -236,14 +221,6 @@ watch(selectedDistrict, async () => {
       data: p.code,
     }
   })
-})
-
-const schema = yup.object().shape({
-  phone: yup.string().required('Số điện thoại là trường bắt buộc'),
-  address: yup.string().required('Số nhà là trường bắt buộc'),
-  selectedProvince: yup.string().required('Tỉnh / Thành phố là trường bắt buộc'),
-  selectedDistrict: yup.string().required('Quận / Huyện là trường bắt buộc'),
-  selectedWard: yup.string().required('Phường / Xã là trường bắt buộc'),
 })
 </script>
 
@@ -285,81 +262,85 @@ const schema = yup.object().shape({
           </div>
         </div>
 
-        <div class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
-          <AuctionCard
-            v-for="auction in paginatedProducts"
-            :key="auction.id"
-            :image-url="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)"
-            :product-name="auction.informationAuction.product.name"
-            :auction-type="auction.informationAuction.modelType"
-            :price="auction.finalPrice"
-            :catched-at="auction.winAt"
-            @action-triggered="openPaymentModel(auction.informationAuction.id)" />
+        <div class="flex flex-col justify-between min-h-[60vh]">
+          <Loading v-if="isLoading"/>
+          <div v-else class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
+            <AuctionCard
+              v-for="auction in paginatedProducts"
+              :key="auction.id"
+              :image-url="imageHelper.getPrimaryImageFromList(auction.informationAuction.product.imageUrls)"
+              :product-name="auction.informationAuction.product.name"
+              :auction-type="auction.informationAuction.modelType"
+              :price="auction.finalPrice"
+              :catched-at="auction.winAt"
+              @action-triggered="openPaymentModel(auction.informationAuction.id)" />
+          </div>
+          <nav
+            class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+            aria-label="Table navigation">
+            <ul class="inline-flex items-stretch -space-x-px">
+              <li>
+                <button
+                  type="button"
+                  class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  @click="goToPreviousPage"
+                  :disabled="currentPage === 1"
+                  aria-label="Previous Page">
+                  <span class="sr-only">Previous</span>
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </li>
+              <!-- Generate pagination links -->
+              <li v-for="pageNumber in totalPages" :key="pageNumber">
+                <button
+                  type="button"
+                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
+                  :class="{
+                    'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                      pageNumber !== currentPage,
+                    'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                      pageNumber === currentPage,
+                  }"
+                  @click="goToPage(pageNumber)"
+                  aria-label="Page {{ pageNumber }}">
+                  {{ pageNumber }}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  @click="goToNextPage"
+                  class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                  :disabled="currentPage === totalPages"
+                  aria-label="Next Page">
+                  <span class="sr-only">Next</span>
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewbox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
-        <nav
-          class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-          aria-label="Table navigation">
-          <ul class="inline-flex items-stretch -space-x-px">
-            <li>
-              <button
-                type="button"
-                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                @click="goToPreviousPage"
-                :disabled="currentPage === 1"
-                aria-label="Previous Page">
-                <span class="sr-only">Previous</span>
-                <svg
-                  class="w-5 h-5"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill-rule="evenodd"
-                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                    clip-rule="evenodd" />
-                </svg>
-              </button>
-            </li>
-            <!-- Generate pagination links -->
-            <li v-for="pageNumber in totalPages" :key="pageNumber">
-              <button
-                type="button"
-                class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
-                :class="{
-                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
-                    pageNumber !== currentPage,
-                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
-                    pageNumber === currentPage,
-                }"
-                @click="goToPage(pageNumber)"
-                aria-label="Page {{ pageNumber }}">
-                {{ pageNumber }}
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                @click="goToNextPage"
-                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                :disabled="currentPage === totalPages"
-                aria-label="Next Page">
-                <span class="sr-only">Next</span>
-                <svg
-                  class="w-5 h-5"
-                  aria-hidden="true"
-                  fill="currentColor"
-                  viewbox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd" />
-                </svg>
-              </button>
-            </li>
-          </ul>
-        </nav>
+
       </div>
     </SideBarLayout>
 
@@ -401,18 +382,17 @@ const schema = yup.object().shape({
               </button>
             </div>
             <!-- Modal body -->
-            <form @submit.prevent="onSubmit(autionIdd)" :validation-schema="schema">
+            <div>
               <div class="grid gap-4 mb-4 sm:grid-cols-2">
                 <div>
                   <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >Số điện thoại</label
                   >
-                  <Field
+                  <input
                     name="phone"
                     type="text"
                     v-model="profileModelData.phone"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="phone" class="text-start text-danger pt-2 fs-6" />
                 </div>
                 <div>
                   <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -424,7 +404,6 @@ const schema = yup.object().shape({
                     id="address"
                     v-model="profileModelData.address"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="address" class="text-start text-danger pt-2 fs-6" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -435,7 +414,6 @@ const schema = yup.object().shape({
                     v-model="selectedProvince"
                     :data="provinces"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="provinces" class="text-start text-danger pt-2 fs-6" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -456,17 +434,17 @@ const schema = yup.object().shape({
                     v-model="selectedWard"
                     :data="wards"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="wards" class="text-start text-danger pt-2 fs-6" />
                 </div>
               </div>
               <div class="flex items-center space-x-4">
                 <button
                   type="submit"
+                  @click="payment(autionIdd)"
                   class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Thanh toán
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

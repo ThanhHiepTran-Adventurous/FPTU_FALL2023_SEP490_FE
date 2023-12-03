@@ -1,20 +1,18 @@
 <script setup>
-import ListProductImage from '@/components/product-detail/ListProductImage.vue'
 import ProductInfo from '@/components/product-detail/ProductInfo.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import AuctionHistoryBid from '@/components/product-detail/AuctionHistoryBid.vue'
-import ItemBox from '@/components/common-components/item-box/ItemBox.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
 import auctionService from '@/services/auction.service'
 import feedbackService from '@/services/feedback.service'
 import moment from 'moment'
-import toastOption from '@/utils/toast-option'
-import { Carousel } from 'flowbite-vue'
 import { AuctionModelType } from '@/common/contract'
 import { useGlobalStore } from '@/stores/global.store'
 
 const globalStore = useGlobalStore()
+
+const isAuctionClosed = ref(false)
 
 const itemsPerPage = ref(3)
 const currentPage = ref(1)
@@ -97,6 +95,8 @@ const fetchDetail = async () => {
 const fetchBidHistory = async () => {
   const response = globalStore.isAlreadyLogin() === true ? await auctionService.getHistoryBidAuthorized(route.params['id']) : await auctionService.getHistoryBid(route.params['id'])
   const data = response.data
+  isAuctionClosedCheck(data)
+
   numOfUsers.value = data.bidders || 0
   numOfBids.value = data.bids || 0
 
@@ -134,6 +134,12 @@ const fetchBidHistory = async () => {
       auction.value = { ...auction.value, latestBidderInfo }
     }
     auction.value.highestPrice = topBidderData.bidAmount
+  }
+}
+
+const isAuctionClosedCheck = (historyInfo) => {
+  if(historyInfo.timeLeft === 0 /*OR currentBidHighest = buyNowPrice*/){
+    isAuctionClosed.value = true
   }
 }
 
@@ -200,6 +206,7 @@ onBeforeUnmount(() => {
             <div>
               <ProductInfo
                 :auction-info="auction"
+                :is-closed="isAuctionClosed"
                 @place-bid-success="fetchPageData()"
                 @buy-now-success="onBuyNowSuccess()"
               />

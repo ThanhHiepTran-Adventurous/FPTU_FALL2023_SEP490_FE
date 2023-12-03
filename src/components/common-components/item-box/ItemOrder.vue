@@ -57,7 +57,7 @@ const props = defineProps({
 <template>
   <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200 !mb-3">
     <div class="tt-image-box">
-      <router-link :to="`/messenger/${chatGroupId}`" v-if="!statusShipRequest">
+      <router-link v-if="auctionType === AuctionModelType.immediate" :to="`/messenger/${chatGroupId}`">
         <Icon icon="et:chat" class="tt-btn-quickview !text-[14px] p-2" />
       </router-link>
       <a class="block w-[220px] h-[210px] overflow-hidden relative">

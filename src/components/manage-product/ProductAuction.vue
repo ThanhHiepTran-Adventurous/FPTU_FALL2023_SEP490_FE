@@ -87,7 +87,7 @@ const fetchProducts = async () => {
   isLoading.value = true
   const onSellingQuery = 'status:IN_PROCESS'
   const data = await auctionService.getAuctionBySeller(onSellingQuery)
-  products.value = data.data
+  products.value = data.data ? data.data : []
   isLoading.value = false
 }
 const calculateCurrentPrice = auction => {
@@ -127,7 +127,8 @@ onMounted(async () => {
         <!-- Loading -->
         <Loading v-if="isLoading" />
         <!-- Data -->
-        <div v-else class="flex flex-wrap items-center mt-10 mx-5 gap-3">
+        <div v-else class="flex flex-wrap items-center mt-10 mx-5 gap-3 min-h-[50vh]">
+          <div class="w-full flex justify-center" v-if="!paginatedProducts || paginatedProducts.length <= 0">Không có sản phẩm nào đang đấu giá</div>
           <ItemStatic
             v-for="item in paginatedProducts"
             :key="item.id"
