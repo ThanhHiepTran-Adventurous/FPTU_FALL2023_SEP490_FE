@@ -10,7 +10,6 @@ import { useGlobalStore } from '@/stores/global.store';
 import { useRouter } from 'vue-router';
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue';
 
-const globalStore = useGlobalStore()
 const router = useRouter()
 
 const breadcrumbItems = [
