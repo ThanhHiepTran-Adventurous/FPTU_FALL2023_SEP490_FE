@@ -76,28 +76,6 @@ const confirmToWaitingForDelivery = async shipRequestId => {
     console.error(e)
   }
 }
-const staffChangeShipRequestToOnDelivery = async shipRequestId => {
-  try {
-    showUpdateModal.value = false
-    await ShipRequestService.staffChangeShipRequestToOnDelivery(shipRequestId)
-    toastOption.toastSuccess('Xác nhận đơn hàng đang vận chuyển thành công')
-    getAllShipRequest()
-  } catch (e) {
-    toastOption.toastError('Xác nhận đơn hàng đang vận chuyển thất bại')
-    console.error(e)
-  }
-}
-const staffChangeShipRequestToDelivered = async shipRequestId => {
-  try {
-    showUpdateModal.value = false
-    await ShipRequestService.staffChangeShipRequestToDelivered(shipRequestId)
-    toastOption.toastSuccess('Xác nhận đơn hàng đã giao thành công')
-    getAllShipRequest()
-  } catch (e) {
-    toastOption.toastError('Xác nhận đơn hàng đã giao thất bại')
-    console.error(e)
-  }
-}
 </script>
 
 <template>
@@ -412,20 +390,6 @@ const staffChangeShipRequestToDelivered = async shipRequestId => {
                 type="button"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 Xác nhận đơn hàng
-              </button>
-              <button
-                v-if="selectedShip?.status === 'WAITING_FOR_DELIVERY'"
-                @click="staffChangeShipRequestToOnDelivery(selectedShip?.id)"
-                type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                Xác nhận đang vận chuyển
-              </button>
-              <button
-                v-if="selectedShip?.status === 'ON_DELIVERY'"
-                @click="staffChangeShipRequestToDelivered(selectedShip?.id)"
-                type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                Xác nhận đơn hàng đã giao
               </button>
             </div>
           </form>
