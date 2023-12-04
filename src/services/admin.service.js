@@ -352,6 +352,58 @@ const getAllProductSoldForEachBrand = async () => {
     throw error
   }
 }
+const deleteCategoryById = async categoryId => {
+  const serviceUrl = url.endpoint.category.deleteById.replace('{categoryId}', categoryId)
+  const response = await utils.axiosLocalHost.delete(serviceUrl)
+  return response ? response.data : response
+}
+
+const updateCategoryById = async (categoryId, formData, updateCategoryRequest) => {
+  try {
+    // Append the updateCategoryRequest as a JSON string to the FormData
+    formData.append(
+      'updateCategoryRequest',
+      new Blob([JSON.stringify(updateCategoryRequest)], { type: 'application/json' }),
+    )
+
+    const serviceUrl = url.endpoint.category.updateById.replace('{categoryId}', categoryId)
+
+    const response = await utils.axiosLocalHost.put(serviceUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the content type to FormData
+      },
+    })
+
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const createNewCategory = async (formData, addBrandAndCategoryRequest) => {
+  try {
+    // Append the addCategoryRequest as a JSON string to the FormData
+    formData.append(
+      'addBrandAndCategoryRequest ',
+      new Blob([JSON.stringify(addBrandAndCategoryRequest)], { type: 'application/json' }),
+    )
+
+    const serviceUrl = url.endpoint.category.create
+
+    const response = await utils.axiosLocalHost.post(serviceUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the content type to FormData
+      },
+    })
+
+    return response ? response.data : response
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 export default {
   fetchAllBrands,
   deleteBrandById,
@@ -385,4 +437,7 @@ export default {
   countAllAuctions,
   getProfitByYear,
   getAllProductSoldForEachBrand,
+  deleteCategoryById,
+  updateCategoryById,
+  createNewCategory,
 }

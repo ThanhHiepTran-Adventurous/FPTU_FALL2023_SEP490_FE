@@ -56,6 +56,9 @@ export default {
     },
     category: {
       getAll: '/categories/listCategory',
+      deleteById: '/categories/{categoryId}',
+      updateById: '/categories/{categoryId}',
+      create: '/categories',
     },
     product: {
       inventory: '/products',
