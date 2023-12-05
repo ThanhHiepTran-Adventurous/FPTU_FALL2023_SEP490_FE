@@ -80,8 +80,12 @@ const getAllBrands = async () => {
 const deleteBrandById = async brandId => {
   try {
     const response = await adminService.deleteBrandById(brandId)
+    toastOption.toastSuccess('Xóa thương hiệu thành công')
+    showUpdateModal.value = false
+    getAllBrands()
   } catch (e) {
     console.error(e)
+    toastOption.toastError('Xóa thương hiệu thất bại')
   }
 }
 
@@ -151,11 +155,13 @@ const handleSubmitUpdateBrand = async selectedbrand => {
 
     // Call updateBrandById function
     await adminService.updateBrandById(selectedbrand.id, formData, updateBrandRequest)
-    toastOption.toastSuccess("Cập nhật thương hiệu thành công")
+    toastOption.toastSuccess('Cập nhật thương hiệu thành công')
     showUpdateModal.value = false
     getAllBrands()
   } catch (error) {
     console.error(error)
+    toastOption.toastError('Cập nhật thể loại thất bại')
+    toastOption.toastError(error?.response?.data?.message)
     // Handle errors (e.g., show an error message)
   }
 }
@@ -176,11 +182,13 @@ const handleSubmitCreateBrand = async newBrand => {
 
     // Call updateBrandById function
     await adminService.creatNewBrand(formData, addBrandAndCategoryRequest)
-    toastOption.toastSuccess("Tạo mới thương hiệu thành công")
+    toastOption.toastSuccess('Tạo mới thương hiệu thành công')
     showCreateModal.value = false
     getAllBrands()
   } catch (error) {
     console.error(error)
+    toastOption.toastError('Tạo mới thương hiệu thất bại')
+
     // Handle errors (e.g., show an error message)
   }
 }
@@ -253,7 +261,7 @@ const handleSubmitCreateBrand = async newBrand => {
                     type="radio"
                     value="ALL"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">ALL </label>
+                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Tất cả </label>
                 </li>
                 <li class="flex items-center">
                   <input
@@ -262,7 +270,9 @@ const handleSubmitCreateBrand = async newBrand => {
                     type="radio"
                     value="ACTIVE"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">ACTIVE </label>
+                  <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                    >Đang hoạt động
+                  </label>
                 </li>
                 <li class="flex items-center">
                   <input
@@ -272,7 +282,7 @@ const handleSubmitCreateBrand = async newBrand => {
                     value="INACTIVE"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
                   <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                    >INACTIVE
+                    >Không hoạt động
                   </label>
                 </li>
               </ul>
@@ -305,7 +315,22 @@ const handleSubmitCreateBrand = async newBrand => {
                   </div>
                 </th>
                 <td class="px-4 py-3">{{ brand.description }}</td>
-                <td class="px-4 py-3">{{ brand.status }}</td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <span
+                    :class="{
+                      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': brand.status === 'ACTIVE',
+                      'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300': brand.status === 'INACTIVE',
+                    }"
+                    class="text-xs font-semibold me-2 px-2.5 py-0.5 rounded-full">
+                    {{
+                      brand.status === 'ACTIVE'
+                        ? 'Đang hoạt động'
+                        : brand.status === 'INACTIVE'
+                        ? 'Không hoạt động'
+                        : brand.status
+                    }}
+                  </span>
+                </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
                     @click="openbrandModal(brand)"
@@ -428,12 +453,12 @@ const handleSubmitCreateBrand = async newBrand => {
             <input type="file" accept="image/*" class="hidden" id="fileInput" @change="handleFileChange" />
             <img
               v-if="!fileSelected"
-              class="rounded-full object-cover w-36 h-auto"
+              class="rounded-full object-cover w-36 h-36"
               :src="selectedbrand.imageUrl"
               :alt="selectedbrand.name + ' image'" />
             <img
               v-else
-              class="rounded-full object-cover w-36 h-auto"
+              class="rounded-full object-cover w-36 h-36"
               :src="fileImageUrl"
               :alt="selectedbrand.name + ' image'" />
             <div
@@ -480,8 +505,8 @@ const handleSubmitCreateBrand = async newBrand => {
                 v-model="selectedbrand.status"
                 id="status"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
+                <option value="ACTIVE">Đang hoạt động</option>
+                <option value="INACTIVE">Không hoạt động</option>
               </select>
             </div>
           </div>
@@ -499,7 +524,7 @@ const handleSubmitCreateBrand = async newBrand => {
               type="submit"
               @click.prevent="handleSubmitUpdateBrand(selectedbrand)"
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-              Update
+              Cập nhật
             </button>
             <button
               @click="deleteBrandById(selectedbrand.id)"
@@ -515,7 +540,7 @@ const handleSubmitCreateBrand = async newBrand => {
                   d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                   clip-rule="evenodd"></path>
               </svg>
-              Delete
+              Xóa
             </button>
           </div>
         </form>
@@ -534,7 +559,7 @@ const handleSubmitCreateBrand = async newBrand => {
       <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
         <!-- Modal header -->
         <div class="flex justify-between items-center mb-2 rounded-t border-b sm:mb-5 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thông tin thương hiệu</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Tạo mới thương hiệu</h3>
           <button
             type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -558,7 +583,7 @@ const handleSubmitCreateBrand = async newBrand => {
         <form action="#">
           <div className="relative inline-block">
             <input type="file" accept="image/*" class="hidden" id="fileInput" @change="handleFileChange" />
-            <img class="rounded-full object-cover w-36 h-auto" :src="fileImageUrl" :alt="'New Brand Image'" />
+            <img class="rounded-full object-cover w-36 h-36" :src="fileImageUrl" :alt="'New Brand Image'" />
             <div
               style="cursor: pointer"
               class="absolute hover:bg-white hover:bg-opacity-5 top-0 h-full w-full bg-black rounded-full bg-opacity-25 flex items-center justify-center"

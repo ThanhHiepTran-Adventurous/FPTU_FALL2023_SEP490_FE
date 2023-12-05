@@ -25,6 +25,7 @@ const getAllUsers = async () => {
   try {
     const response = await loginService.fetchAllUserInfo()
     userList.value = response.data
+    console.log(userList.value)
   } catch (e) {
     console.error(e)
   }
@@ -111,7 +112,7 @@ const goToNextPage = () => {
                 <th scope="col" class="px-4 py-3">Vai trò</th>
                 <th scope="col" class="px-4 py-3">Số điện thoại</th>
                 <th scope="col" class="px-4 py-3">Trạng thái</th>
-                <th scope="col" class="px-4 py-3">Số dư</th>
+
                 <th scope="col" class="px-4 py-3">
                   <span class="sr-only">Actions</span>
                 </th>
@@ -126,10 +127,38 @@ const goToNextPage = () => {
                   </div>
                 </th>
 
-                <td class="px-4 py-3">{{ user.role }}</td>
+                <td class="px-4 py-3">
+                  {{
+                    user.role === 'BUYER'
+                      ? 'Người mua'
+                      : user.role === 'SELLER'
+                      ? 'Người bán'
+                      : user.role === 'STAFF'
+                      ? 'Nhân viên'
+                      : user.role
+                  }}
+                </td>
                 <td class="px-4 py-3">{{ user.phoneNum }}</td>
-                <td class="px-4 py-3">{{ user.status }}</td>
-                <td class="px-4 py-3">{{ user.balance }}</td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  <span
+                    :class="{
+                      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300': user.status === 'ACTIVE',
+                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300':
+                        user.status === 'INACTIVE',
+                      'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300': user.status === 'DELETED',
+                    }"
+                    class="text-xs font-semibold me-2 px-2.5 py-0.5 rounded-full">
+                    {{
+                      user.status === 'ACTIVE'
+                        ? 'Đang hoạt động'
+                        : user.status === 'INACTIVE'
+                        ? 'Chưa xác thực tài khoản'
+                        : user.status === 'DELETED'
+                        ? 'Xoá khỏi hệ thống'
+                        : user.status
+                    }}
+                  </span>
+                </td>
 
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
