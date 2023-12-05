@@ -276,7 +276,7 @@ const goToNextPage = () => {
           <div>
             <div class="flex items-center justify-between">
               <div class="font-bold text-lg text-black uppercase">Bộ lọc</div>
-              <router-link to="/auctions/outstanding" class="bg-blue-100 hover:bg-blue-200 text-blue-800 border px-2 py-1 rounded">Nổi bật</router-link>
+              <router-link to="/auctions/outstanding" class="bg-red-100 flex items-center hover:bg-red-200 hover:text-red-800 text-red-800 border px-2 pt-1 rounded">Nổi bật</router-link>
             </div>
             <!-- Auction model type -->
             <div class="mb-1.5 mt-4">

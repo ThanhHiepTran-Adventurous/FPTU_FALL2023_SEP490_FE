@@ -221,6 +221,15 @@ onMounted(() => {
           <ErrorMessage :text="manualAuctionErrorState.startPrice" />
         </div>
         <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
+            BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
+          </label>
+          <div class="w-full items-center">
+            <CurrencyInput v-model="formData.jump" placeholder="" w="w-full" />
+          </div>
+          <ErrorMessage :text="manualAuctionErrorState.jump" />
+        </div>
+        <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> GIÁ MUA NGAY </label>
           <CurrencyInput v-model="formData.buyNowPrice" placeholder="" />
           <ErrorMessage :text="manualAuctionErrorState.buyNowPrice" />
@@ -297,17 +306,9 @@ onMounted(() => {
             <ErrorMessage :text="manualAuctionErrorState.minimumAuctioneers" />
           </div>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-            BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
-          </label>
-          <div class="w-full items-center">
-            <CurrencyInput v-model="formData.jump" placeholder="" w="w-full" />
-          </div>
-          <ErrorMessage :text="manualAuctionErrorState.jump" />
-        </div>
         <div class="flex items-center gap-3">
           <button
+            @click="emit('justSubmitted')"
             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button">
             Hủy

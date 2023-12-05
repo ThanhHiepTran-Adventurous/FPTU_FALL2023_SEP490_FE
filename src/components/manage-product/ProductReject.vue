@@ -764,6 +764,14 @@ const openProductModal = product => {
                   </div>
                 </div>
                 <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
+                    BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
+                  </label>
+                  <div class="w-full">
+                    <CurrencyInput v-model="auctionFormData.jump" w="w-full" />
+                  </div>
+                </div>
+                <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
                     HÌNH THỨC MUA BÁN <span class="text-red-500 text-lg">*</span>
                   </label>
@@ -836,14 +844,6 @@ const openProductModal = product => {
                         placeholder="" />
                       <div class="block text-gray-700 text-sm font-bold">người</div>
                     </div>
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-                    BƯỚC NHẢY TỐI THIỂU <span class="text-red-500 text-lg">*</span>
-                  </label>
-                  <div class="w-full">
-                    <CurrencyInput v-model="auctionFormData.jump" w="w-full" />
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
