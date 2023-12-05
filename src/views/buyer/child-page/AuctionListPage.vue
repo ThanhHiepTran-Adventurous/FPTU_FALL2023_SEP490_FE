@@ -90,10 +90,12 @@ const initBrandsData = async () => {
   })
 
   for(const d of brands.data){
-    brandOptions.value.push({
-      label: d.name,
-      value: d.id
-    })
+    if(d.status === 'ACTIVE'){
+      brandOptions.value.push({
+        label: d.name,
+        value: d.id
+      })
+    }
   }
   brandSelected.value = brandOptions.value[0].value
 }
@@ -106,10 +108,12 @@ const initCategoriesData = async () => {
   })
 
   for(const d of categories.data){
-    categoryOptions.value.push({
-      label: d.name,
-      value: d.id
-    })
+    if(d.status === 'ACTIVE'){
+      categoryOptions.value.push({
+        label: d.name,
+        value: d.id
+      })
+    }
   }
   cateSelected.value = categoryOptions.value[0].value
 }
