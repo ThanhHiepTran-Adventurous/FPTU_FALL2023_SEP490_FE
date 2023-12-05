@@ -156,7 +156,7 @@ onMounted(() => {
           </div>
         </div>
         <Loading v-if="isLoading" />
-        <div v-else class="mx-5 grid grid-cols-4">
+        <div v-else class="mx-5 flex flex-wrap gap-2">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"

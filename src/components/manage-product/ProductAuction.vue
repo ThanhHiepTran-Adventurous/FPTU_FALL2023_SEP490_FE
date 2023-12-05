@@ -127,7 +127,7 @@ onMounted(async () => {
         <!-- Loading -->
         <Loading v-if="isLoading" />
         <!-- Data -->
-        <div v-else class="grid grid-cols-4 mt-10 mx-5 gap-8 min-h-[50vh]">
+        <div v-else class="flex flex-wrap mt-10 mx-5 gap-4 min-h-[50vh]">
           <div class="w-full flex justify-center" v-if="!paginatedProducts || paginatedProducts.length <= 0">Không có sản phẩm nào đang đấu giá</div>
           <ItemStatic
             v-for="item in paginatedProducts"
