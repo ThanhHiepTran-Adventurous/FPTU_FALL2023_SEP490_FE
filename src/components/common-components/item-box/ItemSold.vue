@@ -62,12 +62,12 @@ const props = defineProps({
                         Không có đấu giá hợp lệ
                     </span>
                 </div>
-                <div v-if="(auctionType === AuctionModelType.intermediate && isInvalidSold === false) || (auctionType === AuctionModelType.immediate && isExpired === false && isInvalidSold === false)" class="pb-2 ml-2">
+                <div v-if="(auctionType === AuctionModelType.intermediate && isInvalidSold === false && isExpired === false) || (auctionType === AuctionModelType.immediate && isExpired === false && isInvalidSold === false)" class="pb-2 ml-2">
                     <span class="bg-white border-[1px] shadow text-green-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
                         {{ formatCurrency(props.price) }}
                     </span>
                 </div>
-                <div v-if="auctionType === AuctionModelType.immediate && isExpired === true && isInvalidSold === false" class="pb-2 ml-2">
+                <div v-if="isExpired === true && isInvalidSold === false" class="pb-2 ml-2">
                     <span class="bg-white text-red-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
                         Hết hạn thanh toán
                     </span>

@@ -18,6 +18,7 @@ import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import TwoOptionsTab from '../TwoOptionsTab.vue'
 import { Tooltip } from 'ant-design-vue'
 import { intermediateScriptBoughtPageSeller } from '@/common/commonStaticState'
+import { useSystemStore } from '@/stores/system-config.store'
 
 const breadcrumbItems = [
   {
@@ -31,6 +32,8 @@ const breadcrumbItems = [
     disabled: true,
   },
 ]
+
+const systemStore = useSystemStore()
 
 const itemsPerPage = 12
 const searchQuery = ref('')
@@ -125,6 +128,8 @@ const calculateIsInvalidSold = auction => {
 const activateInfoAuction = auction => {
   isModalVisible.value = true
   detail.value = auction
+  detail.value.isExpired = calculateIsExpired(detail.value)
+  detail.value.isInvalidSold = calculateIsInvalidSold(detail.value)
 }
 
 function closeModal() {
@@ -134,7 +139,9 @@ function closeModal() {
 function handleConfirm() {
   closeModal()
 }
-
+const calculateIsExpired = auction => {
+  return moment.utc(auction.endDate).add(systemStore.PaymentDeadline, 'days').isBefore(moment(new Date()))
+}
 onMounted(() => {
   fetchAuctions()
   getQueryParameters()
@@ -194,7 +201,8 @@ onMounted(() => {
             :mainImage="imageHelper.getPrimaryImageFromList(item.product.imageUrls)"
             :secondaryImage="imageHelper.getSecondaryImageFromList(item.product.imageUrls)"
             :auction-type="item.modelType"
-            :is-invalid-sold="calculateIsInvalidSold(item)" />
+            :is-invalid-sold="calculateIsInvalidSold(item)"
+            :is-expired="calculateIsExpired(item)" />
         </div>
         <nav
           class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
@@ -350,7 +358,13 @@ onMounted(() => {
                 </div>
               </div>
               <div class="p-2 rounded-xl w-full">
-                <div class="text-red-500 text-lg">
+                <div v-if="detail?.isInvalidSold === true" class="text-red-500 text-lg">
+                  Phiên đấu giá không đủ lượt đấu giá tối thiểu.
+                </div>
+                <div v-if="detail?.isInvalidSold === false && detail?.isExpired === true" class="text-red-500 text-lg">
+                  Người mua đã không thanh toán đơn hàng này và đã bị +1 lần tố cáo!
+                </div>
+                <div v-if="detail?.isInvalidSold === false && detail?.isExpired === false" class="text-red-500 text-lg">
                   Phiên đấu giá hoàn thành. Đơn hàng đang chờ người mua thanh toán...
                 </div>
               </div>
