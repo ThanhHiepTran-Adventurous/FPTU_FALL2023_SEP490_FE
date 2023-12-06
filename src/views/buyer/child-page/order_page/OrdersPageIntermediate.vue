@@ -173,7 +173,7 @@ const onReportModalDecline = () => {
   closeReportModal()
 }
 const onReportModalConfirm = async (listImg, text) => {
-  if (!text || !text.trim()) {
+  if (!text) {
     toastOption.toastError('Bạn phải nhập nội dung tố cáo!')
   }
   // closeReportModal()
@@ -263,13 +263,14 @@ const submitRating = async () => {
       form.append('images', imageData)
     }
     form.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
+    const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
     await feedbackService.buyerCreateFeedBack(form).finally(() => {
       resetFormData()
       closeRatingModal()
     })
-    toastOption.toastSuccess('Gửi đánh giá thành công')
+    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thành công', false)
   } catch (error) {
-    toastOption.toastError('Gửi đánh giá thất bại')
+    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thất bại', true)
   }
 }
 </script>

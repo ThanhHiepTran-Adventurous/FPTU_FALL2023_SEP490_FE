@@ -74,6 +74,9 @@ const resetFormData = () => {
   imgData.value = []
 }
 const submitRating = async () => {
+  if(!confirm("Bạn có chắc chắn muốn gửi đánh giá không?")){
+    return
+  }
   try {
     const form = new FormData()
     const request = {
@@ -85,14 +88,14 @@ const submitRating = async () => {
       form.append('images', imageData)
     }
     form.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
+    const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
     await feedbackService.buyerCreateFeedBack(form).finally(() => {
       resetFormData()
       closeRatingModal()
     })
-    toastOption.toastSuccess('Gửi đánh giá thành công')
+    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thành công', false)
   } catch (error) {
-    console.log(error)
-    toastOption.toastError('Gửi đánh giá thất bại')
+    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thất bại', true)
   }
 }
 const currentPage = ref(1)
