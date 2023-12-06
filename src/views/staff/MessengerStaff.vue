@@ -259,9 +259,9 @@ onBeforeUnmount(() => {
         <div class="h-full flex flex-col justify-between" v-if="isSideBarShowing">
           <div class="h-full">
             <!-- User card -->
-            <div class="flex flex-col">
+            <!-- <div class="flex flex-col">
               <UserMessageCard />
-            </div>
+            </div> -->
 
             <!-- Actions -->
             <div class="flex flex-col mt-4">

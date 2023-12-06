@@ -28,9 +28,12 @@ const props = defineProps({
     isInvalidSold: {
         type: Boolean,
         default: true,
+    },
+    isExpired: {
+        type: Boolean,
+        default: true
     }
 })
-
 
 </script>
 <template>
@@ -54,14 +57,19 @@ const props = defineProps({
                 {{ props.productName }}
             </div>
             <div class="flex row justify-between items-center w-full">
-                <div v-if="isInvalidSold === false" class="pb-2 ml-2">
+                <div v-if="isInvalidSold === true" class="pb-2 ml-2">
+                    <span class="bg-white text-red-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
+                        Không có đấu giá hợp lệ
+                    </span>
+                </div>
+                <div v-if="(auctionType === AuctionModelType.intermediate && isInvalidSold === false) || (auctionType === AuctionModelType.immediate && isExpired === false && isInvalidSold === false)" class="pb-2 ml-2">
                     <span class="bg-white border-[1px] shadow text-green-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
                         {{ formatCurrency(props.price) }}
                     </span>
                 </div>
-                <div v-else class="pb-2 ml-2">
+                <div v-if="auctionType === AuctionModelType.immediate && isExpired === true && isInvalidSold === false" class="pb-2 ml-2">
                     <span class="bg-white text-red-600 text-md font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">
-                        Không có đấu giá hợp lệ
+                        Hết hạn thanh toán
                     </span>
                 </div>
             </div>

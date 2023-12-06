@@ -126,6 +126,9 @@ const filterData = () => {
 const calculateIsInvalidSold = auction => {
   return auction?.product.status === ProductStatus.NOT_REACH_NUM_AUCTIONEER.value
 }
+const calculateIsExpired = auction => {
+  return moment.utc(auction.endDate).add(systemStore.PaymentDeadline, 'days').isBefore(moment(new Date()))
+}
 
 const activateInfoAuction = auction => {
   isModalVisible.value = true
@@ -215,7 +218,8 @@ onMounted(() => {
             :mainImage="imageHelper.getPrimaryImageFromList(item.product.imageUrls)"
             :secondaryImage="imageHelper.getSecondaryImageFromList(item.product.imageUrls)"
             :auction-type="item.modelType"
-            :is-invalid-sold="calculateIsInvalidSold(item)" />
+            :is-invalid-sold="calculateIsInvalidSold(item)"
+            :is-expired="calculateIsExpired(item)" />
         </div>
         <nav
           class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"

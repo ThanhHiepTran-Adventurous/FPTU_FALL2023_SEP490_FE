@@ -267,7 +267,7 @@ onBeforeUnmount(() => {
           <div class="h-full">
             <!-- User card -->
             <div class="flex flex-col">
-              <UserMessageCard />
+              <UserMessageCard name="Người bán sản phẩm" />
             </div>
 
             <!-- Actions -->

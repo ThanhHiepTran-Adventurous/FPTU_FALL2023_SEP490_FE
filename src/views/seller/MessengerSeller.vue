@@ -1,8 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
-import { defaultRoute } from "@/common/constant";
 import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { OrderStatus, Role } from "@/common/contract";
+import { Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -17,7 +16,6 @@ import reportService from "@/services/report.service";
 import toastOption from "@/utils/toast-option";
 import ReportModal from "@/components/ReportModal.vue";
 import ListEditableImage from "@/components/ListEditableImage.vue";
-import ImageExtendModal from "@/components/ImageExtendModal.vue";
 import { base64Image } from "@/utils/imageFile";
 import { useFirebaseStore } from "@/stores/firebase.store";
 import moment from "moment";
@@ -291,7 +289,7 @@ onBeforeUnmount(() => {
           <div class="h-full">
             <!-- User card -->
             <div class="flex flex-col">
-              <UserMessageCard />
+              <UserMessageCard name="Người mua sản phẩm"/>
             </div>
 
             <!-- Actions -->

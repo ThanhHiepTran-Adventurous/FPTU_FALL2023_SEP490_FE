@@ -237,10 +237,10 @@ onMounted(() => {
               </div>
             </AntDropdown>
             <RouterLink
-              to="/"
+              to="/participated"
               class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700"
               v-if="curRole === Role.buyer.value">
-              <Icon icon="wpf:like" class="text-[28px]" />
+              <Icon icon="fluent-mdl2:product-list" class="text-[28px]" />
             </RouterLink>
             <Dropdown placement="bottomRight" trigger="click">
               <div class="rounded-full border-[1px] border-blue-500">
