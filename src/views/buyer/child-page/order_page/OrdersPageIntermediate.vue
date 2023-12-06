@@ -252,6 +252,9 @@ const resetFormData = () => {
   imgData.value = []
 }
 const submitRating = async () => {
+  if(!confirm("Bạn có chắc chắn muốn gửi đánh giá không?")){
+    return
+  }
   try {
     const form = new FormData()
     const request = {
