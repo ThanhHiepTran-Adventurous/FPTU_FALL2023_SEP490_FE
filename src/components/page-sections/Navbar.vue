@@ -219,51 +219,55 @@ onMounted(() => {
         <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" />
 
         <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
-        <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center">
-          <div class="w-full rounded-full bg-gray-300 p-0.5 flex items-center gap-6">
-            <RouterLink
-              to="/bought/immediate"
-              class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700"
-              v-if="curRole === Role.buyer.value">
-              <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
-            </RouterLink>
-            <AntDropdown :menuData="notiList">
-              <div class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700" @click="onNotiClick">
-                <Icon icon="ion:notifcations" class="text-[28px]" />
-                <span v-if="isContainNotRead" class="flex absolute -mt-1 ml-4">
-                  <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500"> </span>
-                </span>
-              </div>
-            </AntDropdown>
-            <RouterLink
-              to="/participated"
-              class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%] bg-gray-700"
-              v-if="curRole === Role.buyer.value">
-              <Icon icon="fluent-mdl2:product-list" class="text-[28px]" />
-            </RouterLink>
-            <Dropdown placement="bottomRight" trigger="click">
-              <div class="rounded-full border-[1px] border-blue-500">
-                <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[38px] h-[38px] rounded-full" />
-              </div>
-              
-              <template #overlay>
-                <Menu class="max-h-[90vh] overflow-auto">
-                  <MenuItem>
-                    <div>
-                      <router-link to="/profile" class="flex items-center gap-3 px-2 text-black hover:bg-gray-200 rounded">
-                        <Icon icon="tabler:edit" class="text-[28px]" />
-                        <div>Edit</div>
-                      </router-link>
-                    </div>
-                    <div @click="onLogout" class="flex items-center gap-3 px-2 mt-3 text-black hover:bg-gray-200 rounded">
-                      <Icon icon="tabler:logout" class="text-[28px]" />
-                      <div>Logout</div>
-                    </div>
-                  </MenuItem>
-                </Menu>
-              </template>
-            </Dropdown>
+        <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center mr-[20px]">
+          <div class="flex items-center gap-4">
+            <div class="w-full rounded-full p-0.5 flex items-center gap-4">
+              <RouterLink
+                to="/bought/immediate"
+                class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%]"
+                v-if="curRole === Role.buyer.value">
+                <Icon icon="material-symbols:shopping-cart" class="text-[28px]" />
+              </RouterLink>
+              <AntDropdown :menuData="notiList">
+                <div class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%]" @click="onNotiClick">
+                  <Icon icon="ion:notifcations" class="text-[28px]" />
+                  <span v-if="isContainNotRead" class="flex absolute -mt-1 ml-4">
+                    <span class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500"> </span>
+                  </span>
+                </div>
+              </AntDropdown>
+              <RouterLink
+                to="/participated"
+                class="flex text-white hover:!text-gray-400 p-1.5 rounded-[50%]"
+                v-if="curRole === Role.buyer.value">
+                <Icon icon="fluent-mdl2:product-list" class="text-[28px]" />
+              </RouterLink>
+            </div>
+            <div class="w-full">
+              <Dropdown placement="bottomRight" trigger="click">
+                <div class="rounded-full border-[1px] border-blue-500">
+                  <img :src="curAvatar || defaultAvatar" alt="avatar" class="w-[38px] h-[38px] rounded-full" />
+                </div>
+                
+                <template #overlay>
+                  <Menu class="max-h-[90vh] overflow-auto">
+                    <MenuItem>
+                      <div>
+                        <router-link to="/profile" class="flex items-center gap-3 px-2 text-black hover:bg-gray-200 rounded">
+                          <Icon icon="tabler:edit" class="text-[28px]" />
+                          <div>Edit</div>
+                        </router-link>
+                      </div>
+                      <div @click="onLogout" class="flex items-center gap-3 px-2 mt-3 text-black hover:bg-gray-200 rounded">
+                        <Icon icon="tabler:logout" class="text-[28px]" />
+                        <div>Logout</div>
+                      </div>
+                    </MenuItem>
+                  </Menu>
+                </template>
+              </Dropdown>
+            </div>
           </div>
         </div>
         <div v-else class="flex gap-3">
