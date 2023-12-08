@@ -108,10 +108,41 @@ const paginatedTransactionList = computed(() => {
                       <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.type }}</div>
+                      <div class="font-normal text-gray-500">
+                        {{
+                          trans?.type === 'SELLER_PAY_FOR_MESSAGING'
+                            ? 'Thanh toán cho việc nhắn tin tự trao đổi'
+                            : trans?.type === 'SELLER_REQUEST_REFUND'
+                            ? 'Người bán yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_REQUEST_REFUND'
+                            ? 'Người mua yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_PAY_FOR_AUCTION'
+                            ? 'Thanh toán qua hệ thống cho phiên đấu giá'
+                            : trans?.type === 'SELLER_WITHDRAW_FROM_HOLDING'
+                            ? 'Người bán yêu cầu rút tiền từ tài khoản phòng giữ'
+                            : ''
+                        }}
+                      </div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.status }}</div>
+                      <div class="font-normal text-gray-500">
+                        <span
+                          :class="{
+                            'ml-2 border border-yellow-500 bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300':
+                              trans?.status === 'PENDING',
+
+                            'ml-2 border border-green-500 bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300':
+                              trans?.status === 'SUCCESS',
+                          }"
+                          >{{
+                            trans?.status === 'PENDING'
+                              ? 'Đang chờ'
+                              : trans?.status === 'SUCCESS'
+                              ? 'Đã thanh toán'
+                              : trans?.status
+                          }}</span
+                        >
+                      </div>
                     </td>
 
                     <td class="px-4 py-3">
