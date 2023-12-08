@@ -19,7 +19,7 @@ import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import toastOption from '@/utils/toast-option'
 import feedbackService from '@/services/feedback.service'
-
+import ErrorMessage from '@/components/common-components/ErrorMessage.vue'
 const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
@@ -63,6 +63,18 @@ const formData = ref({
   rate: '',
   productId: '',
 })
+const resetErrorState = () => {
+  manualErrorState.value = {
+    content: '',
+    rate: '',
+    image: '',
+  }
+}
+const manualErrorState = ref({
+  content: '',
+  rate: '',
+  image: '',
+})
 const resetFormData = () => {
   formData.value = {
     content: '',
@@ -73,6 +85,10 @@ const resetFormData = () => {
   imgData.value = []
 }
 const submitRating = async () => {
+  resetErrorState()
+  if (!validateManual()) {
+    return
+  }
   try {
     const form = new FormData()
     const request = {
@@ -93,6 +109,23 @@ const submitRating = async () => {
     console.log(error)
     toastOption.toastError('Gửi đánh giá thất bại')
   }
+}
+
+const validateManual = () => {
+  if (!formData.value.content) {
+    manualErrorState.value.content = 'Vui lòng nhập nội dung đánh giá'
+    return false
+  }
+
+  if (selectedStars.value == 0) {
+    manualErrorState.value.rate = 'Vui lòng chọn xếp hạng đánh giá'
+    return false
+  }
+  if (imgSrc.value.length === 0) {
+    manualErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
+    return false
+  }
+  return true
 }
 const currentPage = ref(1)
 const searchQuery = ref('')
@@ -313,6 +346,7 @@ function closeRatingModal() {
                   </svg>
                 </template>
               </div>
+              <ErrorMessage :text="manualErrorState.rate" />
               <div class="mb-2">
                 <button
                   @click="() => $refs.file.click()"
@@ -322,6 +356,7 @@ function closeRatingModal() {
                   <span>Upload image</span>
                 </button>
                 <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+                <ErrorMessage :text="manualErrorState.image" />
               </div>
               <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
 
@@ -332,6 +367,7 @@ function closeRatingModal() {
                 rows="4"
                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Ghi đánh giá tại đây"></textarea>
+              <ErrorMessage :text="manualErrorState.content" />
             </form>
           </div>
         </div>

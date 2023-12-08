@@ -181,6 +181,7 @@ export default {
     },
     feedback: {
       getFeedbackBySellerId: 'feedback',
+      buyerCreateFeedBack: 'feedback',
     },
   },
 }
