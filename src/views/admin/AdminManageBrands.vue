@@ -42,7 +42,7 @@ onMounted(() => {
 })
 
 const openbrandModal = brand => {
-  selectedbrand.value = brand // Set the selected brand data
+  selectedbrand.value = { ...brand } // Set the selected brand data
   showUpdateModal.value = true // Show the modal
 }
 const openCreatebrandModal = () => {

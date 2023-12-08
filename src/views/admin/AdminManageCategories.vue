@@ -103,7 +103,7 @@ const filteredAndPaginatedBrands = computed(() => {
   return filtered.slice(startIndex, endIndex)
 })
 const openCateModal = cate => {
-  selectedCate.value = cate // Set the selected brand data
+  selectedCate.value = { ...cate } // Set the selected brand data
   showUpdateModal.value = true // Show the modal
 }
 const handleUploadFile = () => {
