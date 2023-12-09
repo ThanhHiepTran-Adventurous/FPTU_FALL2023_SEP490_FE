@@ -198,5 +198,6 @@ export const GlobalConfigKey = {
   ReturnDuring: "RETURN_POLICY_DAY",
   MaximumReportEachUser: "MAXIMUM_REPORTED",
   NumberSoldProductToAutoConfirm: "NUMBER_SOLD_PRODUCT",
-  NumberRateProductToAutoConfirm: "NUMBER_RATE_FEEDBACK_PRODUCT"
+  NumberRateProductToAutoConfirm: "NUMBER_RATE_FEEDBACK_PRODUCT",
+  MaxinumBuyNowPerDay: "MAXIMUM_NUMBER_BUY_NOW_PER_DAY"
 }

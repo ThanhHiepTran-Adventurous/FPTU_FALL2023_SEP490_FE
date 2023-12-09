@@ -10,7 +10,8 @@ export const useSystemStore = defineStore("system", {
         ReturnDuring: 0,
         MaximumReportEachUser: 0,
         NumberSoldProductToAutoConfirm: 0,
-        NumberRateProductToAutoConfirm: 0
+        NumberRateProductToAutoConfirm: 0,
+        MaxinumBuyNowPerDay: 0
     }),
     actions: {
         async syncData(){
@@ -22,6 +23,7 @@ export const useSystemStore = defineStore("system", {
                 this.MaximumReportEachUser = response.data.filter(f => f.systemConfigType === GlobalConfigKey.MaximumReportEachUser)[0].valueConfig
                 this.NumberSoldProductToAutoConfirm = response.data.filter(f => f.systemConfigType === GlobalConfigKey.NumberSoldProductToAutoConfirm)[0].valueConfig
                 this.NumberRateProductToAutoConfirm = response.data.filter(f => f.systemConfigType === GlobalConfigKey.NumberRateProductToAutoConfirm)[0].valueConfig
+                this.MaxinumBuyNowPerDay = response.data.filter(f => f.systemConfigType === GlobalConfigKey.MaxinumBuyNowPerDay)[0].valueConfig
             } catch (_) {
                 toastOption.toastError("Có lỗi khi lấy dữ liệu từ hệ thống.")
             }

@@ -16,7 +16,8 @@ const originalData = ref({
     ReturnDuring: 0,
     MaximumReportEachUser: 0,
     NumberSoldProductToAutoConfirm: 0,
-    NumberRateProductToAutoConfirm: 0
+    NumberRateProductToAutoConfirm: 0,
+    MaxinumBuyNowPerDay: 0,
 })
 
 const formData = ref({
@@ -25,7 +26,8 @@ const formData = ref({
     ReturnDuring: 0,
     MaximumReportEachUser: 0,
     NumberSoldProductToAutoConfirm: 0,
-    NumberRateProductToAutoConfirm: 0
+    NumberRateProductToAutoConfirm: 0,
+    MaxinumBuyNowPerDay: 0,
 })
 const formErrorState = ref({
     PercentageProfit: '',
@@ -33,7 +35,8 @@ const formErrorState = ref({
     ReturnDuring: '',
     MaximumReportEachUser: '',
     NumberSoldProductToAutoConfirm: '',
-    NumberRateProductToAutoConfirm: ''
+    NumberRateProductToAutoConfirm: '',
+    MaxinumBuyNowPerDay: ''
 })
 
 const resetErrorState = () => {
@@ -43,7 +46,8 @@ const resetErrorState = () => {
         ReturnDuring: '',
         MaximumReportEachUser: '',
         NumberSoldProductToAutoConfirm: '',
-        NumberRateProductToAutoConfirm: ''
+        NumberRateProductToAutoConfirm: '',
+        MaxinumBuyNowPerDay: ''
     }
 }
 
@@ -82,6 +86,10 @@ const formValidate = () => {
         formErrorState.value.NumberSoldProductToAutoConfirm = 'Số sản phẩm đã bán tối thiểu để được tự động duyệt phải là số nguyên lớn hơn 0.'
         isValidated = false
     }
+    if (!validator.stringIsIntegerAndBiggerThanZeroValidator(formData.value.MaxinumBuyNowPerDay)){
+        formErrorState.value.MaxinumBuyNowPerDay = 'Số sản phẩm người mua có thể mua ngay tối đa một ngày phải là số nguyên lớn hơn 0.'
+        isValidated = false
+    }
     if (!validator.stringIsIntegerAndBiggerThanZeroValidator(formData.value.NumberRateProductToAutoConfirm)){
         formErrorState.value.NumberRateProductToAutoConfirm = 'Số lần rating tối thiểu để được tự động duyệt phải là số nguyên lớn hơn 0.'
         isValidated = false
@@ -97,6 +105,7 @@ const resetFormState = () => {
     formData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
     formData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
     formData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+    formData.value.MaxinumBuyNowPerDay = systemStore.MaxinumBuyNowPerDay
 }
 
 const onResetClick = () => {
@@ -127,6 +136,7 @@ const onConfirmUpdate = () => {
                 formData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
                 formData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
                 formData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+                formData.value.MaxinumBuyNowPerDay = systemStore.MaxinumBuyNowPerDay
 
                 originalData.value.PercentageProfit = systemStore.PercentageProfit
                 originalData.value.PaymentDeadline = systemStore.PaymentDeadline
@@ -134,6 +144,7 @@ const onConfirmUpdate = () => {
                 originalData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
                 originalData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
                 originalData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+                originalData.value.MaxinumBuyNowPerDay = systemStore.MaxinumBuyNowPerDay
             })
         }
     }
@@ -177,6 +188,12 @@ const getPayload = () => {
             value: formData.value.NumberRateProductToAutoConfirm
         })
     }
+    if(formData.value.MaxinumBuyNowPerDay !== originalData.value.MaxinumBuyNowPerDay){
+        payload.push({
+            type: GlobalConfigKey.MaxinumBuyNowPerDay,
+            value: formData.value.MaxinumBuyNowPerDay
+        })
+    }
     return payload
 }
 
@@ -189,6 +206,7 @@ onMounted(async () => {
     formData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
     formData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
     formData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+    formData.value.MaxinumBuyNowPerDay = systemStore.MaxinumBuyNowPerDay
 
     originalData.value.PercentageProfit = systemStore.PercentageProfit
     originalData.value.PaymentDeadline = systemStore.PaymentDeadline
@@ -196,6 +214,7 @@ onMounted(async () => {
     originalData.value.MaximumReportEachUser = systemStore.MaximumReportEachUser
     originalData.value.NumberSoldProductToAutoConfirm = systemStore.NumberSoldProductToAutoConfirm
     originalData.value.NumberRateProductToAutoConfirm = systemStore.NumberRateProductToAutoConfirm
+    originalData.value.MaxinumBuyNowPerDay = systemStore.MaxinumBuyNowPerDay
 })
 
 </script>
@@ -281,6 +300,19 @@ onMounted(async () => {
                         type="number"
                         class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                     <ErrorMessage :text="formErrorState.NumberRateProductToAutoConfirm"/>
+                </div>
+            </div>
+            <div class="mb-5 flex items-center w-full px-10">
+                <label for="NumberRateProductToAutoConfirm" class="block mb-2 text-md font-medium text-gray-900 dark:text-white w-[40%]">
+                    Số sản phẩm có thể mua ngay tối đa trong 1 ngày (sản phẩm):
+                </label>
+                <div class="w-[30%]">
+                    <input
+                        id="NumberRateProductToAutoConfirm"
+                        v-model="formData.MaxinumBuyNowPerDay"
+                        type="number"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                    <ErrorMessage :text="formErrorState.MaxinumBuyNowPerDay"/>
                 </div>
             </div>
             <div class="mb-5 flex items-center gap-3 w-full px-10">
