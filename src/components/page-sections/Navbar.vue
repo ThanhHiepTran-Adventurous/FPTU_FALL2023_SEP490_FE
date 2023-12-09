@@ -99,7 +99,6 @@ const submitForm = async () => {
       .login(userInfo.value.phone, userInfo.value.password)
       .then(async response => {
         toast.toastSuccess('Đăng nhập thành công')
-        resetForm()
         userStore.setRefreshTokenAndSaveToLocalStorage(response.data.refreshToken)
         userStore.setTokenAndSaveToLocalStorage(response.data.accessToken)
         const informationUser = await loginService.fetchUserInfo()
@@ -107,8 +106,8 @@ const submitForm = async () => {
         userStore.setIsVerifiedCCCDAndSaveToLocalStorage(informationUser.data.citizenCardVerified)
         userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
         userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
-        // isModalActive.value = false
         closeModal()
+        resetForm()
 
         try {
           const fcmToken = await firebaseStore.getFcmToken()
