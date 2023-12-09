@@ -186,39 +186,40 @@ const resetErrorState = () => {
   }
 }
 const validateManual = () => {
+  let result = true
   if (productFormData.value.name.trim() === '') {
     manualAuctionErrorState.value.productName = 'Vui lòng nhập tên sản phẩm'
-    return false
+    result = false
   }
   if (productFormData.value.description.trim() === '') {
     manualAuctionErrorState.value.description = 'Vui lòng nhập miêu tả'
-    return false
+    result = false
   }
   if (productFormData.value.description.length > 1000) {
     manualAuctionErrorState.value.description = 'Miêu tả không được vượt quá 1000 kí tự'
-    return false
+    result = false
   }
   if (!productFormData.value.weight) {
     manualAuctionErrorState.value.weight = 'Vui lòng nhập trọng lượng'
-    return false
+    result = false
   }
   if (productFormData.value.weight > 10000) {
     manualAuctionErrorState.value.weight = 'Trọng lượng không được quá 10kg'
-    return false
+    result = false
   }
   if (!productFormData.value.brand.id) {
-    manualAuctionErrorState.value.brand = 'Vui lòng chọn thương hiệu sản phẩm'
-    return false
+    manualAuctionErrorState.value.brandId = 'Vui lòng chọn thương hiệu sản phẩm'
+    result = false
   }
   if (!productFormData.value.category.id) {
-    manualAuctionErrorState.value.category = 'Vui lòng chọn loại sản phẩm'
-    return false
+    manualAuctionErrorState.value.categoryId = 'Vui lòng chọn loại sản phẩm'
+    result = false
   }
   if (imgSrc.value.length === 0) {
     manualAuctionErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
-    return false
+    result = false
   }
-  return true
+  return result
 }
 const onSubmit = () => {
   resetErrorState()

@@ -109,11 +109,11 @@ const onCreateSuccess = toastId => {
   fetchProducts()
 }
 
-const onCreateError = (toastId, detail) => {
+const onCreateError = (toastId, detail, message) => {
   if (detail) {
     toastOption.updateLoadingToast(toastId, detail, true)
   } else {
-    toastOption.updateLoadingToast(toastId, 'Có lỗi khi tạo mới sản phẩm', true)
+    toastOption.updateLoadingToast(toastId, message, true)
   }
 }
 const onSendSuccess = toastId => {
@@ -121,11 +121,11 @@ const onSendSuccess = toastId => {
   fetchProducts()
 }
 
-const onSendError = (toastId, detail) => {
+const onSendError = (toastId, detail, error) => {
   if (detail) {
     toastOption.updateLoadingToast(toastId, detail, true)
   } else {
-    toastOption.updateLoadingToast(toastId, 'Có lỗi khi gửi yêu cầu cho sản phẩm lên sàn đấu giá', true)
+    toastOption.updateLoadingToast(toastId, error.response.data.message, true)
   }
 }
 
@@ -146,6 +146,7 @@ const showCreate = async () => {
 
 function closeModal() {
   isModalVisible.value = false
+  typeofModal.value = allowedModalTypes.info
 }
 
 function handleConfirm() {
@@ -291,29 +292,23 @@ onMounted(async () => {
       </div>
     </SellerSideBarLayout>
     <div>
-      <Modal
-        :hidden="!isModalVisible"
-        :widthClass="'w-[900px]'"
-        :hasOverFlowVertical="true"
-        :hasButton="false"
-        :title="typeofModal === allowedModalTypes.info ? 'Thông tin' : 'Tạo mới'"
-        @decline-modal="closeModal"
-        @confirm-modal="handleConfirm">
-        <div :hidden="!(typeofModal === allowedModalTypes.info)">
-          <ProductInfoModal
-            :product="productDetail"
-            @send-success="onSendSuccess"
-            @send-error="onSendError"
-            @just-submitted="closeModal" />
-        </div>
-        <div :hidden="!(typeofModal === allowedModalTypes.create)">
-          <CreateNewProduct
-            @create-success="onCreateSuccess"
-            @create-error="onCreateError"
-            @just-submitted="closeModal" />
-        </div>
-      </Modal>
+      <ProductInfoModal
+        :hidden="!isModalVisible || !(typeofModal === allowedModalTypes.info)"
+        :product="productDetail"
+        @send-success="onSendSuccess"
+        @send-error="onSendError"
+        @just-submitted="closeModal"
+      />
+      <CreateNewProduct
+        :hidden="!isModalVisible || !(typeofModal === allowedModalTypes.create)"
+        @create-success="onCreateSuccess"
+        @create-error="onCreateError"
+        @just-submitted="closeModal"
+      />
     </div>
   </div>
 
 </template>
+<!-- @send-success="onSendSuccess"
+            @send-error="onSendError"
+            @just-submitted="closeModal" -->

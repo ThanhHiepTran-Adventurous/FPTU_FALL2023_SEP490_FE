@@ -131,7 +131,14 @@ const submitForm = async () => {
       })
       .catch(e => {
         if (e.response.status === 401 || e.response.status === 400) {
-          errorMessage.value.form = 'Sai số điện thoại hoặc mật khẩu'
+          if(e.response.data.message.includes("Invalid")){
+            errorMessage.value.form = 'Sai số điện thoại hoặc mật khẩu'
+          }
+          else if(e.response.data.message.includes("banded")){
+            errorMessage.value.form = 'Tài khoản của bạn đã bị ban khỏi hệ thống'
+          } else {
+            errorMessage.value.form = e.response.data.message
+          }
         }
       })
   }
