@@ -25,7 +25,6 @@ const getAllUsers = async () => {
   try {
     const response = await loginService.fetchAllUserInfo()
     userList.value = response.data
-    console.log(userList.value)
   } catch (e) {
     console.error(e)
   }

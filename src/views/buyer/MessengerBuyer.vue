@@ -218,7 +218,6 @@ const initStompClient = () => {
     reconnectDelay: 100,
   })
   stompClient.onConnect = () => {
-    //console.log('connected')
     subscription = stompClient.subscribe(`/topic/messages/group/${groupId}`, payload => {
       const response = JSON.parse(payload.body)
       const messageDtoAppend = {

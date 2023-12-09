@@ -309,6 +309,3 @@ onMounted(async () => {
   </div>
 
 </template>
-<!-- @send-success="onSendSuccess"
-            @send-error="onSendError"
-            @just-submitted="closeModal" -->

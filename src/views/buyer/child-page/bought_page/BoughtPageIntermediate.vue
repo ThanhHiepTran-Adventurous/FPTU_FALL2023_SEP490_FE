@@ -264,7 +264,7 @@ watch(selectedDistrict, async () => {
 
         <div class="flex flex-col justify-between min-h-[60vh]">
           <Loading v-if="isLoading"/>
-          <div v-else class="bg-white grid grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
+          <div v-else class="bg-white grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
             <AuctionCard
               v-for="auction in paginatedProducts"
               :key="auction.id"

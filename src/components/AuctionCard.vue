@@ -35,10 +35,7 @@ const props = defineProps({
 })
 
 const isExpired = computed(() => {
-    console.log(props.catchedAt)
     const expiredDate = moment.utc(props.catchedAt).add(systemStore.PaymentDeadline, "d")
-    console.log(expiredDate)
-    console.log(moment(new Date()))
     return moment(new Date()).isAfter(expiredDate)
 })
 
@@ -66,9 +63,9 @@ const onPaymentClick = () => {
                     </div>
                     <div class="mt-2">
                         <div>
-                            Thời gian
+                            Deadline thanh toán
                         </div>
-                        <div class="!text-gray-400">{{ moment.utc(catchedAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+                        <div class="!text-gray-400">{{ moment.utc(catchedAt).add(systemStore.PaymentDeadline, "d").format('DD/MM/YYYY HH:mm:ss') }}</div>
                     </div>
                 </div>
             </div>
@@ -85,9 +82,9 @@ const onPaymentClick = () => {
                     <Tooltip class="relative" placement="bottom">
                         <template #title>{{ isExpired ? 'Hết hạn thanh toán' : 'Thanh toán' }}</template>
                         <button type="button" @click="onPaymentClick"
-                            class="flex items-center text-black bg-white border-[1px] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 focus:outline-none"
+                            class="flex items-center text-black bg-white border-[1px] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-1 py-1 focus:outline-none"
                             :class="isExpired ? 'border-red-500' : 'border-green-500'">
-                            <Icon icon="arcticons:budgetbakers-wallet" class="text-black text-[20px]"/>
+                            <Icon icon="arcticons:budgetbakers-wallet" class="text-black text-[28px]"/>
                         </button>
                     </Tooltip>
             </div>
