@@ -87,23 +87,24 @@ const handleConfirmWithdraw = async withdrawId => {
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" class="px-6 py-3 whitespace-nowrap">Họ và tên</th>
-                <th scope="col" class="px-6 py-3 whitespace-nowrap">Số tiền</th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên gửi</th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên nhận</th>
+                <th scope="col" class="px-6 py-3 whitespace-nowrap text-right">Số tiền</th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Thể loại</th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                 <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
-                <th scope="col" class="px-6 py-3">
-                  <span class="sr-only">Actions</span>
-                </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(trans, index) in paginatedTransactionList" :key="index" class="border-b dark:border-gray-700">
                 <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
-                  {{ trans?.userPaymentOption?.fullname }}
+                  {{ trans.userPaymentOption ? trans.userPaymentOption.fullname : 'Hệ thống' }}
+                </th>
+                <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
+                  {{ trans.userReceiveMoney ? trans.userReceiveMoney.fullname : 'Hệ thống' }}
                 </th>
                 <td class="px-4 py-3">
-                  <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
+                  <div class="font-normal text-blue-500 font-semibold text-right">{{ formatCurrency(trans?.amount) }}</div>
                 </td>
                 <td class="px-4 py-3">
                   <div class="font-normal text-gray-500">
@@ -117,7 +118,7 @@ const handleConfirmWithdraw = async withdrawId => {
                         : trans?.type === 'BUYER_PAY_FOR_AUCTION'
                         ? 'Thanh toán qua hệ thống cho phiên đấu giá'
                         : trans?.type === 'SELLER_WITHDRAW_FROM_HOLDING'
-                        ? 'Người bán yêu cầu rút tiền từ tài khoản phòng giữ'
+                        ? 'Người bán yêu cầu rút tiền cho sản phẩm đã bán thành công'
                         : ''
                     }}
                   </div>
@@ -143,24 +144,6 @@ const handleConfirmWithdraw = async withdrawId => {
 
                 <td class="px-4 py-3">
                   {{ trans?.transactionDate ? moment.utc(trans?.transactionDate).format('DD/MM/YYYY HH:mm:ss') : '' }}
-                </td>
-                <td class="px-4 py-3 flex items-center justify-end">
-                  <button
-                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                    type="button"
-                    @click="openShipModal(ship)">
-                    <svg
-                      class="w-6 h-6 text-gray-800 dark:text-white"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 20 18">
-                      <path
-                        d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
-                      <path
-                        d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
-                    </svg>
-                  </button>
                 </td>
               </tr>
             </tbody>
@@ -343,22 +326,6 @@ const handleConfirmWithdraw = async withdrawId => {
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 Xác nhận đã thanh toán
               </button>
-              <!-- <button
-                @click="showRejectReasonModal = true"
-                type="button"
-                class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                <svg
-                  class="mr-1 -ml-1 w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"></path>
-                </svg>
-                Từ chối
-              </button> -->
             </div>
           </form>
         </div>

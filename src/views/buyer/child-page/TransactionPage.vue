@@ -1,8 +1,7 @@
 <script setup>
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
-import BoughtNav from '../BoughtNav.vue'
 import { buyerTabs } from '@/common/constant'
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import moment from 'moment'
 import PaymentService from '@/services/payment.service'
 import formatCurrency from '@/utils/currency-output-formatter'
@@ -82,8 +81,9 @@ const breadcrumbItems = [
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Họ và tên</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Số tiền</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên gửi</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên nhận</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-right">Số tiền</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Thể loại</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
@@ -97,11 +97,14 @@ const breadcrumbItems = [
                     v-for="(trans, index) in paginatedTransactionList"
                     :key="index"
                     class="border-b dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-normal text-gray-500 dark:text-white">
-                      {{ trans?.userPayment?.fullname }}
+                    <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
+                      {{ trans.userPayment ? trans.userPayment.fullname : 'Hệ thống' }}
+                    </th>
+                    <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
+                      {{ trans.userReceiveMoney ? trans.userReceiveMoney.fullname : 'Hệ thống' }}
                     </th>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
+                      <div class="font-normal text-blue-500 font-semibold text-right">{{ formatCurrency(trans?.amount) }}</div>
                     </td>
                     <td class="px-4 py-3">
                       <div class="font-normal text-gray-500">{{ trans?.type }}</div>

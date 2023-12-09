@@ -82,8 +82,8 @@ const onBuyNowConfirm = () => {
       toastOption.toastSuccess('Bạn vừa mua ngay sản phẩm này thành công')
       emit('buyNowSuccess')
     })
-    .catch(_ => {
-      toastOption.toastError('Quá trình mua ngay thất bại, hãy tải lại trang và thử lại')
+    .catch(e => {
+      toastOption.toastError(e.response.data.message)
     })
 }
 
