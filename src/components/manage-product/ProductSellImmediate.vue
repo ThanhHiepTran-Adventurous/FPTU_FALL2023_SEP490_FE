@@ -133,6 +133,8 @@ const calculateIsExpired = auction => {
 const activateInfoAuction = auction => {
   isModalVisible.value = true
   detail.value = auction
+  detail.value.isExpired = calculateIsExpired(detail.value)
+  detail.value.isInvalidSold = calculateIsInvalidSold(detail.value)
 }
 
 function closeModal() {
@@ -374,7 +376,7 @@ onMounted(() => {
                   </table>
                 </div>
               </div>
-              <div class="p-2 rounded-xl w-full">
+              <div v-if="detail?.isInvalidSold === false && detail?.isExpired === false" class="p-2 rounded-xl w-full">
                 <div class="text-red-500 text-lg">
                   Để biết thông tin và tiến hành trao đổi với người thắng cuộc, vui lòng thanh toán phí {{ systemStore.PercentageProfit }}% giá trị sản phẩm cho phiên đấu giá.
                 </div>
@@ -396,7 +398,7 @@ onMounted(() => {
               <div>
                 <Button :type="constant.buttonTypes.OUTLINE" @on-click="closeModal"> Đóng </Button>
               </div>
-              <div>
+              <div v-if="detail?.isInvalidSold === false && detail?.isExpired === false">
                 <Button @on-click="handlePayment" v-if="isPaymentLoading === false">
                   <div class="flex items-center w-[120px]">
                     <Icon icon="streamline:money-wallet-money-payment-finance-wallet" class="text-[18px] mr-3" />

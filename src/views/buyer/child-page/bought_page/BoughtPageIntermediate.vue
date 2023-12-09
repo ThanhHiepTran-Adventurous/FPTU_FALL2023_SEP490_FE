@@ -8,7 +8,7 @@ import { useRoute, useRouter } from 'vue-router'
 import imageHelper from '@/utils/image-helper'
 import loginService from '../../../../services/login.service'
 import locationService from '../../../../services/location.service'
-import { AuctionModelType } from '@/common/contract'
+import { AuctionModelType, ProductStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 const showPaymentModel = ref(false)
@@ -135,7 +135,7 @@ const filterData = () => {
     ?.filter(
       v =>
         v.informationAuction.modelType === AuctionModelType.intermediate &&
-        v.informationAuction.product.status !== 'PAID',
+        v.informationAuction.product.status === ProductStatus.ON_SELL,
     )
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()

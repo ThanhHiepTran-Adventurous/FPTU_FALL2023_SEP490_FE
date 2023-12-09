@@ -34,7 +34,7 @@ const filterData = () => {
   auctionWinFiltered.value = auctionWins?.value
     ?.filter(
       v =>
-        v.informationAuction.modelType === AuctionModelType.immediate && v.informationAuction.product.status !== 'PAID',
+        v.informationAuction.modelType === AuctionModelType.immediate && v.informationAuction.product.status === ProductStatus.ON_SELL,
     )
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()
