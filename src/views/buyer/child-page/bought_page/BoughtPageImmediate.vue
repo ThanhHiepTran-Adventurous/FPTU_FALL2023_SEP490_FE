@@ -8,7 +8,7 @@ import { Icon } from '@iconify/vue'
 import { buyerTabs } from '@/common/constant'
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
-import { AuctionModelType } from '@/common/contract'
+import { AuctionModelType, ProductStatus } from '@/common/contract'
 import AuctionCard from '@/components/AuctionCard.vue'
 import { Tooltip } from 'ant-design-vue';
 import Loading from '@/components/common-components/Loading.vue'
@@ -34,7 +34,9 @@ const filterData = () => {
   auctionWinFiltered.value = auctionWins?.value
     ?.filter(
       v =>
-        v.informationAuction.modelType === AuctionModelType.immediate && v.informationAuction.product.status === ProductStatus.ON_SELL,
+        v.informationAuction.modelType === AuctionModelType.immediate 
+        && v.informationAuction.product.status !== ProductStatus.SOLD.value 
+        && v.informationAuction.product.status !== ProductStatus.PAID.value
     )
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()

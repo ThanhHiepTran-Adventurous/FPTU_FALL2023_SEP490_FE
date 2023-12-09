@@ -196,12 +196,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="bg-white dark:bg-gray-900">
+  <section class="bg-white">
     <div class="py-8 px-4 mx-auto max-w-screen-xxl py-2 px-2">
       <Breadcrumb :items="breadcrumbItems" />
       <div class="flex gap-2 mt-2">
         <article
-          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 lg:w-full">
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md lg:w-full">
           <div>
             <div>
               <ProductInfo
@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
           </div>
         </article>
         <article
-          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 lg:w-2/3">
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md lg:w-2/3">
           <div>
             <AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
           </div>
@@ -222,20 +222,20 @@ onBeforeUnmount(() => {
       </div>
     </div>
   </section>
-  <section class="bg-white dark:bg-gray-900">
+  <section class="bg-white">
     <div class="mx-auto max-w-screen-xxl py-2 px-2 py-8 px-4">
-      <article class="bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+      <article class="bg-white rounded-lg border border-gray-200 shadow-md">
         <div
-          class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+          class="text-sm font-medium text-center text-gray-500 border-b border-gray-200">
           <ul class="flex flex-wrap -mb-px">
             <li class="me-2">
               <a
                 @click.prevent="toggleSections(true, false)"
                 href="#"
                 :class="{
-                  'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                  'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300':
                     !showDes,
-                  'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                  'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active':
                     showDes,
                 }"
                 >Mô tả</a
@@ -246,9 +246,9 @@ onBeforeUnmount(() => {
                 @click="toggleSections(false, true)"
                 href="#"
                 :class="{
-                  'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500':
+                  'inline-block p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active':
                     showReview,
-                  'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300':
+                  'inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300':
                     !showReview,
                 }">
                 Đánh giá sản phẩm người bán
@@ -257,19 +257,19 @@ onBeforeUnmount(() => {
           </ul>
         </div>
 
-        <section v-if="showReview" class="bg-white dark:bg-gray-900 rounded-lg border-r">
+        <section v-if="showReview" class="bg-white rounded-lg border-r">
           <div class="mx-auto max-w-screen-xxl">
             <div class="flex gap-2">
               <article
-                class="bg-white rounded-lg border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:w-full">
+                class="bg-white rounded-lg border-r border-gray-200 lg:w-full">
                 <div v-if="feedbacks !== null && feedbacks.length > 0">
                   <section
                     v-for="(feedback, index) in paginatedFeedbacks"
                     :key="index"
-                    class="bg-white border-b dark:bg-gray-900 antialiased">
+                    class="bg-white border-b antialiased">
                     <div class="max-w-2xl">
                       <article
-                        class="text-base bg-white p-3 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                        class="text-base bg-white p-3 rounded-lg border-gray-200">
                         <div class="flex">
                           <div class="">
                             <div class="text-center">
@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
                                 :alt="feedback?.buyer?.fullname" />
                             </div>
 
-                            <p class="text-sm text-center dark:text-gray-400">
+                            <p class="text-sm text-center">
                               <span class="block text-gray-600 whitespace-nowrap mt-2 font-bold">{{
                                 feedback?.buyer?.fullname
                               }}</span>
@@ -294,7 +294,7 @@ onBeforeUnmount(() => {
                               >
                             </p>
                           </div>
-                          <div class="ml-5 text-gray-500 dark:text-gray-400">
+                          <div class="ml-5 text-gray-500">
                             <div class="flex items-center mb-2">
                               <template v-for="i in 5" :key="i">
                                 <svg
@@ -310,7 +310,7 @@ onBeforeUnmount(() => {
                                 </svg>
                                 <svg
                                   v-else
-                                  class="w-6 h-6 text-gray-300 me-1 dark:text-gray-500"
+                                  class="w-6 h-6 text-gray-300 me-1"
                                   aria-hidden="true"
                                   xmlns="http://www.w3.org/2000/svg"
                                   fill="currentColor"
@@ -338,7 +338,7 @@ onBeforeUnmount(() => {
                       <li>
                         <button
                           type="button"
-                          class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                          class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                           @click="goToPreviousPage"
                           :disabled="currentPage === 1"
                           aria-label="Previous Page">
@@ -362,9 +362,9 @@ onBeforeUnmount(() => {
                           type="button"
                           class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
                           :class="{
-                            'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                            'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700':
                               pageNumber !== currentPage,
-                            'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                            'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700':
                               pageNumber === currentPage,
                           }"
                           @click="goToPage(pageNumber)"
@@ -376,7 +376,7 @@ onBeforeUnmount(() => {
                         <button
                           type="button"
                           @click="goToNextPage"
-                          class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                          class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                           :disabled="currentPage === totalPages"
                           aria-label="Next Page">
                           <span class="sr-only">Next</span>
@@ -399,18 +399,18 @@ onBeforeUnmount(() => {
                 <div v-else>
                   <div class="max-w-2xl">
                     <article
-                      class="text-base bg-white p-6 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                      class="text-base bg-white p-6 rounded-lg border-gray-200">
                       <div>
-                        <p class="ml-5 text-gray-500 dark:text-gray-400">Hiện tại chưa có đánh giá</p>
+                        <p class="ml-5 text-gray-500">Hiện tại chưa có đánh giá</p>
                       </div>
                     </article>
                   </div>
                 </div>
               </article>
-              <article class="p-6 bg-white rounded-lg border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:w-2/3">
+              <article class="p-6 bg-white rounded-lg border-gray-200 lg:w-2/3">
                 <div v-if="feedbacks !== null && feedbacks.length > 0">
                   <div class="text-center">
-                    <p class="text-3xl font-bold text-gray-500 dark:text-gray-400">{{ averageRating }}</p>
+                    <p class="text-3xl font-bold text-gray-500">{{ averageRating }}</p>
 
                     <div class="flex justify-center items-center">
                       <template v-for="index in Math.min(5, Math.floor(averageRating))" :key="index">
@@ -426,7 +426,7 @@ onBeforeUnmount(() => {
                       </template>
                       <template v-for="index in Math.max(0, 5 - Math.floor(averageRating))" :key="index">
                         <svg
-                          class="w-8 h-8 ms-3 text-gray-300 dark:text-gray-500"
+                          class="w-8 h-8 ms-3 text-gray-300"
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="currentColor"
@@ -437,11 +437,11 @@ onBeforeUnmount(() => {
                       </template>
                     </div>
 
-                    <p class="text-md mt-3 text-gray-500 dark:text-gray-400">({{ feedbacks?.length }} đánh giá)</p>
+                    <p class="text-md mt-3 text-gray-500">({{ feedbacks?.length }} đánh giá)</p>
                   </div>
                   <div class="text-center ml-28">
                     <div class="flex items-center mt-4">
-                      <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">5 </a>
+                      <a href="#" class="text-sm font-medium text-blue-600 hover:underline">5 </a>
                       <svg
                         class="w-4 h-4 text-yellow-300 ms-1"
                         aria-hidden="true"
@@ -451,7 +451,7 @@ onBeforeUnmount(() => {
                         <path
                           d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
-                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div
                           class="h-5 bg-yellow-300 rounded"
                           :style="{
@@ -459,7 +459,7 @@ onBeforeUnmount(() => {
                               (feedbacks.filter(feedback => feedback.rate === 5).length / feedbacks.length) * 100 + '%',
                           }"></div>
                       </div>
-                      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      <span class="text-sm font-medium text-gray-500"
                         >{{
                           ((feedbacks.filter(feedback => feedback.rate === 5).length / feedbacks.length) * 100).toFixed(
                             2,
@@ -468,7 +468,7 @@ onBeforeUnmount(() => {
                       >
                     </div>
                     <div class="flex items-center mt-4">
-                      <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">4 </a>
+                      <a href="#" class="text-sm font-medium text-blue-600 hover:underline">4 </a>
                       <svg
                         class="w-4 h-4 text-yellow-300 ms-1"
                         aria-hidden="true"
@@ -478,7 +478,7 @@ onBeforeUnmount(() => {
                         <path
                           d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
-                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div
                           class="h-5 bg-yellow-300 rounded"
                           :style="{
@@ -486,7 +486,7 @@ onBeforeUnmount(() => {
                               (feedbacks.filter(feedback => feedback.rate === 4).length / feedbacks.length) * 100 + '%',
                           }"></div>
                       </div>
-                      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      <span class="text-sm font-medium text-gray-500"
                         >{{
                           ((feedbacks.filter(feedback => feedback.rate === 4).length / feedbacks.length) * 100).toFixed(
                             2,
@@ -495,7 +495,7 @@ onBeforeUnmount(() => {
                       >
                     </div>
                     <div class="flex items-center mt-4">
-                      <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">3 </a>
+                      <a href="#" class="text-sm font-medium text-blue-600 hover:underline">3 </a>
                       <svg
                         class="w-4 h-4 text-yellow-300 ms-1"
                         aria-hidden="true"
@@ -505,7 +505,7 @@ onBeforeUnmount(() => {
                         <path
                           d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
-                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div
                           class="h-5 bg-yellow-300 rounded"
                           :style="{
@@ -513,7 +513,7 @@ onBeforeUnmount(() => {
                               (feedbacks.filter(feedback => feedback.rate === 3).length / feedbacks.length) * 100 + '%',
                           }"></div>
                       </div>
-                      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      <span class="text-sm font-medium text-gray-500"
                         >{{
                           ((feedbacks.filter(feedback => feedback.rate === 3).length / feedbacks.length) * 100).toFixed(
                             2,
@@ -522,7 +522,7 @@ onBeforeUnmount(() => {
                       >
                     </div>
                     <div class="flex items-center mt-4">
-                      <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">2 </a>
+                      <a href="#" class="text-sm font-medium text-blue-600 hover:underline">2 </a>
                       <svg
                         class="w-4 h-4 text-yellow-300 ms-1"
                         aria-hidden="true"
@@ -532,7 +532,7 @@ onBeforeUnmount(() => {
                         <path
                           d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
-                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div
                           class="h-5 bg-yellow-300 rounded"
                           :style="{
@@ -540,7 +540,7 @@ onBeforeUnmount(() => {
                               (feedbacks.filter(feedback => feedback.rate === 2).length / feedbacks.length) * 100 + '%',
                           }"></div>
                       </div>
-                      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      <span class="text-sm font-medium text-gray-500"
                         >{{
                           ((feedbacks.filter(feedback => feedback.rate === 2).length / feedbacks.length) * 100).toFixed(
                             2,
@@ -549,7 +549,7 @@ onBeforeUnmount(() => {
                       >
                     </div>
                     <div class="flex items-center mt-4">
-                      <a href="#" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">1 </a>
+                      <a href="#" class="text-sm font-medium text-blue-600 ưhover:underline">1 </a>
                       <svg
                         class="w-4 h-4 text-yellow-300 ms-1"
                         aria-hidden="true"
@@ -559,7 +559,7 @@ onBeforeUnmount(() => {
                         <path
                           d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                       </svg>
-                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
                         <div
                           class="h-5 bg-yellow-300 rounded"
                           :style="{
@@ -567,7 +567,7 @@ onBeforeUnmount(() => {
                               (feedbacks.filter(feedback => feedback.rate === 1).length / feedbacks.length) * 100 + '%',
                           }"></div>
                       </div>
-                      <span class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      <span class="text-sm font-medium text-gray-500"
                         >{{
                           ((feedbacks.filter(feedback => feedback.rate === 1).length / feedbacks.length) * 100).toFixed(
                             2,
@@ -591,18 +591,18 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </section>
-        <section v-if="showDes" class="bg-white dark:bg-gray-900 rounded-lg border-r">
+        <section v-if="showDes" class="bg-white rounded-lg border-r">
           <div class="mx-auto max-w-screen-xxl">
             <div class="flex gap-2">
               <article
-                class="bg-white rounded-lg border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700 lg:w-full">
+                class="bg-white rounded-lg border-r border-gray-200 lg:w-full">
                 <div>
-                  <section class="bg-white border-b dark:bg-gray-900 antialiased">
+                  <section class="bg-white border-b antialiased">
                     <div class="max-w-2xl">
                       <article
-                        class="text-base bg-white p-6 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                        class="text-base bg-white p-6 rounded-lg border-gray-200">
                         <div>
-                          <p class="ml-5 text-gray-500 dark:text-gray-400">{{ description }}</p>
+                          <p class="ml-5 text-gray-500">{{ description }}</p>
                         </div>
                       </article>
                     </div>

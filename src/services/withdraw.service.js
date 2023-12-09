@@ -61,8 +61,8 @@ const getAllWithdraws = async (page, size) => {
     throw error
   }
 }
-const getWithDrawsByUserId = async (page, size, userId) => {
-  const serviceUrl = url.endpoint.withdrawAndRefunds.getAllWithdraws
+const getWithDrawsByUser = async (page, size) => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.getWithdrawsUser
   const response = await utils.axiosLocalHost.get(serviceUrl, {
     params: {
       page,
@@ -74,7 +74,7 @@ const getWithDrawsByUserId = async (page, size, userId) => {
 export default {
   getAllWithdraws,
   sellerWithdrwaOpt2,
-  getWithDrawsByUserId,
+  getWithDrawsByUser,
   adminConfirmSellerwithdrawOpt2,
   adminConfirmSellerWithdrawOpt1,
   adminConfirmBuyerWithdraw

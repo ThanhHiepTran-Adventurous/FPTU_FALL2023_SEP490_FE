@@ -49,7 +49,7 @@ const onPaymentClick = () => {
 <template>
     <div class="w-[23rem]">
         <div class="border border-[1px] border-gray-200 rounded-lg w-full p-3"
-            :class="auctionType === AuctionModelType.intermediate && isExpired ? 'bg-red-200' : 'bg-white'">
+            :class="isExpired ? 'bg-red-200' : 'bg-white'">
             <div class="flex items-start">
                 <div>
                     <img class="object-cover rounded-lg h-32 w-32"

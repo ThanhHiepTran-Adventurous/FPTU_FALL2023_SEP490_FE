@@ -2,7 +2,7 @@
 import { onMounted, ref, computed, watch } from 'vue'
 import moment from 'moment'
 import formatCurrency from '@/utils/currency-output-formatter'
-import { WithdrawRequestStatus, WithdrawRequestType } from '@/common/contract'
+import { Role, WithdrawRequestStatus, WithdrawRequestType } from '@/common/contract'
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import withdrawService from '@/services/withdraw.service'
 import { useUserStore } from '@/stores/user.store'
@@ -69,7 +69,13 @@ const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
 const getAllRecords = async () => {
   try {
-    const response = await withdrawService.getWithDrawsByUserId(1, 1000, userStore.getUserIdAndGetFromLocalStorageIfNotExist())
+    const curRole = userStore.getRoleAndGetFromLocalStorageIfNotExist()
+    let response
+    if(curRole === Role.admin.value){
+      response = await withdrawService.getAllWithdraws(1, 1000)
+    } else {
+      response = await withdrawService.getWithDrawsByUser(1, 1000)
+    }
     records.value = response.data
     filterRecords()
   } catch (e) {

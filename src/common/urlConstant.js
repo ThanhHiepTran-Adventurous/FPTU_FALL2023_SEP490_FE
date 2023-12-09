@@ -164,6 +164,7 @@ export default {
     },
     withdrawAndRefunds: {
       getAllWithdraws: 'withdrawAndRefunds',
+      getWithdrawsUser: 'withdrawAndRefunds/getting-withdrawRefund-of-user',
       adminConfirmSellerwithdrawOpt2:
         'withdrawAndRefunds/admin/{withdrawAndRefundRequestsId}/confirm-withdraw-request-option-two',
       adminConfirmSellerWithdrawOpt1:

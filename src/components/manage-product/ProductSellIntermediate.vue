@@ -117,7 +117,9 @@ const fetchAuctions = async () => {
 }
 const filterData = () => {
   auctionsFiltered.value = auctions.value.filter(
-    v => v.modelType === AuctionModelType.intermediate && v.product.status !== 'PAID',
+    v => v.modelType === AuctionModelType.intermediate
+     && v.product.status !== ProductStatus.PAID.value
+      && v.product.status !== ProductStatus.SOLD.value
   )
 }
 
