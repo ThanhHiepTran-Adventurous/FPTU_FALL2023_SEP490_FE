@@ -268,7 +268,7 @@ onMounted(() => {
                         Địa chỉ :
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
-                        {{ detail?.address ? detail.address : 'N/A' }}
+                        {{ detail?.buyerAddress ? detail.buyerAddress : 'N/A' }}
                       </td>
                     </tr>
                     <tr>
@@ -277,7 +277,7 @@ onMounted(() => {
                         Số điện thoại :
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
-                        {{ detail?.phoneNumber ? detail.phoneNumber : 'N/A' }}
+                        {{ detail?.buyerPhoneNumber ? detail.buyerPhoneNumber : 'N/A' }}
                       </td>
                     </tr>
                     <tr>

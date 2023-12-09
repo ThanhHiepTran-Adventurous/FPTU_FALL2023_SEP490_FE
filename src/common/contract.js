@@ -201,3 +201,8 @@ export const GlobalConfigKey = {
   NumberRateProductToAutoConfirm: "NUMBER_RATE_FEEDBACK_PRODUCT",
   MaxinumBuyNowPerDay: "MAXIMUM_NUMBER_BUY_NOW_PER_DAY"
 }
+
+export const ChatGroupStatus = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE"
+}

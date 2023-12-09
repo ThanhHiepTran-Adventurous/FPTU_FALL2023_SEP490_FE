@@ -1,8 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
-import { defaultRoute } from "@/common/constant";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { OrderStatus, Role } from "@/common/contract";
+import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
+import { Role, ChatGroupStatus, OrderStatus } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -142,7 +141,8 @@ const onConfirmShipped = async () => {
     toastOption.toastSuccess('Xác nhận đã nhận hàng thành công, đoạn chat sẽ được đóng.')
     closeBuyerModal()
     fetchChatInfo()
-  } catch (_) {
+  } catch (e) {
+    console.log(e)
     toastOption.toastError('Có lỗi hệ thống...')
   }
 }
@@ -283,12 +283,13 @@ onBeforeUnmount(() => {
                   Xem thông tin đơn hàng
                 </button>
                 <button
-                  v-if="curRole === Role.buyer.value"
+                  v-if="curRole === Role.buyer.value && groupInfo?.order?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value"
                   @click="onShippedClick"
                   class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
                   Đã nhận hàng
                 </button>
                 <button
+                  v-if="groupInfo?.order?.statusOrder !== OrderStatus.DONE.value && groupInfo?.shipRequestList?.length > 0"
                   @click="openReportModal"
                   class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
                   Tố cáo
@@ -351,52 +352,57 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
-          <div v-if="isImgUploading" class="bg-white rounded-lg w-full h-[222px]">
-            <Loading />
+          <div class="text-red-500 text-center w-full text-xl" v-if="groupInfo?.status === ChatGroupStatus.INACTIVE">
+            Đoạn chat đã đóng
           </div>
-          <div v-else class="rounded-xl w-full px-4">
-            <div class="flex items-center w-full">
-              <!-- Attach icon -->
-              <div class="hover:cursor-pointer">
-                <Icon
-                  icon="teenyicons:attach-solid"
-                  class="text-[24px] mr-3"
-                  @click="() => $refs.file.click()"
-                  @click.prevent/>
-                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
-              </div>
-              <!-- Input -->
-              <div class="flex-grow">
-                <input
-                  v-model="textMessage"
-                  @keypress.enter="sendMessage"
-                  type="text"
-                  class="flex w-full rounded-xl pl-4 h-10" />
-              </div>
-              <!-- Send icon -->
-              <div class="ml-4">
-                <button
-                  @click="sendMessage"
-                  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
-                  <span class="ml-1">
-                    <svg
-                      class="w-4 h-4 transform rotate-45 -mt-px"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                  </span>
-                </button>
-              </div>
+          <div v-if="groupInfo?.status === ChatGroupStatus.ACTIVE">
+            <div v-if="isImgUploading" class="bg-white rounded-lg w-full h-[222px]">
+              <Loading />
             </div>
-            <div v-if="imgSrc.length > 0" class="mt-3">
-              <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
+            <div v-else class="rounded-xl w-full px-4">
+              <div class="flex items-center w-full">
+                <!-- Attach icon -->
+                <div class="hover:cursor-pointer">
+                  <Icon
+                    icon="teenyicons:attach-solid"
+                    class="text-[24px] mr-3"
+                    @click="() => $refs.file.click()"
+                    @click.prevent/>
+                  <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+                </div>
+                <!-- Input -->
+                <div class="flex-grow">
+                  <input
+                    v-model="textMessage"
+                    @keypress.enter="sendMessage"
+                    type="text"
+                    class="flex w-full rounded-xl pl-4 h-10" />
+                </div>
+                <!-- Send icon -->
+                <div class="ml-4">
+                  <button
+                    @click="sendMessage"
+                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
+                    <span class="ml-1">
+                      <svg
+                        class="w-4 h-4 transform rotate-45 -mt-px"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div v-if="imgSrc.length > 0" class="mt-3">
+                <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
+              </div>
             </div>
           </div>
         </div>

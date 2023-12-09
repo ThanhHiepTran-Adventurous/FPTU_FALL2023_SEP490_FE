@@ -1,7 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
 import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { Role } from "@/common/contract";
+import { OrderStatus, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -293,22 +293,26 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Actions -->
-            <div class="flex flex-col mt-4">
+            <div class="flex flex-col mt-4" v-if="groupInfo?.shipRequestList?.length > 0">
               <div class="flex flex-row items-center justify-between">
                 <span class="font-bold">Hành động</span>
               </div>
               <div class="flex flex-col space-y-1 mt-2">
                 <!-- For seller only -->
-                <button v-if="curRole === Role.seller.value" @click="openSellerModal()"
-                  class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2">
+                <button v-if="curRole === Role.seller.value" @click="openSellerModal"
+                  class="flex items-center justify-center text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center mb-2"
+                >
                   Cập nhật thông tin đơn hàng
                 </button>
                 <button v-if="curRole === Role.seller.value" @click="onChangeStatusClick"
-                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer">
+                  class="text-white hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:cursor-pointer"
+                  :disabled="groupInfo?.order?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || groupInfo?.order?.statusOrder === OrderStatus.DONE.value"
+                  :class="groupInfo?.order?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value || groupInfo?.order?.statusOrder === OrderStatus.DONE.value ? 'hover:!cursor-not-allowed bg-blue-300' : 'bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700'">
                   Cập nhật trạng thái đơn hàng
                 </button>
                 <button
                   @click="openReportModal"
+                  v-if="groupInfo?.order?.statusOrder !== OrderStatus.DONE.value"
                   class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2">
                   Tố cáo
                 </button>
@@ -433,6 +437,6 @@ onBeforeUnmount(() => {
       @update-status="onChangeStatus"
       @update-detail="onUpdateDetail"
     />
-    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm"/>
+    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="closeReportModal"/>
   </div>
 </template>
