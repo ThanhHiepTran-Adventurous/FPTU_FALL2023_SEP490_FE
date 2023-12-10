@@ -15,6 +15,13 @@ import userService from '@/services/user.service'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import { sellerTabs } from '@/common/constant'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
+import ErrorMessage from '../common-components/ErrorMessage.vue'
+import ListEditableImage from '../ListEditableImage.vue'
+import brandService from '@/services/brand.service'
+import categoryService from '@/services/category.service'
+import { Icon } from '@iconify/vue'
+import { DUMP_IMG_FILE_DATA } from '@/common/commonStaticState'
+import { base64Image } from '@/utils/imageFile'
 
 const breadcrumbItems = [
   {
@@ -29,7 +36,7 @@ const breadcrumbItems = [
   },
 ]
 
-const itemsPerPage = 9
+const itemsPerPage = 8
 const searchQuery = ref('')
 const isLoading = ref(false)
 const currentPage = ref(1)
@@ -162,10 +169,223 @@ const fetchProducts = async () => {
   filterProduct()
   isLoading.value = false
 }
+
+const isModalEditOpen = ref(false)
+const isModalDeleteConfirmOpen = ref(false)
+
+const cancelEdit = () => {
+  isModalEditOpen.value = false
+}
+
+const showDelete = (product) => {
+  productDetail.value = product
+  isModalDeleteConfirmOpen.value = true
+}
+const cancelDelete = () => {
+  isModalDeleteConfirmOpen.value = false
+}
+const onDeleteConfirm = () => {
+  productSerivice.deleteProduct(productDetail.value.id)
+    .then(_ => {
+      toastOption.toastSuccess("Xóa sản phẩm thành công")
+    })
+    .catch(_ => {
+      toastOption.toastError("Xóa sản phẩm thất bại")
+    })
+    .finally(() => {
+      cancelDelete()
+      fetchProducts()
+    })
+}
+
+// UPDATE
+const productFormData = ref({
+  name: '',
+  description: '',
+  weight: '',
+  brand: '',
+  category: '',
+})
+const manualAuctionErrorState = ref({
+  productName: '',
+  description: '',
+  weight: '',
+  brandId: '',
+  categoryId: '',
+  image: '',
+})
+const imgSrc = ref([])
+const imgData = ref([])
+const convertedImages = ref([])
+const originalImages = ref([])
+
+const categories = ref([])
+const brands = ref([])
+
+const handleFileUpload = async e => {
+  imgData.value.push(e.target.files[0])
+  imgSrc.value.push(await base64Image(e.target.files[0]))
+}
+
+const handleImageDeleted = indx => {
+  imgSrc.value.splice(indx, 1)
+  imgData.value.splice(indx, 1)
+}
+
+const clearDataState = () => {
+  productFormData.value = {
+    name: '',
+    description: '',
+    weight: '',
+    brand: '',
+    category: '',
+  }
+
+  originalImages.value = []
+  imgSrc.value = []
+  imgData.value = []
+}
+
+const setDataStateBaseOnDetail = detail => {
+  productFormData.value = {
+    name: detail.name,
+    description: detail.description,
+    weight: detail.weight,
+    brand: {
+      id: detail.brand.id,
+      name: detail.brand.name,
+    },
+    category: {
+      id: detail.category.id,
+      name: detail.category.name,
+    },
+  }
+
+  originalImages.value = [...detail.imageUrls]
+
+  imgSrc.value = [...detail.imageUrls]
+  imgData.value = detail.imageUrls.map(url => DUMP_IMG_FILE_DATA)
+}
+const openEditProductModal = product => {
+  setDataStateBaseOnDetail(product)
+
+  productDetail.value = product // Set the selected brand data
+  isModalEditOpen.value = true // Show the modal
+
+  convertedImages.value =
+    productDetail.value.imageUrls.map(url => ({
+      src: url,
+      alt: 'Image Alt Text', // You can set the alt text as per your requirements
+    })) || []
+}
+
+const getImageUrlIgnored = () => {
+  return originalImages.value.filter(f => {
+    const dataFetched = imgSrc.value.filter(src => src === f)
+    return !(dataFetched && dataFetched.length > 0)
+  })
+}
+const getNewImages = () => {
+  return imgData.value.filter(f => f !== DUMP_IMG_FILE_DATA)
+}
+
+const validateManual = () => {
+  let result = true
+  if (productFormData.value.name.trim() === '') {
+    manualAuctionErrorState.value.productName = 'Vui lòng nhập tên sản phẩm'
+    result = false
+  }
+  if (productFormData.value.description.trim() === '') {
+    manualAuctionErrorState.value.description = 'Vui lòng nhập miêu tả'
+    result = false
+  }
+  if (productFormData.value.description.length > 1000) {
+    manualAuctionErrorState.value.description = 'Miêu tả không được vượt quá 1000 kí tự'
+    result = false
+  }
+  if (!productFormData.value.weight) {
+    manualAuctionErrorState.value.weight = 'Vui lòng nhập trọng lượng'
+    result = false
+  }
+  if (productFormData.value.weight > 10000) {
+    manualAuctionErrorState.value.weight = 'Trọng lượng không được quá 10kg'
+    result = false
+  }
+  if (!productFormData.value.brand.id) {
+    manualAuctionErrorState.value.brandId = 'Vui lòng chọn thương hiệu sản phẩm'
+    result = false
+  }
+  if (!productFormData.value.category.id) {
+    manualAuctionErrorState.value.categoryId = 'Vui lòng chọn loại sản phẩm'
+    result = false
+  }
+  if (imgSrc.value.length === 0) {
+    manualAuctionErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
+    result = false
+  }
+  return result
+}
+const resetErrorState = () => {
+  manualAuctionErrorState.value = {
+    productName: '',
+    description: '',
+    weight: '',
+    brandId: '',
+    categoryId: '',
+    image: '',
+  }
+}
+const onSubmit = () => {
+  resetErrorState()
+  if (!validateManual()) {
+    return
+  } else if(confirm("Bạn có chắc chắn muốn cập nhật sản phẩm không?")) {
+    clearDataState()
+    cancelEdit()
+
+    const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm')
+    let imageUrlIgnored = getImageUrlIgnored()
+    imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
+    let newImages = getNewImages()
+    newImages = newImages && newImages.length > 0 ? newImages : []
+    const updateProductRequest = {
+      name: productFormData.value.name,
+      description: productFormData.value.description,
+      weight: productFormData.value.weight,
+      brandId: productFormData.value.brand.id,
+      categoryId: productFormData.value.category.id,
+    }
+
+    productSerivice.updateProductById(
+      productDetail.value.id,
+      imageUrlIgnored,
+      newImages,
+      updateProductRequest,
+    )
+      .then(_ => {
+        toastOption.updateLoadingToast(toastId, 'Cập nhật sản phẩm thành công', false)
+      })
+      .catch(_ => {
+        toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
+      })
+      .finally(() => {
+        fetchProducts()
+      })
+  }
+}
+
+// END UPDATE
+
+
 watch(searchQuery, () => {
   currentPage.value = 1
 })
+
 onMounted(async () => {
+  const brandsData = await brandService.getAllBrands()
+  const categoriesData = await categoryService.getAllCategories()
+  brands.value = brandsData.data.filter(d => d.status === 'ACTIVE')
+  categories.value = categoriesData.data.filter(d => d.status === 'ACTIVE')
   options.value = filterOptions()
   await fetchProducts()
 })
@@ -214,11 +434,13 @@ onMounted(async () => {
               </button>
             </div>
           </div>
-    
+          
           <ItemBoxManageVue
             v-for="product in paginatedProducts"
             :key="product.id"
             @click="showDetail(product)"
+            @update="openEditProductModal(product)"
+            @delete="showDelete(product)"
             class="ml-10 mb-10"
             :product-name="product.name"
             :status="product.status"
@@ -305,6 +527,127 @@ onMounted(async () => {
         @create-error="onCreateError"
         @just-submitted="closeModal"
       />
+      <Modal
+        v-if="isModalDeleteConfirmOpen"
+        widthClass="w-[900px]"
+        :hasOverFlowVertical="true"
+        :hasButton="true"
+        button-label="Xác nhận"
+        @decline-modal="cancelDelete()"
+        @confirm-modal="onDeleteConfirm()"
+        title="Xác nhận xóa sản phẩm">
+        <div class="text-xl font-semibold text-red-500">Bạn có chắc chắn muốn xóa sản phẩm này không?</div>
+      </Modal>
+      <Modal
+        v-if="isModalEditOpen"
+        title="Cập nhật sản phẩm"
+        :widthClass="'w-[50vw]'"
+        :hasOverFlowVertical="true"
+        :hasButton="false"
+        @decline-modal="cancelEdit"
+        @confirm-modal="cancelEdit">
+        <div>
+          <div class="bg-white rounded-lg">
+            <!-- Form Tab -->
+            <div>
+              <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> Tên Sản Phẩm </label>
+                  <input
+                    v-model="productFormData.name"
+                    class="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                    id="title"
+                    type="text"
+                  />
+                  <ErrorMessage :text="manualAuctionErrorState.productName" />
+                </div>
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> Mô tả </label>
+                  <textarea
+                    v-model="productFormData.description"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="description"
+                  ></textarea>
+                  <ErrorMessage :text="manualAuctionErrorState.description" />
+                </div>
+                <div class="mb-4">
+                  <label class="block text-sm text-gray-700 text-sm font-bold mb-2" for="weight"> Trọng lượng (gram) </label>
+                  <input
+                    v-model="productFormData.weight"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="weight"
+                    type="text"
+                  />
+                  <ErrorMessage :text="manualAuctionErrorState.weight" />
+                </div>
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="brand"> Thương hiệu sản phẩm </label>
+                  <select
+                    v-model="productFormData.brand.id"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="brand">
+                    <option value="" disabled selected>Chọn thương hiệu</option>
+                    <option
+                      v-for="brand in brands"
+                      :key="brand.id"
+                      :value="brand.id"
+                      :selected="brand.id === productFormData.brand.id">
+                      {{ brand.name }}
+                    </option>
+                  </select>
+                  <ErrorMessage :text="manualAuctionErrorState.brand" />
+                </div>
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="category"> Loại sản phẩm </label>
+                  <select
+                    v-model="productFormData.category.id"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="category">
+                    <option value="" disabled selected>Chọn loại</option>
+                    <option
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.id"
+                      :selected="category.id === productFormData.category.id">
+                      {{ category.name }}
+                    </option>
+                  </select>
+                  <ErrorMessage :text="manualAuctionErrorState.category" />
+                </div>
+
+                <div class="mb-4 w-full overflow-x-auto">
+                  <ListEditableImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
+                </div>
+                <div class="mb-4">
+                  <button
+                    @click="() => $refs.file.click()"
+                    @click.prevent
+                    class="flex items-center bg-white hover:!bg-gray-200 gap-3 w-[180px] justify-center text-gray-800 mt-3 px-4 py-2 rounded text-sm border-[1px] border-blue-500">
+                    <Icon icon="tdesign:upload" />
+                    <span>Upload image</span>
+                  </button>
+                  <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+                  <ErrorMessage :text="manualAuctionErrorState.image" />
+                </div>
+                <div class="flex items-center gap-3">
+                  <button
+                    @click="cancelEdit()"
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button">
+                    Hủy
+                  </button>
+                  <button
+                    @click="onSubmit()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button">
+                    Cập nhật
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   </div>
 

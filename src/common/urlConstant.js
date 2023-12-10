@@ -64,6 +64,7 @@ export default {
       inventory: '/products',
       inventoryByUser: '/products/listProductBySeller',
       updateProductById: 'products/{productId}',
+      deleteProductById: 'products/{productId}',
     },
     auctions: {
       getAll: '/auctions',
@@ -191,7 +192,7 @@ export default {
       assignReport: 'report/staff/assign-report/{reportId}',
     },
     feedback: {
-      getFeedbackBySellerId: 'feedback',
+      getFeedbackBySellerId: '/guest/listFeedback-guest',
       buyerCreateFeedBack: 'feedback',
     },
   },

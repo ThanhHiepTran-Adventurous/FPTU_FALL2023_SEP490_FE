@@ -44,8 +44,23 @@ const updateProductById = async (productId, oldImageRemoved, newImages, updateRe
     throw error
   }
 }
+
+const deleteProduct = async (id) => {
+  const serviceUrl = `${url.endpoint.product.inventory}/${id}`
+
+  try {
+    const response = await utils.axiosLocalHost.delete(serviceUrl)
+
+    return response ? response.data : response
+  } catch (error) {
+    console.error('Error deleting product:', error)
+    throw error
+  }
+}
+
 export default {
   addProductToInventory,
   getProducts,
   updateProductById,
+  deleteProduct
 }

@@ -1,6 +1,9 @@
 <script setup>
+import { ProductStatus } from '@/common/contract';
 import ProductStatusBadge from '../badge/ProductStatusBadge.vue';
 import { Icon } from '@iconify/vue';
+
+const emit = defineEmits(['update', 'delete'])
 
 const props = defineProps({
     mainImage: {
@@ -10,10 +13,6 @@ const props = defineProps({
     secondaryImage: {
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKBMDCwElNqXzxgqg6K-hkKoNWECLd2iKnaflZivfgPntwaTCe_hAl7xmQH1zeOIZfIX8&usqp=CAU"
-    },
-    brand: {
-        type: String,
-        default: "BRAND"
     },
     productName: {
         type: String,
@@ -25,12 +24,20 @@ const props = defineProps({
     }
 })
 
+const onEditClick = (e) => {
+    e.stopPropagation()
+    emit('update')
+}
+
+const onDeleteClick = (e) => {
+    e.stopPropagation()
+    emit('delete')
+}
 
 </script>
 <template>
     <div class="group tt-product thumbprod-center rounded-xl hover:scale-105 duration-200">
         <div class="tt-image-box">
-            <Icon icon="ph:frame-corners-thin" class="tt-btn-quickview !text-[13px] p-2.5" />
             <a class="block w-[220px] h-[210px] overflow-hidden">
                 <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt=""></span>
                 <span class="tt-img-roll-over">
@@ -42,9 +49,17 @@ const props = defineProps({
             <div class="w-[210px] text-left text-blue-700 mt-1 mb-1.5 pl-1 font-semibold text-lg truncate">
                 {{ props.productName }}
             </div>
-            <div class="flex row justify-end px-2 w-full">
-                 <div class="items-center pb-2">
+            <div class="flex justify-end px-2 w-full">
+                <div class="flex items-center gap-3 pb-2">
                     <ProductStatusBadge :status="props.status" />
+                    <div class="flex items-center gap-2" v-if="props.status === ProductStatus.ACTIVE.value">
+                        <div class="rounded-full !bg-gray-200 p-1 hover:!bg-gray-300" @click="onEditClick">
+                            <Icon icon="clarity:edit-line" class="!text-[18px] !text-blue-700" />
+                        </div>
+                        <div class="rounded-full !bg-red-200 p-1 hover:!bg-red-300" @click="onDeleteClick">
+                            <Icon icon="mingcute:delete-line" class="!text-red-500 !text-[18px]" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
