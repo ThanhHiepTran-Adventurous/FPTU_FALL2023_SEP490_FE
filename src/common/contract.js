@@ -17,6 +17,22 @@ export const Role = {
   },
 }
 
+export const TransactionStatus = {
+  SUCCESS: {
+    label: 'THÀNH CÔNG',
+    value: 'SUCCESS',
+  },
+  PENDING: {
+    label: 'ĐANG ĐỢI',
+    value: 'PENDING',
+  },
+  FAIL: {
+    label: 'THẤT BẠI',
+    value: 'FAIL',
+  },
+}
+
+
 export const AuctionModelType = {
   intermediate: 'INTERMEDIATE',
   immediate: 'IMMEDIATE',

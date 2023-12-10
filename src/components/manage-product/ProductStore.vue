@@ -136,8 +136,10 @@ const showDetail = product => {
 }
 
 const showCreate = async () => {
-  if(! await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist())){
-    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng, địa ch] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
+  if (!(await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist()))) {
+    toastOption.toastError(
+      'Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng, địa ch] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.',
+    )
     return
   }
   isModalVisible.value = true
@@ -156,9 +158,11 @@ function handleConfirm() {
 const fetchProducts = async () => {
   isLoading.value = true
   const data = await productSerivice.getProducts()
-  productsOrigin.value = data.data ? data.data.sort((a, b) => {
-    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
-  }) : []
+  productsOrigin.value = data.data
+    ? data.data.sort((a, b) => {
+        return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+      })
+    : []
   filterProduct()
   isLoading.value = false
 }
@@ -206,15 +210,20 @@ onMounted(async () => {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </a>
-              <button class="text-white font-semibold text-lg group-hover:text-white group-hover:smooth-hover text-center">
+              <button
+                class="text-white font-semibold text-lg group-hover:text-white group-hover:smooth-hover text-center">
                 TẠO MỚI
               </button>
             </div>
           </div>
-    
+
           <ItemBoxManageVue
             v-for="product in paginatedProducts"
             :key="product.id"
@@ -297,15 +306,12 @@ onMounted(async () => {
         :product="productDetail"
         @send-success="onSendSuccess"
         @send-error="onSendError"
-        @just-submitted="closeModal"
-      />
+        @just-submitted="closeModal" />
       <CreateNewProduct
         :hidden="!isModalVisible || !(typeofModal === allowedModalTypes.create)"
         @create-success="onCreateSuccess"
         @create-error="onCreateError"
-        @just-submitted="closeModal"
-      />
+        @just-submitted="closeModal" />
     </div>
   </div>
-
 </template>

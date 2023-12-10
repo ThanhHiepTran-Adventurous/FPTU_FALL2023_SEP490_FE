@@ -7,6 +7,7 @@ import PaymentService from '@/services/payment.service'
 import formatCurrency from '@/utils/currency-output-formatter'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import TransactionStatusBadge from '@/components/common-components/badge/TransactionStatusBadge.vue'
 
 const transactionList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
@@ -87,9 +88,9 @@ const breadcrumbItems = [
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Thể loại</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
-                    <th scope="col" class="px-6 py-3">
+                    <!-- <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
-                    </th>
+                    </th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -104,13 +105,32 @@ const breadcrumbItems = [
                       {{ trans.userReceiveMoney ? trans.userReceiveMoney.fullname : 'Hệ thống' }}
                     </th>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-blue-500 font-semibold text-right">{{ formatCurrency(trans?.amount) }}</div>
+                      <div class="font-normal text-blue-500 font-semibold text-right">
+                        {{ formatCurrency(trans?.amount) }}
+                      </div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.type }}</div>
+                      <div class="font-normal text-gray-500">
+                        {{
+                          trans?.type === 'SELLER_PAY_FOR_MESSAGING'
+                            ? 'Thanh toán cho việc nhắn tin tự trao đổi'
+                            : trans?.type === 'SELLER_REQUEST_REFUND'
+                            ? 'Người bán yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_REQUEST_REFUND'
+                            ? 'Người mua yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_PAY_FOR_AUCTION'
+                            ? 'Thanh toán qua hệ thống cho phiên đấu giá'
+                            : trans?.type === 'SELLER_WITHDRAW_FROM_HOLDING'
+                            ? 'Người bán yêu cầu rút tiền cho sản phẩm đã bán thành công'
+                            : ''
+                        }}
+                      </div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.status }}</div>
+                      <!-- <div class="font-normal text-gray-500">
+                        {{ trans?.status }}
+                      </div> -->
+                      <div class="font-normal text-gray-500"><TransactionStatusBadge :status="trans?.status" /></div>
                     </td>
 
                     <td class="px-4 py-3">
