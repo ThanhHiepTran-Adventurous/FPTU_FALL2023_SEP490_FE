@@ -4,7 +4,6 @@ import { RouterLink } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import Button from '@/components/common-components/Button.vue'
 import SearchInput from '@/components/common-components/SearchInput.vue'
-import Avatar from '@/components/common-components/Avatar.vue'
 import { useUserStore } from '../../stores/user.store'
 import loginService from '../../services/login.service'
 import Modal from '@/components/common-components/Modal.vue'
@@ -164,6 +163,15 @@ const notiList = computed(() => {
   return notiStore.notifications
 })
 
+const searchKey = ref('')
+const onSearchPress = e => {
+  const ENTER_CHAR_CODE = 13
+  if(e.charCode === ENTER_CHAR_CODE){
+    router.push(`/auctions?search=${searchKey.value}`)
+    searchKey.value = ''
+  }
+}
+
 onMounted(() => {
   notiStore.syncNotifications()
 })
@@ -222,7 +230,7 @@ onMounted(() => {
           </router-link>
         </div>
 
-        <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" />
+        <SearchInput placeholder="       Search a product" addOnInputClass="w-full md:w-[400px]" @keyPress="onSearchPress" v-model="searchKey" />
 
         <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
         <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center mr-[20px]">

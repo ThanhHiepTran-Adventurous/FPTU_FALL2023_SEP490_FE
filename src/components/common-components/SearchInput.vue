@@ -4,7 +4,7 @@
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <transition name="icon">
           <svg
-            v-if="showIcon"
+            v-if="showIcon && !searchValue"
             aria-hidden="true"
             class="w-5 h-5 text-neutral-500"
             fill="none"
@@ -27,7 +27,8 @@
         :class="props.addOnInputClass"
         :placeholder="placeholderValue"
         @focus="hideIcon()"
-        @focusout="show()" />
+        @focusout="show()"
+        @keypress="(e) => emit('keyPress', e)" />
     </div>
   </div>
 </template>
@@ -35,7 +36,7 @@
 <script setup>
 import {computed, ref} from "vue"
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'keyPress'])
 const props = defineProps({
   type: {
     type: String,

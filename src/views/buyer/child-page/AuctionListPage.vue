@@ -1,7 +1,7 @@
 <script setup>
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import ItemBox from '@/components/common-components/item-box/ItemBox.vue'
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Icon } from '@iconify/vue'
 import Slider from '@vueform/slider'
 import brandService from '@/services/brand.service'
@@ -14,6 +14,8 @@ import Loading from '@/components/common-components/Loading.vue'
 import { AuctionModelType } from '@/common/contract'
 import CurrencyInput from '@/components/common-components/CurrencyInput.vue'
 import currencyFormatter from '@/utils/currencyFormatter'
+import SearchInput from '@/components/common-components/SearchInput.vue'
+import debounce from 'lodash.debounce'
 
 const DEFAULT_MIN_PRICE_FILTER = 0
 const DEFAULT_MAX_PRICE_FILTER = 20000000
@@ -67,6 +69,7 @@ const orderSelected = ref({
   data: 'numberOfBids:asc',
 })
 const priceSelected = ref([DEFAULT_MIN_PRICE_FILTER, DEFAULT_MAX_PRICE_FILTER])
+const searchKey = ref('')
 
 const brandOptions = ref([])
 const categoryOptions = ref([])
@@ -80,6 +83,14 @@ const auctions = ref([])
 const AUCTIONS_PER_PAGE = 8
 const currentPage = ref(1)
 const totalAuctions = ref(1)
+
+const debouceWatch = debounce(() => {
+    onFilter()
+  }, 1000)
+
+watch(searchKey, () => {
+  debouceWatch()
+})
 
 const initBrandsData = async () => {
   const brands = await brandService.getAllBrandsGuest()
@@ -171,6 +182,9 @@ const syncQueryParams = () => {
   if(queryParams['modelType']){
     modelTypeSelected.value = queryParams['modelType']
   }
+  if(queryParams['search']){
+    searchKey.value = queryParams['search']
+  }
 }
 const pushQueryParams = () => {
   const queryPayload = {
@@ -180,7 +194,8 @@ const pushQueryParams = () => {
     priceEnd: maxPriceSelected.value,
     sort: orderSelected.value.data,
     page: currentPage.value,
-    modelType: modelTypeSelected.value
+    modelType: modelTypeSelected.value,
+    search: searchKey.value
   }
   router.push({
     query: {... queryPayload}
@@ -219,6 +234,10 @@ const onFilter = async () => {
   // Selected model type
   if (modelTypeSelected.value) {
     queryFilters.push(`modelType:${modelTypeSelected.value}`)
+  }
+
+  if (searchKey.value){
+    queryFilters.push(`product_name%23${searchKey.value}`)
   }
 
   // Price range filter
@@ -405,19 +424,22 @@ const goToNextPage = () => {
         <article
           class="p-4 bg-white rounded-lg border border-gray-200 shadow lg:w-full">
           <div class="h-full flex flex-col justify-between">
-            <!-- Header, sort -->
-            <div class="flex items-center justify-between">
-              <!-- Header -->
-              <div class="px-3 pb-1 flex items-center justify-between">
-                <div class="font-bold text-2xl text-black text-blue-800">
-                  Sản phẩm đấu giá</div>
-              </div>
-              <div class="flex items-center justify-center gap-3">
-                <p class="mt-3">Sắp xếp theo:</p>
-                <div>
-                  <Dropdown v-model="orderSelected" :data="orderOptions" class="!w-[300px]" />
+            <div>
+              <!-- Header, sort -->
+              <div class="flex items-center justify-between mb-3">
+                <!-- Header -->
+                <div class="px-3 pb-1 flex items-center justify-between">
+                  <div class="font-bold text-2xl text-black text-blue-800">
+                    Sản phẩm đấu giá</div>
+                </div>
+                <div class="flex items-center justify-center gap-3">
+                  <p class="mt-3">Sắp xếp theo:</p>
+                  <div>
+                    <Dropdown v-model="orderSelected" :data="orderOptions" class="!w-[300px]" />
+                  </div>
                 </div>
               </div>
+              <SearchInput placeholder="       Search a product" addOnInputClass="pl-[50px] w-full" v-model="searchKey" />
             </div>
             <!-- Auctions -->
             <div class="w-full flex justify-center">

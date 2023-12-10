@@ -20,6 +20,7 @@
     "flowbite": "^1.5.3",
     "flowbite-vue": "^0.0.17-next.0",
     "jquery": "^3.7.0",
+    "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
     "pinia": "^2.1.6",
     "vee-validate": "^4.7.1",
