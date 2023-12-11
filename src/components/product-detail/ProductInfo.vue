@@ -76,14 +76,15 @@ const onCloseModal = () => {
 }
 
 const onBuyNowConfirm = () => {
+  const toastId = toastOption.toastLoadingMessage('Đang tiến hành mua ngay sản phẩm...')
   auctionService
     .buyNowBid(props.auctionInfo?.id)
     .then(_ => {
-      toastOption.toastSuccess('Bạn vừa mua ngay sản phẩm này thành công')
+      toastOption.updateLoadingToast(toastId, 'Bạn vừa mua ngay sản phẩm này thành công', false)
       emit('buyNowSuccess')
     })
     .catch(e => {
-      toastOption.toastError(e.response.data.message)
+      toastOption.updateLoadingToast(toastId, e.response.data.message, true)
     })
 }
 
