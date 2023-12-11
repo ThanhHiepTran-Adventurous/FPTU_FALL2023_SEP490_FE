@@ -7,6 +7,7 @@ import { sellerTabs } from '@/common/constant'
 import SellerSideBarLayout from '@/layouts/SellerSideBarLayout.vue'
 import Breadcrumb from '@/layouts/Breadcrumb.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import TransactionStatusBadgeVue from '../common-components/badge/TransactionStatusBadge.vue'
 
 const breadcrumbItems = [
   {
@@ -91,9 +92,9 @@ const paginatedTransactionList = computed(() => {
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
 
-                    <th scope="col" class="px-6 py-3">
+                    <!-- <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
-                    </th>
+                    </th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -108,10 +109,25 @@ const paginatedTransactionList = computed(() => {
                       <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.type }}</div>
+                      <div class="font-normal text-gray-500">
+                        {{
+                          trans?.type === 'SELLER_PAY_FOR_MESSAGING'
+                            ? 'Thanh toán cho việc nhắn tin tự trao đổi'
+                            : trans?.type === 'SELLER_REQUEST_REFUND'
+                            ? 'Người bán yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_REQUEST_REFUND'
+                            ? 'Người mua yêu cầu hoàn tiền'
+                            : trans?.type === 'BUYER_PAY_FOR_AUCTION'
+                            ? 'Thanh toán qua hệ thống cho phiên đấu giá'
+                            : trans?.type === 'SELLER_WITHDRAW_FROM_HOLDING'
+                            ? 'Người bán yêu cầu rút tiền cho sản phẩm đã bán thành công'
+                            : ''
+                        }}
+                      </div>
                     </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-gray-500">{{ trans?.status }}</div>
+                      <!-- <div class="font-normal text-gray-500">{{ trans?.status }}</div> -->
+                      <div class="font-normal text-gray-500"><TransactionStatusBadgeVue :status="trans?.status" /></div>
                     </td>
 
                     <td class="px-4 py-3">
@@ -119,7 +135,7 @@ const paginatedTransactionList = computed(() => {
                         trans?.transactionDate ? moment.utc(trans?.transactionDate).format('DD/MM/YYYY HH:mm:ss') : ''
                       }}
                     </td>
-                    <td class="px-4 py-3 flex items-center justify-end">
+                    <!-- <td class="px-4 py-3 flex items-center justify-end">
                       <button
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                         type="button"
@@ -136,7 +152,7 @@ const paginatedTransactionList = computed(() => {
                             d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
                         </svg>
                       </button>
-                    </td>
+                    </td> -->
                   </tr>
                 </tbody>
               </table>
