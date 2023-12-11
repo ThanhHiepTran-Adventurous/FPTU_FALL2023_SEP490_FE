@@ -116,11 +116,7 @@ const paginatedAuctions = computed(() => {
     <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
       <!-- Start coding here -->
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-        <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-          <div class="w-full md:w-1/2"></div>
-          <div
-            class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3"></div>
-        </div>
+        <div class="ml-3 mt-3 text-3xl font-semibold text-blue-700 mb-8">Duyệt đấu giá</div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

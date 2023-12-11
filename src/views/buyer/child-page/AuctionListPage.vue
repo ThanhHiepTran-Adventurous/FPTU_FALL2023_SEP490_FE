@@ -80,7 +80,7 @@ const minPriceSelected = ref(DEFAULT_MIN_PRICE_FILTER)
 const maxPriceSelected = ref(DEFAULT_MAX_PRICE_FILTER_STRING)
 
 const auctions = ref([])
-const AUCTIONS_PER_PAGE = 8
+const AUCTIONS_PER_PAGE = 12
 const currentPage = ref(1)
 const totalAuctions = ref(1)
 
