@@ -28,7 +28,7 @@ import 'vue3-carousel/dist/carousel.css'
                 <div class="text-xl leading-6 text-opacity-100 text-blue-700">
                     <strong class="font-semibold">Nền tảng đấu giá thời trang</strong><svg viewBox="0 0 2 2" class="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true"><circle cx="1" cy="1" r="1" /></svg>Đa dạng hình thức đấu giá, uy tín, chất lượng.
                 </div>
-                <a href="#" class="flex-none rounded-full bg-blue-700 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">Đấu giá ngay <span aria-hidden="true">&rarr;</span></a>
+                <a href="/#/auctions" class="flex-none rounded-full bg-blue-700 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900">Đấu giá ngay <span aria-hidden="true">&rarr;</span></a>
             </div>
         </div>
     </div>
