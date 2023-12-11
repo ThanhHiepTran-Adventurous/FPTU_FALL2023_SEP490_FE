@@ -60,7 +60,26 @@ const breadcrumbItems = [
 const fetchProducts = async () => {
   try {
     const response = await AuctionService.getAuctionBySeller('status:REJECTED')
-    products.value = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
+    const dataFiltered = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
+    const latestAuctionRequests = []
+    for(const product of dataFiltered){
+      let latestRequestTime
+      const allSameProduct = dataFiltered.filter(f => f.product.id === product.product.id)
+      if(!allSameProduct || allSameProduct.length === 0){
+        latestAuctionRequests.push(product)
+      } else {
+        for (const data of allSameProduct) {
+          const curRequestTime = new Date(data.createAt).getTime()
+          if (!latestRequestTime || latestRequestTime < curRequestTime) {
+            latestRequestTime = curRequestTime
+          }
+        }
+        if (new Date(product.createAt).getTime() === latestRequestTime) {
+          latestAuctionRequests.push(product)
+        }
+      }
+    }
+    products.value = [...latestAuctionRequests]
   } catch (e) {
     console.error(e)
   }
