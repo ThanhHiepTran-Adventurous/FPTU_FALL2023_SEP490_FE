@@ -8,7 +8,9 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import toastOption from '@/utils/toast-option'
 import moment from 'moment'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import Loading from '@/components/common-components/Loading.vue'
 
+const isDataLoading = ref(false)
 const autionsList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
 const currentPage = ref(1)
@@ -32,12 +34,15 @@ const openAuctionModal = auction => {
   showUpdateModal.value = true // Show the modal
 }
 const getAllAuctions = async () => {
+  isDataLoading.value = true
   try {
     const response = await adminService.getAllAuctions(1, 100)
     autionsList.value = response.data ? response.data : []
     autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW').sort((a, b) => new Date(a.createAt).getTime() - new Date(b.createAt).getTime())
   } catch (e) {
     console.error(e)
+  } finally {
+    isDataLoading.value = false
   }
 }
 
@@ -112,14 +117,15 @@ const paginatedAuctions = computed(() => {
 <template>
   <AdminHeader />
 
-  <section class="bg-white ml-20 mt-5 p-3 sm:p-5">
-    <div class="mx-auto max-w-screen-lg pl-5 px-4 lg:px-12">
+  <section class="bg-white pl-72 mt-5 pr-16">
+    <div class="mx-auto pl-5 px-4 lg:px-12">
       <!-- Start coding here -->
-      <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-        <div class="ml-3 mt-3 text-3xl font-semibold text-blue-700 mb-8">Duyệt đấu giá</div>
+      <div class="bg-white relative overflow-hidden">
+        <div class="ml-3 text-3xl font-semibold text-blue-700 mb-8 mt-8">Duyệt đấu giá</div>
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <Loading v-if="isDataLoading" />
+          <table v-else class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th scope="col" class="px-5 py-3">Người bán</th>
 
@@ -132,8 +138,8 @@ const paginatedAuctions = computed(() => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(auction, index) in paginatedAuctions" :key="index" class="border-b dark:border-gray-700">
-                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+              <tr v-for="(auction, index) in paginatedAuctions" :key="index" class="border-b">
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap">
                   <div class="pl-3">
                     <div class="text-base font-semibold">{{ auction?.product?.seller?.id.split('-')[0] }}</div>
                   </div>
@@ -153,11 +159,11 @@ const paginatedAuctions = computed(() => {
                 </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
-                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                    class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                     type="button"
                     @click="openAuctionModal(auction)">
                     <svg
-                      class="w-6 h-6 text-gray-800 dark:text-white"
+                      class="w-6 h-6 text-gray-800"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -180,7 +186,7 @@ const paginatedAuctions = computed(() => {
             <li>
               <button
                 type="button"
-                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 @click="goToPreviousPage"
                 :disabled="currentPage === 1"
                 aria-label="Previous Page">
@@ -204,9 +210,9 @@ const paginatedAuctions = computed(() => {
                 type="button"
                 class="flex items-center justify-center text-sm py-2 px-3 leading-tight"
                 :class="{
-                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                  'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700':
                     pageNumber !== currentPage,
-                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white':
+                  'text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700':
                     pageNumber === currentPage,
                 }"
                 @click="goToPage(pageNumber)"
@@ -218,7 +224,7 @@ const paginatedAuctions = computed(() => {
               <button
                 type="button"
                 @click="goToNextPage"
-                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 :disabled="currentPage === totalPages"
                 aria-label="Next Page">
                 <span class="sr-only">Next</span>
@@ -248,13 +254,13 @@ const paginatedAuctions = computed(() => {
     class="fixed inset-0 flex m items-center justify-center z-50 bg-black bg-opacity-50">
     <div class="relative p-4 w-full max-w-4xl md:h-auto">
       <!-- Modal content -->
-      <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+      <div class="relative p-4 bg-white rounded-lg shadow">
         <!-- Modal header -->
-        <div class="flex justify-between items-center mb-2 rounded-t border-b sm:mb-5 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Thông tin sản phẩm đấu giá</h3>
+        <div class="flex justify-between items-center mb-2 rounded-t border-b sm:mb-5">
+          <h3 class="text-lg font-semibold text-gray-900">Thông tin sản phẩm đấu giá</h3>
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             data-modal-toggle="updateAutionModal"
             @click="showUpdateModal = false">
             <svg
@@ -277,7 +283,7 @@ const paginatedAuctions = computed(() => {
           <form action="#">
             <div class="grid mt-2 gap-4 mb-4 sm:grid-cols-2">
               <div>
-                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900"
                   >Tên sản phẩm
                 </label>
                 <input
@@ -286,10 +292,10 @@ const paginatedAuctions = computed(() => {
                   :value="selectedAution?.product?.name"
                   readonly
                   id="name"
-                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
-                <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900"
                   >Hình thức mua bán</label
                 >
                 <input
@@ -298,10 +304,10 @@ const paginatedAuctions = computed(() => {
                   id="modelType"
                   :value="selectedAution?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống'"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
-                <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900"
                   >Giá khởi điểm</label
                 >
                 <input
@@ -310,10 +316,10 @@ const paginatedAuctions = computed(() => {
                   id="startPrice"
                   :value="selectedAution?.startPrice ? selectedAution.startPrice.toLocaleString('vi-VN') + ' VND' : ''"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
-                <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                <label for="buyNowPrice" class="block mb-2 text-sm font-medium text-gray-900"
                   >Giá mua ngay</label
                 >
                 <input
@@ -324,10 +330,10 @@ const paginatedAuctions = computed(() => {
                     selectedAution?.buyNowPrice ? selectedAution.buyNowPrice.toLocaleString('vi-VN') + ' VND' : ''
                   "
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
-                <label for="jump" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                <label for="jump" class="block mb-2 text-sm font-medium text-gray-900"
                   >Bước nhảy tối thiểu</label
                 >
                 <input
@@ -336,33 +342,33 @@ const paginatedAuctions = computed(() => {
                   id="jump"
                   :value="selectedAution?.jump ? selectedAution.jump.toLocaleString('vi-VN') + ' VND' : ''"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div class="flex items-center gap-3">
                 <div>
-                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian đấu giá</label>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900">Thời gian đấu giá</label>
                   <input
                     type="text"
                     name="duration"
                     id="duration"
                     :value="selectedAution?.duration / (1000 * 60 * 60) + ' tiếng'"
                     readonly
-                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                 </div>
                 <div>
-                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số người đấu giá tối thiểu</label>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900">Số người đấu giá tối thiểu</label>
                   <input
                     type="text"
                     name="duration"
                     id="duration"
                     :value="selectedAution?.minimumAuctioneers"
                     readonly
-                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                 </div>
               </div>
             </div>
             <div>
-              <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              <label for="description" class="block mb-2 text-sm font-medium text-gray-900"
                 >Mô tả</label
               >
               <textarea
@@ -371,7 +377,7 @@ const paginatedAuctions = computed(() => {
                 :value="selectedAution?.product?.description"
                 readonly
                 id="description"
-                class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
+                class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"></textarea>
             </div>
             <div class="mt-2">
               <Carousel :pictures="convertedImages"></Carousel>
@@ -380,13 +386,13 @@ const paginatedAuctions = computed(() => {
               <button
                 @click="handleApproveAuction(selectedAution.id)"
                 type="button"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 Duyệt
               </button>
               <button
                 @click="showRejectReasonModal = true"
                 type="button"
-                class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                 <svg
                   class="mr-1 -ml-1 w-5 h-5"
                   fill="currentColor"
@@ -413,11 +419,11 @@ const paginatedAuctions = computed(() => {
     class="fixed inset-0 flex m items-center justify-center z-50 bg-black bg-opacity-50">
     <div class="relative w-full max-w-md max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <div class="relative bg-white rounded-lg shadow">
         <button
           @click="closeRejectModal"
           type="button"
-          class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
           data-modal-hide="authentication-modal">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
             <path
@@ -432,7 +438,7 @@ const paginatedAuctions = computed(() => {
         <div class="px-6 py-6 lg:px-8">
           <form class="space-y-6" @submit.prevent="handleRejectAuction(selectedAution.id)">
             <div>
-              <label for="reject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              <label for="reject" class="block mb-2 text-sm font-medium text-gray-900"
                 >Lý do từ chối</label
               >
               <textarea
@@ -440,14 +446,14 @@ const paginatedAuctions = computed(() => {
                 type="string"
                 name="reject"
                 id="reject"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Điền lý do từ chối"
                 required></textarea>
             </div>
 
             <button
               type="submit"
-              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
               Từ chối
             </button>
           </form>
