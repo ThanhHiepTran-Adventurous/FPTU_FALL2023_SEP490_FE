@@ -340,7 +340,6 @@ const onSubmit = () => {
   if (!validateManual()) {
     return
   } else if(confirm("Bạn có chắc chắn muốn cập nhật sản phẩm không?")) {
-    clearDataState()
     cancelEdit()
 
     const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm')
@@ -355,7 +354,7 @@ const onSubmit = () => {
       brandId: productFormData.value.brand.id,
       categoryId: productFormData.value.category.id,
     }
-
+    
     productSerivice.updateProductById(
       productDetail.value.id,
       imageUrlIgnored,
@@ -369,6 +368,7 @@ const onSubmit = () => {
         toastOption.updateLoadingToast(toastId, 'Có lỗi xảy ra vui lòng thử lại', true)
       })
       .finally(() => {
+        clearDataState()
         fetchProducts()
       })
   }

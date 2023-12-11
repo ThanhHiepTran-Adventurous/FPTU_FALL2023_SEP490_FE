@@ -34,8 +34,8 @@ const openAuctionModal = auction => {
 const getAllAuctions = async () => {
   try {
     const response = await adminService.getAllAuctions(1, 100)
-    autionsList.value = response.data
-    autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW')
+    autionsList.value = response.data ? response.data : []
+    autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW').sort((a, b) => new Date(a.createAt).getTime() - new Date(b.createAt).getTime())
   } catch (e) {
     console.error(e)
   }
@@ -150,8 +150,8 @@ const paginatedAuctions = computed(() => {
                 </td>
                 <td class="px-4 py-3">
                   {{
-                    auction?.product?.createAt
-                      ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss')
+                    auction?.createAt
+                      ? moment.utc(auction?.createAt).format('DD/MM/YYYY HH:mm:ss')
                       : ''
                   }}
                 </td>
