@@ -144,7 +144,7 @@ const showDetail = product => {
 
 const showCreate = async () => {
   if(! await userService.isAllRequiredInformationFilled(userStore.getRoleAndGetFromLocalStorageIfNotExist())){
-    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng, địa ch] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
+    toastOption.toastError("Bạn phải hoàn thiện thông tin cá nhân [Thông tin tài khoản ngân hàng, địa chỉ] trước khi đấu giá, để tiện cho quá trình đổi trả, tố cáo.")
     return
   }
   isModalVisible.value = true
