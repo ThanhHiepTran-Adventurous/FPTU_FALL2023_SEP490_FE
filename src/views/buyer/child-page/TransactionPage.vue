@@ -8,6 +8,7 @@ import formatCurrency from '@/utils/currency-output-formatter'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
 import TransactionStatusBadge from '@/components/common-components/badge/TransactionStatusBadge.vue'
+import { useUserStore } from '@/stores/user.store'
 
 const transactionList = ref([])
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
@@ -63,6 +64,10 @@ const breadcrumbItems = [
     disabled: true,
   },
 ]
+const userStore = useUserStore()
+const isSelf = (id) => {
+  return userStore.getUserIdAndGetFromLocalStorageIfNotExist() === id;
+}
 </script>
 <template>
   <div class="w-full">
@@ -84,13 +89,10 @@ const breadcrumbItems = [
                   <tr>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên gửi</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Bên nhận</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-right">Số tiền</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap">Số tiền</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Thể loại</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Trạng thái</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
-                    <!-- <th scope="col" class="px-6 py-3">
-                      <span class="sr-only">Actions</span>
-                    </th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -98,16 +100,17 @@ const breadcrumbItems = [
                     v-for="(trans, index) in paginatedTransactionList"
                     :key="index"
                     class="border-b dark:border-gray-700">
-                    <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
-                      {{ trans.userPayment ? trans.userPayment.fullname : 'Hệ thống' }}
-                    </th>
-                    <th scope="row" class="px-6 whitespace-nowrap py-4 font-normal text-gray-500 dark:text-white">
-                      {{ trans.userReceiveMoney ? trans.userReceiveMoney.fullname : 'Hệ thống' }}
-                    </th>
+                    <td class="px-6 py-4 font-normal text-gray-500 dark:text-white" :class="isSelf(trans.userPayment.id) ? '!text-blue-500 !font-semibold' : ''">
+                      {{ isSelf(trans.userPayment.id) ? 'Tôi' : trans.userPayment.fullname }}
+                    </td>
+                    <td class="px-6 py-4 font-normal text-gray-500 dark:text-white" :class="{
+                      '!text-blue-500 !font-semibold': isSelf(trans.userReceiveMoney?.id),
+                      '!text-red-500 !font-semibold': !trans.userReceiveMoney
+                    }">
+                      {{ trans.userReceiveMoney ? (isSelf(trans.userReceiveMoney?.id) ? 'Tôi' : trans.userReceiveMoney?.fullname) : 'Hệ thống' }}
+                    </td>
                     <td class="px-4 py-3">
-                      <div class="font-normal text-blue-500 font-semibold text-right">
-                        {{ formatCurrency(trans?.amount) }}
-                      </div>
+                      <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
                     </td>
                     <td class="px-4 py-3">
                       <div class="font-normal text-gray-500">
@@ -127,9 +130,6 @@ const breadcrumbItems = [
                       </div>
                     </td>
                     <td class="px-4 py-3">
-                      <!-- <div class="font-normal text-gray-500">
-                        {{ trans?.status }}
-                      </div> -->
                       <div class="font-normal text-gray-500"><TransactionStatusBadge :status="trans?.status" /></div>
                     </td>
 
@@ -137,24 +137,6 @@ const breadcrumbItems = [
                       {{
                         trans?.transactionDate ? moment.utc(trans?.transactionDate).format('DD/MM/YYYY HH:mm:ss') : ''
                       }}
-                    </td>
-                    <td class="px-4 py-3 flex items-center justify-end">
-                      <button
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                        type="button"
-                        @click="openShipModal(ship)">
-                        <svg
-                          class="w-6 h-6 text-gray-800 dark:text-white"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 18">
-                          <path
-                            d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
-                          <path
-                            d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
-                        </svg>
-                      </button>
                     </td>
                   </tr>
                 </tbody>

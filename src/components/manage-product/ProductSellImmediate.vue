@@ -36,7 +36,7 @@ const breadcrumbItems = [
   },
 ]
 
-const itemsPerPage = 12
+const itemsPerPage = 15
 const searchQuery = ref('')
 const route = useRoute()
 const router = useRouter()
@@ -212,7 +212,7 @@ onMounted(() => {
           </div>
         </div>
         <Loading v-if="isLoading" />
-        <div v-else class="flex flex-wrap items-center mx-5 gap-3">
+        <div v-else class="flex flex-wrap items-center mx-5 gap-2">
           <ItemSold
             v-for="item in paginatedProducts"
             :key="item.id"

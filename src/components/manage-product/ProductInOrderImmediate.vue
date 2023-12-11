@@ -42,7 +42,7 @@ const isUpdating = ref(false)
 const currentPage = ref(1)
 
 const searchQuery = ref('')
-const itemsPerPage = 8
+const itemsPerPage = 10
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page

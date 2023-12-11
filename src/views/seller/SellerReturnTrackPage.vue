@@ -193,7 +193,7 @@ onMounted(() => {
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Lý do trả hàng</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap">Ngày tạo</th>
                     <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái</th>
-                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center">Trạng thái trả hàng</th>
+                    <th scope="col" class="px-6 py-3 whitespace-nowrap text-center min-w-[15rem]">Trạng thái trả hàng</th>
                     <th scope="col" class="px-6 py-3">
                       <span class="sr-only">Actions</span>
                     </th>

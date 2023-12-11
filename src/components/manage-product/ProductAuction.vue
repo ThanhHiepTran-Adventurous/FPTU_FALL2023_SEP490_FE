@@ -28,7 +28,7 @@ const breadcrumbItems = [
   },
 ]
 const currentPage = ref(1)
-const itemsPerPage = 8
+const itemsPerPage = 10
 const searchQuery = ref('')
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {

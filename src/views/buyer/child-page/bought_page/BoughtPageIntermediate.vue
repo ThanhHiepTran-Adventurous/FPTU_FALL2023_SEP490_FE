@@ -95,7 +95,7 @@ const closeModal = () => {
 }
 const currentPage = ref(1)
 const searchQuery = ref('')
-const itemsPerPage = 6
+const itemsPerPage = 9
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page

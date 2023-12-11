@@ -115,7 +115,7 @@ function handleConfirm() {
 }
 const currentPage = ref(1)
 const searchQuery = ref('')
-const itemsPerPage = 6
+const itemsPerPage = 10
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page

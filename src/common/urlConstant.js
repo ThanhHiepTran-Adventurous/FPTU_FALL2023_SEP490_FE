@@ -62,7 +62,7 @@ export default {
     },
     product: {
       inventory: '/products',
-      inventoryByUser: '/products/listProductBySeller',
+      inventoryByUser: '/products/seller/getListProduct-authorize',
       updateProductById: 'products/{productId}',
       deleteProductById: 'products/{productId}',
     },

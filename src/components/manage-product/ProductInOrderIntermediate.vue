@@ -52,7 +52,7 @@ const filterData = async () => {
 }
 const currentPage = ref(1)
 const searchQuery = ref('')
-const itemsPerPage = 8
+const itemsPerPage = 10
 const goToPage = page => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
@@ -185,7 +185,7 @@ onMounted(() => {
           </div>
         </div>
         <Loading v-if="isLoading" />
-        <div v-else class="flex flex-wrap gap-3 mx-5">
+        <div v-else class="flex flex-wrap gap-2 mx-5">
           <ItemOrder
             v-for="item in paginatedProducts"
             :key="item.id"
