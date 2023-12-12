@@ -22,7 +22,7 @@ import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
 import * as yup from 'yup'
-import { ErrorMessage, Field, Form } from 'vee-validate'
+import ErrorMessage from '../../../../components/common-components/ErrorMessage.vue'
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')
@@ -198,19 +198,52 @@ const payment = async auctionId => {
     console.error('Error during payment:', error)
   }
 }
+const manualErrorState = ref({
+  phone: '',
+  address: '',
+  provinces: '',
+  districts: '',
+  wards: '',
+})
+const resetErrorState = () => {
+  manualErrorState.value = {
+    phone: '',
+    address: '',
+    provinces: '',
+    districts: '',
+    wards: '',
+  }
+}
+const validateManual = () => {
+  console.log(selectedProvince.value.data)
+  if (!profileModelData.value.phone) {
+    manualErrorState.value.phone = 'Vui lòng nhập số điện thoại'
+    return false
+  }
+  if (!profileModelData.value.address) {
+    manualErrorState.value.address = 'Vui lòng nhập số nhà'
+    return false
+  }
+  if (selectedProvince.value.data.trim() === '') {
+    manualErrorState.value.provinces = 'Vui lòng chọn tỉnh / thành phố'
+    return false
+  }
+  if (selectedDistrict.value.data.trim() === '') {
+    manualErrorState.value.districts = 'Vui lòng chọn quận / huyện'
+    return false
+  }
+  if (selectedWard.value.data.trim() === '') {
+    manualErrorState.value.wards = 'Vui lòng chọn phường / xã'
+    return false
+  }
+  return true
+}
 const onSubmit = async autionIdd => {
   try {
-    await schema.validate(
-      {
-        phone: profileModelData.value.phone,
-        address: profileModelData.value.address,
-        selectedProvince: selectedProvince.value.label,
-        selectedDistrict: selectedDistrict.value.label,
-        selectedWard: selectedWard.value.label,
-      },
-      { abortEarly: false },
-    )
-
+    resetErrorState()
+    if (!validateManual()) {
+      return
+    }
     payment(autionIdd)
   } catch (error) {
     console.error('Validation error:', error.errors)
@@ -238,14 +271,6 @@ watch(selectedDistrict, async () => {
       data: p.code,
     }
   })
-})
-
-const schema = yup.object().shape({
-  phone: yup.string().required('Số điện thoại là trường bắt buộc'),
-  address: yup.string().required('Số nhà là trường bắt buộc'),
-  selectedProvince: yup.string().required('Tỉnh / Thành phố là trường bắt buộc'),
-  selectedDistrict: yup.string().required('Quận / Huyện là trường bắt buộc'),
-  selectedWard: yup.string().required('Phường / Xã là trường bắt buộc'),
 })
 </script>
 
@@ -397,18 +422,18 @@ const schema = yup.object().shape({
               </button>
             </div>
             <!-- Modal body -->
-            <form @submit.prevent="onSubmit(autionIdd)" :validation-schema="schema">
+            <form @submit.prevent="onSubmit(autionIdd)">
               <div class="grid gap-4 mb-4 sm:grid-cols-2">
                 <div>
                   <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >Số điện thoại</label
                   >
-                  <Field
+                  <input
                     name="phone"
                     type="text"
                     v-model="profileModelData.phone"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="phone" class="text-start text-danger pt-2 fs-6" />
+                  <ErrorMessage :text="manualErrorState.phone" />
                 </div>
                 <div>
                   <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -420,7 +445,7 @@ const schema = yup.object().shape({
                     id="address"
                     v-model="profileModelData.address"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="address" class="text-start text-danger pt-2 fs-6" />
+                  <ErrorMessage :text="manualErrorState.address" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -431,7 +456,7 @@ const schema = yup.object().shape({
                     v-model="selectedProvince"
                     :data="provinces"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="provinces" class="text-start text-danger pt-2 fs-6" />
+                  <ErrorMessage :text="manualErrorState.provinces" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -442,6 +467,7 @@ const schema = yup.object().shape({
                     v-model="selectedDistrict"
                     :data="districts"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.districts" />
                 </div>
                 <div>
                   <label for="wards" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -452,7 +478,7 @@ const schema = yup.object().shape({
                     v-model="selectedWard"
                     :data="wards"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                  <ErrorMessage as="div" name="wards" class="text-start text-danger pt-2 fs-6" />
+                  <ErrorMessage :text="manualErrorState.wards" />
                 </div>
               </div>
               <div class="flex items-center space-x-4">
