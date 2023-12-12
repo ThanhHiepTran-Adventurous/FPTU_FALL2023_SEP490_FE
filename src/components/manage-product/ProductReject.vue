@@ -832,36 +832,40 @@ const openProductModal = product => {
                   </div>
                 </div>
                 <div class="mb-4 flex items-center">
-                  <div class="mr-[20%]">
+                  <div class="mr-[15%]">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
                       THỜI GIAN ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
                     </label>
                     <div class="flex gap-3 items-center">
                       <Dropdown :data="durationData" v-model="duration" class="!w-[200px]" />
-                      <input
-                        v-model="durationInput"
-                        v-if="!duration?.value"
-                        type="number"
-                        class="shadow appearance-none border rounded w-[20%] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="duration"
-                        placeholder="" />
-                      <div class="block text-gray-700 text-sm font-bold">giờ</div>
+                      <div class="flex items-center gap-3" :class="{
+                        'invisible': duration.value
+                      }">
+                        <input
+                          v-model="durationInput"
+                          type="number"
+                          class="shadow appearance-none border rounded w-[5rem] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          id="duration"
+                          placeholder="" />
+                        <div class="block text-gray-700 text-sm font-bold">giờ</div>
+                      </div>
                     </div>
                   </div>
                   <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
-                      SỐ NGƯỜI TỐI THIỂU THAM GIA ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
+                      SỐ NGƯỜI TỐI THIỂU THAM GIA ĐẤU GIÁ <span class="text-red-500 text-lg">*</span>
                     </label>
-                    <div class="flex gap-3 items-center">
+                    <div class="flex items-center gap-3">
                       <input
                         v-model="auctionFormData.minimumAuctioneers"
                         type="number"
                         min="1"
-                        class="shadow appearance-none border rounded w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        class="shadow appearance-none border rounded !w-[100px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="duration"
                         placeholder="" />
                       <div class="block text-gray-700 text-sm font-bold">người</div>
                     </div>
+                    <ErrorMessage :text="manualAuctionErrorState.minimumAuctioneers" />
                   </div>
                 </div>
                 <div class="flex items-center gap-3">

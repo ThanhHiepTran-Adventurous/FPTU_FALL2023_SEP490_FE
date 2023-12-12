@@ -439,7 +439,7 @@ const goToNextPage = () => {
                   </div>
                 </div>
               </div>
-              <SearchInput placeholder="       Search a product" addOnInputClass="pl-[50px] w-full" v-model="searchKey" />
+              <SearchInput placeholder="       Tìm kiếm sản phẩm theo tên" addOnInputClass="pl-[50px] w-full" v-model="searchKey" />
             </div>
             <!-- Auctions -->
             <div class="w-full flex justify-center">

@@ -128,12 +128,9 @@ const onSendSuccess = toastId => {
   fetchProducts()
 }
 
-const onSendError = (toastId, detail, error) => {
-  if (detail) {
-    toastOption.updateLoadingToast(toastId, detail, true)
-  } else {
-    toastOption.updateLoadingToast(toastId, error.response.data.message, true)
-  }
+const onSendError = (toastId, error) => {
+  console.log(error)
+  toastOption.updateLoadingToast(toastId, error.response.data.message, true)
 }
 
 const showDetail = product => {
