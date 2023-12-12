@@ -19,6 +19,7 @@ import {
 import ErrorMessage from '../common-components/ErrorMessage.vue'
 import AuctionConfirmModal from '../AuctionConfirmModal.vue'
 import Modal from '../common-components/Modal.vue'
+import validator from '@/utils/validator'
 
 const tableTab = 'table'
 const formTab = 'form'
@@ -63,6 +64,7 @@ const manualAuctionErrorState = ref({
   buyNowPrice: '',
   modelType: '',
   jump: '',
+  time: '',
   minimumAuctioneers: '',
 })
 const resetErrorState = () => {
@@ -71,6 +73,7 @@ const resetErrorState = () => {
     buyPrice: '',
     modelType: '',
     jump: '',
+    time: '',
     minimumAuctioneers: '',
   }
 }
@@ -88,12 +91,16 @@ const validateManual = () => {
     manualAuctionErrorState.value.modelType = 'Vui lòng chọn hình thức mua bán'
     result = false
   }
-  if (!formData.value.minimumAuctioneers) {
-    manualAuctionErrorState.value.minimumAuctioneers = 'Vui lòng nhập số người tham gia tối thiểu'
+  if (!validator.stringIsIntegerAndBiggerThanZeroValidator(formData.value.minimumAuctioneers)) {
+    manualAuctionErrorState.value.minimumAuctioneers = 'Số người tối thiểu phải là số nguyên lớn hơn 0'
     result = false
   }
   if (!formData.value.jump) {
     manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
+    result = false
+  }
+  if(!duration.value.value && !validator.stringIsIntegerAndBiggerThanZeroValidator(durationInput.value)){
+    manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn 0'
     result = false
   }
 
@@ -282,6 +289,9 @@ onMounted(() => {
                     placeholder="" />
                   <div class="block text-gray-700 text-sm font-bold">giờ</div>
                 </div>
+              </div>
+              <div>
+                <ErrorMessage :text="manualAuctionErrorState.time" />
               </div>
             </div>
             <div>
