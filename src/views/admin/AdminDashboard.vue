@@ -523,7 +523,7 @@ const createBrandBarChart = brandData => {
           class="rounded-lg p-4 shadow-md bg-white dark:border-gray-600 h-32 md:h-96 flex flex-col items-center justify-center">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20 mb-4">
             <div
-              class="rounded-lg shadow-md dark:border-ư-600 h-32 md:h-44 bg-white flex flex-col items-center justify-center text-center p-4">
+              class="rounded-lg shadow-md dark:border-ư-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
               <span
                 class="bg-blue-100 whitespace-nowrap shadow-sm text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
                 Tổng số người dùng
@@ -531,7 +531,7 @@ const createBrandBarChart = brandData => {
               <h1 class="flex items-center text-blue-700 text-5xl font-extrabold dark:text-white">{{ allUsers }}</h1>
             </div>
             <div
-              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-44 bg-white flex flex-col items-center justify-center text-center p-4">
+              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
               <span
                 class="bg-blue-100 shadow-sm whitespace-nowrap text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
                 Tổng số sản phẩm
@@ -539,10 +539,37 @@ const createBrandBarChart = brandData => {
               <h1 class="flex items-center text-blue-700 text-6xl font-extrabold dark:text-white">{{ allProducts }}</h1>
             </div>
             <div
-              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-44 bg-white flex flex-col items-center justify-center text-center p-4">
+              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
               <span
                 class="bg-blue-100 shadow-sm whitespace-nowrap text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
                 Tổng số đấu giá
+              </span>
+              <h1 class="flex items-center text-blue-700 text-6xl font-extrabold dark:text-white">{{ allAuctions }}</h1>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20">
+            <div
+              class="rounded-lg shadow-md dark:border-ư-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
+              <span
+                class="bg-blue-100 whitespace-nowrap shadow-sm text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
+                Người dùng đang hoạt động
+              </span>
+
+              <h1 class="flex items-center text-blue-700 text-5xl font-extrabold dark:text-white">{{ allUsers }}</h1>
+            </div>
+            <div
+              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
+              <span
+                class="bg-blue-100 shadow-sm whitespace-nowrap text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
+                Tổng số tố cáo
+              </span>
+              <h1 class="flex items-center text-blue-700 text-6xl font-extrabold dark:text-white">{{ allProducts }}</h1>
+            </div>
+            <div
+              class="rounded-lg shadow-md dark:border-gray-600 h-32 md:h-40 bg-white flex flex-col items-center justify-center text-center p-4">
+              <span
+                class="bg-blue-100 shadow-sm whitespace-nowrap text-blue-800 text-lg font-medium mb-2 px-2.5 py-1 rounded-full dark:bg-red-900 dark:text-red-300">
+                Tổng số đơn hàng
               </span>
               <h1 class="flex items-center text-blue-700 text-6xl font-extrabold dark:text-white">{{ allAuctions }}</h1>
             </div>

@@ -149,11 +149,7 @@ const paginatedAuctions = computed(() => {
                   {{ auction?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống' }}
                 </td>
                 <td class="px-4 py-3">
-                  {{
-                    auction?.product?.createAt
-                      ? moment.utc(auction?.product?.createAt).format('DD/MM/YYYY HH:mm:ss')
-                      : ''
-                  }}
+                  {{ auction?.createAt ? moment.utc(auction?.createAt).format('DD/MM/YYYY HH:mm:ss') : '' }}
                 </td>
                 <td class="px-4 py-3 flex items-center justify-end">
                   <button
@@ -344,7 +340,9 @@ const paginatedAuctions = computed(() => {
               </div>
               <div class="flex items-center gap-3">
                 <div>
-                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thời gian đấu giá</label>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Thời gian đấu giá</label
+                  >
                   <input
                     type="text"
                     name="duration"
@@ -354,7 +352,9 @@ const paginatedAuctions = computed(() => {
                     class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                 </div>
                 <div>
-                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Số người đấu giá tối thiểu</label>
+                  <label for="duration" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Số người đấu giá tối thiểu</label
+                  >
                   <input
                     type="text"
                     name="duration"
