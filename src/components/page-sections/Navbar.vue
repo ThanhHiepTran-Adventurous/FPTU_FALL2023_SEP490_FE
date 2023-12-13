@@ -230,7 +230,7 @@ onMounted(() => {
           </router-link>
         </div>
 
-        <SearchInput placeholder="       Tìm kiếm sản phẩm theo tên" addOnInputClass="w-full md:w-[400px]" @keyPress="onSearchPress" v-model="searchKey" />
+        <SearchInput v-if="!curRole || curRole === Role.buyer.value" placeholder="       Tìm kiếm sản phẩm theo tên" addOnInputClass="w-full md:w-[400px]" @keyPress="onSearchPress" v-model="searchKey" />
 
         <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
         <div v-if="isAuth" class="flex flex-row gap-8 items-center justify-center mr-[20px]">

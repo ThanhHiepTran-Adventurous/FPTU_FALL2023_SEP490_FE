@@ -1,7 +1,7 @@
 <script setup>
 import { Icon } from "@iconify/vue"
 import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
-import { OrderStatus, Role } from "@/common/contract";
+import { ChatGroupStatus, OrderStatus, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
@@ -142,8 +142,8 @@ const onChangeStatus = async () => {
     toastOption.toastSuccess('Cập nhật trạng thái đơn hàng thành công!')
     closeSellerModal()
     fetchChatInfo()
-  } catch (_) {
-    toastOption.toastError('Có lỗi hệ thống...')
+  } catch (e) {
+    toastOption.toastError(e.response.data.message)
   } finally {
     isBuyerUpdating.value = false
   }
@@ -162,8 +162,8 @@ const onUpdateDetail = async (messageData) => {
       toastOption.toastSuccess("Cập nhật thông tin đơn hàng thành công!")
       closeSellerModal()
       fetchChatInfo()
-    } catch (_) {
-    toastOption.toastError('Có lỗi hệ thống...')
+    } catch (e) {
+    toastOption.toastError(e.response.data.message)
     } finally {
       isSellerUpdating.value = false
     }
@@ -293,7 +293,7 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Actions -->
-            <div class="flex flex-col mt-4" v-if="groupInfo?.shipRequestList?.length > 0">
+            <div class="flex flex-col mt-4">
               <div class="flex flex-row items-center justify-between">
                 <span class="font-bold">Hành động</span>
               </div>
@@ -373,52 +373,57 @@ onBeforeUnmount(() => {
               </div>
             </div>
           </div>
-          <div v-if="isImgUploading" class="bg-white rounded-lg w-full h-[222px]">
-            <Loading />
+          <div class="text-red-500 text-center w-full text-xl" v-if="groupInfo?.status === ChatGroupStatus.INACTIVE">
+            Đoạn chat đã đóng
           </div>
-          <div v-else class="rounded-xl w-full px-4">
-            <div class="flex items-center w-full">
-              <!-- Attach icon -->
-              <div class="hover:cursor-pointer">
-                <Icon
-                  icon="teenyicons:attach-solid"
-                  class="text-[24px] mr-3"
-                  @click="() => $refs.file.click()"
-                  @click.prevent/>
-                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
-              </div>
-              <!-- Input -->
-              <div class="flex-grow">
-                <input
-                  v-model="textMessage"
-                  @keypress.enter="sendMessage"
-                  type="text"
-                  class="flex w-full rounded-xl pl-4 h-10" />
-              </div>
-              <!-- Send icon -->
-              <div class="ml-4">
-                <button
-                  @click="sendMessage"
-                  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
-                  <span class="ml-1">
-                    <svg
-                      class="w-4 h-4 transform rotate-45 -mt-px"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                  </span>
-                </button>
-              </div>
+          <div v-if="groupInfo?.status === ChatGroupStatus.ACTIVE">
+            <div v-if="isImgUploading" class="bg-white rounded-lg w-full h-[222px]">
+              <Loading />
             </div>
-            <div v-if="imgSrc.length > 0" class="mt-3">
-              <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
+            <div v-else class="rounded-xl w-full px-4">
+              <div class="flex items-center w-full">
+                <!-- Attach icon -->
+                <div class="hover:cursor-pointer">
+                  <Icon
+                    icon="teenyicons:attach-solid"
+                    class="text-[24px] mr-3"
+                    @click="() => $refs.file.click()"
+                    @click.prevent/>
+                  <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
+                </div>
+                <!-- Input -->
+                <div class="flex-grow">
+                  <input
+                    v-model="textMessage"
+                    @keypress.enter="sendMessage"
+                    type="text"
+                    class="flex w-full rounded-xl pl-4 h-10" />
+                </div>
+                <!-- Send icon -->
+                <div class="ml-4">
+                  <button
+                    @click="sendMessage"
+                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 rounded-[50%] p-2 text-white flex-shrink-0">
+                    <span class="ml-1">
+                      <svg
+                        class="w-4 h-4 transform rotate-45 -mt-px"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div v-if="imgSrc.length > 0" class="mt-3">
+                <ListEditableImage :img-src="imgSrc" @deleted="handleImageDeleted" />
+              </div>
             </div>
           </div>
         </div>

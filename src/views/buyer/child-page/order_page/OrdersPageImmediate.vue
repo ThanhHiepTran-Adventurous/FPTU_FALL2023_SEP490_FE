@@ -1,13 +1,11 @@
 <script setup>
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
+import { AuctionModelType, OrderStatus } from '@/common/contract'
 import { Icon } from '@iconify/vue'
-import { base64Image } from '@/utils/imageFile'
-import ListImage from '@/components/ListEditableImage.vue'
 import Button from '@/components/common-components/Button.vue'
 import constant, { buyerTabs } from '@/common/constant'
 import OrderService from '@/services/order.service'
@@ -32,7 +30,6 @@ const maxStars = ref(5)
 const selectRating = stars => {
   selectedStars.value = stars
 }
-const isUpdating = ref(false)
 const breadcrumbItems = [
   {
     text: 'Trang chủ',
@@ -49,16 +46,7 @@ const activateRatingModel = () => {
   isRatingVisible.value = true
   isModalVisible.value = false
 }
-const imgSrc = ref([])
-const imgData = ref([])
-const handleFileUpload = async e => {
-  imgData.value.push(e.target.files[0])
-  imgSrc.value.push(await base64Image(e.target.files[0]))
-}
-const handleImageDeleted = indx => {
-  imgSrc.value.splice(indx, 1)
-  imgData.value.splice(indx, 1)
-}
+
 const formData = ref({
   content: '',
   rate: '',
@@ -70,32 +58,26 @@ const resetFormData = () => {
     rate: '',
     productId: '',
   }
-  imgSrc.value = []
-  imgData.value = []
+  selectedStars.value = 0
 }
 const submitRating = async () => {
   if(!confirm("Bạn có chắc chắn muốn gửi đánh giá không?")){
     return
   }
+  const request = {
+    content: formData.value.content,
+    rate: selectedStars.value,
+    productId: detail.value?.productResponse?.id,
+  }
+  const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
   try {
-    const form = new FormData()
-    const request = {
-      content: formData.value.content,
-      rate: selectedStars.value,
-      productId: detail.value?.productResponse?.id,
-    }
-    for (const imageData of imgData.value) {
-      form.append('images', imageData)
-    }
-    form.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
-    const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
-    await feedbackService.buyerCreateFeedBack(form).finally(() => {
+    await feedbackService.buyerCreateFeedBack(request).finally(() => {
       resetFormData()
       closeRatingModal()
     })
     toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thành công', false)
   } catch (error) {
-    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thất bại', true)
+    toastOption.updateLoadingToast(toastId, error.response.data.message, true)
   }
 }
 const currentPage = ref(1)
@@ -142,13 +124,6 @@ const filterData = () => {
 }
 
 // Update status
-const updateOrderStatus = async () => {
-  isUpdating.value = true
-  await OrderService.updateStatus(detail.value.statusOrder, detail.value.id)
-  closeModal()
-  fetchOrders()
-  isUpdating.value = false
-}
 
 const activateInfoAuction = order => {
   detail.value = order
@@ -297,6 +272,7 @@ function closeRatingModal() {
       :hasOverFlowVertical="true"
       :hasButton="true"
       :title="`Đánh giá sản phẩm ${detail?.productResponse?.name}`"
+      button-label="Gửi"
       @decline-modal="closeRatingModal"
       @confirm-modal="submitRating">
       <div class="bg-gray rounded-lg mx-1 my-1">
@@ -320,24 +296,13 @@ function closeRatingModal() {
                   </svg>
                 </template>
               </div>
-              <div class="mb-2">
-                <button
-                  @click="() => $refs.file.click()"
-                  @click.prevent
-                  class="flex items-center bg-white hover:!bg-gray-200 gap-3 w-[180px] justify-center text-gray-800 mt-3 px-4 py-2 rounded text-sm border-[1px] border-blue-500">
-                  <Icon icon="tdesign:upload" />
-                  <span>Upload image</span>
-                </button>
-                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
-              </div>
-              <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
 
-              <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Đánh giá</label>
               <textarea
                 v-model="formData.content"
                 id="message"
                 rows="4"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+                class="block p-2.5 mt-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Ghi đánh giá tại đây"></textarea>
             </form>
           </div>

@@ -250,30 +250,26 @@ const resetFormData = () => {
   }
   imgSrc.value = []
   imgData.value = []
+  selectedStars.value = 0
 }
 const submitRating = async () => {
   if(!confirm("Bạn có chắc chắn muốn gửi đánh giá không?")){
     return
   }
+  const request = {
+    content: formData.value.content,
+    rate: selectedStars.value,
+    productId: detail.value?.productResponse?.id,
+  }
+  const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
   try {
-    const form = new FormData()
-    const request = {
-      content: formData.value.content,
-      rate: selectedStars.value,
-      productId: detail.value?.productResponse?.id,
-    }
-    for (const imageData of imgData.value) {
-      form.append('images', imageData)
-    }
-    form.append('request', new Blob([JSON.stringify(request)], { type: 'application/json' }))
-    const toastId = toastOption.toastLoadingMessage("Đang gửi đánh giá...")
-    await feedbackService.buyerCreateFeedBack(form).finally(() => {
+    await feedbackService.buyerCreateFeedBack(request).finally(() => {
       resetFormData()
       closeRatingModal()
     })
     toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thành công', false)
   } catch (error) {
-    toastOption.updateLoadingToast(toastId, 'Gửi đánh giá thất bại', true)
+    toastOption.updateLoadingToast(toastId, error.response.data.message, true)
   }
 }
 </script>
@@ -400,6 +396,7 @@ const submitRating = async () => {
       :widthClass="'w-[500px]'"
       :hasOverFlowVertical="true"
       :hasButton="true"
+      button-label="Gửi"
       :title="`Đánh giá sản phẩm ${detail?.productResponse?.name}`"
       @decline-modal="closeRatingModal"
       @confirm-modal="submitRating">
@@ -424,24 +421,11 @@ const submitRating = async () => {
                   </svg>
                 </template>
               </div>
-              <div class="mb-2">
-                <button
-                  @click="() => $refs.file.click()"
-                  @click.prevent
-                  class="flex items-center bg-white hover:!bg-gray-200 gap-3 w-[180px] justify-center text-gray-800 mt-3 px-4 py-2 rounded text-sm border-[1px] border-blue-500">
-                  <Icon icon="tdesign:upload" />
-                  <span>Upload image</span>
-                </button>
-                <input type="file" hidden v-on:change="handleFileUpload($event)" ref="file" />
-              </div>
-              <ListImage v-if="imgSrc.length > 0" :img-src="imgSrc" @deleted="handleImageDeleted" />
-
-              <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Đánh giá</label>
               <textarea
                 v-model="formData.content"
                 id="message"
                 rows="4"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="block p-2.5 mt-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Ghi đánh giá tại đây"></textarea>
             </form>
           </div>
