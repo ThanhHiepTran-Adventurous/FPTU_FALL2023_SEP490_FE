@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
   <section class="bg-white">
     <div class="py-8 px-4 mx-auto max-w-screen-xxl py-2 px-2">
       <Breadcrumb :items="breadcrumbItems" />
-      <div class="flex gap-2 mt-2">
+      <div class="block xl:flex xl:gap-3 mt-2">
         <article
           class="p-6 bg-white rounded-lg border border-gray-200 shadow-md lg:w-full">
           <div>
@@ -214,7 +214,7 @@ onBeforeUnmount(() => {
           </div>
         </article>
         <article
-          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md lg:w-2/3">
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md w-full xl:w-2/3 mt-3 xl:!mt-0">
           <div>
             <AuctionHistoryBid :auctionHistory="bidHistoryInfo" :numOfUsers="numOfUsers" :numOfBids="numOfBids" />
           </div>
