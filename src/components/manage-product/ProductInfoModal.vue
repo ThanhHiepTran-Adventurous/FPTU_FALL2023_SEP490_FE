@@ -99,7 +99,7 @@ const validateManual = () => {
     manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
     result = false
   }
-  if(!duration.value.value && !validator.stringIsIntegerAndBiggerThanZeroValidator(durationInput.value)){
+  if(!duration.value.value && !validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(durationInput.value)){
     manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn 0'
     result = false
   }
