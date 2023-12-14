@@ -140,6 +140,7 @@ const getPayload = () => {
     buyNowPrice: currencyFormatter.fromStyledStringToNumber(formData.value.buyNowPrice) || 0,
     modelType: formData.value.modelType,
     hoursOfDuration: durationValue,
+    minutesOfDuration: durationValue === 0 ? 10 : 0,
     minimumAuctioneers: formData.value.minimumAuctioneers,
   }
 }
