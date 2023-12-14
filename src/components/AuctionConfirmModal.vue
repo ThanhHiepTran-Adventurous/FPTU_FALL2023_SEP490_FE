@@ -20,6 +20,9 @@ const onModalConfirm = () => {
 const profit = computed(() => {
     return systemStore.PercentageProfit
 })
+const days = computed(() => {
+  return systemStore.ReturnDuring
+})
 </script>
 
 <template>
@@ -34,7 +37,7 @@ const profit = computed(() => {
       <div class="text-black text-lg flex flex-col">
         <div>
             Nếu bạn chọn hình thức bán <span class="font-semibold text-blue-500">Tự trao đổi</span>
-            , bạn sẽ phải trả một khoản phí tương đương <span class="font-semibold text-red-500">{{ profit }}%</span> cho hệ thống. Với hình thức <span class="font-semibold text-blue-500">Tự trao đổi</span> sau <span class="font-semibold text-red-500">{{ profit }}</span> ngày nếu bạn không thanh toán cho hệ thống, 
+            , bạn sẽ phải trả một khoản phí tương đương <span class="font-semibold text-red-500">{{ days }}%</span> cho hệ thống. Với hình thức <span class="font-semibold text-blue-500">Tự trao đổi</span> sau <span class="font-semibold text-red-500">{{ profit }}</span> ngày nếu bạn không thanh toán cho hệ thống, 
               bạn sẽ bị 1 lần cảnh cáo, và cuộc đấu giá đó sẽ bị huỷ. 
             <br /><br/>Nếu bạn chọn hình thức bán <span class="font-semibold text-green-500">Trung gian qua hệ thống</span>, sau khi đấu giá, 
             người mua sẽ thanh toán toàn bộ qua hệ thống. Sau đó bạn sẽ tạo yêu cầu giao hàng cho người mua, nếu bạn không tạo thì sau 1 ngày hệ thống sẽ
