@@ -20,7 +20,7 @@ const getAllShipRequest = async () => {
   try {
     const query = ''
     const response = await ShipRequestService.getAllShipRequest(query)
-    shipRequestList.value = response.data
+    shipRequestList.value = response.data ? response.data : []
   } catch (e) {
     console.error(e)
   }
