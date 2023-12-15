@@ -146,7 +146,7 @@ const fetchAuctionWinData = async () => {
   isLoading.value = true
   const response = await auctionService.getListAuctionWin()
   isLoading.value = false
-  auctionWins.value = response.data
+  auctionWins.value = response.data ? response.data : []
   auctionWinFiltered.value = JSON.parse(JSON.stringify(auctionWins.value))
   filterData()
 }
