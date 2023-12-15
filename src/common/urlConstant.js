@@ -79,7 +79,7 @@ export default {
       auctionBySeller: 'auctions/seller/getListAuction-authorize',
       auctionHistoryAuthorized: '/auctions/public/auction-of-buyer/{auctionId}',
       hotAuction: '/guest/auctions-guest/list-descending-priority-auction',
-      participatedAuction: '/auctions/buyer/history-auction-of-buyer'
+      participatedAuction: '/auctions/buyer/history-auction-of-buyer',
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',
@@ -124,6 +124,7 @@ export default {
       paymentForChatVnPay: 'transaction/paymentForMessaging/vnPay',
       getTransactionAdmin: 'transaction/admin/transactionsOfUser',
       getTransactionBuyerSeller: 'transaction/transactionsOfUser',
+      exportFileExcel: 'exportFile/export/history-transaction',
     },
     notification: {
       getAllNoti: 'notification/list-top-10-notification-user',
@@ -152,7 +153,7 @@ export default {
       updatePaymentDeadline: 'systemConfig/addNewPaymentDeadlineConfig',
       updatePercentageProfit: 'systemConfig/addNewPercentageConfig',
       updateReturnDuring: 'systemConfig/addNewReturnPolicyDayConfig',
-      updateBatch: 'systemConfig/addNewArrayAllConfig'
+      updateBatch: 'systemConfig/addNewArrayAllConfig',
     },
     ship: {
       sellerCreateShipRequest: 'shipRequest/seller/create-ship-request/{orderId}',
@@ -177,6 +178,7 @@ export default {
         'withdrawAndRefunds/staff/{orderId}/create-refund-request-for-buyer-win-option-two',
       staffConfirmReportSellerWinOpt2:
         'withdrawAndRefunds/staff/{orderId}/create-withdraw-request-for-seller-win-option-two',
+      exportFileExcel: 'exportFile/export/withdrawAndRefundMoneyRequest',
     },
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',

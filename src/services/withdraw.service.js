@@ -30,7 +30,7 @@ const adminConfirmSellerWithdrawOpt1 = async withdrawAndRefundRequestsId => {
 const adminConfirmBuyerWithdraw = async withdrawId => {
   const serviceUrl = url.endpoint.withdrawAndRefunds.adminConfirmBuyerWithdraw.replace(
     '{withdrawAndRefundRequestsId}',
-    withdrawId
+    withdrawId,
   )
   const response = await utils.axiosLocalHost.put(serviceUrl)
   return response ? response.data : response
@@ -67,9 +67,33 @@ const getWithDrawsByUser = async (page, size) => {
     params: {
       page,
       size,
-    }
+    },
   })
   return response ? response.data : response
+}
+const exportFileExcel = async () => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.exportFileExcel
+
+  try {
+    const response = await utils.axiosLocalHost.get(serviceUrl, {
+      responseType: 'blob',
+    })
+
+    if (response) {
+      // Create a temporary anchor element to trigger the file download
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'withdraw_refund_requests.xlsx') // Define the file name
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    }
+  } catch (error) {
+    console.error('Error exporting file:', error)
+    throw error
+  }
 }
 export default {
   getAllWithdraws,
@@ -77,5 +101,6 @@ export default {
   getWithDrawsByUser,
   adminConfirmSellerwithdrawOpt2,
   adminConfirmSellerWithdrawOpt1,
-  adminConfirmBuyerWithdraw
+  adminConfirmBuyerWithdraw,
+  exportFileExcel,
 }

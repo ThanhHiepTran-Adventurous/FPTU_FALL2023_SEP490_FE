@@ -14,12 +14,12 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 const showPaymentModel = ref(false)
 import { buyerTabs } from '@/common/constant'
 import { intermediateScriptBoughtPage } from '@/common/commonStaticState'
-import { Tooltip } from 'ant-design-vue';
+import { Tooltip } from 'ant-design-vue'
 import SideBarLayout from '../../../../layouts/BuyerSideBarLayout.vue'
 import TwoOptionsTab from '@/components/TwoOptionsTab.vue'
 import AuctionCard from '@/components/AuctionCard.vue'
 import Loading from '@/components/common-components/Loading.vue'
-
+import ErrorMessage from '../../../../components/common-components/ErrorMessage.vue'
 const route = useRoute()
 const router = useRouter()
 let responeCode = ref('')
@@ -136,7 +136,7 @@ const filterData = () => {
       v =>
         v.informationAuction.modelType === AuctionModelType.intermediate &&
         v.informationAuction.product.status !== ProductStatus.SOLD.value &&
-        v.informationAuction.product.status !== ProductStatus.PAID.value
+        v.informationAuction.product.status !== ProductStatus.PAID.value,
     )
     .sort((a, b) => {
       return new Date(b.winAt).getTime() - new Date(a.winAt).getTime()
@@ -175,9 +175,52 @@ onMounted(async () => {
     }
   })
 })
-
+const manualErrorState = ref({
+  phone: '',
+  address: '',
+  provinces: '',
+  districts: '',
+  wards: '',
+})
+const resetErrorState = () => {
+  manualErrorState.value = {
+    phone: '',
+    address: '',
+    provinces: '',
+    districts: '',
+    wards: '',
+  }
+}
+const validateManual = () => {
+  console.log(selectedProvince.value.data)
+  if (!profileModelData.value.phone) {
+    manualErrorState.value.phone = 'Vui lòng nhập số điện thoại'
+    return false
+  }
+  if (!profileModelData.value.address) {
+    manualErrorState.value.address = 'Vui lòng nhập số nhà'
+    return false
+  }
+  if (selectedProvince.value.data.trim() === '') {
+    manualErrorState.value.provinces = 'Vui lòng chọn tỉnh / thành phố'
+    return false
+  }
+  if (selectedDistrict.value.data.trim() === '') {
+    manualErrorState.value.districts = 'Vui lòng chọn quận / huyện'
+    return false
+  }
+  if (selectedWard.value.data.trim() === '') {
+    manualErrorState.value.wards = 'Vui lòng chọn phường / xã'
+    return false
+  }
+  return true
+}
 const payment = async auctionId => {
   try {
+    resetErrorState()
+    if (!validateManual()) {
+      return
+    }
     const curHost = `${window.location.protocol}//${window.location.host}/#`
     const returnUrl = `${curHost}${route.fullPath}`
     const paymentData = {
@@ -264,7 +307,7 @@ watch(selectedDistrict, async () => {
         </div>
 
         <div class="flex flex-col justify-between min-h-[60vh]">
-          <Loading v-if="isLoading"/>
+          <Loading v-if="isLoading" />
           <div v-else class="bg-white grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-2 pt-6 pb-5 w-full px-3">
             <AuctionCard
               v-for="auction in paginatedProducts"
@@ -341,7 +384,6 @@ watch(selectedDistrict, async () => {
             </ul>
           </nav>
         </div>
-
       </div>
     </SideBarLayout>
 
@@ -394,6 +436,7 @@ watch(selectedDistrict, async () => {
                     type="text"
                     v-model="profileModelData.phone"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.phone" />
                 </div>
                 <div>
                   <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -405,6 +448,7 @@ watch(selectedDistrict, async () => {
                     id="address"
                     v-model="profileModelData.address"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.address" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -415,6 +459,7 @@ watch(selectedDistrict, async () => {
                     v-model="selectedProvince"
                     :data="provinces"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.provinces" />
                 </div>
                 <div>
                   <label for="districts" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -425,6 +470,7 @@ watch(selectedDistrict, async () => {
                     v-model="selectedDistrict"
                     :data="districts"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.districts" />
                 </div>
                 <div>
                   <label for="wards" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -435,6 +481,7 @@ watch(selectedDistrict, async () => {
                     v-model="selectedWard"
                     :data="wards"
                     class="!w-[280px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                  <ErrorMessage :text="manualErrorState.wards" />
                 </div>
               </div>
               <div class="flex items-center space-x-4">

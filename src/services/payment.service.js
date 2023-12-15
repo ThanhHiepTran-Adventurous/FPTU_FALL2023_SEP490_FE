@@ -64,9 +64,42 @@ const getTransactionBuyerSeller = async () => {
     throw error
   }
 }
+const exportFileExcel = async () => {
+  const serviceUrl = url.endpoint.transaction.exportFileExcel
+
+  try {
+    const response = await utils.axiosLocalHost.get(serviceUrl, {
+      responseType: 'blob',
+    })
+
+    if (response) {
+      // Process the file download
+      const blob = new Blob([response.data], { type: 'application/vnd.ms-excel' })
+      const url = window.URL.createObjectURL(blob)
+
+      // Create a link element to trigger the download
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'transaction_data.xlsx') // Set the file name
+      document.body.appendChild(link)
+      link.click()
+
+      // Cleanup
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(link)
+    } else {
+      throw new Error('No file data found')
+    }
+  } catch (error) {
+    console.error('Error exporting file:', error)
+    throw error
+  }
+}
+
 export default {
   paymentOption2,
   paymentForChat,
   getTransactionAdmin,
   getTransactionBuyerSeller,
+  exportFileExcel,
 }

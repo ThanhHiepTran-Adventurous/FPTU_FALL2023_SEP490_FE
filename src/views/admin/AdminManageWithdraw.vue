@@ -12,7 +12,14 @@ import WithdrawStatusComponent from '@/components/common-components/badge/Withdr
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import { WithdrawRequestStatus, WithdrawRequestType } from '@/common/contract'
 import WithdrawTypeComponent from '@/components/common-components/badge/WithdrawTypeComponent.vue'
-
+const handleExportFileExcel = async () => {
+  try {
+    await withdrawService.exportFileExcel()
+    console.log('File exported successfully!')
+  } catch (error) {
+    console.error('Error exporting file:', error)
+  }
+}
 const filterData = ref({
   type: [
     {
@@ -45,7 +52,7 @@ const filterData = ref({
       label: WithdrawRequestStatus.SUCCESS.label,
       value: WithdrawRequestStatus.SUCCESS.value,
     },
-  ]
+  ],
 })
 
 const selected = ref({
@@ -56,13 +63,16 @@ const selected = ref({
   status: {
     label: 'Tất cả',
     value: '',
-  }
+  },
 })
 
-watch(selected, () => {
-  filterRecords()
-}, {deep: true})
-
+watch(
+  selected,
+  () => {
+    filterRecords()
+  },
+  { deep: true },
+)
 
 const withdrawsList = ref([])
 const filteredWithdrawList = ref([])
@@ -81,17 +91,17 @@ const getAllWithdraws = async () => {
   }
 }
 
-
 const filterRecords = () => {
   filteredWithdrawList.value = withdrawsList.value
-    .filter(f => 
-    (!selected.value.type.value || f.type === selected.value.type.value) 
-    && (!selected.value.status.value || f.status === selected.value.status.value))
-    .sort((a,b) => {
-        return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+    .filter(
+      f =>
+        (!selected.value.type.value || f.type === selected.value.type.value) &&
+        (!selected.value.status.value || f.status === selected.value.status.value),
+    )
+    .sort((a, b) => {
+      return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
     })
 }
-
 
 onMounted(() => {
   getAllWithdraws()
@@ -132,16 +142,15 @@ const openWithdrawModal = withdrawDetail => {
 const handleConfirmWithdraw = async withdrawId => {
   try {
     showWithdrawModal.value = false
-    if(selectedWithdraw.value.type === WithdrawRequestType.WITHDRAW){
+    if (selectedWithdraw.value.type === WithdrawRequestType.WITHDRAW) {
       await withdrawService.adminConfirmSellerWithdrawOpt1(withdrawId)
-    } else if(selectedWithdraw.value.type === WithdrawRequestType.REFUND_TYPE_INTERMEDIATE){
+    } else if (selectedWithdraw.value.type === WithdrawRequestType.REFUND_TYPE_INTERMEDIATE) {
       await withdrawService.adminConfirmBuyerWithdraw(withdrawId)
     } else {
       await withdrawService.adminConfirmSellerwithdrawOpt2(withdrawId)
     }
     getAllWithdraws()
     toastOption.toastSuccess('Xác nhận đã thanh toán thành công')
-    
   } catch (error) {
     toastOption.toastError('Xác nhận đã thanh toán thất bại')
   }
@@ -154,24 +163,25 @@ const handleConfirmWithdraw = async withdrawId => {
     <div class="mx-auto pl-72">
       <!-- Header -->
       <div class="pt-3 px-3 pb-1 flex items-center justify-between">
-        <div class="font-bold text-2xl text-black text-blue-800">
-          Yêu cầu rút tiền</div>
+        <div class="font-bold text-2xl text-black text-blue-800">Yêu cầu rút tiền</div>
+        <button
+          @click="handleExportFileExcel"
+          type="button"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Tải xuống yêu cầu rút tiền
+        </button>
       </div>
 
       <!-- Filter section -->
       <div class="my-4 px-12 flex items-center">
         <div class="flex items-center gap-3 mr-[10%]">
-          <label class="block text-gray-700 text-sm font-bold" for="jump">
-            Loại yêu cầu: 
-          </label>
+          <label class="block text-gray-700 text-sm font-bold" for="jump"> Loại yêu cầu: </label>
           <div class="flex gap-3 items-center">
             <Dropdown :data="filterData.type" v-model="selected.type" class="!w-[300px]" />
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <label class="block text-gray-700 text-sm font-bold" for="jump">
-            Trạng thái:
-          </label>
+          <label class="block text-gray-700 text-sm font-bold" for="jump"> Trạng thái: </label>
           <div class="flex items-center gap-3">
             <Dropdown :data="filterData.status" v-model="selected.status" class="!w-[200px]" />
           </div>
@@ -389,16 +399,24 @@ const handleConfirmWithdraw = async withdrawId => {
                   class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
               <div>
-                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Loại yêu cầu</label>
+                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Loại yêu cầu</label
+                >
                 <div><WithdrawTypeComponent :status="selectedWithdraw?.type" /></div>
               </div>
               <div>
-                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng thái</label>
+                <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Trạng thái</label
+                >
                 <input
                   type="text"
                   name="amount"
                   id="amount"
-                  :value="selectedWithdraw?.status === WithdrawRequestStatus.PENDING.value ? WithdrawRequestStatus.PENDING.label : WithdrawRequestStatus.SUCCESS.label"
+                  :value="
+                    selectedWithdraw?.status === WithdrawRequestStatus.PENDING.value
+                      ? WithdrawRequestStatus.PENDING.label
+                      : WithdrawRequestStatus.SUCCESS.label
+                  "
                   readonly
                   class="bg-gray-50 border border-gray-300 text-blue-600 text-sm font-semibold rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
