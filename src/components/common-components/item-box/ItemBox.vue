@@ -60,7 +60,6 @@ const timeDeadline = computed(() => {
           data-target="#ModalquickView"
           data-tooltip="Quick View"
           data-tposition="left"></a>
-        <a href="#" class="tt-btn-wishlist" data-tooltip="Add to Wishlist" data-tposition="left"></a>
         <a class="block w-[220px] h-[210px] overflow-hidden" href="product.html">
           <span class="tt-img"><img :src="props.mainImage" :data-src="props.mainImage" alt="" /></span>
           <span class="tt-img-roll-over">

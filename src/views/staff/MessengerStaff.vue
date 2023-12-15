@@ -312,10 +312,10 @@ onBeforeUnmount(() => {
             <!-- Helper -->
             <div class="border-[1px] rounded-lg py-2 mt-8 italic pl-2">
               <div class="mb-1">
-                <span class="font-bold">Người bán: </span> khung avatar màu <span class="text-blue-800 font-bold">xanh dương</span>
+                <span class="font-bold">Người mua: </span> khung avatar màu <span class="text-blue-800 font-bold">xanh dương</span>
               </div>
               <div class="mb-1">
-                <span class="font-bold">Người mua: </span> khung avatar màu <span class="text-green-500 font-bold">xanh lá</span>
+                <span class="font-bold">Người bán: </span> khung avatar màu <span class="text-green-500 font-bold">xanh lá</span>
               </div>
               <div>
                 <span class="font-bold">Người giải quyết (nếu có): </span> khung avatar màu <span class="text-red-500 font-bold">đỏ</span>

@@ -263,6 +263,7 @@ const onSubmit = () => {
       minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
       modelType: auctionFormData.value.modelType,
       hoursOfDuration: durationValue,
+      minutesOfDuration: durationValue === 0 ? 10 : 0,
     }
     ProductSerivice.updateProductById(
       selectedProduct.value.product.id,
