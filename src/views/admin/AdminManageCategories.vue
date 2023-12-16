@@ -40,7 +40,7 @@ onMounted(() => {
 const getAllCategories = async () => {
   try {
     const response = await adminService.getAllCategories()
-    categoriesList.value = response.data
+    categoriesList.value = response.data ? response.data : []
   } catch (e) {
     console.error(e)
   }

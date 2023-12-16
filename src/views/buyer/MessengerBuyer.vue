@@ -184,7 +184,7 @@ const sendMessage = async () => {
 const fetchAllMessages = async () => {
   groupId = route.params['groupId']
   const response = await ChatService.getAllChatMessage(groupId)
-  messagesData.value = response.data
+  messagesData.value = response.data ? response.data : []
 }
 const fetchChatInfo = async () => {
   groupId = route.params['groupId']

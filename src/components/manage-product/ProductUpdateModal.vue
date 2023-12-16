@@ -48,7 +48,7 @@ const brands = ref([])
 const fetchProducts = async () => {
   try {
     const response = await AuctionService.getAuctionBySeller('status:REJECTED')
-    products.value = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
+    products.value = response.data ? response.data.filter(f => f.product.status === ProductStatus.REJECTED.value) : []
   } catch (e) {
     console.error(e)
   }

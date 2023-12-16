@@ -16,7 +16,7 @@ const currentPage = ref(1)
 const getAllTransaction = async () => {
   try {
     const response = await PaymentService.getTransactionBuyerSeller()
-    transactionList.value = response.data
+    transactionList.value = response.data ? response.data : []
   } catch (e) {
     console.error(e)
   }

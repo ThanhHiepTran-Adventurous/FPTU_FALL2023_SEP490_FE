@@ -72,7 +72,7 @@ const filteredAndPaginatedBrands = computed(() => {
 const getAllBrands = async () => {
   try {
     const response = await adminService.fetchAllBrands()
-    brandList.value = response.data
+    brandList.value = response.data ? response.data : []
   } catch (e) {
     console.error(e)
   }

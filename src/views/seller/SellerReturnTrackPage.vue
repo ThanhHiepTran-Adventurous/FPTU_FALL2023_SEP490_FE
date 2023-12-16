@@ -111,11 +111,11 @@ const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataBuyerOrSeller()
-    reportList.value = response.data.filter(
+    reportList.value = response.data ? response.data.filter(
       f =>
         f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.intermediate &&
         f.reportType === 'BUYER_REPORT_OPTION_2',
-    )
+    ) : []
     filterReports()
   } catch (e) {
     console.error(e)

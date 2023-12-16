@@ -60,7 +60,7 @@ const breadcrumbItems = [
 const fetchProducts = async () => {
   try {
     const response = await AuctionService.getAuctionBySeller('status:REJECTED')
-    const dataFiltered = response.data.filter(f => f.product.status === ProductStatus.REJECTED.value)
+    const dataFiltered = response.data ? response.data.filter(f => f.product.status === ProductStatus.REJECTED.value) : []
     const latestAuctionRequests = []
     for(const product of dataFiltered){
       let latestRequestTime

@@ -84,7 +84,7 @@ const showWithdrawModal = ref(false)
 const getAllWithdraws = async () => {
   try {
     const response = await withdrawService.getAllWithdraws(1, 100)
-    withdrawsList.value = response.data
+    withdrawsList.value = response.data ? response.data : []
     filterRecords()
   } catch (e) {
     console.error(e)

@@ -100,7 +100,7 @@ const currentPage = ref(1)
 const getAllReportStaff = async () => {
   try {
     const response = await reportService.getAllReportDataStaff()
-    reportList.value = response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.immediate)
+    reportList.value = response.data ? response.data.filter(f => f.aboutOrder.modelTypeAuctionOfOrder === AuctionModelType.immediate) : []
     filterReports()
   } catch (e) {
     console.error(e)

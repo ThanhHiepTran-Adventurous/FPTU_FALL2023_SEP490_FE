@@ -37,7 +37,7 @@ const currentPage = ref(1)
 const getAllReport = async () => {
   try {
     const response = await reportService.getAllReportData()
-    reportList.value = response.data.filter(f => f.status === 'PROCESSING' && !f.staffHandler)
+    reportList.value = response.data ? response.data.filter(f => f.status === 'PROCESSING' && !f.staffHandler) : []
   } catch (e) {
     console.error(e)
   }

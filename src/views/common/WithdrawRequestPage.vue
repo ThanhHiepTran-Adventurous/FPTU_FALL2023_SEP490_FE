@@ -76,7 +76,7 @@ const getAllRecords = async () => {
     } else {
       response = await withdrawService.getWithDrawsByUser(1, 1000)
     }
-    records.value = response.data
+    records.value = response.data ? response.data : []
     filterRecords()
   } catch (e) {
     console.error(e)

@@ -20,7 +20,7 @@ const showWithdrawModal = ref(false)
 const getAllTransaction = async () => {
   try {
     const response = await PaymentService.getTransactionAdmin()
-    transactionList.value = response.data
+    transactionList.value = response.data ? response.data : []
   } catch (e) {
     console.error(e)
   }
