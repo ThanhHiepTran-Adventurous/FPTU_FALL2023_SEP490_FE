@@ -238,6 +238,60 @@ const validateManual = () => {
   }
   return result
 }
+
+const onSubmitV2 = () => {
+  resetErrorState()
+  if (!validateManual()) {
+    return
+  }
+  if (!confirm("Bạn có chắc chắn muốn gửi lại yêu cầu đấu giá không?")){
+    return
+  }
+
+  const toastId = toastOption.toastLoadingMessage('Đang cập nhật sản phẩm và yêu cầu đấu giá')
+
+  const durationValue = duration.value.value ? duration.value.value : durationInput.value
+  let imageUrlIgnored = getImageUrlIgnored()
+  imageUrlIgnored = imageUrlIgnored && imageUrlIgnored.length > 0 ? imageUrlIgnored : []
+  let newImages = getNewImages()
+  newImages = newImages && newImages.length > 0 ? newImages : []
+  const updateProductRequest = {
+    name: productFormData.value.name,
+    description: productFormData.value.description,
+    weight: productFormData.value.weight,
+    brandId: productFormData.value.brand.id,
+    categoryId: productFormData.value.category.id,
+  }
+  const auctionRequest = {
+    startPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice),
+    jump: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump),
+    buyNowPrice: currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice),
+    minimumAuctioneers: auctionFormData.value.minimumAuctioneers,
+    modelType: auctionFormData.value.modelType,
+    hoursOfDuration: durationValue,
+    minutesOfDuration: durationValue === 0 ? 10 : 0,
+  }
+
+  const oldImgsBlob = new Blob([JSON.stringify(imageUrlIgnored)], { type: 'application/json' })
+  const updateProductRequestBlob = new Blob([JSON.stringify(updateProductRequest)], { type: 'application/json' })
+  const auctionRequestBlob = new Blob([JSON.stringify(auctionRequest)], { type: 'application/json' })
+
+  const formData = new FormData()
+  formData.append('updateProductRequest', updateProductRequestBlob)
+  formData.append('createAuctionRequest', auctionRequestBlob)
+  formData.append('oldImagesRemoved', oldImgsBlob)
+  for (const imageData of newImages) {
+    formData.append('newImages', imageData)
+  }
+
+  AuctionService.updateRejectAuction(selectedProduct.value.product.id, formData)
+  .then(_ => {
+    toastOption.updateLoadingToast(toastId, 'Gửi lại yêu cầu đấu giá thành công', false)
+  }).catch(e => {
+    toastOption.updateLoadingToast(toastId, e.response.data.message, true)
+  })
+}
+
 const onSubmit = () => {
   resetErrorState()
   if (!validateManual()) {
@@ -878,7 +932,7 @@ const openProductModal = product => {
                   </button>
                   <button
                     v-if="canReup"
-                    @click="onSubmit()"
+                    @click="onSubmitV2()"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button">
                     Gửi Yêu Cầu

@@ -80,6 +80,7 @@ export default {
       auctionHistoryAuthorized: '/auctions/public/auction-of-buyer/{auctionId}',
       hotAuction: '/guest/auctions-guest/list-descending-priority-auction',
       participatedAuction: '/auctions/buyer/history-auction-of-buyer',
+      resendAuctionRequest: '/auctions/{productId}/resend-auction-request'
     },
     placeBid: {
       manual: 'auctions/buyer/manual-auction',

@@ -86,6 +86,16 @@ const getParticipatedAuction = async (page=1, size=1000) => {
   return response ? response.data : response
 }
 
+const updateRejectAuction = async (productId, formData) => {
+  const serviceUrl = url.endpoint.auctions.resendAuctionRequest.replace('{productId}', productId)
+  const response = await utils.axiosLocalHost.put(serviceUrl, formData, {
+    headers: {
+      'Content-Type': undefined,
+    },
+  })
+  return response ? response.data : response
+}
+
 export default {
   sendAuctionRequest,
   getAllActiveAuctions,
@@ -100,5 +110,6 @@ export default {
   getListAuctionWin,
   getAuctionBySeller,
   getHotAuctionsDesc,
-  getParticipatedAuction
+  getParticipatedAuction,
+  updateRejectAuction
 }
