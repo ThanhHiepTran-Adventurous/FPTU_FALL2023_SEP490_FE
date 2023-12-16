@@ -446,7 +446,7 @@ const goToNextPage = () => {
               <div class="w-full" v-if="isDataLoading">
                 <Loading />
               </div>
-              <div v-else class="flex flex-wrap gap-2 mt-3">
+              <div v-else class="flex flex-wrap gap-2 mt-3 ml-10">
                 <ItemBox
                   v-for="auction in auctions"
                   :key="auction.id"
