@@ -36,9 +36,9 @@ const openAuctionModal = auction => {
 const getAllAuctions = async () => {
   isDataLoading.value = true
   try {
-    const response = await adminService.getAllAuctions(1, 100)
+    const response = await adminService.getAllAuctions(1, 100, 'status:NEW')
     autionsList.value = response.data ? response.data : []
-    autionsList.value = autionsList.value.filter(auction => auction.status === 'NEW').sort((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime())
+    autionsList.value = autionsList.value.sort((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime())
   } catch (e) {
     console.error(e)
   } finally {
@@ -294,17 +294,29 @@ const paginatedAuctions = computed(() => {
                   id="name"
                   class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
               </div>
-              <div>
-                <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900"
-                  >Hình thức mua bán</label
-                >
-                <input
-                  type="text"
-                  name="modelType"
-                  id="modelType"
-                  :value="selectedAution?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống'"
-                  readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
+              <div class="flex items-center gap-3">
+                <div>
+                  <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900"
+                    >Hình thức mua bán</label
+                  >
+                  <input
+                    type="text"
+                    name="modelType"
+                    id="modelType"
+                    :value="selectedAution?.modelType === 'IMMEDIATE' ? 'Tự trao đổi mua bán' : 'Trung gian qua hệ thống'"
+                    readonly
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
+                </div>
+                <div>
+                  <label for="modelType" class="block mb-2 text-sm font-medium text-gray-900">Khối lượng</label>
+                  <input
+                    type="text"
+                    name="modelType"
+                    id="modelType"
+                    :value="selectedAution?.product.weight"
+                    readonly
+                    class="bg-gray-50 border border-gray-300 text-blue-600 font-semibold text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
+                </div>
               </div>
               <div>
                 <label for="startPrice" class="block mb-2 text-sm font-medium text-gray-900"

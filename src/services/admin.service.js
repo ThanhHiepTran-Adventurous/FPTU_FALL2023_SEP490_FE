@@ -53,13 +53,14 @@ const creatNewBrand = async (formData, addBrandAndCategoryRequest) => {
     throw error
   }
 }
-const getAllAuctions = async (page, size) => {
+const getAllAuctions = async (page, size, query=null) => {
   try {
     const serviceUrl = url.endpoint.auctions.getAll
     const response = await utils.axiosLocalHost.get(serviceUrl, {
       params: {
         page,
         size,
+        query
       },
     })
 
