@@ -91,7 +91,7 @@ const formValidate = () => {
         isValidated = false
     }
     if (!validator.stringIsIntegerAndBiggerThanZeroValidator(formData.value.NumberRateProductToAutoConfirm)){
-        formErrorState.value.NumberRateProductToAutoConfirm = 'Số lần rating tối thiểu để được tự động duyệt phải là số nguyên lớn hơn 0.'
+        formErrorState.value.NumberRateProductToAutoConfirm = 'Số lần rating 5 sao tối thiểu để được tự động duyệt phải là số nguyên lớn hơn 0.'
         isValidated = false
     }
     
@@ -291,7 +291,7 @@ onMounted(async () => {
             </div>
             <div class="mb-5 flex items-center w-full px-10">
                 <label for="NumberRateProductToAutoConfirm" class="block mb-2 text-md font-medium text-gray-900 dark:text-white w-[40%]">
-                    Số lần rating tối thiểu để được tự động duyệt (lần):
+                    Số lần rating 5 sao tối thiểu để được tự động duyệt (lần):
                 </label>
                 <div class="w-[30%]">
                     <input
