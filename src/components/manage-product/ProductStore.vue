@@ -397,7 +397,7 @@ onMounted(async () => {
     <SellerSideBarLayout :cur-tab="sellerTabs.productRepository.value">
       <div class="container py-2 mx-auto bg-white rounded-md">
         <div class="mb-4 flex items-center mr-5 ml-5 mt-10">
-          <Dropdown v-model="selected" :data="options" class="!w-[200px]" />
+          <Dropdown v-model="selected" :data="options" class="!w-[400px]" />
           <div class="w-full ml-2">
             <input
               v-model="searchQuery"

@@ -17,6 +17,7 @@ const props = defineProps({
     <span v-if="status === ProductStatus.ON_SELL.value" class="bg-green-100 text-green-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.ON_SELL.label }}</span>
     <span v-if="status === ProductStatus.INACTIVE.value" class="bg-green-100 text-green-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.INACTIVE.label }}</span>
     <span v-if="status === ProductStatus.SOLD.value" class="bg-green-100 text-green-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.SOLD.label }}</span>
+    <span v-if="status === ProductStatus.FAIL_TO_SOLD.value" class="bg-red-100 text-red-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.FAIL_TO_SOLD.label }}</span>
     <span v-if="status === ProductStatus.NOT_REACH_NUM_AUCTIONEER.value" class="bg-red-100 text-red-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.NOT_REACH_NUM_AUCTIONEER.label }}</span>
     <span v-if="status === ProductStatus.NOT_PAYMENT.value" class="bg-red-100 text-red-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.NOT_PAYMENT.label }}</span>
     <span v-if="status === ProductStatus.PAID.value" class="bg-green-100 text-green-800 text-xs font-medium font-semibold mr-2 px-2.5 py-0.5 rounded">{{ ProductStatus.PAID.label }}</span>

@@ -75,6 +75,10 @@ export const ProductStatus = {
     label: 'ĐÃ THANH TOÁN',
     value: 'PAID',
   },
+  FAIL_TO_SOLD: {
+    label: 'NGƯỜI MUA KHIẾU NẠI THÀNH CÔNG',
+    value: 'FAIL_TO_SOLD'
+  }
 }
 
 export const BidType = {

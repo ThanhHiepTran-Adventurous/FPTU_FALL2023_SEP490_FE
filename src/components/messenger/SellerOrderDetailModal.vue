@@ -10,6 +10,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import Dropdown from '../common-components/Dropdown.vue';
 import { Icon } from "@iconify/vue";
 import locationService from '@/services/location.service';
+import ProductStatusBadge from '../common-components/badge/ProductStatusBadge.vue';
 
 // for address update purpose
 const districts = ref([])
@@ -109,21 +110,24 @@ onMounted(() => {
                 <tr>
                     <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Tên Sản Phẩm :
+                    Tên Sản Phẩm
                     </td>
-                    <td class="py-2 px-4 border-b border-grey-light">{{ detail?.productResponse.name }}</td>
+                    <td class="py-2 px-4 border-b border-grey-light">
+                        <div>{{ detail?.productResponse.name }}</div>
+                        <div><ProductStatusBadge :status="detail?.productResponse.status" /></div>
+                    </td>
                 </tr>
                 <tr>
                     <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Giá tiền :
+                    Giá tiền
                     </td>
                     <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.price) }}</td>
                 </tr>
                 <tr>
                     <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light">
-                    <div>Địa chỉ :</div>
+                    <div>Địa chỉ</div>
                     </td>
                     <td v-if="!isEditing" class="py-2 px-4 flex justify-between">
                         <div>{{ detail?.buyerAddress ? detail.buyerAddress : 'N/A' }}</div>
@@ -158,7 +162,7 @@ onMounted(() => {
                 <tr>
                     <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Số điện thoại :
+                    Số điện thoại
                     </td>
                     <td v-if="!isEditing" class="py-2 px-4 border-b border-grey-light">{{ detail?.buyerPhoneNumber ? detail.buyerPhoneNumber : 'N/A' }}</td>
                     <td class="py-2 px-4 border-b" v-else>
@@ -171,14 +175,14 @@ onMounted(() => {
                 <tr>
                     <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Tạo lúc :
+                    Tạo lúc
                 </td>
                 <td class="py-2 px-4 border-b border-grey-light">{{ detail?.createAt ? moment.utc(detail?.createAt).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
                 </tr>
                 <tr>
                 <td
                     class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                    Cập nhật lúc :
+                    Cập nhật lúc
                 </td>
                 <td class="py-2 px-4 border-b border-grey-light">{{ detail?.lastUpdatedAt ? moment.utc(detail?.lastUpdatedAt).format("DD/MM/YYYY HH:mm:ss") : 'N/A' }}</td>
                 </tr>
