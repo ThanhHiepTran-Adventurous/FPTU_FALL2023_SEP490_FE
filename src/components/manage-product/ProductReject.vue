@@ -274,7 +274,19 @@ const validateManual = () => {
     manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn 0'
     result = false
   }
-
+  if(auctionFormData.value.jump && auctionFormData.value.buyNowPrice && auctionFormData.value.startPrice){
+    let jumpVal = currencyFormatter.fromStyledStringToNumber(auctionFormData.value.jump)
+    let buyNowPriceVal = currencyFormatter.fromStyledStringToNumber(auctionFormData.value.buyNowPrice)
+    let startPriceVal = currencyFormatter.fromStyledStringToNumber(auctionFormData.value.startPrice)
+    if(jumpVal >= buyNowPriceVal - startPriceVal){
+      manualAuctionErrorState.value.jump = 'Bước nhảy phải nhỏ hơn chênh lệch giữa giá mua ngay và giá khởi điểm'
+      result = false
+    }
+    if(buyNowPriceVal <= startPriceVal){
+      manualAuctionErrorState.value.buyNowPrice = 'Giá mua ngay phải cao hơn giá khởi điểm'
+      result = false
+    }
+  }
   return result
 }
 
