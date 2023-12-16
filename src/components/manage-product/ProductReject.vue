@@ -31,6 +31,7 @@ import { ProductStatus } from '@/common/contract'
 import ErrorMessage from '../common-components/ErrorMessage.vue'
 import { getUuidSplitted } from '@/utils/uuid-cutter'
 import { Tooltip } from 'ant-design-vue'
+import validator from '@/utils/validator'
 
 const allowedModalTypes = { info: 'info' }
 const typeofModal = ref('info')
@@ -191,6 +192,12 @@ const manualAuctionErrorState = ref({
   brandId: '',
   categoryId: '',
   image: '',
+  startPrice: '',
+  buyNowPrice: '',
+  modelType: '',
+  jump: '',
+  time: '',
+  minimumAuctioneers: '',
 })
 const resetErrorState = () => {
   manualAuctionErrorState.value = {
@@ -200,6 +207,12 @@ const resetErrorState = () => {
     brandId: '',
     categoryId: '',
     image: '',
+    startPrice: '',
+    buyNowPrice: '',
+    modelType: '',
+    jump: '',
+    time: '',
+    minimumAuctioneers: '',
   }
 }
 const validateManual = () => {
@@ -236,6 +249,32 @@ const validateManual = () => {
     manualAuctionErrorState.value.image = 'Vui lòng tải lên ít nhất một hình ảnh'
     result = false
   }
+
+  if (!auctionFormData.value.startPrice) {
+    manualAuctionErrorState.value.startPrice = 'Vui lòng nhập giá khởi điểm'
+    result = false
+  }
+  if (!auctionFormData.value.buyNowPrice) {
+    manualAuctionErrorState.value.buyNowPrice = 'Vui lòng nhập giá mua ngay'
+    result = false
+  }
+  if (!auctionFormData.value.modelType) {
+    manualAuctionErrorState.value.modelType = 'Vui lòng chọn hình thức mua bán'
+    result = false
+  }
+  if (!validator.stringIsIntegerAndBiggerThanZeroValidator(auctionFormData.value.minimumAuctioneers)) {
+    manualAuctionErrorState.value.minimumAuctioneers = 'Số người tối thiểu phải là số nguyên lớn hơn 0'
+    result = false
+  }
+  if (!auctionFormData.value.jump) {
+    manualAuctionErrorState.value.jump = 'Vui lòng nhập bước nhảy tối thiểu'
+    result = false
+  }
+  if(!duration.value.value && !validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(durationInput.value)){
+    manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn 0'
+    result = false
+  }
+
   return result
 }
 
@@ -827,6 +866,7 @@ const openProductModal = product => {
                   <div class="w-full items-center">
                     <CurrencyInput v-model="auctionFormData.startPrice" placeholder="" w="w-full" />
                   </div>
+                  <ErrorMessage :text="manualAuctionErrorState.startPrice" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -835,6 +875,7 @@ const openProductModal = product => {
                   <div class="w-full items-center">
                     <CurrencyInput v-model="auctionFormData.buyNowPrice" placeholder="" w="w-full" />
                   </div>
+                  <ErrorMessage :text="manualAuctionErrorState.buyNowPrice" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">
@@ -843,6 +884,7 @@ const openProductModal = product => {
                   <div class="w-full">
                     <CurrencyInput v-model="auctionFormData.jump" w="w-full" />
                   </div>
+                  <ErrorMessage :text="manualAuctionErrorState.jump" />
                 </div>
                 <div class="mb-4">
                   <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -885,6 +927,7 @@ const openProductModal = product => {
                       </div>
                     </div>
                   </div>
+                  <ErrorMessage :text="manualAuctionErrorState.modelType" />
                 </div>
                 <div class="mb-4 flex items-center">
                   <div class="mr-[15%]">
@@ -905,6 +948,7 @@ const openProductModal = product => {
                         <div class="block text-gray-700 text-sm font-bold">giờ</div>
                       </div>
                     </div>
+                    <ErrorMessage :text="manualAuctionErrorState.time" />
                   </div>
                   <div>
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="jump">

@@ -100,7 +100,7 @@ const validateManual = () => {
     result = false
   }
   if(!duration.value.value && !validator.stringIsIntegerAndBiggerThanOrEqualZeroValidator(durationInput.value)){
-    manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn 0'
+    manualAuctionErrorState.value.time = 'Thời gian đấu giá phải là số nguyên lớn hơn hoặc bằng 0'
     result = false
   }
 
