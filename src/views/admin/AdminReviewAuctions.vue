@@ -38,7 +38,7 @@ const getAllAuctions = async () => {
   try {
     const response = await adminService.getAllAuctions(1, 100, 'status:NEW')
     autionsList.value = response.data ? response.data : []
-    autionsList.value = autionsList.value.sort((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime())
+    autionsList.value = autionsList.value.toSorted((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime())
   } catch (e) {
     console.error(e)
   } finally {
