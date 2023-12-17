@@ -201,7 +201,7 @@ onBeforeUnmount(() => {
       <Breadcrumb :items="breadcrumbItems" />
       <div class="block xl:flex xl:gap-3 mt-2">
         <article
-          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md lg:w-full">
+          class="p-6 bg-white rounded-lg border border-gray-200 shadow-md w-full xl:w-[55%]">
           <div>
             <div>
               <ProductInfo
@@ -399,7 +399,7 @@ onBeforeUnmount(() => {
                 <div v-else>
                   <div class="max-w-2xl">
                     <article
-                      class="text-base bg-white p-6 rounded-lg border-gray-200">
+                      class="text-base bg-white p-6 rounded-lg border-gray-200 w-full">
                       <div>
                         <p class="ml-5 text-gray-500">Hiện tại chưa có đánh giá</p>
                       </div>
@@ -598,11 +598,11 @@ onBeforeUnmount(() => {
                 class="bg-white rounded-lg border-r border-gray-200 lg:w-full">
                 <div>
                   <section class="bg-white border-b antialiased">
-                    <div class="max-w-2xl">
+                    <div class="!text-black">
                       <article
-                        class="text-base bg-white p-6 rounded-lg border-gray-200">
+                        class="text-base bg-white p-6 rounded-lg border-gray-200 w-full">
                         <div>
-                          <p class="ml-5 text-gray-500">{{ description }}</p>
+                          <p class="ml-5 mt-3">{{ description }}</p>
                         </div>
                       </article>
                     </div>

@@ -15,7 +15,6 @@ import WithdrawTypeComponent from '@/components/common-components/badge/Withdraw
 const handleExportFileExcel = async () => {
   try {
     await withdrawService.exportFileExcel()
-    console.log('File exported successfully!')
   } catch (error) {
     console.error('Error exporting file:', error)
   }

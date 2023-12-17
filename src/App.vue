@@ -24,7 +24,7 @@ onMounted( async () => {
     notiStore.newMessageArrive()
   }
   
-  console.log(`FCM Token from APP: ${await firebaseStore.getFcmToken()}`)
+  // console.log(`FCM Token from APP: ${await firebaseStore.getFcmToken()}`)
   firebaseStore.onFirebaseMessage(handleFunction)
   systemStore.syncData()
 })

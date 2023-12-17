@@ -23,7 +23,7 @@ export const useFirebaseStore = defineStore("firebase", {
         await getToken(messaging, { vapidKey: 'BEpzmmc04Wym0ABXEUfiJ3Gqks03sXEjIUx6Wc2MO-wjJgJnXzSDYfrsSqPLZd4zQOdOYmNo5ik4bVmyI3I4VVY' }).then((currentToken) => {
         if (currentToken) {
             this.fcmToken  = currentToken;
-            console.log("Token is " + currentToken)
+            // console.log("Token is " + currentToken)
         } else {
             // Show permission request UI
             console.log('No registration token available. Request permission to generate one.');

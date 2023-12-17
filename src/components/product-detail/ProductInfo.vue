@@ -12,7 +12,7 @@ import DateHelper from '@/utils/date-helper'
 import AuctionType from '../common-components/badge/AuctionType.vue'
 import userService from '@/services/user.service'
 import { useUserStore } from '@/stores/user.store'
-import ListProductImage from '@/components/product-detail/ListProductImage.vue'
+import ListProductImage from '@/components/product-detail/NewListProductImage.vue'
 import { Tooltip } from 'ant-design-vue'
 
 const globalStore = useGlobalStore()
@@ -114,14 +114,14 @@ const onPlaceBidClick = async () => {
 <template>
   <section class="bg-white dark:bg-gray-900">
     <div class="mx-auto max-w-screen-xxl py-2 px-2">
-      <div class="grid gap-3 lg:grid-cols-2 mt-2">
-        <article class="bg-white">
-          <div>
+      <div class="block 2xl:flex mt-2">
+        <article class="bg-white w-full 2xl:w-[50%]">
+          <div class="w-full">
             <ListProductImage :images="auctionInfo?.product?.imageUrls" />
           </div>
         </article>
-        <article class="bg-white ml-3">
-          <div class="">
+        <article class="bg-white ml-8 w-full 2xl:w-[50%]">
+          <div>
             <Modal
               v-if="isModalVisible"
               :widthClass="'w-[900px]'"

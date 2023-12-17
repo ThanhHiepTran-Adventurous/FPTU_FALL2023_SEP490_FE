@@ -129,7 +129,7 @@ const onSendSuccess = toastId => {
 }
 
 const onSendError = (toastId, error) => {
-  console.log(error)
+  // console.log(error)
   toastOption.updateLoadingToast(toastId, error.response.data.message, true)
 }
 

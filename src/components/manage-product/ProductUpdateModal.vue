@@ -29,8 +29,6 @@ import ErrorMessage from '../common-components/ErrorMessage.vue'
 
 const props = defineProps(['product'])
 watch(() => props.product, (oldVal, newVal) => {
-  console.log(oldVal)
-  console.log(newVal)
 })
 
 const allowedModalTypes = { info: 'info' }

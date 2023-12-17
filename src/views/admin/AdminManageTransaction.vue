@@ -73,7 +73,6 @@ const handleConfirmWithdraw = async withdrawId => {
 const handleExportFileExcel = async () => {
   try {
     await PaymentService.exportFileExcel()
-    console.log('File exported successfully!')
   } catch (error) {
     console.error('Error exporting file:', error)
   }

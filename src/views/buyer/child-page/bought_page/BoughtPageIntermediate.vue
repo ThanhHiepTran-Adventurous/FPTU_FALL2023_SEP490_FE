@@ -192,7 +192,6 @@ const resetErrorState = () => {
   }
 }
 const validateManual = () => {
-  console.log(selectedProvince.value.data)
   if (!profileModelData.value.phone) {
     manualErrorState.value.phone = 'Vui lòng nhập số điện thoại'
     return false
