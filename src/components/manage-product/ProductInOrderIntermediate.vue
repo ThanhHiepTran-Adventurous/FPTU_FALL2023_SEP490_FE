@@ -4,7 +4,7 @@ import Modal from '../common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import moment from 'moment'
 import imageHelper from '@/utils/image-helper'
-import { AuctionModelType, OrderStatus, ShipRequestType } from '@/common/contract'
+import { AuctionModelType, OrderStatus, ShipRequestType, StatusShipRequest } from '@/common/contract'
 import Button from '@/components/common-components/Button.vue'
 import constant, { sellerTabs } from '@/common/constant'
 import OrderService from '@/services/order.service'
@@ -33,11 +33,10 @@ const breadcrumbItems = [
   },
 ]
 
-const router = useRouter()
-
 const orders = ref([])
 const ordersFiltered = ref([])
 const detail = ref(null)
+const isWithdrawable = ref(false)
 const isLoading = ref(false)
 
 const isModalVisible = ref(false)
@@ -96,24 +95,33 @@ const handleDepositRequest = async orderId => {
   }
 }
 const handleCreateShipRequest = async orderId => {
-  try {
-    closeModal()
-    await ShipRequestService.sellerCreateShipRequest(orderId)
-    toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
-    fetchOrders()
-  } catch (error) {
-    toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
-    console.error('Error creating ship request:', error)
+  if(confirm("Bạn có chắc chắn muốn tạo yêu cầu giao hàng không?")){
+    try {
+      closeModal()
+      await ShipRequestService.sellerCreateShipRequest(orderId)
+      toastOption.toastSuccess('Tạo yêu cầu giao hàng thành công')
+      fetchOrders()
+    } catch (error) {
+      toastOption.toastError('Tạo yêu cầu giao hàng thất bại')
+      console.error('Error creating ship request:', error)
+    }
   }
 }
 
 // Page operations
 const activateInfoAuction = order => {
   detail.value = order
+  isWithdrawable.value = order.statusOrder !== OrderStatus.DONE.value 
+  && order.sellerShipRequest?.status === StatusShipRequest.delivered.value 
+  && !order.buyerShipRequest 
+  && order.hasWithdrawRequest === false
+  && order.haveBuyerReturn === false
+  
   isModalVisible.value = true
 }
 function closeModal() {
   isModalVisible.value = false
+  isWithdrawable.value = false
 }
 function handleConfirm() {
   closeModal()
@@ -362,9 +370,7 @@ onMounted(() => {
             <div>
               <Button
                 :disabled="
-                  isUpdating ||
-                  detail?.statusOrder === OrderStatus.CONFIRM_DELIVERY.value ||
-                  detail?.statusOrder !== OrderStatus.DONE.value
+                  !isWithdrawable
                 "
                 @on-click="handleDepositRequest(detail?.id)">
                 <div class="flex items-center">
