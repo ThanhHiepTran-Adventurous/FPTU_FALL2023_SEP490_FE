@@ -87,8 +87,10 @@ const paginatedProducts = computed(() => {
 // Business functions
 const handleDepositRequest = async orderId => {
   try {
+    closeModal()
     await withdraw.sellerWithdrwaOpt2(orderId)
     toastOption.toastSuccess('Tạo yêu cầu rút tiền thành công')
+    fetchOrders()
   } catch (error) {
     toastOption.toastError('Tạo yêu cầu rút tiền thất bại')
     console.error('Error creating ship request:', error)
@@ -111,9 +113,9 @@ const handleCreateShipRequest = async orderId => {
 // Page operations
 const activateInfoAuction = order => {
   detail.value = order
-  isWithdrawable.value = order.statusOrder !== OrderStatus.DONE.value 
+  isWithdrawable.value = order.statusOrder === OrderStatus.DONE.value
   && order.sellerShipRequest?.status === StatusShipRequest.delivered.value 
-  && !order.buyerShipRequest 
+  && !order.buyerShipRequest
   && order.hasWithdrawRequest === false
   && order.haveBuyerReturn === false
   
@@ -291,28 +293,28 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Tên Sản Phẩm :
+                        Tên Sản Phẩm
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">{{ detail?.productResponse.name }}</td>
                     </tr>
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Giá tiền :
+                        Giá tiền
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.price) }}</td>
                     </tr>
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Địa chỉ :
+                        Địa chỉ
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">{{ detail?.buyerAddress }}</td>
                     </tr>
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Số điện thoại :
+                        Số điện thoại
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{ detail?.buyerPhoneNumber }}
@@ -321,7 +323,7 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Tạo lúc :
+                        Tạo lúc
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{ detail?.createAt ? moment.utc(detail?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}
@@ -330,7 +332,7 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Cập nhật lúc:
+                        Cập nhật lúc
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{
@@ -343,7 +345,7 @@ onMounted(() => {
                     <tr v-if="detail?.sellerShipRequest">
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Trạng thái giao hàng:
+                        Trạng thái giao hàng
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         <ShippingStatusIntermediate :status="detail?.sellerShipRequest.status" />
@@ -352,7 +354,7 @@ onMounted(() => {
                     <tr v-if="detail?.buyerShipRequest">
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Trạng thái trả hàng:
+                        Trạng thái trả hàng
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         <ShippingStatusIntermediate :status="detail?.buyerShipRequest.status" />
