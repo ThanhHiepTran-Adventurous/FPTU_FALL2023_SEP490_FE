@@ -443,6 +443,23 @@ onMounted(() => {
           <ListExpandableImage :img-src="report?.reportImages" />
         </div>
       </div>
+
+      <!-- Report detail -->
+      <div class="mx-auto container align-middle border-[2px] border-blue-800 rounded-lg pl-3 py-1.5 mt-3">
+        <div class="font-bold mb-2 mt-2 text-xl text-black text-blue-800">Trạng thái tố cáo</div>
+        <div class="flex px-8 my-2">
+          <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
+            <div class="min-w-[100px]">Trạng thái:</div>
+            <div><ReportStatusBadge :status="report?.status" /></div>
+          </div>
+        </div>
+        <div class="flex px-8 my-2">
+          <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
+            <div class="min-w-[100px]">Lý do:</div>
+            <div>{{ report?.rejectReason ? report?.rejectReason : 'N/A'}}</div>
+          </div>
+        </div>
+      </div>
     </div>
     <template #button>
       <div>

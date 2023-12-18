@@ -30,7 +30,7 @@ onMounted(() => {
 <template>
     <div class="container mx-auto">
         <div class="flex">
-            <div class="flex flex-col items-center w-16 md:w-80 h-full pb-2 overflow-hidden text-gray-700 bg-white rounded">
+            <div class="flex flex-col items-center w-16 md:w-80 h-full pb-2 overflow-auto text-gray-700 bg-white rounded">
                 <div class="w-full px-2">
                     <div class="flex flex-col items-center w-full border-gray-300">
                         <router-link v-for="item in navs" :key="item.value"
