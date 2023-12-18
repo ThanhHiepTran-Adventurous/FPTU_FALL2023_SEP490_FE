@@ -353,12 +353,6 @@ onMounted(() => {
                   </tbody>
                 </table>
               </div>
-              <div class="mx-auto container align-middle mt-8">
-                <div class="text-xl font-bold ml-5 underline mb-4">Trạng thái đơn hàng</div>
-                <div class="ml-8">
-                  <OrderTimeline :curStatus="detail?.statusOrder" />
-                </div>
-              </div>
             </div>
           </div>
           <template #button>

@@ -180,6 +180,7 @@ export default {
       staffConfirmReportSellerWinOpt2:
         'withdrawAndRefunds/staff/{orderId}/create-withdraw-request-for-seller-win-option-two',
       exportFileExcel: 'exportFile/export/withdrawAndRefundMoneyRequest',
+      sellerConfirmShip: 'withdrawAndRefunds/seller/{orderId}/confirm-and-create-refund-request-option-two'
     },
     report: {
       buyerReportSellerOpt1: 'report/buyer/report-seller-option1/{orderId}',
@@ -192,7 +193,7 @@ export default {
       confirmReportOpt1: 'report/staff/confirm-report/{reportId}',
       declineReportOpt1: 'report/staff/reject-report/{reportId}',
       confirmReportOpt2ForBuyer: 'report/staff/confirm-buyer-report/{reportId}',
-      assignReport: 'report/staff/assign-report/{reportId}',
+      assignReport: 'report/staff/assign-report/{reportId}'
     },
     feedback: {
       getFeedbackBySellerId: '/guest/listFeedback-guest',

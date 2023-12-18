@@ -15,6 +15,7 @@ import ShippingStatusIntermediate from '@/components/common-components/badge/Shi
 import Dropdown from '@/components/common-components/Dropdown.vue'
 import BuyerSideBarLayout from '@/layouts/BuyerSideBarLayout.vue'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import OrderStatusBadge from '@/components/common-components/badge/OrderStatusBadge.vue'
 
 const breadcrumbItems = [
   {
@@ -319,6 +320,12 @@ onMounted(() => {
             <div class="flex items-center gap-3 text-lg mb-1">
               <div class="min-w-[100px]">Tạo lúc:</div>
               <div>{{ moment.utc(report?.aboutOrder.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
+            </div>
+          </div>
+          <div class="flex px-8 mt-2">
+            <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
+              <div class="min-w-[100px]">Trạng thái đơn hàng:</div>
+              <div><OrderStatusBadge :status="report?.aboutOrder.statusOrder" /></div>
             </div>
           </div>
           <div class="py-1.5">

@@ -6,7 +6,7 @@ import Modal from '@/components/common-components/Modal.vue'
 import formatCurrency from '@/utils/currency-output-formatter'
 import AuctionType from '@/components/common-components/badge/AuctionType.vue'
 import ListExpandableImage from '@/components/ListExpandableImage.vue'
-import { AuctionModelType, ReportStatus, Role, StatusShipRequest } from '@/common/contract'
+import { AuctionModelType, OrderStatus, ReportStatus, Role, StatusShipRequest } from '@/common/contract'
 import { sellerTabs } from '@/common/constant'
 import ReportStatusBadge from '@/components/common-components/badge/ReportStatusBadge.vue'
 import { Icon } from '@iconify/vue'
@@ -17,6 +17,7 @@ import Dropdown from '@/components/common-components/Dropdown.vue'
 import ReportModal from '@/components/ReportModal.vue'
 import toastOption from '@/utils/toast-option'
 import { SIMPLE_TABLE_ITEMS_PER_PAGE } from '@/common/commonStaticState'
+import OrderStatusBadge from '@/components/common-components/badge/OrderStatusBadge.vue'
 
 const breadcrumbItems = [
   {
@@ -155,6 +156,23 @@ const paginatedReportList = computed(() => {
   return filteredReport.value.slice(startIndex, endIndex)
 })
 
+const onConfirmReturnIconClick = (detail) => {
+  if(confirm("Bạn có chắc chắn muốn xác nhận sản phẩm đã trả về thành công không?")){
+    reportService
+      .sellerConfirmReturnSuccess(detail.aboutOrder.id)
+      .then(_ => toastOption.toastSuccess('Xác nhận sản phẩm đã trả về thành công.', false))
+      .catch(e => toastOption.toastError(e.response.data.message, true))
+  }
+}
+const onConfirmReturnClick = () => {
+  if(confirm("Bạn có chắc chắn muốn xác nhận sản phẩm đã trả về thành công không?")){
+    reportService
+      .sellerConfirmReturnSuccess(report.value.aboutOrder.id)
+      .then(_ => toastOption.toastSuccess('Xác nhận sản phẩm đã trả về thành công.', false))
+      .catch(e => toastOption.toastError(e.response.data.message, true))
+  }
+}
+
 onMounted(() => {
   getAllReportStaff()
 })
@@ -242,11 +260,18 @@ onMounted(() => {
                         </button>
                       </router-link>
                       <button
-                        v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value"
+                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value"
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
                         type="button"
                         @click="onReportClick(report)">
                         <Icon icon="mdi:report-problem" class="font-bold text-[24px] text-red-700" />
+                      </button>
+                      <button
+                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value"
+                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
+                        type="button"
+                        @click="onConfirmReturnIconClick(report)">
+                        <Icon icon="line-md:circle-twotone-to-confirm-circle-twotone-transition" class="font-bold text-[24px] text-green-500" />
                       </button>
                     </td>
                   </tr>
@@ -354,6 +379,12 @@ onMounted(() => {
             <div>{{ moment.utc(report?.aboutOrder.createAt).format('DD/MM/YYYY HH:mm:ss') }}</div>
           </div>
         </div>
+        <div class="flex px-8 mt-2">
+          <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
+            <div class="min-w-[100px]">Trạng thái đơn hàng:</div>
+            <div><OrderStatusBadge :status="report?.aboutOrder.statusOrder" /></div>
+          </div>
+        </div>
         <div class="py-1.5">
           <div class="min-w-[100px]">Hình ảnh:</div>
           <ListExpandableImage :img-src="report?.aboutOrder.productResponse.imageUrls" />
@@ -422,12 +453,20 @@ onMounted(() => {
           Đóng
         </button>
       </div>
-      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value">
+      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value">
         <button
           @click="onReportClick()"
           class="bg-red-600 hover:!bg-red-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
           type="button">
           Tố cáo
+        </button>
+      </div>
+      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value  && report.aboutOrder.statusOrder !== OrderStatus.DONE.value">
+        <button
+          @click="onConfirmReturnClick()"
+          class="bg-green-600 hover:!bg-green-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
+          type="button">
+          Xác nhận đã nhận hàng
         </button>
       </div>
     </template>

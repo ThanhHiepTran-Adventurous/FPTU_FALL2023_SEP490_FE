@@ -94,8 +94,8 @@ const filterData = () => {
 
 const activateInfoAuction = order => {
   detail.value = order
-  isRefunable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.haveShipReturn
-  isConfirmable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.haveShipReturn
+  isRefunable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.haveBuyerReturn
+  isConfirmable.value = order.sellerShipRequest?.status === StatusShipRequest.delivered.value && !order.haveBuyerReturn
   isModalVisible.value = true
 }
 const activateRatingModel = () => {

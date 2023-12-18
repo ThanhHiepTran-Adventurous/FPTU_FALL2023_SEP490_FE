@@ -99,6 +99,12 @@ const staffConfirmSellerWinOpt2 = async (orderId) => {
   return response ? response.data : response
 }
 
+const sellerConfirmReturnSuccess = async (orderId) => {
+  const serviceUrl = url.endpoint.withdrawAndRefunds.sellerConfirmShip.replace("{orderId}", orderId)
+  const response = await utils.axiosLocalHost.post(serviceUrl)
+  return response ? response.data : response
+}
+
 export default {
   sellerReportBuyerOption1,
   buyerReportSellerOption1,
@@ -112,5 +118,6 @@ export default {
   staffConfirmReturnRequest,
   sellerReportBuyerOpt2,
   staffConfirmBuyerWinOpt2,
-  staffConfirmSellerWinOpt2
+  staffConfirmSellerWinOpt2,
+  sellerConfirmReturnSuccess
 }
