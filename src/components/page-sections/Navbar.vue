@@ -105,6 +105,7 @@ const submitForm = async () => {
         userStore.setIsVerifiedCCCDAndSaveToLocalStorage(informationUser.data.citizenCardVerified)
         userStore.setUserIdAndSaveToLocalStorage(informationUser.data.id)
         userStore.setUsernameAndSaveToLocalStorage(informationUser.data.fullname)
+        userStore.setAvatarUrlAndSaveToLocalStorage(informationUser.data.avatarUrl)
         closeModal()
         resetForm()
 
