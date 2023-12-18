@@ -113,7 +113,9 @@ const submitForm = async () => {
           if (fcmToken) {
             loginService.saveFcmToken(fcmToken)
           }
-        } catch(e){}
+        } catch(e){
+          console.log(e)
+        }
 
         // Check the user's role and redirect accordingly
         if (informationUser.data.role === Role.admin.value) {

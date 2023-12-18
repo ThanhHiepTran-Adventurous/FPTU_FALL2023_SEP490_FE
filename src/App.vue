@@ -23,7 +23,7 @@ onMounted( async () => {
     toastOption.toastInformation(payloadReceive.notification.title)
     notiStore.newMessageArrive()
   }
-  
+  await firebaseStore.getFcmToken()
   // console.log(`FCM Token from APP: ${await firebaseStore.getFcmToken()}`)
   firebaseStore.onFirebaseMessage(handleFunction)
   systemStore.syncData()
