@@ -112,8 +112,10 @@ const filterReports = () => {
   filteredReports.value = reportList.value.filter(
     f =>
       (!selected.value.fromRole.value || f.fromUserReport.role === selected.value.fromRole.value) &&
-      (!selected.value.status.value || f.status === selected.value.status.value),
-  )
+      (!selected.value.status.value || f.status === selected.value.status.value)
+  ).sort((a, b) => {
+    return new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+  })
 }
 
 // Pagination

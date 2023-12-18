@@ -122,6 +122,8 @@ const filterData = () => {
     v => v.modelType === AuctionModelType.immediate 
     && v.product.status !== ProductStatus.SOLD.value 
     && v.product.status !== ProductStatus.PAID.value
+    && v.product.status !== ProductStatus.FAIL_TO_SOLD.value
+    && v.product.status !== ProductStatus.NOT_REACH_NUM_AUCTIONEER.value
   )
 }
 
