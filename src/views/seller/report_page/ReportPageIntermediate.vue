@@ -364,7 +364,7 @@ onMounted(() => {
         <div class="flex px-8 my-2">
           <div class="flex items-center gap-3 text-lg mb-1 w-[400px]">
             <div class="min-w-[100px]">Lý do:</div>
-            <div>{{ report.rejectReason ? report.rejectReason : 'N/A' }}</div>
+            <div>{{ report?.rejectReason ? report?.rejectReason : 'N/A' }}</div>
           </div>
         </div>
       </div>

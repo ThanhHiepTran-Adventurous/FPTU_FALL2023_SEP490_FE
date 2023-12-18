@@ -35,7 +35,7 @@ onMounted(() => {
                     <div class="flex flex-col items-center w-full border-gray-300">
                         <router-link v-for="item in navs" :key="item.value"
                             :to="item.navLink"
-                            class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300"
+                            class="flex justify-center md:justify-start items-center w-full h-12 px-1 md:px-3 mt-2 rounded hover:bg-gray-300"
                             :class="curTab === item.value ? '!bg-gray-200' : ''">
                             <Icon :icon="item.icon" class="w-6 h-6 stroke-current" />
                             <span class="hidden md:block ml-3 text-sm font-medium">{{ item.value }}</span>
