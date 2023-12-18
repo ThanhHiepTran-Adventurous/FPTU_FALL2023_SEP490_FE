@@ -76,9 +76,7 @@ const staffConfirmReportOpt1 = async (reportId) => {
 const staffDeclineReportOpt1 = async (reportId, reason) => {
   const serviceUrl = url.endpoint.report.declineReportOpt1.replace("{reportId}", reportId)
   const payload = {
-    createRejectReportRequest: {
-      rejectReason: reason
-    }
+    rejectReason: reason
   }
   const response = await utils.axiosLocalHost.put(serviceUrl, payload)
   return response ? response.data : response
