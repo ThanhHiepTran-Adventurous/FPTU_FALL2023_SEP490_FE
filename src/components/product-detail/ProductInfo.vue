@@ -159,7 +159,7 @@ const onPlaceBidClick = async () => {
             </Tooltip>
             <AuctionType :type="auctionInfo?.modelType" />
 
-            <div class="tt-wrapper whitespace-nowrap">
+            <div class="tt-wrapper whitespace-nowrap mt-8">
               <div class="tt-countdown_box_02 mt-3 mb-2">
                 <div v-if="isClosed === false" class="tt-countdown_inner">
                   <CountDown :coefficientSize="0.6" :deadlineInMilis="deadlineInMilis" />
@@ -167,7 +167,7 @@ const onPlaceBidClick = async () => {
                 <div v-else class="text-red-600 text-lg">&lt; Phiên đấu giá đã kết thúc ></div>
               </div>
             </div>
-            <div class="tt-wrapper">
+            <div class="tt-wrapper mt-8">
               <div class="flex w-full">
                 <div class="flex flex-col w-full">
                   <div class="flex items-start mx-auto w-full mr-2">
@@ -201,7 +201,7 @@ const onPlaceBidClick = async () => {
                     </div>
                     <div v-else class="ml-[13rem] mt-1">Hiện tại chưa có người đặt giá</div>
                   </div>
-                  <div v-if="isClosed === false" class="flex mt-3">
+                  <div v-if="isClosed === false" class="flex mt-12">
                     <button
                       @click="onBuyNowClick()"
                       type="button"
