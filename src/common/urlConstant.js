@@ -42,6 +42,7 @@ export default {
       resendEmailOtp: 'profiles/register/otp/resend',
       changeEmail: 'profiles/userProfile/changeEmail',
       verifyEmailOtp: 'profiles/userProfile/verifyOtpChangeEmail',
+      createStaffAccount: 'users/createAccountStaff'
     },
     address: {
       allWardsOfDistrict: '/address/districts/{code}',
@@ -199,6 +200,9 @@ export default {
       getFeedbackBySellerId: '/guest/listFeedback-guest',
       buyerCreateFeedBack: 'feedback',
     },
+    bankAccountFetch: {
+      allBankAccount: '/bank/bankAccounts'
+    }
   },
 }
 

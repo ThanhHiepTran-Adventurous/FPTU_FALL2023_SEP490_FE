@@ -2,6 +2,7 @@ import utils from "@/utils/customAxios"
 import url from "@/common/urlConstant";
 import loginService from "./login.service";
 import { Role } from "@/common/contract";
+import urlConstant from "@/common/urlConstant";
 
 
 const updateProfileData = async (data) => {
@@ -84,6 +85,17 @@ const isAllRequiredInformationFilled = async (roleName) => {
   }
 }
 
+const createStaffAccount = async (phone, pw, name) => {
+  const payload = {
+    phone: phone,
+    password: pw,
+    fullname: name
+  }
+  const serviceUrl = urlConstant.endpoint.user.createStaffAccount
+  const response = await utils.axiosLocalHost.post(serviceUrl, payload)
+  return response ? response.data : response
+}
+
 export default {
-  updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp, uploadCCCD, getCCCD, getAllNotification, isAllRequiredInformationFilled
+  updateProfileData, updateAvatar, updateEmail, resendEmailOtp, verifyEmailOtp, uploadCCCD, getCCCD, getAllNotification, isAllRequiredInformationFilled, createStaffAccount
 }

@@ -172,6 +172,9 @@ const onConfirmReturnClick = () => {
       .sellerConfirmReturnSuccess(report.value.aboutOrder.id)
       .then(_ => toastOption.toastSuccess('Xác nhận sản phẩm đã trả về thành công.', false))
       .catch(e => toastOption.toastError(e.response.data.message, true))
+      .finally(() => {
+        isModalVisible.value = false
+      })
   }
 }
 

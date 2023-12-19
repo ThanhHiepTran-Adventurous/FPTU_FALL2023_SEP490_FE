@@ -16,6 +16,7 @@ import { ErrorMessage, Field, Form } from 'vee-validate'
 import { defaultAvatar } from '@/common/urlConstant'
 import { useUserStore } from '@/stores/user.store'
 import Navbar from '@/components/page-sections/Navbar.vue'
+import bankaccountService from '@/services/bankaccount.service'
 
 const userStore = useUserStore()
 
@@ -142,13 +143,13 @@ const onUploadImage = () => {
   isImageUpdating.value = true
   userService
     .updateAvatar(formData)
-    .then(response => {
+    .then(_ => {
       fetchUserdata()
-      toast.toastSuccess('Cập nhật avatar thành công.')
-      isImageUpdating.value = false
-    })
-    .catch(err => {
+      toast.toastSuccess('Cập nhật avatar thành công.')    })
+    .catch(_ => {
       toast.toastError('Không thể cập nhật avatar, có thể file quá lớn hoặc do hệ thống.')
+    }).finally(() => {
+      isImageUpdating.value = false
     })
 }
 
@@ -200,7 +201,7 @@ const onSaveUpdate = () => {
     ward: selectedWard.value.label,
     bankAccountNumber: profileModelData.value.bankAccountNumber,
     bankOwnerName: profileModelData.value.bankOwnerName,
-    bankInformation: profileModelData.value.bankInformation
+    bankInformation: selectedBankAccount.value?.data || profileModelData.value.bankInformation
   }
   const toastId = toast.toastLoadingMessage('Đang cập nhật thông tin của bạn')
   userService
@@ -312,8 +313,22 @@ const fetchCCCD = async () => {
   profileModel.value.fileBack = data.data.imageBack
 }
 
+const bankAccountSelection = ref([])
+const selectedBankAccount = ref('')
+const fetchAllBankAccount = async () => {
+  const data = await bankaccountService.getAll()
+  const bankAccounts = data.data?.data ? data.data?.data : []
+  bankAccountSelection.value = bankAccounts.map(f => {
+    return {
+      label: f.name,
+      data: f.name,
+    }
+  })
+}
+
 onMounted(async () => {
   await fetchUserdata()
+  await fetchAllBankAccount()
   const provincesFetch = await locationService.fetchAllProvinces()
   provinces.value = provincesFetch.data.map(p => {
     return {
@@ -488,6 +503,13 @@ onMounted(async () => {
               <span v-else class="text-gray-700">{{ profileModel.address || 'N/A' }}</span>
             </li>
             <li class="flex border-b py-2">
+              <span class="font-bold w-28">Tên ngân hàng:</span>
+              <Dropdown v-if="isInEditMode" v-model="selectedBankAccount" :data="bankAccountSelection" class="!w-[400px]" />
+              <span v-else class="text-gray-700">{{
+                profileModel.bankInformation ? profileModel.bankInformation : 'N/A'
+              }}</span>
+            </li>
+            <li class="flex border-b py-2">
               <span class="font-bold w-28">Số tài khoản:</span>
               <input
                 v-if="isInEditMode"
@@ -495,16 +517,6 @@ onMounted(async () => {
                 class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 px-2" />
               <span v-else class="text-gray-700">{{
                 profileModel.bankAccountNumber ? profileModel.bankAccountNumber : 'N/A'
-              }}</span>
-            </li>
-            <li class="flex border-b py-2">
-              <span class="font-bold w-28">Tên ngân hàng:</span>
-              <input
-                v-if="isInEditMode"
-                v-model="profileModelData.bankInformation"
-                class="bg-white focus:bg-gray-50 border border-gray-300 text-gray-900 w-[60%] text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block py-1 px-2" />
-              <span v-else class="text-gray-700">{{
-                profileModel.bankInformation ? profileModel.bankInformation : 'N/A'
               }}</span>
             </li>
             <li class="flex border-b py-2">
