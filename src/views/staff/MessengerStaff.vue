@@ -5,7 +5,7 @@ import { AuctionModelType, Role } from "@/common/contract";
 import { useUserStore } from "@/stores/user.store";
 import { useRoute } from "vue-router";
 import { Client } from '@stomp/stompjs';
-import urlConstant from "@/common/urlConstant";
+import urlConstant, { defaultAvatar } from "@/common/urlConstant";
 import MessageBubble from "@/components/messenger/MessageBubble.vue";
 import ChatService from "@/services/chat.service"
 import UserMessageCard from "@/components/messenger/UserMessageCard.vue";
@@ -360,7 +360,7 @@ onBeforeUnmount(() => {
                   :receiverRole="mess.receiverRole"
                   :senderRole="mess.senderRole"
                   :createAt="mess.createAt"
-                  :img-src="mess.img"
+                  :img-src="defaultAvatar"
                   />
               </div>
             </div>
