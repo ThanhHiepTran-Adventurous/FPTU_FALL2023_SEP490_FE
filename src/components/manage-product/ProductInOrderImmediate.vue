@@ -251,21 +251,21 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Tên Sản Phẩm :
+                        Tên Sản Phẩm
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">{{ detail?.productResponse.name }}</td>
                     </tr>
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Giá tiền :
+                        Giá tiền
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">{{ formatCurrency(detail?.price) }}</td>
                     </tr>
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Địa chỉ :
+                        Địa chỉ
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{ detail?.buyerAddress ? detail.buyerAddress : 'N/A' }}
@@ -274,7 +274,7 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Số điện thoại :
+                        Số điện thoại
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{ detail?.buyerPhoneNumber ? detail.buyerPhoneNumber : 'N/A' }}
@@ -283,7 +283,7 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Tạo lúc :
+                        Tạo lúc
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{ detail?.createAt ? moment.utc(detail?.createAt).format('DD/MM/YYYY HH:mm:ss') : 'N/A' }}
@@ -292,7 +292,7 @@ onMounted(() => {
                     <tr>
                       <td
                         class="py-2 px-4 bg-grey-lightest font-bold uppercase text-sm text-grey-light border-b border-grey-light">
-                        Cập nhật lúc :
+                        Cập nhật lúc
                       </td>
                       <td class="py-2 px-4 border-b border-grey-light">
                         {{
