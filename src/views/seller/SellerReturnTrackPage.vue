@@ -105,6 +105,8 @@ const onReportModalConfirm = (listImg, text) => {
     .sellerReportBuyerOpt2(report.value.aboutOrder.id, formData)
     .then(_ => toastOption.updateLoadingToast(toastId, 'Tố cáo thành công.', false))
     .catch(_ => toastOption.updateLoadingToast(toastId, 'Tố cáo thất bại.', true))
+
+  closeReportModal()
 }
 
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE

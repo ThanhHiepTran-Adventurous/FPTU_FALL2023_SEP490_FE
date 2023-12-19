@@ -269,62 +269,60 @@ onBeforeUnmount(() => {
                     class="bg-white border-b antialiased">
                     <div class="max-w-2xl">
                       <article
-                        class="text-base bg-white p-3 rounded-lg border-gray-200">
-                        <div class="flex">
-                          <div class="">
-                            <div class="text-center">
-                              <img
-                                class="w-16 h-16 mx-auto rounded-full"
-                                :src="feedback.buyer.avatarUrl"
-                                :alt="feedback?.buyer?.fullname" />
-                            </div>
+                        class="flex items-center text-base bg-white p-3 rounded-lg border-gray-200">
+                        <div class="w-[20%]">
+                          <div class="text-center">
+                            <img
+                              class="w-16 h-16 mx-auto rounded-full"
+                              :src="feedback.buyer.avatarUrl"
+                              :alt="feedback?.buyer?.fullname" />
+                          </div>
 
-                            <p class="text-sm text-center">
-                              <span class="block text-gray-600 whitespace-nowrap mt-2 font-bold">{{
-                                feedback?.buyer?.fullname
-                              }}</span>
-                              <time
-                                class="block text-gray-400"
-                                pubdate
-                                datetime="2022-03-12"
-                                title="March 12th, 2022"
-                                >{{
-                                  feedback?.createAt ? moment.utc(feedback?.createAt).format('DD/MM/YYYY HH:mm:ss') : ''
-                                }}</time
-                              >
-                            </p>
+                          <div class="text-sm text-center">
+                            <span class="block text-gray-600 whitespace-nowrap mt-2 font-bold">{{
+                              feedback?.buyer?.fullname
+                            }}</span>
+                            <time
+                              class="block text-gray-400"
+                              pubdate
+                              datetime="2022-03-12"
+                              title="March 12th, 2022"
+                              >{{
+                                feedback?.createAt ? moment.utc(feedback?.createAt).format('DD/MM/YYYY HH:mm:ss') : ''
+                              }}</time
+                            >
                           </div>
-                          <div class="ml-5 text-gray-500">
-                            <div class="flex items-center mb-2">
-                              <template v-for="i in 5" :key="i">
-                                <svg
-                                  v-if="i <= feedback.rate"
-                                  class="w-6 h-6 text-yellow-300 me-1"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="currentColor"
-                                  viewBox="0 0 22 20">
-                                  <!-- SVG path for a filled star -->
-                                  <path
-                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                </svg>
-                                <svg
-                                  v-else
-                                  class="w-6 h-6 text-gray-300 me-1"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="currentColor"
-                                  viewBox="0 0 22 20">
-                                  <!-- SVG path for an empty star -->
-                                  <path
-                                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                                </svg>
-                              </template>
-                            </div>
-                            <p>
-                              {{ feedback?.content }}
-                            </p>
+                        </div>
+                        <div class="w-[80%] ml-5 text-gray-500">
+                          <div class="flex items-center mb-2">
+                            <template v-for="i in 5" :key="i">
+                              <svg
+                                v-if="i <= feedback.rate"
+                                class="w-6 h-6 text-yellow-300 me-1"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 22 20">
+                                <!-- SVG path for a filled star -->
+                                <path
+                                  d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                              </svg>
+                              <svg
+                                v-else
+                                class="w-6 h-6 text-gray-300 me-1"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 22 20">
+                                <!-- SVG path for an empty star -->
+                                <path
+                                  d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                              </svg>
+                            </template>
                           </div>
+                          <p>
+                            {{ feedback?.content }}
+                          </p>
                         </div>
                       </article>
                     </div>

@@ -417,6 +417,6 @@ onBeforeUnmount(() => {
       :status="sttChange"
       @modal-declined="closeBuyerModal"
       @confirm-shipped="onConfirmShipped" />
-    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" />
+    <ReportModal :hidden="!isReportModalOpen" @confirm="onReportModalConfirm" @decline="closeReportModal" />
   </div>
 </template>
