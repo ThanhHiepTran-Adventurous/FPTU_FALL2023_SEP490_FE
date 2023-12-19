@@ -267,7 +267,7 @@ onMounted(() => {
       <div :hidden="currentTab !== formTab">
         <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title"> GIÁ KHỞI ĐIỂM <span class="text-red-500 text-lg">*</span> </label>
             <CurrencyInput v-model="formData.startPrice" placeholder="" />
             <ErrorMessage :text="manualAuctionErrorState.startPrice" />
           </div>
@@ -281,7 +281,7 @@ onMounted(() => {
             <ErrorMessage :text="manualAuctionErrorState.jump" />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> GIÁ MUA NGAY </label>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description"> GIÁ MUA NGAY <span class="text-red-500 text-lg">*</span> </label>
             <CurrencyInput v-model="formData.buyNowPrice" placeholder="" />
             <ErrorMessage :text="manualAuctionErrorState.buyNowPrice" />
           </div>
