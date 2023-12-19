@@ -229,14 +229,7 @@ onMounted(() => {
 })
 const imgSrc = ref([])
 const imgData = ref([])
-const handleFileUpload = async e => {
-  imgData.value.push(e.target.files[0])
-  imgSrc.value.push(await base64Image(e.target.files[0]))
-}
-const handleImageDeleted = indx => {
-  imgSrc.value.splice(indx, 1)
-  imgData.value.splice(indx, 1)
-}
+
 const formData = ref({
   content: '',
   rate: '',

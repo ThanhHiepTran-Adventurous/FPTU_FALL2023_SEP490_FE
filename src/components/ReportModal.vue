@@ -12,11 +12,21 @@ const reportText = ref('')
 
 const emit = defineEmits(['confirm', 'decline'])
 
+const resetState = () => {
+  imgSrc.value = []
+  imgData.value = []
+  reportText.value = ''
+}
+
 const onModalDecline = () => {
   emit('decline')
+  resetState()
 }
 const onModalConfirm = () => {
-  emit('confirm', imgData.value, reportText.value)
+  const imgDataSrc = [...imgData.value]
+  const text = reportText.value
+  emit('confirm', imgDataSrc, text)
+  resetState()
 }
 
 const handleFileUpload = async e => {
