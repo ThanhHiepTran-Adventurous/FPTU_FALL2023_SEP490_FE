@@ -292,7 +292,7 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Actions -->
-            <div class="flex flex-col mt-4" v-if="groupInfo?.reportResponseList?.length !== 2">
+            <div class="flex flex-col mt-4" v-if="groupInfo?.order?.reportResponseList?.length !== 2">
               <div class="flex flex-row items-center justify-between">
                 <span class="font-bold">Hành động</span>
               </div>
