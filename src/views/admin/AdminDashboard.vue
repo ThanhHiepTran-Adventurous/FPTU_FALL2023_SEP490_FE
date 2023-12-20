@@ -434,7 +434,7 @@ const createProfitLineChart = profitData => {
       ],
       datasets: [
         {
-          label: 'Lợi nhuận',
+          label: 'Doanh thu',
           data: profitData,
           borderColor: '#3B82F6',
           borderWidth: 2,
@@ -463,7 +463,7 @@ const createProfitLineChart = profitData => {
           display: true,
           title: {
             display: true,
-            text: 'Lợi nhuận',
+            text: 'Doanh thu',
           },
         },
       },
@@ -564,7 +564,7 @@ const createBrandBarChart = brandData => {
           class="rounded-lg p-4 shadow-md bg-white dark:border-gray-600 h-32 md:h-96 flex flex-col items-center justify-center">
           <span
             class="inline-flex items-center mt-2 mb-1 bg-blue-100 text-blue-800 text-md font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
-            Thống kê lợi nhuận
+            Thống kê doanh thu
           </span>
           <canvas ref="LinearProfitCanvas"></canvas>
         </div>
