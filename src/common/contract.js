@@ -76,7 +76,7 @@ export const ProductStatus = {
     value: 'PAID',
   },
   FAIL_TO_SOLD: {
-    label: 'NGƯỜI MUA KHIẾU NẠI THÀNH CÔNG',
+    label: 'NGƯỜI MUA KHIẾU NẠI',
     value: 'FAIL_TO_SOLD'
   }
 }

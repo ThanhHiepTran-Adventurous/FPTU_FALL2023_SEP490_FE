@@ -270,14 +270,14 @@ onMounted(() => {
                         </button>
                       </router-link>
                       <button
-                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value"
+                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value && report.hasSellerReportReturnShip === false"
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
                         type="button"
                         @click="onReportClick(report)">
                         <Icon icon="mdi:report-problem" class="font-bold text-[24px] text-red-700" />
                       </button>
                       <button
-                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value"
+                        v-if="report.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value && report.hasSellerReportReturnShip === false"
                         class="inline-flex items-center p-0.5 text-sm font-medium text-center text-black hover:text-gray-800 rounded-lg"
                         type="button"
                         @click="onConfirmReturnIconClick(report)">
@@ -480,7 +480,7 @@ onMounted(() => {
           Đóng
         </button>
       </div>
-      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value">
+      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value && report.hasSellerReportReturnShip === false">
         <button
           @click="onReportClick()"
           class="bg-red-600 hover:!bg-red-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
@@ -488,7 +488,7 @@ onMounted(() => {
           Tố cáo
         </button>
       </div>
-      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value  && report.aboutOrder.statusOrder !== OrderStatus.DONE.value">
+      <div v-if="report?.returnShipRequestResponse?.status === StatusShipRequest.delivered.value && report.aboutOrder.statusOrder !== OrderStatus.DONE.value && report.hasSellerReportReturnShip === false">
         <button
           @click="onConfirmReturnClick()"
           class="bg-green-600 hover:!bg-green-700 text-white font-bold py-2 px-4 rounded border focus:outline-none focus:shadow-outline"
