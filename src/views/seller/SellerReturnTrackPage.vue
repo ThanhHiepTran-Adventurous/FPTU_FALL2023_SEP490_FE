@@ -107,6 +107,7 @@ const onReportModalConfirm = (listImg, text) => {
     .catch(_ => toastOption.updateLoadingToast(toastId, 'Tố cáo thất bại.', true))
 
   closeReportModal()
+  getAllReportStaff()
 }
 
 const itemsPerPage = SIMPLE_TABLE_ITEMS_PER_PAGE
@@ -164,6 +165,9 @@ const onConfirmReturnIconClick = (detail) => {
       .sellerConfirmReturnSuccess(detail.aboutOrder.id)
       .then(_ => toastOption.toastSuccess('Xác nhận sản phẩm đã trả về thành công.', false))
       .catch(e => toastOption.toastError(e.response.data.message, true))
+      .finally(() => {
+        getAllReportStaff()
+      })
   }
 }
 const onConfirmReturnClick = () => {
@@ -174,6 +178,7 @@ const onConfirmReturnClick = () => {
       .catch(e => toastOption.toastError(e.response.data.message, true))
       .finally(() => {
         isModalVisible.value = false
+        getAllReportStaff()
       })
   }
 }

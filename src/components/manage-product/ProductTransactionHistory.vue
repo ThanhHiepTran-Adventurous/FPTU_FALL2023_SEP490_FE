@@ -105,14 +105,17 @@ const isSelf = (id) => {
                     v-for="(trans, index) in paginatedTransactionList"
                     :key="index"
                     class="border-b dark:border-gray-700">
-                    <td class="px-6 py-4 font-normal text-gray-500 dark:text-white" :class="isSelf(trans.userPayment.id) ? '!text-blue-500 !font-semibold' : ''">
-                      {{ isSelf(trans.userPayment.id) ? 'Tôi' : trans.userPayment.fullname }}
+                    <td class="px-6 py-4 font-normal text-gray-500 dark:text-white" :class="{
+                      '!text-blue-500 !font-semibold': isSelf(trans.userPayment?.id),
+                      '!text-red-500 !font-semibold': !trans.userPayment || trans.userPayment?.fullname === 'admin bidbay'
+                    }">
+                      {{ trans.userPayment && trans.userPayment?.fullname !== 'admin bidbay' ? (isSelf(trans.userPayment?.id) ? 'Tôi' : trans.userPayment?.fullname) : 'Hệ thống' }}
                     </td>
                     <td class="px-6 py-4 font-normal text-gray-500 dark:text-white" :class="{
                       '!text-blue-500 !font-semibold': isSelf(trans.userReceiveMoney?.id),
-                      '!text-red-500 !font-semibold': !trans.userReceiveMoney
+                      '!text-red-500 !font-semibold': !trans.userReceiveMoney || trans.userReceiveMoney?.fullname === 'admin bidbay'
                     }">
-                      {{ trans.userReceiveMoney ? (isSelf(trans.userReceiveMoney?.id) ? 'Tôi' : trans.userReceiveMoney?.fullname) : 'Hệ thống' }}
+                      {{ trans.userReceiveMoney && trans.userReceiveMoney?.fullname !== 'admin bidbay' ? (isSelf(trans.userReceiveMoney?.id) ? 'Tôi' : trans.userReceiveMoney?.fullname) : 'Hệ thống' }}
                     </td>
                     <td class="px-4 py-3">
                       <div class="font-normal text-gray-500">{{ formatCurrency(trans?.amount) }}</div>
