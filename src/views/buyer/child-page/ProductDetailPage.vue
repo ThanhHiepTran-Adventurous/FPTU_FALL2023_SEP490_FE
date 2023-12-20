@@ -162,7 +162,7 @@ onMounted(async () => {
   // NEED TO REPLACE SET INTERVAL WITH FIREBASE MESSAGE TRIGGER!!!!!
   interval = setInterval(() => {
     fetchBidHistory()
-  }, 5000)
+  }, 3000)
 })
 const totalPages = computed(() => {
   return Math.ceil(feedbacks.value.length / itemsPerPage.value)
